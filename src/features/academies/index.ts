@@ -1,0 +1,1 @@
+export { AcademiesPage } from './academies-page'

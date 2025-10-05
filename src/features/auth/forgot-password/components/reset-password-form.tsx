@@ -1,0 +1,193 @@
+import { useState } from 'react'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from '@tanstack/react-router'
+import { ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react'
+import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
+import { authApi, getErrorMessage } from '@/lib/api-client'
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+
+const formSchema = z.object({
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number'),
+  password_confirmation: z.string().min(1, 'Please confirm your password'),
+}).refine((data) => data.password === data.password_confirmation, {
+  message: "Passwords don't match",
+  path: ["password_confirmation"],
+})
+
+interface ResetPasswordFormProps extends React.HTMLAttributes<HTMLFormElement> {
+  token: string
+}
+
+export function ResetPasswordForm({
+  token,
+  className,
+  ...props
+}: ResetPasswordFormProps) {
+  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { 
+      password: '',
+      password_confirmation: ''
+    },
+  })
+
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true)
+      
+      const response = await authApi.resetPassword(
+        token,
+        data.password,
+        data.password_confirmation
+      )
+      
+      toast.success(response.message)
+      form.reset()
+      
+      // Redirect to sign-in page after successful reset
+      navigate({ to: '/sign-in' })
+    } catch (error: any) {
+      const errorMessage = getErrorMessage(error)
+      toast.error(errorMessage)
+      
+      // Handle specific validation errors
+      if (error?.type === 'ValidationError' && error?.details) {
+        error.details.forEach((detail: string) => {
+          if (detail.toLowerCase().includes('password confirmation')) {
+            form.setError('password_confirmation', { message: detail })
+          } else if (detail.toLowerCase().includes('password')) {
+            form.setError('password', { message: detail })
+          }
+        })
+      }
+      
+      // Handle authentication errors (invalid/expired token)
+      if (error?.type === 'AuthenticationError') {
+        if (error?.code === 'INVALID_RESET_TOKEN' || error?.code === 'EXPIRED_RESET_TOKEN') {
+          // Show error and redirect to forgot password page
+          setTimeout(() => {
+            navigate({ to: '/forgot-password' })
+          }, 3000)
+        }
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn('grid gap-4', className)}
+        {...props}
+      >
+        <FormField
+          control={form.control}
+          name='password'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>New Password</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input 
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder='Enter your new password'
+                    disabled={isLoading}
+                    {...field} 
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                    disabled={isLoading}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name='password_confirmation'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm New Password</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input 
+                    type={showPasswordConfirmation ? 'text' : 'password'}
+                    placeholder='Confirm your new password'
+                    disabled={isLoading}
+                    {...field} 
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPasswordConfirmation(!showPasswordConfirmation)}
+                    disabled={isLoading}
+                  >
+                    {showPasswordConfirmation ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <Button className='mt-2' disabled={isLoading} type="submit">
+          {isLoading ? (
+            <>
+              Resetting password...
+              <Loader2 className='ml-2 h-4 w-4 animate-spin' />
+            </>
+          ) : (
+            <>
+              Reset password
+              <ArrowRight className='ml-2 h-4 w-4' />
+            </>
+          )}
+        </Button>
+      </form>
+    </Form>
+  )
+}
