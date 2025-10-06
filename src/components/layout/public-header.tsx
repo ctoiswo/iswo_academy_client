@@ -41,7 +41,7 @@ export function PublicHeader({
 
         <nav className='hidden items-center space-x-6 md:flex'>
           <Link
-            to='/'
+            to='/academies'
             className='hover:text-primary text-sm font-medium transition-colors'
           >
             Explorar Cursos

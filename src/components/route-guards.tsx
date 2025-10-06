@@ -108,9 +108,14 @@ export function GuestGuard({ children, fallback }: RouteGuardProps) {
   const router = useRouter()
 
   useEffect(() => {
-    // Initialize auth state if not already done
+    // For guest routes, only initialize if we have some indication of existing auth
+    // This prevents unnecessary loading states during sign-up/sign-in
     if (!isAuthenticated && !isLoading && !user) {
-      initialize()
+      // Delayed initialization to avoid blocking the UI
+      const timer = setTimeout(() => {
+        initialize()
+      }, 100)
+      return () => clearTimeout(timer)
     }
   }, [isAuthenticated, isLoading, user, initialize])
 
@@ -138,9 +143,10 @@ export function GuestGuard({ children, fallback }: RouteGuardProps) {
     }
   }, [isAuthenticated, isLoading, router, academyData, currentAcademy])
 
-  // Show loading state while checking authentication
-  if (isLoading) {
-    return fallback || <AuthLoadingFallback />
+  // For guest routes, show loading only if we're actively checking existing authentication
+  // This prevents showing loading on fresh visits to sign-up/sign-in pages
+  if (isLoading && user) {
+    return fallback || <GuestLoadingFallback />
   }
 
   // Don't render children if authenticated
@@ -330,6 +336,26 @@ function AuthLoadingFallback() {
         </div>
         <div className="text-sm text-muted-foreground">
           Checking authentication...
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Silent loading fallback for guest routes (sign-up, sign-in)
+ * Shows minimal loading state without authentication messages
+ */
+function GuestLoadingFallback() {
+  return (
+    <div className="flex h-screen w-full items-center justify-center">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
         </div>
       </div>
     </div>

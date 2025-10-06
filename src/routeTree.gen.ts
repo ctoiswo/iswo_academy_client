@@ -18,6 +18,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PublicAcademySlugRouteImport } from './routes/public/$academySlug'
 import { Route as AcademyAcademyIdRouteImport } from './routes/academy/$academyId'
+import { Route as AcademiesSlugRouteImport } from './routes/academies/$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
@@ -110,6 +111,11 @@ const AcademyAcademyIdRoute = AcademyAcademyIdRouteImport.update({
   id: '/academy/$academyId',
   path: '/academy/$academyId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AcademiesSlugRoute = AcademiesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => AcademiesRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
@@ -375,7 +381,7 @@ const AcademyAcademyIdTeachingAssignmentsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
-  '/academies': typeof AcademiesRoute
+  '/academies': typeof AcademiesRouteWithChildren
   '/academy-selection': typeof AcademySelectionRoute
   '/create-academy': typeof CreateAcademyRoute
   '/landing': typeof LandingRoute
@@ -395,6 +401,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/academies/$slug': typeof AcademiesSlugRoute
   '/academy/$academyId': typeof AcademyAcademyIdRouteWithChildren
   '/public/$academySlug': typeof PublicAcademySlugRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
@@ -431,7 +438,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/academies': typeof AcademiesRoute
+  '/academies': typeof AcademiesRouteWithChildren
   '/academy-selection': typeof AcademySelectionRoute
   '/create-academy': typeof CreateAcademyRoute
   '/landing': typeof LandingRoute
@@ -450,6 +457,7 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/academies/$slug': typeof AcademiesSlugRoute
   '/academy/$academyId': typeof AcademyAcademyIdRouteWithChildren
   '/public/$academySlug': typeof PublicAcademySlugRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
@@ -489,7 +497,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/clerk': typeof ClerkRouteRouteWithChildren
-  '/academies': typeof AcademiesRoute
+  '/academies': typeof AcademiesRouteWithChildren
   '/academy-selection': typeof AcademySelectionRoute
   '/create-academy': typeof CreateAcademyRoute
   '/landing': typeof LandingRoute
@@ -510,6 +518,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/academies/$slug': typeof AcademiesSlugRoute
   '/academy/$academyId': typeof AcademyAcademyIdRouteWithChildren
   '/public/$academySlug': typeof PublicAcademySlugRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
@@ -569,6 +578,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/dashboard'
+    | '/academies/$slug'
     | '/academy/$academyId'
     | '/public/$academySlug'
     | '/errors/$error'
@@ -624,6 +634,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/dashboard'
+    | '/academies/$slug'
     | '/academy/$academyId'
     | '/public/$academySlug'
     | '/errors/$error'
@@ -683,6 +694,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/dashboard'
+    | '/academies/$slug'
     | '/academy/$academyId'
     | '/public/$academySlug'
     | '/_authenticated/errors/$error'
@@ -722,7 +734,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   ClerkRouteRoute: typeof ClerkRouteRouteWithChildren
-  AcademiesRoute: typeof AcademiesRoute
+  AcademiesRoute: typeof AcademiesRouteWithChildren
   AcademySelectionRoute: typeof AcademySelectionRoute
   CreateAcademyRoute: typeof CreateAcademyRoute
   LandingRoute: typeof LandingRoute
@@ -807,6 +819,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/academy/$academyId'
       preLoaderRoute: typeof AcademyAcademyIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/academies/$slug': {
+      id: '/academies/$slug'
+      path: '/$slug'
+      fullPath: '/academies/$slug'
+      preLoaderRoute: typeof AcademiesSlugRouteImport
+      parentRoute: typeof AcademiesRoute
     }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
@@ -1238,6 +1257,18 @@ const ClerkRouteRouteWithChildren = ClerkRouteRoute._addFileChildren(
   ClerkRouteRouteChildren,
 )
 
+interface AcademiesRouteChildren {
+  AcademiesSlugRoute: typeof AcademiesSlugRoute
+}
+
+const AcademiesRouteChildren: AcademiesRouteChildren = {
+  AcademiesSlugRoute: AcademiesSlugRoute,
+}
+
+const AcademiesRouteWithChildren = AcademiesRoute._addFileChildren(
+  AcademiesRouteChildren,
+)
+
 interface AcademyAcademyIdTeachingRouteChildren {
   AcademyAcademyIdTeachingAssignmentsRoute: typeof AcademyAcademyIdTeachingAssignmentsRoute
   AcademyAcademyIdTeachingCoursesRoute: typeof AcademyAcademyIdTeachingCoursesRoute
@@ -1298,7 +1329,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   ClerkRouteRoute: ClerkRouteRouteWithChildren,
-  AcademiesRoute: AcademiesRoute,
+  AcademiesRoute: AcademiesRouteWithChildren,
   AcademySelectionRoute: AcademySelectionRoute,
   CreateAcademyRoute: CreateAcademyRoute,
   LandingRoute: LandingRoute,

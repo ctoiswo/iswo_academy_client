@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -35,7 +35,7 @@ interface AcademyCardProps {
   isSelecting: boolean
 }
 
-function AcademyCard({ academy, onSelect, isSelecting }: AcademyCardProps) {
+function AcademyCard({ academy, onSelect }: AcademyCardProps) {
   const formatDate = (dateString: string | null) => {
     if (!dateString) return null
     return new Date(dateString).toLocaleDateString('en-US', {

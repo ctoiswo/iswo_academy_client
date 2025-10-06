@@ -6,10 +6,11 @@ import {
   Search,
   BookOpen,
   Users,
-  Star,
   Clock,
   ArrowRight,
   Play,
+  Loader2,
+  AlertCircle,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -21,108 +22,38 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { PublicHeader } from '@/components/layout/public-header'
+import { useFeaturedContent, useAcademyCategories } from '@/hooks/use-featured-content'
 
 export function HomePage() {
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
+  
+  // Fetch categories and featured content from backend
+  const categoriesQuery = useAcademyCategories()
+  const { academies, courses, isLoading, isError, refetch } = useFeaturedContent(selectedCategory || undefined)
 
-  // Mock data - esto vendría del backend
-  const featuredAcademies = [
-    {
-      id: 1,
-      name: 'Academia de Marketing Digital',
-      slug: 'marketing-digital-pro',
-      description:
-        'Aprende las estrategias más efectivas del marketing digital moderno',
-      instructor: 'María González',
-      students: 1250,
-      rating: 4.8,
-      courses: 12,
-      image:
-        'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2',
-      category: 'Marketing',
-    },
-    {
-      id: 2,
-      name: 'Escuela de Programación Web',
-      slug: 'programacion-web-fullstack',
-      description: 'Conviértete en desarrollador Full Stack desde cero',
-      instructor: 'Carlos Mendoza',
-      students: 2100,
-      rating: 4.9,
-      courses: 18,
-      image:
-        'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2',
-      category: 'Tecnología',
-    },
-    {
-      id: 3,
-      name: 'Instituto de Diseño UX/UI',
-      slug: 'diseno-ux-ui-profesional',
-      description: 'Diseña experiencias digitales que cautiven a los usuarios',
-      instructor: 'Ana Rodríguez',
-      students: 890,
-      rating: 4.7,
-      courses: 8,
-      image:
-        'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2',
-      category: 'Diseño',
-    },
-  ]
+  // Helper function to format price from string
+  const formatPrice = (priceString: string) => {
+    const price = parseFloat(priceString)
+    return `$${(price / 1000).toFixed(0)}k`
+  }
 
-  const popularCourses = [
-    {
-      id: 1,
-      title: 'React y Next.js: Desarrollo Moderno',
-      academy: 'Escuela de Programación Web',
-      academySlug: 'programacion-web-fullstack',
-      instructor: 'Carlos Mendoza',
-      duration: '8 semanas',
-      students: 456,
-      rating: 4.9,
-      price: '$99',
-      image:
-        'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2',
-      level: 'Intermedio',
-    },
-    {
-      id: 2,
-      title: 'Fundamentos de Marketing Digital',
-      academy: 'Academia de Marketing Digital',
-      academySlug: 'marketing-digital-pro',
-      instructor: 'María González',
-      duration: '6 semanas',
-      students: 789,
-      rating: 4.8,
-      price: '$79',
-      image:
-        'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2',
-      level: 'Principiante',
-    },
-    {
-      id: 3,
-      title: 'Diseño de Interfaces Modernas',
-      academy: 'Instituto de Diseño UX/UI',
-      academySlug: 'diseno-ux-ui-profesional',
-      instructor: 'Ana Rodríguez',
-      duration: '10 semanas',
-      students: 334,
-      rating: 4.7,
-      price: '$129',
-      image:
-        'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2',
-      level: 'Intermedio',
-    },
-  ]
+  // Helper function to format difficulty level
+  const formatDifficulty = (level: string) => {
+    const levels = {
+      beginner: 'Principiante',
+      intermediate: 'Intermedio',
+      advanced: 'Avanzado'
+    }
+    return levels[level as keyof typeof levels] || level
+  }
 
-  const categories = [
-    { id: 'all', name: 'Todas las categorías' },
-    { id: 'tecnologia', name: 'Tecnología' },
-    { id: 'marketing', name: 'Marketing' },
-    { id: 'diseno', name: 'Diseño' },
-    { id: 'negocios', name: 'Negocios' },
-    { id: 'idiomas', name: 'Idiomas' },
+  // Create categories array with "Todas" option plus real categories
+  const allCategories = [
+    { id: null, name: 'Todas las categorías', slug: 'all' },
+    ...(categoriesQuery.data || []).map(cat => ({ id: cat.id, name: cat.name, slug: cat.slug }))
   ]
 
   return (
@@ -193,26 +124,33 @@ export function HomePage() {
       {/* Categories */}
       <section className='bg-muted/50 border-b py-12'>
         <div className='container'>
-          <div className='flex flex-wrap justify-center gap-4'>
-            {categories.map((category, index) => (
-              <motion.button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`rounded-full px-6 py-3 text-sm font-medium transition-colors ${
-                  selectedCategory === category.id
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-background hover:bg-muted border'
-                }`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {category.name}
-              </motion.button>
-            ))}
-          </div>
+          {categoriesQuery.isLoading ? (
+            <div className='flex items-center justify-center py-4'>
+              <Loader2 className='h-6 w-6 animate-spin' />
+              <span className='ml-2 text-muted-foreground'>Cargando categorías...</span>
+            </div>
+          ) : (
+            <div className='flex flex-wrap justify-center gap-4'>
+              {allCategories.map((category, index) => (
+                <motion.button
+                  key={category.slug}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`rounded-full px-6 py-3 text-sm font-medium transition-colors ${
+                    selectedCategory === category.id
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-background hover:bg-muted border'
+                  }`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {category.name}
+                </motion.button>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -234,70 +172,88 @@ export function HomePage() {
             </p>
           </motion.div>
 
-          <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
-            {featuredAcademies.map((academy, index) => (
-              <motion.div
-                key={academy.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
-              >
-                <Card className='group h-full cursor-pointer overflow-hidden'>
-                  <div className='relative'>
-                    <img
-                      src={academy.image}
-                      alt={academy.name}
-                      className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
-                    />
-                    <div className='absolute top-4 left-4'>
-                      <Badge variant='secondary'>{academy.category}</Badge>
-                    </div>
-                  </div>
-                  <CardHeader>
-                    <CardTitle className='line-clamp-1'>
-                      {academy.name}
-                    </CardTitle>
-                    <CardDescription className='line-clamp-2'>
-                      {academy.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className='space-y-4'>
-                      <div className='flex items-center justify-between text-sm'>
-                        <span className='text-muted-foreground'>
-                          Por {academy.instructor}
-                        </span>
-                        <div className='flex items-center space-x-1'>
-                          <Star className='h-4 w-4 fill-yellow-400 text-yellow-400' />
-                          <span className='font-medium'>{academy.rating}</span>
-                        </div>
+          {isLoading ? (
+            <div className='col-span-full flex items-center justify-center py-12'>
+              <Loader2 className='h-8 w-8 animate-spin' />
+              <span className='ml-2 text-muted-foreground'>Cargando academias...</span>
+            </div>
+          ) : isError ? (
+            <div className='col-span-full'>
+              <Alert variant='destructive'>
+                <AlertCircle className='h-4 w-4' />
+                <AlertDescription>
+                  Error al cargar las academias destacadas. {' '}
+                  <Button variant='outline' size='sm' onClick={() => refetch()}>
+                    Reintentar
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            </div>
+          ) : (
+            <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
+              {academies.map((academy, index) => (
+                <motion.div
+                  key={academy.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  whileHover={{ y: -10 }}
+                >
+                  <Card className='group h-full cursor-pointer overflow-hidden'>
+                    <div className='relative'>
+                      <img
+                        src={academy.logo_url || 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'}
+                        alt={academy.name}
+                        className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                      />
+                      <div className='absolute top-4 left-4'>
+                        <Badge variant='secondary'>{academy.is_public ? 'Público' : 'Privado'}</Badge>
                       </div>
-                      <div className='flex items-center justify-between text-sm'>
-                        <div className='flex items-center space-x-4'>
-                          <div className='flex items-center space-x-1'>
-                            <Users className='text-muted-foreground h-4 w-4' />
-                            <span>{academy.students.toLocaleString()}</span>
-                          </div>
-                          <div className='flex items-center space-x-1'>
-                            <BookOpen className='text-muted-foreground h-4 w-4' />
-                            <span>{academy.courses} cursos</span>
+                    </div>
+                    <CardHeader>
+                      <CardTitle className='line-clamp-1'>
+                        {academy.name}
+                      </CardTitle>
+                      <CardDescription className='line-clamp-2'>
+                        {academy.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className='space-y-4'>
+                        <div className='flex items-center justify-between text-sm'>
+                          <span className='text-muted-foreground'>
+                            Por {academy.creator.name}
+                          </span>
+                          <div className='flex items-center space-x-1 text-sm'>
+                            <span className='text-muted-foreground'>Desde {formatPrice(academy.monthly_price)}/mes</span>
                           </div>
                         </div>
+                        <div className='flex items-center justify-between text-sm'>
+                          <div className='flex items-center space-x-4'>
+                            <div className='flex items-center space-x-1'>
+                              <Users className='text-muted-foreground h-4 w-4' />
+                              <span>{academy.student_count.toLocaleString()}</span>
+                            </div>
+                            <div className='flex items-center space-x-1'>
+                              <BookOpen className='text-muted-foreground h-4 w-4' />
+                              <span>{academy.course_count} cursos</span>
+                            </div>
+                          </div>
+                        </div>
+                        <Button asChild className='w-full'>
+                          <Link to='/academies'>
+                            Explorar Academia
+                            <ArrowRight className='ml-2 h-4 w-4' />
+                          </Link>
+                        </Button>
                       </div>
-                      <Button asChild className='w-full'>
-                        <Link to='/academies'>
-                          Explorar Academia
-                          <ArrowRight className='ml-2 h-4 w-4' />
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -319,75 +275,93 @@ export function HomePage() {
             </p>
           </motion.div>
 
-          <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
-            {popularCourses.map((course, index) => (
-              <motion.div
-                key={course.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
-              >
-                <Card className='group h-full cursor-pointer overflow-hidden'>
-                  <div className='relative'>
-                    <img
-                      src={course.image}
-                      alt={course.title}
-                      className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
-                    />
-                    <div className='absolute top-4 left-4'>
-                      <Badge>{course.level}</Badge>
-                    </div>
-                    <div className='absolute top-4 right-4'>
-                      <div className='rounded bg-black/70 px-2 py-1 text-sm font-medium text-white'>
-                        {course.price}
+          {isLoading ? (
+            <div className='col-span-full flex items-center justify-center py-12'>
+              <Loader2 className='h-8 w-8 animate-spin' />
+              <span className='ml-2 text-muted-foreground'>Cargando cursos...</span>
+            </div>
+          ) : isError ? (
+            <div className='col-span-full'>
+              <Alert variant='destructive'>
+                <AlertCircle className='h-4 w-4' />
+                <AlertDescription>
+                  Error al cargar los cursos destacados. {' '}
+                  <Button variant='outline' size='sm' onClick={() => refetch()}>
+                    Reintentar
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            </div>
+          ) : (
+            <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
+              {courses.map((course, index) => (
+                <motion.div
+                  key={course.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  whileHover={{ y: -10 }}
+                >
+                  <Card className='group h-full cursor-pointer overflow-hidden'>
+                    <div className='relative'>
+                      <img
+                        src={course.thumbnail_url || 'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'}
+                        alt={course.title}
+                        className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                      />
+                      <div className='absolute top-4 left-4'>
+                        <Badge>{formatDifficulty(course.difficulty_level)}</Badge>
                       </div>
-                    </div>
-                  </div>
-                  <CardHeader>
-                    <CardTitle className='line-clamp-1'>
-                      {course.title}
-                    </CardTitle>
-                    <CardDescription className='line-clamp-1'>
-                      {course.academy}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className='space-y-4'>
-                      <div className='flex items-center justify-between text-sm'>
-                        <span className='text-muted-foreground'>
-                          Por {course.instructor}
-                        </span>
-                        <div className='flex items-center space-x-1'>
-                          <Star className='h-4 w-4 fill-yellow-400 text-yellow-400' />
-                          <span className='font-medium'>{course.rating}</span>
+                      <div className='absolute top-4 right-4'>
+                        <div className='rounded bg-black/70 px-2 py-1 text-sm font-medium text-white'>
+                          {course.is_free ? 'Gratis' : formatPrice(course.price)}
                         </div>
                       </div>
-                      <div className='flex items-center justify-between text-sm'>
-                        <div className='flex items-center space-x-4'>
+                    </div>
+                    <CardHeader>
+                      <CardTitle className='line-clamp-1'>
+                        {course.title}
+                      </CardTitle>
+                      <CardDescription className='line-clamp-1'>
+                        Curso independiente
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className='space-y-4'>
+                        <div className='flex items-center justify-between text-sm'>
+                          <span className='text-muted-foreground'>
+                            Por {course.creator.name}
+                          </span>
                           <div className='flex items-center space-x-1'>
-                            <Clock className='text-muted-foreground h-4 w-4' />
-                            <span>{course.duration}</span>
-                          </div>
-                          <div className='flex items-center space-x-1'>
-                            <Users className='text-muted-foreground h-4 w-4' />
-                            <span>{course.students}</span>
+                            <Badge variant='outline'>{course.is_published ? 'Publicado' : 'Borrador'}</Badge>
                           </div>
                         </div>
+                        <div className='flex items-center justify-between text-sm'>
+                          <div className='flex items-center space-x-4'>
+                            <div className='flex items-center space-x-1'>
+                              <Clock className='text-muted-foreground h-4 w-4' />
+                              <span>{Math.round(course.duration_minutes / 60)}h</span>
+                            </div>
+                            <div className='flex items-center space-x-1'>
+                              <Users className='text-muted-foreground h-4 w-4' />
+                              <span>{course.enrollment_count}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <Button asChild className='w-full'>
+                          <Link to='/academies'>
+                            Ver Curso
+                            <Play className='ml-2 h-4 w-4' />
+                          </Link>
+                        </Button>
                       </div>
-                      <Button asChild className='w-full'>
-                        <Link to='/academies'>
-                          Ver Curso
-                          <Play className='ml-2 h-4 w-4' />
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

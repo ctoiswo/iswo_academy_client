@@ -147,9 +147,9 @@ export function UserAuthForm({
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Correo electrónico</FormLabel>
+              <FormLabel className='text-black'>Correo electrónico</FormLabel>
               <FormControl>
-                <Input placeholder='nombre@ejemplo.com' {...field} />
+                <Input className='text-black' placeholder='nombre@ejemplo.com' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -160,9 +160,9 @@ export function UserAuthForm({
           name='password'
           render={({ field }) => (
             <FormItem className='relative'>
-              <FormLabel>Contraseña</FormLabel>
+              <FormLabel className='text-black'>Contraseña</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='********' {...field} />
+                <PasswordInput className='text-black' placeholder='********' {...field} />
               </FormControl>
               <FormMessage />
               <Link

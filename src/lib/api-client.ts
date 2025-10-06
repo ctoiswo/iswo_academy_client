@@ -111,7 +111,7 @@ const processQueue = (error: any, token: string | null = null) => {
       resolve(token)
     }
   })
-  
+
   failedQueue = []
 }
 
@@ -126,11 +126,11 @@ const clearRefreshTimer = () => {
 // Schedule proactive token refresh
 const scheduleTokenRefresh = (expiresIn: number) => {
   clearRefreshTimer()
-  
+
   // Schedule refresh 5 minutes before expiration (or halfway through if less than 10 minutes)
   const refreshBuffer = Math.min(5 * 60 * 1000, (expiresIn * 1000) / 2)
   const refreshDelay = Math.max(0, (expiresIn * 1000) - refreshBuffer)
-  
+
   if (refreshDelay > 0) {
     refreshTimer = setTimeout(async () => {
       try {
@@ -162,7 +162,7 @@ const performTokenRefresh = async (): Promise<AuthTokens> => {
 
   updateTokens(tokens)
   scheduleTokenRefresh(tokens.expires_in)
-  
+
   return tokens
 }
 
@@ -241,7 +241,7 @@ apiClient.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null)
         clearTokens()
-        
+
         // Redirect to login page only if we're in a browser environment
         if (typeof window !== 'undefined' && window.location) {
           // Use router navigation if available, otherwise fallback to location
@@ -250,7 +250,7 @@ apiClient.interceptors.response.use(
             window.location.href = '/auth/sign-in'
           }
         }
-        
+
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false
@@ -350,11 +350,11 @@ export const getErrorMessage = (error: any): string => {
     }
     return error.message
   }
-  
+
   if (error instanceof Error) {
     return error.message
   }
-  
+
   return 'An unexpected error occurred'
 }
 
@@ -474,6 +474,63 @@ export const userApi = {
   }
 }
 
+// Academy category interfaces
+export interface AcademyCategory {
+  id: number
+  name: string
+  description: string
+  slug: string
+  icon: string
+  color: string
+  academies_count: number
+  academies?: FeaturedAcademy[]
+}
+
+export interface AcademyCategoriesResponse {
+  categories: AcademyCategory[]
+}
+
+// Featured content interfaces
+export interface FeaturedAcademy {
+  id: number
+  name: string
+  description: string
+  slug: string
+  logo_url: string | null
+  is_public: boolean
+  subscription_required: boolean
+  monthly_price: string
+  creator: {
+    id: number
+    name: string
+  }
+  course_count: number
+  student_count: number
+  created_at: string
+  has_active_subscription: boolean
+}
+
+export interface FeaturedCourse {
+  id: number
+  title: string
+  description: string
+  thumbnail_url: string | null
+  price: string
+  is_free: boolean
+  difficulty_level: 'beginner' | 'intermediate' | 'advanced'
+  duration_minutes: number
+  is_published: boolean
+  section_count: number
+  lesson_count: number
+  enrollment_count: number
+  creator: {
+    id: number
+    name: string
+  }
+  created_at: string
+  updated_at: string
+}
+
 // Academy-related interfaces for API
 export interface AcademyMembership {
   id: number
@@ -496,6 +553,26 @@ export const academyApi = {
   getUserAcademies: async (): Promise<AcademyData> => {
     const response = await apiClient.get('/academies/user_academies')
     return handleApiResponse(response)
+  },
+
+  getFeaturedAcademies: async (categoryId?: number): Promise<FeaturedAcademy[]> => {
+    const params = categoryId ? { academy_category_id: categoryId } : {}
+    const response = await apiClient.get('/academies/featured', { params })
+    return handleApiResponse(response).data
+  },
+
+  getCategories: async (): Promise<AcademyCategory[]> => {
+    const response = await apiClient.get('/academy_categories')
+    return handleApiResponse(response).categories
+  }
+}
+
+// Course API methods
+export const courseApi = {
+  getFeaturedCourses: async (categoryId?: number): Promise<FeaturedCourse[]> => {
+    const params = categoryId ? { academy_category_id: categoryId } : {}
+    const response = await apiClient.get('/courses/featured', { params })
+    return handleApiResponse(response).data
   }
 }
 
@@ -591,7 +668,7 @@ export const superAdminApi = {
   },
 
   updateAcademyStatus: async (
-    academyId: number, 
+    academyId: number,
     status: 'active' | 'inactive' | 'suspended' | 'pending'
   ): Promise<{ data: AcademyOverview; message: string }> => {
     const response = await apiClient.patch(`/super_admin/academies/${academyId}/status`, { status })
@@ -1037,4 +1114,6 @@ export const API_CONFIG = {
   TIMEOUT: API_TIMEOUT,
 }
 
+// Export both named and default exports for compatibility
+export { apiClient }
 export default apiClient
