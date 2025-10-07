@@ -1,6 +1,7 @@
 import { create } from 'zustand'
-import { authApi, tokenManager, type AuthUser, type AuthTokens, type AuthResponse } from '@/lib/api-client'
+import { tokenManager } from '@/lib/api-client'
 import { tokenStorage } from '@/lib/token-storage'
+import authService from '@/services/auth-service'
 
 // TypeScript interfaces for auth state
 export interface AuthUser {
@@ -119,7 +120,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     try {
       set({ isLoading: true, error: null })
       
-      const response: AuthResponse & { academies?: AcademyData } = await authApi.login(credentials)
+      const response = await authService.login(credentials)
       
       const tokens: AuthTokens = {
         access_token: response.access_token,
@@ -130,8 +131,16 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       // Store tokens securely
       tokenStorage.setTokens(tokens)
       
-      // Handle academy data from login response
-      const academyData = response.academies || { count: 0, academies: [] }
+      // Handle academy data from login response - map to expected format
+      const apiAcademies = response.academies
+      const allAcademies = [
+        ...(apiAcademies?.owned || []),
+        ...(apiAcademies?.member || [])
+      ]
+      const academyData: AcademyData = {
+        count: allAcademies.length,
+        academies: allAcademies
+      }
       
       set({
         user: response.user,
@@ -185,7 +194,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     try {
       set({ isLoading: true, error: null })
       
-      const response = await authApi.register(userData)
+      const response = await authService.register(userData)
       
       set({
         isLoading: false,
@@ -210,7 +219,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       const { tokens } = get()
       if (tokens?.refresh_token) {
         try {
-          await authApi.logout(tokens.refresh_token)
+          await authService.logout()
         } catch (error) {
           // Continue with logout even if API call fails
           console.warn('Logout API call failed:', error)
@@ -246,32 +255,17 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   refreshTokens: async (): Promise<boolean> => {
     try {
-      const success = await tokenManager.refreshTokens()
-      if (success) {
-        // Get the updated tokens from storage
-        const updatedTokens = tokenStorage.getTokens()
-        if (updatedTokens) {
-          const authTokens: AuthTokens = {
-            access_token: updatedTokens.access_token,
-            refresh_token: updatedTokens.refresh_token,
-            expires_in: Math.floor((updatedTokens.expires_at - Date.now()) / 1000)
-          }
-          set({
-            tokens: authTokens,
-            error: null
-          })
-        }
-        return true
-      } else {
-        // If refresh fails, clear tokens and set error
-        set({
-          user: null,
-          tokens: null,
-          isAuthenticated: false,
-          error: 'Session expired'
-        })
-        return false
-      }
+      const newTokens = await tokenManager.refreshAccessToken()
+      // Tokens are already stored by tokenManager
+      set({
+        tokens: {
+          access_token: newTokens.access_token,
+          refresh_token: newTokens.refresh_token,
+          expires_in: newTokens.expires_in
+        },
+        error: null
+      })
+      return true
     } catch (error) {
       // If refresh fails, clear tokens and redirect to login
       set({
@@ -322,9 +316,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     try {
       set({ isLoading: true })
       
-      // Initialize token manager
-      tokenManager.initialize()
-      
       // Try to load tokens from storage
       const storedTokens = tokenStorage.getTokens()
       if (!storedTokens) {
@@ -353,8 +344,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
       // Fetch user profile if we have valid tokens
       try {
-        const { userApi } = await import('@/lib/api-client')
-        const user = await userApi.getProfile()
+        const user = await authService.getCurrentUser()
         set({ user, isLoading: false })
         
         // Refresh academy data after successful profile fetch
@@ -364,8 +354,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         const refreshed = await get().refreshTokens()
         if (refreshed) {
           try {
-            const { userApi } = await import('@/lib/api-client')
-            const user = await userApi.getProfile()
+            const user = await authService.getCurrentUser()
             set({ user, isLoading: false })
             
             // Refresh academy data after successful profile fetch
@@ -407,11 +396,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       const { isAuthenticated } = get()
       if (!isAuthenticated) return
       
-      // Import academyApi dynamically to avoid circular dependencies
-      const { academyApi } = await import('@/lib/api-client')
-      const academyData = await academyApi.getUserAcademies()
+      // TODO: Implement academy service
+      // const academyData = await academyService.getUserAcademies()
+      // set({ academyData })
       
-      set({ academyData })
+      console.warn('refreshAcademies: Academy service not yet implemented')
     } catch (error) {
       console.error('Failed to refresh academy data:', error)
       // Don't throw error to avoid breaking the flow

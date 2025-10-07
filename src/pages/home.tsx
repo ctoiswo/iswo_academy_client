@@ -8,7 +8,6 @@ import {
   Users,
   Clock,
   ArrowRight,
-  Play,
   Loader2,
   AlertCircle,
 } from 'lucide-react'
