@@ -23,7 +23,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { PublicHeader } from '@/components/layout/public-header'
-import { useFeaturedContent, useAcademyCategories, useFeaturedCourses } from '@/hooks/use-featured-content'
+import { useFeaturedAcademies, useAcademyCategories, useFeaturedCoursesByCategories } from '@/hooks/use-featured-content'
 
 export function HomePage() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -31,17 +31,13 @@ export function HomePage() {
   
   // Fetch categories and featured content from backend
   const categoriesQuery = useAcademyCategories()
-  const { academies, isLoading, isError, refetch } = useFeaturedContent(selectedCategory || undefined)
+  const { data: academies, isLoading, isError, refetch } = useFeaturedAcademies(selectedCategory || undefined)
   
-  // Pre-fetch courses for the first 3 categories to avoid hook ordering issues
-  const categories = categoriesQuery.data || []
-  const topCategories = categories.slice(0, 3)
+  // Fetch courses organized by categories from backend
+  const coursesByCategoriesQuery = useFeaturedCoursesByCategories()
+  const coursesByCategories = coursesByCategoriesQuery.data || []
   
-  const categoryCoursesQueries = [
-    useFeaturedCourses(topCategories[0]?.id),
-    useFeaturedCourses(topCategories[1]?.id), 
-    useFeaturedCourses(topCategories[2]?.id)
-  ]
+  console.log('Courses by categories:', coursesByCategories)
 
   // Helper function to format price from string
   const formatPrice = (priceString: string) => {
@@ -211,7 +207,7 @@ export function HomePage() {
                 </AlertDescription>
               </Alert>
             </div>
-          ) : (
+          ) : academies && academies.length > 0 ? (
             <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
               {academies.map((academy, index) => (
                 <motion.div
@@ -246,7 +242,7 @@ export function HomePage() {
                         <div className='space-y-4'>
                           <div className='flex items-center justify-between text-sm'>
                             <span className='text-muted-foreground'>
-                              Por {academy.creator.name}
+                              Por {academy?.creator?.name}
                             </span>
                             <div className='flex items-center space-x-1 text-sm'>
                               <span className='text-muted-foreground'>Desde {formatPrice(academy.monthly_price)}/mes</span>
@@ -270,6 +266,10 @@ export function HomePage() {
                   </Link>
                 </motion.div>
               ))}
+            </div>
+          ) : (
+            <div className='col-span-full text-center py-12'>
+              <p className='text-muted-foreground'>No se encontraron academias destacadas.</p>
             </div>
           )}
 
@@ -316,13 +316,11 @@ export function HomePage() {
             </div>
           ) : (
             <div className='space-y-16'>
-              {topCategories.map((category, categoryIndex) => {
-                // Get the corresponding courses query for this category
-                const categoryCoursesQuery = categoryCoursesQueries[categoryIndex]
-                const categoryCourses = categoryCoursesQuery?.data || []
+              {coursesByCategories.map((categoryData, categoryIndex) => {
+                const { category, courses } = categoryData
 
-                // Skip empty categories or if no query exists
-                if (!categoryCoursesQuery || categoryCourses.length === 0) return null
+                // Skip empty categories
+                if (!courses || courses.length === 0) return null
 
                 return (
                   <motion.div
@@ -337,14 +335,8 @@ export function HomePage() {
                       <p className='text-muted-foreground'>{category.description}</p>
                     </div>
 
-                    {categoryCoursesQuery.isLoading ? (
-                      <div className='flex items-center justify-center py-8'>
-                        <Loader2 className='h-6 w-6 animate-spin' />
-                        <span className='ml-2 text-muted-foreground'>Cargando cursos de {category.name}...</span>
-                      </div>
-                    ) : (
-                      <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
-                        {categoryCourses.slice(0, 3).map((course, courseIndex) => (
+                    <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+                      {courses.map((course, courseIndex) => (
                           <motion.div
                             key={course.id}
                             initial={{ opacity: 0, y: 30 }}
@@ -357,25 +349,25 @@ export function HomePage() {
                               <Card className='group h-full cursor-pointer overflow-hidden'>
                                 <div className='relative'>
                                   <img
-                                    src={course.thumbnail_url || 'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'}
-                                    alt={course.title}
+                                    src={course?.thumbnail_url || 'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'}
+                                    alt={course?.title}
                                     className='h-40 w-full object-cover transition-transform duration-300 group-hover:scale-105'
                                   />
                                   <div className='absolute top-3 left-3'>
-                                    <Badge variant='secondary'>{formatDifficulty(course.difficulty_level)}</Badge>
+                                    <Badge variant='secondary'>{formatDifficulty(course?.difficulty_level)}</Badge>
                                   </div>
                                   <div className='absolute top-3 right-3'>
                                     <div className='rounded bg-black/70 px-2 py-1 text-xs font-medium text-white'>
-                                      {course.is_free ? 'Gratis' : formatPrice(course.price)}
+                                      {course?.is_free ? 'Gratis' : formatPrice(course?.price)}
                                     </div>
                                   </div>
                                 </div>
                                 <CardHeader className='pb-4'>
                                   <CardTitle className='line-clamp-2 text-lg'>
-                                    {course.title}
+                                    {course?.title}
                                   </CardTitle>
                                   <CardDescription className='line-clamp-1 text-sm'>
-                                    Por {course.creator.name}
+                                    Por {course?.creator?.name}
                                   </CardDescription>
                                 </CardHeader>
                                 <CardContent className='pt-0'>
@@ -383,15 +375,15 @@ export function HomePage() {
                                     <div className='flex items-center space-x-3'>
                                       <div className='flex items-center space-x-1'>
                                         <Clock className='text-muted-foreground h-3 w-3' />
-                                        <span className='text-xs'>{Math.round(course.duration_minutes / 60)}h</span>
+                                        <span className='text-xs'>{Math.round(course?.duration_minutes / 60)}h</span>
                                       </div>
                                       <div className='flex items-center space-x-1'>
                                         <Users className='text-muted-foreground h-3 w-3' />
-                                        <span className='text-xs'>{course.enrollment_count}</span>
+                                        <span className='text-xs'>{course?.enrollment_count}</span>
                                       </div>
                                     </div>
                                     <Badge variant='outline' className='text-xs'>
-                                      {course.is_published ? 'Disponible' : 'Próximamente'}
+                                      {course?.is_published ? 'Disponible' : 'Próximamente'}
                                     </Badge>
                                   </div>
                                 </CardContent>
@@ -400,7 +392,6 @@ export function HomePage() {
                           </motion.div>
                         ))}
                       </div>
-                    )}
                   </motion.div>
                 )
               })}

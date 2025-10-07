@@ -1,6 +1,4 @@
 import apiClient from '@/lib/api-client'
-import type { ViewMode } from '@/lib/api-view-modes'
-import { withView } from '@/lib/api-view-modes'
 
 // TypeScript interfaces for Academies
 export interface FeaturedAcademy {
@@ -11,11 +9,11 @@ export interface FeaturedAcademy {
   logo_url: string | null
   is_public: boolean
   monthly_price: string
-  yearly_price: string
+  subscription_required: boolean
+  status: string
   creator: {
     id: number
     name: string
-    email: string
   } | null
   student_count: number
   course_count: number
@@ -35,8 +33,10 @@ class AcademyService {
    */
   async getFeaturedAcademies(categoryId?: number): Promise<FeaturedAcademy[]> {
     const params = categoryId ? { academy_category_id: categoryId } : {}
+    console.log('AcademyService.getFeaturedAcademies called with:', { categoryId, params })
     const response = await apiClient.get('/academies/featured', { params })
-    return response.data.data
+    console.log('AcademyService.getFeaturedAcademies response:', response.data)
+    return response.data
   }
 }
 

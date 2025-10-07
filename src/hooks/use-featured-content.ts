@@ -28,6 +28,15 @@ export function useFeaturedCourses(categoryId?: number) {
   })
 }
 
+export function useFeaturedCoursesByCategories() {
+  return useQuery({
+    queryKey: ['featured', 'courses', 'by-categories'],
+    queryFn: () => courseService.getFeaturedCoursesByCategories(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+  })
+}
+
 export function useFeaturedContent(categoryId?: number) {
   const academiesQuery = useFeaturedAcademies(categoryId)
   const coursesQuery = useFeaturedCourses(categoryId)
