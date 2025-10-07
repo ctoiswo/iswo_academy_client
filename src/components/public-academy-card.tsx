@@ -74,7 +74,7 @@ export function PublicAcademyCard({ academy, index = 0 }: PublicAcademyCardProps
       className="w-full max-w-sm mx-auto"
     >
       <Card className="overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-card group cursor-pointer">
-        <Link to="/academies/$slug" params={{ slug: academy.slug }}>
+        <Link to="/public/academies/$academySlug" params={{ academySlug: academy.slug }}>
           {/* Image Container */}
           <div className="relative h-48 overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50">
             <motion.img
@@ -169,7 +169,7 @@ export function PublicAcademyCard({ academy, index = 0 }: PublicAcademyCardProps
 
             {/* Action Button */}
             <Button className="w-full group/btn" asChild>
-              <Link to="/academies/$slug" params={{ slug: academy.slug }}>
+              <Link to="/public/academies/$academySlug" params={{ academySlug: academy.slug }}>
                 Ver Academia
                 <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
               </Link>

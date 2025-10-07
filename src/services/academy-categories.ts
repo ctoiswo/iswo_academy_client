@@ -25,7 +25,7 @@ export interface Academy {
 }
 
 class AcademyCategoriesService {
-  private baseUrl = 'http://localhost:3001/api/v1'
+  private baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1'
 
   async getCategories(options?: {
     search?: string

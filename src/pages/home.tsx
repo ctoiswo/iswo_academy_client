@@ -24,7 +24,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { PublicHeader } from '@/components/layout/public-header'
-import { useFeaturedContent, useAcademyCategories } from '@/hooks/use-featured-content'
+import { useFeaturedContent, useAcademyCategories, useFeaturedCourses } from '@/hooks/use-featured-content'
 
 export function HomePage() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -32,7 +32,17 @@ export function HomePage() {
   
   // Fetch categories and featured content from backend
   const categoriesQuery = useAcademyCategories()
-  const { academies, courses, isLoading, isError, refetch } = useFeaturedContent(selectedCategory || undefined)
+  const { academies, isLoading, isError, refetch } = useFeaturedContent(selectedCategory || undefined)
+  
+  // Pre-fetch courses for the first 3 categories to avoid hook ordering issues
+  const categories = categoriesQuery.data || []
+  const topCategories = categories.slice(0, 3)
+  
+  const categoryCoursesQueries = [
+    useFeaturedCourses(topCategories[0]?.id),
+    useFeaturedCourses(topCategories[1]?.id), 
+    useFeaturedCourses(topCategories[2]?.id)
+  ]
 
   // Helper function to format price from string
   const formatPrice = (priceString: string) => {
@@ -48,6 +58,19 @@ export function HomePage() {
       advanced: 'Avanzado'
     }
     return levels[level as keyof typeof levels] || level
+  }
+
+  // Helper function to generate course slug
+  const generateCourseSlug = (course: any) => {
+    if (course.slug) return course.slug
+    // Generate slug from title and id
+    const titleSlug = course.title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+    return `${titleSlug}-${course.id}`
   }
 
   // Create categories array with "Todas" option plus real categories
@@ -200,64 +223,76 @@ export function HomePage() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={{ y: -10 }}
                 >
-                  <Card className='group h-full cursor-pointer overflow-hidden'>
-                    <div className='relative'>
-                      <img
-                        src={academy.logo_url || 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'}
-                        alt={academy.name}
-                        className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
-                      />
-                      <div className='absolute top-4 left-4'>
-                        <Badge variant='secondary'>{academy.is_public ? 'Público' : 'Privado'}</Badge>
-                      </div>
-                    </div>
-                    <CardHeader>
-                      <CardTitle className='line-clamp-1'>
-                        {academy.name}
-                      </CardTitle>
-                      <CardDescription className='line-clamp-2'>
-                        {academy.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className='space-y-4'>
-                        <div className='flex items-center justify-between text-sm'>
-                          <span className='text-muted-foreground'>
-                            Por {academy.creator.name}
-                          </span>
-                          <div className='flex items-center space-x-1 text-sm'>
-                            <span className='text-muted-foreground'>Desde {formatPrice(academy.monthly_price)}/mes</span>
-                          </div>
+                  <Link to='/public/academies/$academySlug' params={{ academySlug: academy.slug }}>
+                    <Card className='group h-full cursor-pointer overflow-hidden'>
+                      <div className='relative'>
+                        <img
+                          src={academy.logo_url || 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'}
+                          alt={academy.name}
+                          className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                        />
+                        <div className='absolute top-4 left-4'>
+                          <Badge variant='secondary'>{academy.is_public ? 'Público' : 'Privado'}</Badge>
                         </div>
-                        <div className='flex items-center justify-between text-sm'>
-                          <div className='flex items-center space-x-4'>
-                            <div className='flex items-center space-x-1'>
-                              <Users className='text-muted-foreground h-4 w-4' />
-                              <span>{academy.student_count.toLocaleString()}</span>
-                            </div>
-                            <div className='flex items-center space-x-1'>
-                              <BookOpen className='text-muted-foreground h-4 w-4' />
-                              <span>{academy.course_count} cursos</span>
+                      </div>
+                      <CardHeader>
+                        <CardTitle className='line-clamp-1'>
+                          {academy.name}
+                        </CardTitle>
+                        <CardDescription className='line-clamp-2'>
+                          {academy.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className='space-y-4'>
+                          <div className='flex items-center justify-between text-sm'>
+                            <span className='text-muted-foreground'>
+                              Por {academy.creator.name}
+                            </span>
+                            <div className='flex items-center space-x-1 text-sm'>
+                              <span className='text-muted-foreground'>Desde {formatPrice(academy.monthly_price)}/mes</span>
                             </div>
                           </div>
+                          <div className='flex items-center justify-between text-sm'>
+                            <div className='flex items-center space-x-4'>
+                              <div className='flex items-center space-x-1'>
+                                <Users className='text-muted-foreground h-4 w-4' />
+                                <span>{academy.student_count.toLocaleString()}</span>
+                              </div>
+                              <div className='flex items-center space-x-1'>
+                                <BookOpen className='text-muted-foreground h-4 w-4' />
+                                <span>{academy.course_count} cursos</span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <Button asChild className='w-full'>
-                          <Link to='/academies'>
-                            Explorar Academia
-                            <ArrowRight className='ml-2 h-4 w-4' />
-                          </Link>
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </motion.div>
               ))}
             </div>
           )}
+
+          {/* Ver todas las academias button */}
+          <motion.div
+            className='mt-12 text-center'
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <Button size='lg' variant='outline' asChild>
+              <Link to='/academies'>
+                Ver Todas las Academias
+                <ArrowRight className='ml-2 h-4 w-4' />
+              </Link>
+            </Button>
+          </motion.div>
         </div>
       </section>
 
-      {/* Popular Courses */}
+      {/* Popular Courses by Category */}
       <section className='bg-muted/50 py-20'>
         <div className='container'>
           <motion.div
@@ -268,100 +303,126 @@ export function HomePage() {
             transition={{ duration: 0.6 }}
           >
             <h2 className='text-3xl font-bold tracking-tight sm:text-4xl'>
-              Cursos Populares
+              Cursos Populares por Categoría
             </h2>
             <p className='text-muted-foreground mt-4 text-lg'>
-              Los cursos más elegidos por nuestra comunidad de estudiantes
+              Explora los cursos más destacados organizados por áreas de conocimiento
             </p>
           </motion.div>
 
-          {isLoading ? (
-            <div className='col-span-full flex items-center justify-center py-12'>
+          {categoriesQuery.isLoading ? (
+            <div className='flex items-center justify-center py-12'>
               <Loader2 className='h-8 w-8 animate-spin' />
-              <span className='ml-2 text-muted-foreground'>Cargando cursos...</span>
-            </div>
-          ) : isError ? (
-            <div className='col-span-full'>
-              <Alert variant='destructive'>
-                <AlertCircle className='h-4 w-4' />
-                <AlertDescription>
-                  Error al cargar los cursos destacados. {' '}
-                  <Button variant='outline' size='sm' onClick={() => refetch()}>
-                    Reintentar
-                  </Button>
-                </AlertDescription>
-              </Alert>
+              <span className='ml-2 text-muted-foreground'>Cargando categorías...</span>
             </div>
           ) : (
-            <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
-              {courses.map((course, index) => (
-                <motion.div
-                  key={course.id}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ y: -10 }}
-                >
-                  <Card className='group h-full cursor-pointer overflow-hidden'>
-                    <div className='relative'>
-                      <img
-                        src={course.thumbnail_url || 'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'}
-                        alt={course.title}
-                        className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
-                      />
-                      <div className='absolute top-4 left-4'>
-                        <Badge>{formatDifficulty(course.difficulty_level)}</Badge>
-                      </div>
-                      <div className='absolute top-4 right-4'>
-                        <div className='rounded bg-black/70 px-2 py-1 text-sm font-medium text-white'>
-                          {course.is_free ? 'Gratis' : formatPrice(course.price)}
-                        </div>
-                      </div>
+            <div className='space-y-16'>
+              {topCategories.map((category, categoryIndex) => {
+                // Get the corresponding courses query for this category
+                const categoryCoursesQuery = categoryCoursesQueries[categoryIndex]
+                const categoryCourses = categoryCoursesQuery?.data || []
+
+                // Skip empty categories or if no query exists
+                if (!categoryCoursesQuery || categoryCourses.length === 0) return null
+
+                return (
+                  <motion.div
+                    key={category.id}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: categoryIndex * 0.2 }}
+                  >
+                    <div className='mb-8'>
+                      <h3 className='text-2xl font-bold mb-2'>{category.name}</h3>
+                      <p className='text-muted-foreground'>{category.description}</p>
                     </div>
-                    <CardHeader>
-                      <CardTitle className='line-clamp-1'>
-                        {course.title}
-                      </CardTitle>
-                      <CardDescription className='line-clamp-1'>
-                        Curso independiente
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className='space-y-4'>
-                        <div className='flex items-center justify-between text-sm'>
-                          <span className='text-muted-foreground'>
-                            Por {course.creator.name}
-                          </span>
-                          <div className='flex items-center space-x-1'>
-                            <Badge variant='outline'>{course.is_published ? 'Publicado' : 'Borrador'}</Badge>
-                          </div>
-                        </div>
-                        <div className='flex items-center justify-between text-sm'>
-                          <div className='flex items-center space-x-4'>
-                            <div className='flex items-center space-x-1'>
-                              <Clock className='text-muted-foreground h-4 w-4' />
-                              <span>{Math.round(course.duration_minutes / 60)}h</span>
-                            </div>
-                            <div className='flex items-center space-x-1'>
-                              <Users className='text-muted-foreground h-4 w-4' />
-                              <span>{course.enrollment_count}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <Button asChild className='w-full'>
-                          <Link to='/academies'>
-                            Ver Curso
-                            <Play className='ml-2 h-4 w-4' />
-                          </Link>
-                        </Button>
+
+                    {categoryCoursesQuery.isLoading ? (
+                      <div className='flex items-center justify-center py-8'>
+                        <Loader2 className='h-6 w-6 animate-spin' />
+                        <span className='ml-2 text-muted-foreground'>Cargando cursos de {category.name}...</span>
                       </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
+                    ) : (
+                      <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+                        {categoryCourses.slice(0, 3).map((course, courseIndex) => (
+                          <motion.div
+                            key={course.id}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.4, delay: courseIndex * 0.1 }}
+                            whileHover={{ y: -5 }}
+                          >
+                            <Link to='/public/courses/$courseSlug' params={{ courseSlug: generateCourseSlug(course) }}>
+                              <Card className='group h-full cursor-pointer overflow-hidden'>
+                                <div className='relative'>
+                                  <img
+                                    src={course.thumbnail_url || 'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'}
+                                    alt={course.title}
+                                    className='h-40 w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                                  />
+                                  <div className='absolute top-3 left-3'>
+                                    <Badge variant='secondary'>{formatDifficulty(course.difficulty_level)}</Badge>
+                                  </div>
+                                  <div className='absolute top-3 right-3'>
+                                    <div className='rounded bg-black/70 px-2 py-1 text-xs font-medium text-white'>
+                                      {course.is_free ? 'Gratis' : formatPrice(course.price)}
+                                    </div>
+                                  </div>
+                                </div>
+                                <CardHeader className='pb-4'>
+                                  <CardTitle className='line-clamp-2 text-lg'>
+                                    {course.title}
+                                  </CardTitle>
+                                  <CardDescription className='line-clamp-1 text-sm'>
+                                    Por {course.creator.name}
+                                  </CardDescription>
+                                </CardHeader>
+                                <CardContent className='pt-0'>
+                                  <div className='flex items-center justify-between text-sm'>
+                                    <div className='flex items-center space-x-3'>
+                                      <div className='flex items-center space-x-1'>
+                                        <Clock className='text-muted-foreground h-3 w-3' />
+                                        <span className='text-xs'>{Math.round(course.duration_minutes / 60)}h</span>
+                                      </div>
+                                      <div className='flex items-center space-x-1'>
+                                        <Users className='text-muted-foreground h-3 w-3' />
+                                        <span className='text-xs'>{course.enrollment_count}</span>
+                                      </div>
+                                    </div>
+                                    <Badge variant='outline' className='text-xs'>
+                                      {course.is_published ? 'Disponible' : 'Próximamente'}
+                                    </Badge>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            </Link>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                )
+              })}
             </div>
           )}
+
+          {/* Ver todos los cursos button */}
+          <motion.div
+            className='mt-12 text-center'
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <Button size='lg' variant='outline' asChild>
+              <Link to='/public/courses'>
+                Explorar Todos los Cursos
+                <ArrowRight className='ml-2 h-4 w-4' />
+              </Link>
+            </Button>
+          </motion.div>
         </div>
       </section>
 

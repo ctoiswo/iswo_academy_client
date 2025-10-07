@@ -16,7 +16,7 @@ import { Route as AcademiesRouteImport } from './routes/academies'
 import { Route as ClerkRouteRouteImport } from './routes/clerk/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PublicAcademySlugRouteImport } from './routes/public/$academySlug'
+import { Route as PublicCoursesRouteImport } from './routes/public/courses'
 import { Route as AcademyAcademyIdRouteImport } from './routes/academy/$academyId'
 import { Route as AcademiesSlugRouteImport } from './routes/academies/$slug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -42,6 +42,8 @@ import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
+import { Route as PublicCoursesCourseSlugRouteImport } from './routes/public/courses/$courseSlug'
+import { Route as PublicAcademiesAcademySlugRouteImport } from './routes/public/academies/$academySlug'
 import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/clerk/_authenticated/user-management'
 import { Route as ClerkauthSignUpRouteImport } from './routes/clerk/(auth)/sign-up'
 import { Route as ClerkauthSignInRouteImport } from './routes/clerk/(auth)/sign-in'
@@ -102,9 +104,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PublicAcademySlugRoute = PublicAcademySlugRouteImport.update({
-  id: '/public/$academySlug',
-  path: '/public/$academySlug',
+const PublicCoursesRoute = PublicCoursesRouteImport.update({
+  id: '/public/courses',
+  path: '/public/courses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AcademyAcademyIdRoute = AcademyAcademyIdRouteImport.update({
@@ -233,6 +235,17 @@ const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
   path: '/apps/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const PublicCoursesCourseSlugRoute = PublicCoursesCourseSlugRouteImport.update({
+  id: '/$courseSlug',
+  path: '/$courseSlug',
+  getParentRoute: () => PublicCoursesRoute,
+} as any)
+const PublicAcademiesAcademySlugRoute =
+  PublicAcademiesAcademySlugRouteImport.update({
+    id: '/public/academies/$academySlug',
+    path: '/public/academies/$academySlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ClerkAuthenticatedUserManagementRoute =
   ClerkAuthenticatedUserManagementRouteImport.update({
     id: '/user-management',
@@ -403,7 +416,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/academies/$slug': typeof AcademiesSlugRoute
   '/academy/$academyId': typeof AcademyAcademyIdRouteWithChildren
-  '/public/$academySlug': typeof PublicAcademySlugRoute
+  '/public/courses': typeof PublicCoursesRouteWithChildren
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -426,6 +439,8 @@ export interface FileRoutesByFullPath {
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
+  '/public/academies/$academySlug': typeof PublicAcademiesAcademySlugRoute
+  '/public/courses/$courseSlug': typeof PublicCoursesCourseSlugRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
@@ -459,7 +474,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/academies/$slug': typeof AcademiesSlugRoute
   '/academy/$academyId': typeof AcademyAcademyIdRouteWithChildren
-  '/public/$academySlug': typeof PublicAcademySlugRoute
+  '/public/courses': typeof PublicCoursesRouteWithChildren
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -482,6 +497,8 @@ export interface FileRoutesByTo {
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
+  '/public/academies/$academySlug': typeof PublicAcademiesAcademySlugRoute
+  '/public/courses/$courseSlug': typeof PublicCoursesCourseSlugRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
@@ -520,7 +537,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/academies/$slug': typeof AcademiesSlugRoute
   '/academy/$academyId': typeof AcademyAcademyIdRouteWithChildren
-  '/public/$academySlug': typeof PublicAcademySlugRoute
+  '/public/courses': typeof PublicCoursesRouteWithChildren
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -543,6 +560,8 @@ export interface FileRoutesById {
   '/clerk/(auth)/sign-in': typeof ClerkauthSignInRoute
   '/clerk/(auth)/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/_authenticated/user-management': typeof ClerkAuthenticatedUserManagementRoute
+  '/public/academies/$academySlug': typeof PublicAcademiesAcademySlugRoute
+  '/public/courses/$courseSlug': typeof PublicCoursesCourseSlugRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
@@ -580,7 +599,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/academies/$slug'
     | '/academy/$academyId'
-    | '/public/$academySlug'
+    | '/public/courses'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -603,6 +622,8 @@ export interface FileRouteTypes {
     | '/clerk/sign-in'
     | '/clerk/sign-up'
     | '/clerk/user-management'
+    | '/public/academies/$academySlug'
+    | '/public/courses/$courseSlug'
     | '/apps'
     | '/chats'
     | '/help-center'
@@ -636,7 +657,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/academies/$slug'
     | '/academy/$academyId'
-    | '/public/$academySlug'
+    | '/public/courses'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -659,6 +680,8 @@ export interface FileRouteTypes {
     | '/clerk/sign-in'
     | '/clerk/sign-up'
     | '/clerk/user-management'
+    | '/public/academies/$academySlug'
+    | '/public/courses/$courseSlug'
     | '/apps'
     | '/chats'
     | '/help-center'
@@ -696,7 +719,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/academies/$slug'
     | '/academy/$academyId'
-    | '/public/$academySlug'
+    | '/public/courses'
     | '/_authenticated/errors/$error'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
@@ -719,6 +742,8 @@ export interface FileRouteTypes {
     | '/clerk/(auth)/sign-in'
     | '/clerk/(auth)/sign-up'
     | '/clerk/_authenticated/user-management'
+    | '/public/academies/$academySlug'
+    | '/public/courses/$courseSlug'
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
     | '/_authenticated/help-center/'
@@ -752,7 +777,8 @@ export interface RootRouteChildren {
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
   AcademyAcademyIdRoute: typeof AcademyAcademyIdRouteWithChildren
-  PublicAcademySlugRoute: typeof PublicAcademySlugRoute
+  PublicCoursesRoute: typeof PublicCoursesRouteWithChildren
+  PublicAcademiesAcademySlugRoute: typeof PublicAcademiesAcademySlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -806,11 +832,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/public/$academySlug': {
-      id: '/public/$academySlug'
-      path: '/public/$academySlug'
-      fullPath: '/public/$academySlug'
-      preLoaderRoute: typeof PublicAcademySlugRouteImport
+    '/public/courses': {
+      id: '/public/courses'
+      path: '/public/courses'
+      fullPath: '/public/courses'
+      preLoaderRoute: typeof PublicCoursesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/academy/$academyId': {
@@ -987,6 +1013,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/apps'
       preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/public/courses/$courseSlug': {
+      id: '/public/courses/$courseSlug'
+      path: '/$courseSlug'
+      fullPath: '/public/courses/$courseSlug'
+      preLoaderRoute: typeof PublicCoursesCourseSlugRouteImport
+      parentRoute: typeof PublicCoursesRoute
+    }
+    '/public/academies/$academySlug': {
+      id: '/public/academies/$academySlug'
+      path: '/public/academies/$academySlug'
+      fullPath: '/public/academies/$academySlug'
+      preLoaderRoute: typeof PublicAcademiesAcademySlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/clerk/_authenticated/user-management': {
       id: '/clerk/_authenticated/user-management'
@@ -1325,6 +1365,18 @@ const AcademyAcademyIdRouteChildren: AcademyAcademyIdRouteChildren = {
 const AcademyAcademyIdRouteWithChildren =
   AcademyAcademyIdRoute._addFileChildren(AcademyAcademyIdRouteChildren)
 
+interface PublicCoursesRouteChildren {
+  PublicCoursesCourseSlugRoute: typeof PublicCoursesCourseSlugRoute
+}
+
+const PublicCoursesRouteChildren: PublicCoursesRouteChildren = {
+  PublicCoursesCourseSlugRoute: PublicCoursesCourseSlugRoute,
+}
+
+const PublicCoursesRouteWithChildren = PublicCoursesRoute._addFileChildren(
+  PublicCoursesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -1347,7 +1399,8 @@ const rootRouteChildren: RootRouteChildren = {
   errors500Route: errors500Route,
   errors503Route: errors503Route,
   AcademyAcademyIdRoute: AcademyAcademyIdRouteWithChildren,
-  PublicAcademySlugRoute: PublicAcademySlugRoute,
+  PublicCoursesRoute: PublicCoursesRouteWithChildren,
+  PublicAcademiesAcademySlugRoute: PublicAcademiesAcademySlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
