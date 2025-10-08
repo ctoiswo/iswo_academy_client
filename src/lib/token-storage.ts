@@ -25,26 +25,27 @@ export interface StoredTokens {
  */
 class TokenStorage {
   /**
-   * Store tokens securely in cookies with httpOnly preference
+   * Store tokens - Only refresh token is persisted
+   * Access token should be kept in memory only
    */
   setTokens(tokens: AuthTokens): void {
     try {
       const expiresAt = Date.now() + (tokens.expires_in * 1000)
       
-      // Store tokens in secure cookies
-      setCookie(ACCESS_TOKEN_KEY, tokens.access_token, tokens.expires_in)
-      setCookie(REFRESH_TOKEN_KEY, tokens.refresh_token, tokens.expires_in)
-      setCookie(TOKEN_EXPIRES_KEY, expiresAt.toString(), tokens.expires_in)
-      
-      // Also store in localStorage as fallback (less secure but more reliable)
+      // Only store refresh token in localStorage (persistent across reloads)
       if (typeof localStorage !== 'undefined') {
-        const tokenData: StoredTokens = {
-          access_token: tokens.access_token,
+        const tokenData = {
           refresh_token: tokens.refresh_token,
           expires_at: expiresAt
         }
-        localStorage.setItem('iswo_auth_tokens', JSON.stringify(tokenData))
+        localStorage.setItem('iswo_refresh_token', JSON.stringify(tokenData))
       }
+      
+      // Store refresh token in cookie as fallback
+      setCookie(REFRESH_TOKEN_KEY, tokens.refresh_token, 30 * 24 * 60 * 60) // 30 days for refresh token
+      
+      // NOTE: access_token is NOT persisted - it lives only in memory (auth store state)
+      // This is more secure and prevents issues with expired access tokens on reload
     } catch (error) {
       console.error('Failed to store tokens:', error)
       throw new Error('Token storage failed')
@@ -53,28 +54,30 @@ class TokenStorage {
 
   /**
    * Retrieve tokens from storage
+   * Note: Only refresh token is stored, access token must come from memory
    */
   getTokens(): StoredTokens | null {
     try {
-      // Try to get from cookies first
-      const accessToken = getCookie(ACCESS_TOKEN_KEY)
-      const refreshToken = getCookie(REFRESH_TOKEN_KEY)
-      const expiresAt = getCookie(TOKEN_EXPIRES_KEY)
-
-      if (accessToken && refreshToken && expiresAt) {
-        return {
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          expires_at: parseInt(expiresAt, 10)
+      // Try to get from localStorage first
+      if (typeof localStorage !== 'undefined') {
+        const storedData = localStorage.getItem('iswo_refresh_token')
+        if (storedData) {
+          const tokenData = JSON.parse(storedData)
+          return {
+            access_token: '', // Access token is not persisted
+            refresh_token: tokenData.refresh_token,
+            expires_at: tokenData.expires_at
+          }
         }
       }
 
-      // Fallback to localStorage
-      if (typeof localStorage !== 'undefined') {
-        const storedData = localStorage.getItem('iswo_auth_tokens')
-        if (storedData) {
-          const tokenData: StoredTokens = JSON.parse(storedData)
-          return tokenData
+      // Fallback to cookie
+      const refreshToken = getCookie(REFRESH_TOKEN_KEY)
+      if (refreshToken) {
+        return {
+          access_token: '', // Access token is not persisted
+          refresh_token: refreshToken,
+          expires_at: Date.now() + (30 * 24 * 60 * 60 * 1000) // Assume 30 days
         }
       }
 
@@ -134,6 +137,8 @@ class TokenStorage {
 
       // Clear localStorage
       if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem('iswo_refresh_token')
+        // Also clear old token format for migration
         localStorage.removeItem('iswo_auth_tokens')
       }
     } catch (error) {
@@ -209,6 +214,3 @@ export const getRefreshToken = () => tokenStorage.getRefreshToken()
 export const hasValidTokens = () => tokenStorage.hasValidTokens()
 export const clearTokens = () => tokenStorage.clearTokens()
 export const isTokenExpired = (tokens?: StoredTokens) => tokenStorage.isTokenExpired(tokens)
-
-// Export types
-export type { StoredTokens }

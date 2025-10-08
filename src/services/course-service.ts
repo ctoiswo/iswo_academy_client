@@ -12,6 +12,7 @@ export interface FeaturedCourse {
   duration_minutes: number
   is_published: boolean
   enrollment_count: number
+  slug: string
   creator: {
     id: number
     name: string
@@ -41,26 +42,27 @@ export interface CategoryWithCourses {
  */
 class CourseService {
   /**
-   * Get featured courses
+   * Get featured courses organized by categories
    * @param categoryId - Optional category ID to filter by
-   * @returns Promise with array of featured courses or categories with courses
+   * @returns Promise with array of categories containing courses
    */
-  async getFeaturedCourses(categoryId?: number): Promise<FeaturedCourse[]> {
+  async getFeaturedCourses(categoryId?: number): Promise<CategoryWithCourses[]> {
     const params = categoryId ? { academy_category_id: categoryId } : {}
-    console.log(`Fetching courses for category: ${categoryId}`, params)
+    console.log(`Fetching featured courses for category: ${categoryId}`, params)
     const response = await apiClient.get('/courses/featured', { params })
     console.log(`Featured courses response for category ${categoryId}:`, response.data)
     return response.data
   }
 
   /**
-   * Get featured courses organized by categories
-   * @returns Promise with array of categories containing courses
+   * Get a single course by slug
+   * @param slug - Course slug
+   * @returns Promise with course details
    */
-  async getFeaturedCoursesByCategories(): Promise<CategoryWithCourses[]> {
-    console.log('Fetching featured courses organized by categories')
-    const response = await apiClient.get('/courses/featured')
-    console.log('Featured courses by categories response:', response.data)
+  async getCourseBySlug(slug: string): Promise<FeaturedCourse> {
+    console.log('CourseService.getCourseBySlug called with:', slug)
+    const response = await apiClient.get(`/courses/${slug}`)
+    console.log('CourseService.getCourseBySlug response:', response.data)
     return response.data
   }
 }

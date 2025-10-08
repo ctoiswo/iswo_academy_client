@@ -19,7 +19,7 @@ interface AuthStore {
   getState: () => {
     tokens: AuthTokens | null
     setTokens: (tokens: AuthTokens) => void
-    clearAuth: () => void
+    reset: () => void
     isAuthenticated: boolean
   }
 }
@@ -48,9 +48,30 @@ export class TokenManager {
 
   /**
    * Obtiene el token de refresco actual
+   * Primero intenta desde el estado en memoria, luego desde localStorage
    */
   getRefreshToken(): string | null {
-    return this.authStore?.getState().tokens?.refresh_token || null
+    // Intentar obtener desde el estado en memoria primero
+    const tokenFromState = this.authStore?.getState().tokens?.refresh_token
+    if (tokenFromState) {
+      return tokenFromState
+    }
+    
+    // Si no está en memoria, buscar en localStorage
+    // Esto es necesario durante la inicialización cuando el estado aún está vacío
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const storedData = localStorage.getItem('iswo_refresh_token')
+        if (storedData) {
+          const tokenData = JSON.parse(storedData)
+          return tokenData.refresh_token || null
+        }
+      } catch (error) {
+        console.error('[TokenManager] Error reading refresh token from localStorage:', error)
+      }
+    }
+    
+    return null
   }
 
   /**
@@ -64,7 +85,7 @@ export class TokenManager {
    * Elimina los tokens del almacenamiento
    */
   clearTokens() {
-    this.authStore?.getState().clearAuth()
+    this.authStore?.getState().reset()
     this.refreshPromise = null
   }
 
@@ -217,6 +238,12 @@ class APIClient {
           return Promise.reject(error)
         }
 
+        // Si no hay refresh token disponible, no intentar refrescar
+        // Esto evita bucles infinitos cuando el usuario no está autenticado
+        if (!tokenManager.getRefreshToken()) {
+          return Promise.reject(error)
+        }
+
         // Marcar que ya intentamos refrescar este request
         originalRequest._retry = true
 
@@ -321,4 +348,81 @@ export { apiClient }
  */
 export function setAuthStore(store: AuthStore) {
   tokenManager.setAuthStore(store)
+}
+
+/**
+ * Interfaz para errores de API
+ */
+export interface ApiError {
+  message: string
+  code?: string
+  type?: string
+  status?: number
+  errors?: Record<string, string[]>
+  details?: string[]
+}
+
+/**
+ * Type guard para verificar si un error es de tipo ApiError
+ */
+export function isApiError(error: unknown): error is ApiError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof (error as any).message === 'string'
+  )
+}
+
+/**
+ * Extrae el mensaje de error de diferentes tipos de errores
+ */
+export function getErrorMessage(error: unknown): string {
+  // Si es un error de Axios
+  if (axios.isAxiosError(error)) {
+    // Priorizar el mensaje del backend si existe
+    if (error.response?.data?.message) {
+      return error.response.data.message
+    }
+    
+    // Mensajes por código de estado
+    if (error.response?.status) {
+      switch (error.response.status) {
+        case 400:
+          return 'Solicitud inválida. Por favor verifica los datos.'
+        case 401:
+          return 'No autorizado. Por favor inicia sesión.'
+        case 403:
+          return 'No tienes permisos para realizar esta acción.'
+        case 404:
+          return 'Recurso no encontrado.'
+        case 409:
+          return 'El recurso ya existe.'
+        case 422:
+          return 'Error de validación. Por favor verifica los datos.'
+        case 500:
+          return 'Error del servidor. Por favor intenta más tarde.'
+        case 503:
+          return 'Servicio no disponible. Por favor intenta más tarde.'
+      }
+    }
+    
+    // Si hay un mensaje de error genérico
+    if (error.message) {
+      return error.message
+    }
+  }
+  
+  // Si es nuestro ApiError custom
+  if (isApiError(error)) {
+    return error.message
+  }
+  
+  // Si es un Error estándar
+  if (error instanceof Error) {
+    return error.message
+  }
+  
+  // Fallback
+  return 'Ha ocurrido un error inesperado'
 }

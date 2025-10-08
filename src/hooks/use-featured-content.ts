@@ -28,28 +28,12 @@ export function useFeaturedCourses(categoryId?: number) {
   })
 }
 
-export function useFeaturedCoursesByCategories() {
+export function useCourseBySlug(slug: string) {
   return useQuery({
-    queryKey: ['featured', 'courses', 'by-categories'],
-    queryFn: () => courseService.getFeaturedCoursesByCategories(),
+    queryKey: ['course', slug],
+    queryFn: () => courseService.getCourseBySlug(slug),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
+    enabled: !!slug, // Solo ejecutar si hay slug
   })
-}
-
-export function useFeaturedContent(categoryId?: number) {
-  const academiesQuery = useFeaturedAcademies(categoryId)
-  const coursesQuery = useFeaturedCourses(categoryId)
-
-  return {
-    academies: academiesQuery.data || [],
-    courses: coursesQuery.data || [],
-    isLoading: academiesQuery.isLoading || coursesQuery.isLoading,
-    isError: academiesQuery.isError || coursesQuery.isError,
-    error: academiesQuery.error || coursesQuery.error,
-    refetch: () => {
-      academiesQuery.refetch()
-      coursesQuery.refetch()
-    }
-  }
 }

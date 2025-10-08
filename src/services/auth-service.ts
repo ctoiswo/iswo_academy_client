@@ -8,8 +8,10 @@ export interface AuthUser {
   email: string
   full_name: string
   initials: string
+  avatar_url: string | null
   confirmed: boolean
   is_super_admin: boolean
+  onboarding_completed_at: string | null
   created_at: string
   last_login_at: string | null
 }
@@ -26,8 +28,8 @@ export interface AcademyMembership {
 }
 
 export interface AcademyData {
-  owned: AcademyMembership[]
-  member: AcademyMembership[]
+  count: number
+  academies: AcademyMembership[]
 }
 
 export interface AuthResponse extends AuthTokens {
@@ -47,6 +49,11 @@ export interface RegisterData {
   password_confirmation: string
   first_name: string
   last_name: string
+}
+
+export interface RegisterResponse {
+  message: string
+  user: AuthUser
 }
 
 /**
@@ -72,16 +79,13 @@ class AuthService {
 
   /**
    * Register new user
+   * Note: Registration does NOT return tokens - user must confirm email first
    */
-  async register(userData: RegisterData): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>('/auth/register', userData)
+  async register(userData: RegisterData): Promise<RegisterResponse> {
+    const response = await apiClient.post<RegisterResponse>('/auth/register', userData)
     
-    // Store tokens automatically
-    tokenManager.setTokens({
-      access_token: response.data.access_token,
-      refresh_token: response.data.refresh_token,
-      expires_in: response.data.expires_in,
-    })
+    // Do NOT store tokens - registration requires email confirmation
+    // Tokens will only be provided after successful login with confirmed account
 
     return response.data
   }
@@ -142,7 +146,7 @@ class AuthService {
    * Get current authenticated user
    */
   async getCurrentUser(): Promise<AuthUser> {
-    const response = await apiClient.get<AuthUser>('/auth/me')
+    const response = await apiClient.get<AuthUser>('/users/profile')
     return response.data
   }
 }

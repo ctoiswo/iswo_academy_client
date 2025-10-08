@@ -1,3 +1,6 @@
+import { Link } from '@tanstack/react-router'
+import { BookmarkIcon, HeartIcon, GraduationCapIcon } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -18,6 +21,168 @@ import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 
 export function Dashboard() {
+  const { user, academyData } = useAuthStore()
+  const isGuestUser = !academyData || academyData.count === 0
+
+  // Guest User Dashboard (no academies)
+  if (isGuestUser) {
+    return (
+      <>
+        {/* ===== Top Heading ===== */}
+        <Header>
+          <TopNav links={topNav} />
+          <div className='ms-auto flex items-center space-x-4'>
+            <Search />
+            <ThemeSwitch />
+            <ConfigDrawer />
+            <ProfileDropdown />
+          </div>
+        </Header>
+
+        {/* ===== Main ===== */}
+        <Main>
+          <div className='mb-6 space-y-2'>
+            <h1 className='text-3xl font-bold tracking-tight'>
+              ¡Bienvenido, {user?.first_name}! 👋
+            </h1>
+            <p className='text-muted-foreground text-lg'>
+              Explora cursos, guarda tus favoritos y comienza tu viaje de
+              aprendizaje
+            </p>
+          </div>
+
+          {/* Quick Actions */}
+          <div className='mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+            <Card className='transition-shadow hover:shadow-lg'>
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-sm font-medium'>
+                  Cursos Favoritos
+                </CardTitle>
+                <HeartIcon className='text-muted-foreground h-5 w-5' />
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>0</div>
+                <p className='text-muted-foreground mt-1 text-xs'>
+                  Cursos que te interesan
+                </p>
+                <Button variant='link' className='mt-2 px-0' asChild>
+                  <Link to='/courses'>Ver todos los cursos</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className='transition-shadow hover:shadow-lg'>
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-sm font-medium'>Guardados</CardTitle>
+                <BookmarkIcon className='text-muted-foreground h-5 w-5' />
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>0</div>
+                <p className='text-muted-foreground mt-1 text-xs'>
+                  Para ver más tarde
+                </p>
+                <Button variant='link' className='mt-2 px-0' asChild>
+                  <Link to='/courses'>Explorar cursos</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className='transition-shadow hover:shadow-lg'>
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-sm font-medium'>
+                  Crear Academia
+                </CardTitle>
+                <GraduationCapIcon className='text-muted-foreground h-5 w-5' />
+              </CardHeader>
+              <CardContent>
+                <p className='text-muted-foreground mt-1 text-sm'>
+                  ¿Quieres crear tu propia academia?
+                </p>
+                <Button className='mt-3 w-full'>Crear Academia</Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main Content Area */}
+          <Tabs defaultValue='recommended' className='space-y-4'>
+            <TabsList>
+              <TabsTrigger value='recommended'>Recomendados</TabsTrigger>
+              <TabsTrigger value='favorites'>Mis Favoritos</TabsTrigger>
+              <TabsTrigger value='saved'>Guardados</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value='recommended' className='space-y-4'>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Cursos Recomendados</CardTitle>
+                  <CardDescription>
+                    Cursos populares que podrían interesarte
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className='py-12 text-center'>
+                    <GraduationCapIcon className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
+                    <p className='text-muted-foreground'>
+                      Estamos cargando cursos recomendados para ti...
+                    </p>
+                    <Button className='mt-4' asChild>
+                      <Link to='/courses'>Explorar todos los cursos</Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value='favorites' className='space-y-4'>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Mis Cursos Favoritos</CardTitle>
+                  <CardDescription>
+                    Cursos que has marcado como favoritos
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className='py-12 text-center'>
+                    <HeartIcon className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
+                    <p className='text-muted-foreground mb-2'>
+                      Aún no tienes cursos favoritos
+                    </p>
+                    <p className='text-muted-foreground text-sm'>
+                      Explora cursos y márcalos como favoritos para verlos aquí
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value='saved' className='space-y-4'>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Cursos Guardados</CardTitle>
+                  <CardDescription>
+                    Cursos que guardaste para ver más tarde
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className='py-12 text-center'>
+                    <BookmarkIcon className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
+                    <p className='text-muted-foreground mb-2'>
+                      No has guardado ningún curso aún
+                    </p>
+                    <p className='text-muted-foreground text-sm'>
+                      Guarda cursos interesantes para revisarlos después
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </Main>
+      </>
+    )
+  }
+
+  // Regular Dashboard (with academies)
   return (
     <>
       {/* ===== Top Heading ===== */}

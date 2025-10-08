@@ -164,7 +164,7 @@ export function AnimatedAuthLayout({
               className={`absolute top-6 ${reversed ? 'right-6' : 'left-6'}`}
               variants={itemVariants}
             >
-              <CustomButton variant="ghost" className="text-white hover:bg-white/10 border-white/20 border" asChild>
+              <CustomButton variant="ghost" className="" asChild>
                 <Link to='/'>
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Volver al inicio

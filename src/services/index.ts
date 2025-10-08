@@ -16,11 +16,16 @@ export type {
   AuthResponse, 
   LoginCredentials, 
   RegisterData,
+  RegisterResponse,
   AcademyData,
   AcademyMembership 
 } from './auth-service'
 
-export type { FeaturedAcademy } from './academy-service'
+export type { 
+  FeaturedAcademy,
+  FeaturedAcademiesByCategory,
+  AcademyCategory as AcademyCategoryFromService
+} from './academy-service'
 
 export type { 
   AcademyCategory,

@@ -1,7 +1,24 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
-import { GraduationCap, ArrowLeft } from 'lucide-react'
+import {
+  GraduationCap,
+  ArrowLeft,
+  LogOut,
+  Settings,
+  LayoutDashboard,
+} from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { ThemeSwitch } from '@/components/theme-switch'
 
 interface PublicHeaderProps {
   showBackButton?: boolean
@@ -55,14 +72,86 @@ export function PublicHeader({
         </nav>
 
         <div className='flex items-center space-x-4'>
-          <Button variant='ghost' asChild>
-            <Link to='/sign-in'>Iniciar Sesión</Link>
-          </Button>
-          <Button asChild>
-            <Link to='/sign-up'>Registrarse</Link>
-          </Button>
+          <ThemeSwitch />
+          <UserMenu />
         </div>
       </div>
     </header>
+  )
+}
+
+/**
+ * UserMenu component - Shows login/register buttons or user avatar
+ */
+function UserMenu() {
+  const { isAuthenticated, user, logout } = useAuthStore()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    await logout()
+    navigate({ to: '/' })
+  }
+
+  // Show user avatar and menu when authenticated
+  if (isAuthenticated && user) {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant='ghost' className='relative h-10 w-10 rounded-full'>
+            <Avatar className='h-10 w-10'>
+              <AvatarImage
+                src={user.avatar_url || undefined}
+                alt={user.full_name}
+              />
+              <AvatarFallback className='bg-primary text-primary-foreground'>
+                {user.initials}
+              </AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className='w-56' align='end' forceMount>
+          <DropdownMenuLabel className='font-normal'>
+            <div className='flex flex-col space-y-1'>
+              <p className='text-sm leading-none font-medium'>
+                {user.full_name}
+              </p>
+              <p className='text-muted-foreground text-xs leading-none'>
+                {user.email}
+              </p>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link to='/dashboard' className='cursor-pointer'>
+              <LayoutDashboard className='mr-2 h-4 w-4' />
+              Dashboard
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to='/settings' className='cursor-pointer'>
+              <Settings className='mr-2 h-4 w-4' />
+              Configuración
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={handleLogout} className='cursor-pointer'>
+            <LogOut className='mr-2 h-4 w-4' />
+            Cerrar Sesión
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
+  }
+
+  // Show login/register buttons when not authenticated
+  return (
+    <>
+      <Button variant='ghost' asChild>
+        <Link to='/sign-in'>Iniciar Sesión</Link>
+      </Button>
+      <Button asChild>
+        <Link to='/sign-up'>Registrarse</Link>
+      </Button>
+    </>
   )
 }

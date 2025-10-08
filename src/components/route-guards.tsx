@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
-import { Skeleton } from '@/components/ui/skeleton'
 import { validateRouteAccess } from '@/lib/permissions'
 import type { AcademyRole, Permission } from '@/lib/permissions'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface RouteGuardProps {
   children: React.ReactNode
@@ -16,22 +16,22 @@ interface RouteGuardProps {
  * Handles academy-aware routing decisions based on user's academy memberships
  */
 export function AuthGuard({ children, fallback }: RouteGuardProps) {
-  const { 
-    isAuthenticated, 
-    isLoading, 
-    user, 
-    initialize, 
-    academyData, 
-    currentAcademy 
+  const {
+    isAuthenticated,
+    isLoading,
+    isInitialized,
+    initialize,
+    academyData,
+    currentAcademy,
   } = useAuthStore()
   const router = useRouter()
 
   useEffect(() => {
-    // Initialize auth state if not already done
-    if (!isAuthenticated && !isLoading && !user) {
+    // Initialize auth state only once if not already initialized
+    if (!isInitialized && !isLoading) {
       initialize()
     }
-  }, [isAuthenticated, isLoading, user, initialize])
+  }, [isInitialized, isLoading, initialize])
 
   useEffect(() => {
     // Redirect to sign-in if not authenticated and not loading
@@ -43,35 +43,39 @@ export function AuthGuard({ children, fallback }: RouteGuardProps) {
     // Handle academy-aware routing for authenticated users
     if (!isLoading && isAuthenticated && academyData) {
       const currentPath = router.state.location.pathname
-      
-      // Skip academy routing logic if already on academy-specific routes
-      if (currentPath.startsWith('/academy/') || 
-          currentPath === '/academy-selection' || 
-          currentPath === '/create-academy') {
+
+      // Skip academy routing logic if already on academy-specific routes or dashboard
+      if (
+        currentPath.startsWith('/academy/') ||
+        currentPath === '/academy-selection' ||
+        currentPath === '/create-academy' ||
+        currentPath === '/dashboard'
+      ) {
         return
       }
 
-      // Handle routing based on academy count
+      // Handle routing based on academy count (only for root path '/')
       if (academyData.count === 0) {
-        // No academies - redirect to academy creation
-        if (currentPath === '/dashboard' || currentPath === '/') {
-          router.navigate({ to: '/create-academy' })
+        // No academies - allow access to dashboard (guest student)
+        // Only redirect from root path
+        if (currentPath === '/') {
+          router.navigate({ to: '/dashboard' })
         }
       } else if (academyData.count === 1) {
         // Single academy - auto-redirect to academy dashboard
         const singleAcademy = academyData.academies[0]
-        if (currentPath === '/dashboard' || currentPath === '/') {
-          router.navigate({ 
+        if (currentPath === '/') {
+          router.navigate({
             to: `/academy/${singleAcademy.id}/dashboard`,
-            replace: true 
+            replace: true,
           })
         }
       } else if (academyData.count > 1) {
         // Multiple academies - show academy selection if no current academy selected
-        if (!currentAcademy && (currentPath === '/dashboard' || currentPath === '/')) {
-          router.navigate({ 
+        if (!currentAcademy && currentPath === '/') {
+          router.navigate({
             to: '/academy-selection',
-            replace: true 
+            replace: true,
           })
         }
       }
@@ -97,34 +101,29 @@ export function AuthGuard({ children, fallback }: RouteGuardProps) {
  * Handles academy-aware redirects for authenticated users
  */
 export function GuestGuard({ children, fallback }: RouteGuardProps) {
-  const { 
-    isAuthenticated, 
-    isLoading, 
-    user, 
-    initialize, 
-    academyData, 
-    currentAcademy 
+  const {
+    isAuthenticated,
+    isLoading,
+    isInitialized,
+    initialize,
+    academyData,
+    currentAcademy,
   } = useAuthStore()
   const router = useRouter()
 
   useEffect(() => {
-    // For guest routes, only initialize if we have some indication of existing auth
-    // This prevents unnecessary loading states during sign-up/sign-in
-    if (!isAuthenticated && !isLoading && !user) {
-      // Delayed initialization to avoid blocking the UI
-      const timer = setTimeout(() => {
-        initialize()
-      }, 100)
-      return () => clearTimeout(timer)
+    // Initialize auth state only once if not already initialized
+    if (!isInitialized && !isLoading) {
+      initialize()
     }
-  }, [isAuthenticated, isLoading, user, initialize])
+  }, [isInitialized, isLoading, initialize])
 
   useEffect(() => {
     // Redirect authenticated users based on their academy status
     if (!isLoading && isAuthenticated && academyData) {
       if (academyData.count === 0) {
-        // No academies - redirect to academy creation
-        router.navigate({ to: '/create-academy' })
+        // No academies - redirect to dashboard (guest student)
+        router.navigate({ to: '/dashboard' })
       } else if (academyData.count === 1) {
         // Single academy - redirect to academy dashboard
         const singleAcademy = academyData.academies[0]
@@ -145,7 +144,7 @@ export function GuestGuard({ children, fallback }: RouteGuardProps) {
 
   // For guest routes, show loading only if we're actively checking existing authentication
   // This prevents showing loading on fresh visits to sign-up/sign-in pages
-  if (isLoading && user) {
+  if (isLoading) {
     return fallback || <GuestLoadingFallback />
   }
 
@@ -162,15 +161,16 @@ export function GuestGuard({ children, fallback }: RouteGuardProps) {
  * Redirects non-admin users to the dashboard
  */
 export function AdminGuard({ children, fallback }: RouteGuardProps) {
-  const { isAuthenticated, isLoading, user, initialize } = useAuthStore()
+  const { isAuthenticated, isLoading, isInitialized, user, initialize } =
+    useAuthStore()
   const router = useRouter()
 
   useEffect(() => {
-    // Initialize auth state if not already done
-    if (!isAuthenticated && !isLoading && !user) {
+    // Initialize auth state only once if not already initialized
+    if (!isInitialized && !isLoading) {
       initialize()
     }
-  }, [isAuthenticated, isLoading, user, initialize])
+  }, [isInitialized, isLoading, initialize])
 
   useEffect(() => {
     // Redirect to sign-in if not authenticated
@@ -209,31 +209,31 @@ interface AcademyGuardProps extends RouteGuardProps {
  * AcademyGuard component that protects academy-specific routes
  * Validates user has access to the specified academy and optional role/permission requirements
  */
-export function AcademyGuard({ 
-  children, 
-  fallback, 
-  academyId, 
+export function AcademyGuard({
+  children,
+  fallback,
+  academyId,
   requiredRole,
   requiredPermission,
-  showUnauthorized = false
+  showUnauthorized = false,
 }: AcademyGuardProps) {
-  const { 
-    isAuthenticated, 
-    isLoading, 
-    user, 
-    initialize, 
-    academyData, 
+  const {
+    isAuthenticated,
+    isLoading,
+    isInitialized,
+    initialize,
+    academyData,
     currentAcademy,
-    selectAcademy 
+    selectAcademy,
   } = useAuthStore()
   const router = useRouter()
 
   useEffect(() => {
-    // Initialize auth state if not already done
-    if (!isAuthenticated && !isLoading && !user) {
+    // Initialize auth state only once if not already initialized
+    if (!isInitialized && !isLoading) {
       initialize()
     }
-  }, [isAuthenticated, isLoading, user, initialize])
+  }, [isInitialized, isLoading, initialize])
 
   useEffect(() => {
     // Redirect to sign-in if not authenticated
@@ -244,18 +244,19 @@ export function AcademyGuard({
 
     // Handle academy access validation for authenticated users
     if (!isLoading && isAuthenticated && academyData && academyId) {
-      const academyIdNum = typeof academyId === 'string' ? parseInt(academyId, 10) : academyId
-      
+      const academyIdNum =
+        typeof academyId === 'string' ? parseInt(academyId, 10) : academyId
+
       const validation = validateRouteAccess(
         academyData.academies,
         academyIdNum,
         requiredRole as AcademyRole,
         requiredPermission as Permission
       )
-      
+
       if (!validation.hasAccess) {
         console.warn('Academy access denied:', validation.reason)
-        
+
         if (validation.reason === 'Not a member of this academy') {
           // User doesn't have access to this academy - redirect to academy selection
           router.navigate({ to: '/academy-selection' })
@@ -272,15 +273,15 @@ export function AcademyGuard({
       }
     }
   }, [
-    isAuthenticated, 
-    isLoading, 
-    router, 
-    academyData, 
-    academyId, 
+    isAuthenticated,
+    isLoading,
+    router,
+    academyData,
+    academyId,
     requiredRole,
     requiredPermission,
-    currentAcademy, 
-    selectAcademy
+    currentAcademy,
+    selectAcademy,
   ])
 
   // Show loading state while checking authentication and academy access
@@ -295,24 +296,37 @@ export function AcademyGuard({
 
   // Don't render children if academy validation is still in progress
   if (academyId && academyData) {
-    const academyIdNum = typeof academyId === 'string' ? parseInt(academyId, 10) : academyId
-    
+    const academyIdNum =
+      typeof academyId === 'string' ? parseInt(academyId, 10) : academyId
+
     // Use synchronous validation for rendering decision
-    const academyMembership = academyData.academies.find(a => a.id === academyIdNum)
-    
+    const academyMembership = academyData.academies.find(
+      (a) => a.id === academyIdNum
+    )
+
     if (!academyMembership) {
-      return showUnauthorized ? <UnauthorizedFallback reason="Not a member of this academy" /> : null
+      return showUnauthorized ? (
+        <UnauthorizedFallback reason='Not a member of this academy' />
+      ) : null
     }
 
     // Basic role check (more detailed validation happens in useEffect)
     if (requiredRole && academyMembership.user_role !== requiredRole) {
       // Allow higher roles to access lower role requirements
-      const roleHierarchy: Record<string, number> = { student: 1, teacher: 2, admin: 3 }
+      const roleHierarchy: Record<string, number> = {
+        student: 1,
+        teacher: 2,
+        admin: 3,
+      }
       const userLevel = roleHierarchy[academyMembership.user_role] || 0
       const requiredLevel = roleHierarchy[requiredRole] || 0
-      
+
       if (userLevel < requiredLevel) {
-        return showUnauthorized ? <UnauthorizedFallback reason={`Insufficient role: ${academyMembership.user_role}`} /> : null
+        return showUnauthorized ? (
+          <UnauthorizedFallback
+            reason={`Insufficient role: ${academyMembership.user_role}`}
+          />
+        ) : null
       }
     }
   }
@@ -325,16 +339,16 @@ export function AcademyGuard({
  */
 function AuthLoadingFallback() {
   return (
-    <div className="flex h-screen w-full items-center justify-center">
-      <div className="flex flex-col items-center space-y-4">
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
+    <div className='flex h-screen w-full items-center justify-center'>
+      <div className='flex flex-col items-center space-y-4'>
+        <div className='flex items-center space-x-4'>
+          <Skeleton className='h-12 w-12 rounded-full' />
+          <div className='space-y-2'>
+            <Skeleton className='h-4 w-[250px]' />
+            <Skeleton className='h-4 w-[200px]' />
           </div>
         </div>
-        <div className="text-sm text-muted-foreground">
+        <div className='text-muted-foreground text-sm'>
           Checking authentication...
         </div>
       </div>
@@ -348,13 +362,13 @@ function AuthLoadingFallback() {
  */
 function GuestLoadingFallback() {
   return (
-    <div className="flex h-screen w-full items-center justify-center">
-      <div className="flex flex-col items-center space-y-4">
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
+    <div className='flex h-screen w-full items-center justify-center'>
+      <div className='flex flex-col items-center space-y-4'>
+        <div className='flex items-center space-x-4'>
+          <Skeleton className='h-12 w-12 rounded-full' />
+          <div className='space-y-2'>
+            <Skeleton className='h-4 w-[250px]' />
+            <Skeleton className='h-4 w-[200px]' />
           </div>
         </div>
       </div>
@@ -367,25 +381,25 @@ function GuestLoadingFallback() {
  */
 function UnauthorizedFallback({ reason }: { reason: string }) {
   const router = useRouter()
-  
+
   return (
-    <div className="flex h-screen w-full items-center justify-center">
-      <div className="flex flex-col items-center space-y-4 text-center max-w-md">
-        <div className="text-6xl">🚫</div>
-        <h1 className="text-2xl font-bold">Access Denied</h1>
-        <p className="text-muted-foreground">
+    <div className='flex h-screen w-full items-center justify-center'>
+      <div className='flex max-w-md flex-col items-center space-y-4 text-center'>
+        <div className='text-6xl'>🚫</div>
+        <h1 className='text-2xl font-bold'>Access Denied</h1>
+        <p className='text-muted-foreground'>
           {reason || 'You do not have permission to access this page.'}
         </p>
-        <div className="flex space-x-2">
-          <button 
+        <div className='flex space-x-2'>
+          <button
             onClick={() => router.history.back()}
-            className="px-4 py-2 text-sm bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80"
+            className='bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-md px-4 py-2 text-sm'
           >
             Go Back
           </button>
-          <button 
+          <button
             onClick={() => router.navigate({ to: '/academy-selection' })}
-            className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+            className='bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2 text-sm'
           >
             Select Academy
           </button>
@@ -458,8 +472,8 @@ export function withAcademyGuard<P extends object>(
 ) {
   return function AcademyGuardedComponent(props: P) {
     return (
-      <AcademyGuard 
-        academyId={options?.academyId} 
+      <AcademyGuard
+        academyId={options?.academyId}
         requiredRole={options?.requiredRole}
         requiredPermission={options?.requiredPermission}
         showUnauthorized={options?.showUnauthorized}
@@ -484,7 +498,7 @@ export function withPermission<P extends object>(
     // This would use the permission hook to check access
     // For now, we'll use the AcademyGuard with permission
     return (
-      <AcademyGuard 
+      <AcademyGuard
         academyId={academyId}
         requiredPermission={permission}
         fallback={fallback}

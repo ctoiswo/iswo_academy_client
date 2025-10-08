@@ -7,7 +7,15 @@
  */
 
 // Exportar el cliente principal y utilidades
-export { default, apiClient, tokenManager, setAuthStore } from './api-client-base'
+export { 
+  default, 
+  apiClient, 
+  tokenManager, 
+  setAuthStore,
+  isApiError,
+  getErrorMessage
+} from './api-client-base'
 
 // Re-exportar tipos útiles
 export type { AuthTokens } from '@/stores/auth-store'
+export type { ApiError } from './api-client-base'

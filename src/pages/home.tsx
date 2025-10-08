@@ -11,6 +11,12 @@ import {
   Loader2,
   AlertCircle,
 } from 'lucide-react'
+import {
+  useFeaturedAcademies,
+  useAcademyCategories,
+  useFeaturedCourses,
+} from '@/hooks/use-featured-content'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,23 +27,26 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { PublicHeader } from '@/components/layout/public-header'
-import { useFeaturedAcademies, useAcademyCategories, useFeaturedCoursesByCategories } from '@/hooks/use-featured-content'
 
 export function HomePage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
-  
+
   // Fetch categories and featured content from backend
   const categoriesQuery = useAcademyCategories()
-  const { data: academies, isLoading, isError, refetch } = useFeaturedAcademies(selectedCategory || undefined)
-  
+  const {
+    data: academiesByCategory,
+    isLoading,
+    isError,
+    refetch,
+  } = useFeaturedAcademies(selectedCategory || undefined)
+
   // Fetch courses organized by categories from backend
-  const coursesByCategoriesQuery = useFeaturedCoursesByCategories()
+  const coursesByCategoriesQuery = useFeaturedCourses(
+    selectedCategory || undefined
+  )
   const coursesByCategories = coursesByCategoriesQuery.data || []
-  
-  console.log('Courses by categories:', coursesByCategories)
 
   // Helper function to format price from string
   const formatPrice = (priceString: string) => {
@@ -50,7 +59,7 @@ export function HomePage() {
     const levels = {
       beginner: 'Principiante',
       intermediate: 'Intermedio',
-      advanced: 'Avanzado'
+      advanced: 'Avanzado',
     }
     return levels[level as keyof typeof levels] || level
   }
@@ -71,7 +80,11 @@ export function HomePage() {
   // Create categories array with "Todas" option plus real categories
   const allCategories = [
     { id: null, name: 'Todas las categorías', slug: 'all' },
-    ...(categoriesQuery.data || []).map(cat => ({ id: cat.id, name: cat.name, slug: cat.slug }))
+    ...(categoriesQuery.data || []).map((cat) => ({
+      id: cat.id,
+      name: cat.name,
+      slug: cat.slug,
+    })),
   ]
 
   return (
@@ -145,7 +158,9 @@ export function HomePage() {
           {categoriesQuery.isLoading ? (
             <div className='flex items-center justify-center py-4'>
               <Loader2 className='h-6 w-6 animate-spin' />
-              <span className='ml-2 text-muted-foreground'>Cargando categorías...</span>
+              <span className='text-muted-foreground ml-2'>
+                Cargando categorías...
+              </span>
             </div>
           ) : (
             <div className='flex flex-wrap justify-center gap-4'>
@@ -193,83 +208,125 @@ export function HomePage() {
           {isLoading ? (
             <div className='col-span-full flex items-center justify-center py-12'>
               <Loader2 className='h-8 w-8 animate-spin' />
-              <span className='ml-2 text-muted-foreground'>Cargando academias...</span>
+              <span className='text-muted-foreground ml-2'>
+                Cargando academias...
+              </span>
             </div>
           ) : isError ? (
             <div className='col-span-full'>
               <Alert variant='destructive'>
                 <AlertCircle className='h-4 w-4' />
                 <AlertDescription>
-                  Error al cargar las academias destacadas. {' '}
+                  Error al cargar las academias destacadas.{' '}
                   <Button variant='outline' size='sm' onClick={() => refetch()}>
                     Reintentar
                   </Button>
                 </AlertDescription>
               </Alert>
             </div>
-          ) : academies && academies.length > 0 ? (
-            <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
-              {academies.map((academy, index) => (
-                <motion.div
-                  key={academy.id}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ y: -10 }}
-                >
-                  <Link to='/public/academies/$academySlug' params={{ academySlug: academy.slug }}>
-                    <Card className='group h-full cursor-pointer overflow-hidden'>
-                      <div className='relative'>
-                        <img
-                          src={academy.logo_url || 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'}
-                          alt={academy.name}
-                          className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
-                        />
-                        <div className='absolute top-4 left-4'>
-                          <Badge variant='secondary'>{academy.is_public ? 'Público' : 'Privado'}</Badge>
-                        </div>
-                      </div>
-                      <CardHeader>
-                        <CardTitle className='line-clamp-1'>
-                          {academy.name}
-                        </CardTitle>
-                        <CardDescription className='line-clamp-2'>
-                          {academy.description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className='space-y-4'>
-                          <div className='flex items-center justify-between text-sm'>
-                            <span className='text-muted-foreground'>
-                              Por {academy?.creator?.name}
-                            </span>
-                            <div className='flex items-center space-x-1 text-sm'>
-                              <span className='text-muted-foreground'>Desde {formatPrice(academy.monthly_price)}/mes</span>
-                            </div>
-                          </div>
-                          <div className='flex items-center justify-between text-sm'>
-                            <div className='flex items-center space-x-4'>
-                              <div className='flex items-center space-x-1'>
-                                <Users className='text-muted-foreground h-4 w-4' />
-                                <span>{academy.student_count.toLocaleString()}</span>
+          ) : academiesByCategory && academiesByCategory.length > 0 ? (
+            <div className='space-y-16'>
+              {academiesByCategory.map((categoryData, categoryIndex) => {
+                const { category, academies } = categoryData
+
+                // Skip empty categories
+                if (!academies || academies.length === 0) return null
+
+                return (
+                  <motion.div
+                    key={category.id}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: categoryIndex * 0.2 }}
+                  >
+                    <div className='mb-8'>
+                      <h3 className='mb-2 text-2xl font-bold'>
+                        {category.name}
+                      </h3>
+                      <p className='text-muted-foreground'>
+                        {category.description}
+                      </p>
+                    </div>
+
+                    <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
+                      {academies.map((academy, index) => (
+                        <motion.div
+                          key={academy.id}
+                          initial={{ opacity: 0, y: 50 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.6, delay: index * 0.1 }}
+                          whileHover={{ y: -10 }}
+                        >
+                          <Link
+                            to='/academies/$slug'
+                            params={{ slug: academy.slug }}
+                          >
+                            <Card className='group h-full cursor-pointer overflow-hidden'>
+                              <div className='relative'>
+                                <img
+                                  src={
+                                    academy.logo_url ||
+                                    'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'
+                                  }
+                                  alt={academy.name}
+                                  className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                                />
+                                <div className='absolute top-4 right-4'>
+                                  <div className='rounded bg-black/70 px-2 py-1 text-xs font-medium text-white'>
+                                    Desde {formatPrice(academy.monthly_price)}
+                                    /mes
+                                  </div>
+                                </div>
                               </div>
-                              <div className='flex items-center space-x-1'>
-                                <BookOpen className='text-muted-foreground h-4 w-4' />
-                                <span>{academy.course_count} cursos</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </motion.div>
-              ))}
+                              <CardHeader>
+                                <CardTitle className='line-clamp-1'>
+                                  {academy.name}
+                                </CardTitle>
+                                <CardDescription className='line-clamp-2'>
+                                  {academy.description}
+                                </CardDescription>
+                              </CardHeader>
+                              <CardContent>
+                                <div className='space-y-4'>
+                                  <div className='flex items-center justify-between text-sm'>
+                                    <span className='text-muted-foreground'>
+                                      Por {academy?.creator?.name}
+                                    </span>
+                                  </div>
+                                  <div className='flex items-center justify-between text-sm'>
+                                    <div className='flex items-center space-x-4'>
+                                      <div className='flex items-center space-x-1'>
+                                        <Users className='text-muted-foreground h-4 w-4' />
+                                        <span>
+                                          {academy.student_count.toLocaleString()}
+                                        </span>
+                                      </div>
+                                      <div className='flex items-center space-x-1'>
+                                        <BookOpen className='text-muted-foreground h-4 w-4' />
+                                        <span>
+                                          {academy.course_count} cursos
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )
+              })}
             </div>
           ) : (
-            <div className='col-span-full text-center py-12'>
-              <p className='text-muted-foreground'>No se encontraron academias destacadas.</p>
+            <div className='col-span-full py-12 text-center'>
+              <p className='text-muted-foreground'>
+                No se encontraron academias destacadas.
+              </p>
             </div>
           )}
 
@@ -305,14 +362,17 @@ export function HomePage() {
               Cursos Populares por Categoría
             </h2>
             <p className='text-muted-foreground mt-4 text-lg'>
-              Explora los cursos más destacados organizados por áreas de conocimiento
+              Explora los cursos más destacados organizados por áreas de
+              conocimiento
             </p>
           </motion.div>
 
           {categoriesQuery.isLoading ? (
             <div className='flex items-center justify-center py-12'>
               <Loader2 className='h-8 w-8 animate-spin' />
-              <span className='ml-2 text-muted-foreground'>Cargando categorías...</span>
+              <span className='text-muted-foreground ml-2'>
+                Cargando categorías...
+              </span>
             </div>
           ) : (
             <div className='space-y-16'>
@@ -331,67 +391,93 @@ export function HomePage() {
                     transition={{ duration: 0.6, delay: categoryIndex * 0.2 }}
                   >
                     <div className='mb-8'>
-                      <h3 className='text-2xl font-bold mb-2'>{category.name}</h3>
-                      <p className='text-muted-foreground'>{category.description}</p>
+                      <h3 className='mb-2 text-2xl font-bold'>
+                        {category.name}
+                      </h3>
+                      <p className='text-muted-foreground'>
+                        {category.description}
+                      </p>
                     </div>
 
                     <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
                       {courses.map((course, courseIndex) => (
-                          <motion.div
-                            key={course.id}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.4, delay: courseIndex * 0.1 }}
-                            whileHover={{ y: -5 }}
+                        <motion.div
+                          key={course.id}
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{
+                            duration: 0.4,
+                            delay: courseIndex * 0.1,
+                          }}
+                          whileHover={{ y: -5 }}
+                        >
+                          <Link
+                            to='/courses/$courseSlug'
+                            params={{ courseSlug: generateCourseSlug(course) }}
                           >
-                            <Link to='/public/courses/$courseSlug' params={{ courseSlug: generateCourseSlug(course) }}>
-                              <Card className='group h-full cursor-pointer overflow-hidden'>
-                                <div className='relative'>
-                                  <img
-                                    src={course?.thumbnail_url || 'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'}
-                                    alt={course?.title}
-                                    className='h-40 w-full object-cover transition-transform duration-300 group-hover:scale-105'
-                                  />
-                                  <div className='absolute top-3 left-3'>
-                                    <Badge variant='secondary'>{formatDifficulty(course?.difficulty_level)}</Badge>
-                                  </div>
-                                  <div className='absolute top-3 right-3'>
-                                    <div className='rounded bg-black/70 px-2 py-1 text-xs font-medium text-white'>
-                                      {course?.is_free ? 'Gratis' : formatPrice(course?.price)}
-                                    </div>
+                            <Card className='group h-full cursor-pointer overflow-hidden'>
+                              <div className='relative'>
+                                <img
+                                  src={
+                                    course?.thumbnail_url ||
+                                    'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'
+                                  }
+                                  alt={course?.title}
+                                  className='h-40 w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                                />
+                                <div className='absolute top-3 left-3'>
+                                  <Badge variant='secondary'>
+                                    {formatDifficulty(course?.difficulty_level)}
+                                  </Badge>
+                                </div>
+                                <div className='absolute top-3 right-3'>
+                                  <div className='rounded bg-black/70 px-2 py-1 text-xs font-medium text-white'>
+                                    {course?.is_free
+                                      ? 'Gratis'
+                                      : formatPrice(course?.price)}
                                   </div>
                                 </div>
-                                <CardHeader className='pb-4'>
-                                  <CardTitle className='line-clamp-2 text-lg'>
-                                    {course?.title}
-                                  </CardTitle>
-                                  <CardDescription className='line-clamp-1 text-sm'>
-                                    Por {course?.creator?.name}
-                                  </CardDescription>
-                                </CardHeader>
-                                <CardContent className='pt-0'>
-                                  <div className='flex items-center justify-between text-sm'>
-                                    <div className='flex items-center space-x-3'>
-                                      <div className='flex items-center space-x-1'>
-                                        <Clock className='text-muted-foreground h-3 w-3' />
-                                        <span className='text-xs'>{Math.round(course?.duration_minutes / 60)}h</span>
-                                      </div>
-                                      <div className='flex items-center space-x-1'>
-                                        <Users className='text-muted-foreground h-3 w-3' />
-                                        <span className='text-xs'>{course?.enrollment_count}</span>
-                                      </div>
+                              </div>
+                              <CardHeader className='pb-4'>
+                                <CardTitle className='line-clamp-2 text-lg'>
+                                  {course?.title}
+                                </CardTitle>
+                                <CardDescription className='line-clamp-1 text-sm'>
+                                  Por {course?.creator?.name}
+                                </CardDescription>
+                              </CardHeader>
+                              <CardContent className='pt-0'>
+                                <div className='flex items-center justify-between text-sm'>
+                                  <div className='flex items-center space-x-3'>
+                                    <div className='flex items-center space-x-1'>
+                                      <Clock className='text-muted-foreground h-3 w-3' />
+                                      <span className='text-xs'>
+                                        {Math.round(
+                                          course?.duration_minutes / 60
+                                        )}
+                                        h
+                                      </span>
                                     </div>
-                                    <Badge variant='outline' className='text-xs'>
-                                      {course?.is_published ? 'Disponible' : 'Próximamente'}
-                                    </Badge>
+                                    <div className='flex items-center space-x-1'>
+                                      <Users className='text-muted-foreground h-3 w-3' />
+                                      <span className='text-xs'>
+                                        {course?.enrollment_count}
+                                      </span>
+                                    </div>
                                   </div>
-                                </CardContent>
-                              </Card>
-                            </Link>
-                          </motion.div>
-                        ))}
-                      </div>
+                                  <Badge variant='outline' className='text-xs'>
+                                    {course?.is_published
+                                      ? 'Disponible'
+                                      : 'Próximamente'}
+                                  </Badge>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </div>
                   </motion.div>
                 )
               })}
@@ -407,7 +493,7 @@ export function HomePage() {
             transition={{ duration: 0.6 }}
           >
             <Button size='lg' variant='outline' asChild>
-              <Link to='/public/courses'>
+              <Link to='/courses'>
                 Explorar Todos los Cursos
                 <ArrowRight className='ml-2 h-4 w-4' />
               </Link>

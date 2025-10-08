@@ -11,7 +11,11 @@ import {
   Heart,
   Share2,
   Award,
+  Loader2,
+  AlertCircle,
 } from 'lucide-react'
+import { useAcademy } from '@/hooks/use-academy'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -23,76 +27,111 @@ import {
 } from '@/components/ui/card'
 
 export function PublicAcademyPage() {
-  const { academySlug } = useParams({ strict: false })
+  const { slug } = useParams({ strict: false })
 
-  // Mock data - esto vendría del backend basado en el slug
-  const academy = {
-    id: 1,
-    name: 'Academia de Marketing Digital Pro',
-    slug: 'marketing-digital-pro',
-    description:
-      'La academia más completa para dominar el marketing digital. Aprende desde los fundamentos hasta las estrategias más avanzadas con instructores expertos y casos reales.',
-    instructor: {
-      name: 'María González',
-      bio: 'Especialista en Marketing Digital con más de 10 años de experiencia. Ha trabajado con marcas reconocidas y ha formado a más de 5,000 estudiantes.',
-      avatar:
-        'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
-    },
-    students: 1250,
-    rating: 4.8,
-    totalRatings: 234,
-    coursesCount: 12,
-    image:
-      'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=1260&h=400&dpr=2',
-    category: 'Marketing Digital',
-    tags: ['SEO', 'SEM', 'Redes Sociales', 'Email Marketing', 'Analytics'],
-    createdAt: '2023',
-    totalHours: 45,
+  // Fetch real academy data from backend
+  const {
+    academy: backendAcademy,
+    loading,
+    error,
+    refetch,
+  } = useAcademy(slug || '')
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className='bg-background flex min-h-screen items-center justify-center'>
+        <div className='text-center'>
+          <Loader2 className='text-primary mx-auto h-12 w-12 animate-spin' />
+          <p className='text-muted-foreground mt-4'>Cargando academia...</p>
+        </div>
+      </div>
+    )
   }
 
-  const courses = [
-    {
-      id: 1,
-      title: 'Fundamentos de Marketing Digital',
-      description:
-        'Aprende los conceptos básicos y fundamentales del marketing digital moderno',
-      duration: '8 semanas',
-      lessons: 24,
-      students: 456,
-      rating: 4.9,
-      price: '$99',
-      level: 'Principiante',
-      image:
-        'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2',
+  // Show error state
+  if (error || !backendAcademy) {
+    return (
+      <div className='bg-background min-h-screen'>
+        <header className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 border-b backdrop-blur'>
+          <div className='container flex h-16 items-center justify-between'>
+            <Button variant='ghost' size='sm' asChild>
+              <Link to='/'>
+                <ArrowLeft className='mr-2 h-4 w-4' />
+                Volver al inicio
+              </Link>
+            </Button>
+          </div>
+        </header>
+        <div className='container py-20'>
+          <Alert variant='destructive'>
+            <AlertCircle className='h-4 w-4' />
+            <AlertDescription>
+              {error || 'No se encontró la academia'}
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => refetch()}
+                className='ml-4'
+              >
+                Reintentar
+              </Button>
+            </AlertDescription>
+          </Alert>
+        </div>
+      </div>
+    )
+  }
+
+  // Adapt backend data to component format with defaults for missing fields
+  const academy = {
+    id: backendAcademy.id,
+    name: backendAcademy.name,
+    slug: backendAcademy.slug,
+    description: backendAcademy.description,
+    instructor: {
+      name: backendAcademy.creator?.name || 'Instructor',
+      bio: 'Instructor experto dedicado a compartir conocimientos de calidad.', // TODO: Add bio field to backend
+      avatar:
+        'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2', // TODO: Add avatar field to backend
     },
-    {
-      id: 2,
-      title: 'SEO Avanzado para Profesionales',
-      description: 'Estrategias avanzadas de posicionamiento en buscadores',
-      duration: '10 semanas',
-      lessons: 32,
-      students: 234,
-      rating: 4.8,
-      price: '$149',
-      level: 'Avanzado',
-      image:
-        'https://images.pexels.com/photos/270408/pexels-photo-270408.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2',
-    },
-    {
-      id: 3,
-      title: 'Publicidad en Redes Sociales',
-      description:
-        'Domina Facebook Ads, Instagram Ads y otras plataformas publicitarias',
-      duration: '6 semanas',
-      lessons: 18,
-      students: 567,
-      rating: 4.7,
-      price: '$129',
-      level: 'Intermedio',
-      image:
-        'https://images.pexels.com/photos/267389/pexels-photo-267389.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2',
-    },
-  ]
+    students: backendAcademy.student_count,
+    rating: 4.5, // TODO: Implement rating system in backend
+    totalRatings: 0, // TODO: Implement rating system in backend
+    coursesCount: backendAcademy.course_count,
+    image:
+      backendAcademy.logo_url ||
+      'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=1260&h=400&dpr=2',
+    category: 'Educación', // TODO: Add category field to backend response
+    tags: [], // TODO: Add tags field to backend
+    createdAt: '2024', // TODO: Add created_at to backend response
+    totalHours: backendAcademy.courses
+      ? Math.round(
+          backendAcademy.courses.reduce(
+            (sum, course) => sum + course.duration_minutes,
+            0
+          ) / 60
+        )
+      : 0,
+  }
+
+  // Helper functions
+  const formatPrice = (priceString: string) => {
+    const price = parseFloat(priceString)
+    return `$${(price / 1000).toFixed(0)}k`
+  }
+
+  const formatDifficulty = (level: string) => {
+    const levels = {
+      beginner: 'Principiante',
+      intermediate: 'Intermedio',
+      advanced: 'Avanzado',
+    }
+    return levels[level as keyof typeof levels] || level
+  }
+
+  // Use real courses from backend or show empty state
+  const courses = backendAcademy.courses || []
 
   return (
     <div className='bg-background min-h-screen'>
@@ -158,24 +197,32 @@ export function PublicAcademyPage() {
               </p>
 
               <div className='mt-8 flex flex-wrap items-center gap-6 text-white'>
-                <div className='flex items-center space-x-2'>
-                  <img
-                    src={academy.instructor.avatar}
-                    alt={academy.instructor.name}
-                    className='h-10 w-10 rounded-full'
-                  />
-                  <div>
-                    <p className='font-medium'>Por {academy.instructor.name}</p>
+                {academy.instructor.name && (
+                  <div className='flex items-center space-x-2'>
+                    <img
+                      src={academy.instructor.avatar}
+                      alt={academy.instructor.name}
+                      className='h-10 w-10 rounded-full'
+                    />
+                    <div>
+                      <p className='font-medium'>
+                        Por {academy.instructor.name}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
 
-                <div className='flex items-center space-x-1'>
-                  <Star className='h-5 w-5 fill-yellow-400 text-yellow-400' />
-                  <span className='font-medium'>{academy.rating}</span>
-                  <span className='text-gray-300'>
-                    ({academy.totalRatings} reseñas)
-                  </span>
-                </div>
+                {academy.rating > 0 && (
+                  <div className='flex items-center space-x-1'>
+                    <Star className='h-5 w-5 fill-yellow-400 text-yellow-400' />
+                    <span className='font-medium'>{academy.rating}</span>
+                    {academy.totalRatings > 0 && (
+                      <span className='text-gray-300'>
+                        ({academy.totalRatings} reseñas)
+                      </span>
+                    )}
+                  </div>
+                )}
 
                 <div className='flex items-center space-x-1'>
                   <Users className='h-5 w-5' />
@@ -209,40 +256,44 @@ export function PublicAcademyPage() {
                   {academy.description}
                 </p>
 
-                <div className='mt-6 flex flex-wrap gap-2'>
-                  {academy.tags.map((tag, index) => (
-                    <Badge key={index} variant='outline'>
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
+                {academy.tags && academy.tags.length > 0 && (
+                  <div className='mt-6 flex flex-wrap gap-2'>
+                    {academy.tags.map((tag: string, index: number) => (
+                      <Badge key={index} variant='outline'>
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
-                <h2 className='mb-6 text-2xl font-bold'>
-                  Conoce a tu instructor
-                </h2>
-                <div className='flex items-start space-x-4'>
-                  <img
-                    src={academy.instructor.avatar}
-                    alt={academy.instructor.name}
-                    className='h-16 w-16 rounded-full'
-                  />
-                  <div>
-                    <h3 className='text-xl font-semibold'>
-                      {academy.instructor.name}
-                    </h3>
-                    <p className='text-muted-foreground mt-2 leading-relaxed'>
-                      {academy.instructor.bio}
-                    </p>
+              {academy.instructor.name && (
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
+                  <h2 className='mb-6 text-2xl font-bold'>
+                    Conoce a tu instructor
+                  </h2>
+                  <div className='flex items-start space-x-4'>
+                    <img
+                      src={academy.instructor.avatar}
+                      alt={academy.instructor.name}
+                      className='h-16 w-16 rounded-full'
+                    />
+                    <div>
+                      <h3 className='text-xl font-semibold'>
+                        {academy.instructor.name}
+                      </h3>
+                      <p className='text-muted-foreground mt-2 leading-relaxed'>
+                        {academy.instructor.bio}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              )}
             </div>
 
             {/* Sidebar con estadísticas */}
@@ -258,15 +309,17 @@ export function PublicAcademyPage() {
                     <CardTitle>Esta academia incluye</CardTitle>
                   </CardHeader>
                   <CardContent className='space-y-4'>
-                    <div className='flex items-center justify-between'>
-                      <div className='flex items-center space-x-2'>
-                        <Clock className='text-muted-foreground h-4 w-4' />
-                        <span className='text-sm'>Contenido total</span>
+                    {academy.totalHours > 0 && (
+                      <div className='flex items-center justify-between'>
+                        <div className='flex items-center space-x-2'>
+                          <Clock className='text-muted-foreground h-4 w-4' />
+                          <span className='text-sm'>Contenido total</span>
+                        </div>
+                        <span className='font-medium'>
+                          {academy.totalHours} horas
+                        </span>
                       </div>
-                      <span className='font-medium'>
-                        {academy.totalHours} horas
-                      </span>
-                    </div>
+                    )}
 
                     <div className='flex items-center justify-between'>
                       <div className='flex items-center space-x-2'>
@@ -332,77 +385,116 @@ export function PublicAcademyPage() {
             </p>
           </motion.div>
 
-          <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
-            {courses.map((course, index) => (
-              <motion.div
-                key={course.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -10 }}
-              >
-                <Card className='group h-full cursor-pointer overflow-hidden'>
-                  <div className='relative'>
-                    <img
-                      src={course.image}
-                      alt={course.title}
-                      className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
-                    />
-                    <div className='absolute top-4 left-4'>
-                      <Badge>{course.level}</Badge>
-                    </div>
-                    <div className='absolute top-4 right-4'>
-                      <div className='rounded bg-black/70 px-2 py-1 text-sm font-medium text-white'>
-                        {course.price}
-                      </div>
-                    </div>
-                    <div className='absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/20'>
-                      <Play className='h-12 w-12 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
-                    </div>
-                  </div>
-                  <CardHeader>
-                    <CardTitle className='line-clamp-2'>
-                      {course.title}
-                    </CardTitle>
-                    <CardDescription className='line-clamp-2'>
-                      {course.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className='space-y-4'>
-                      <div className='flex items-center justify-between text-sm'>
-                        <div className='flex items-center space-x-4'>
-                          <div className='flex items-center space-x-1'>
-                            <Clock className='text-muted-foreground h-4 w-4' />
-                            <span>{course.duration}</span>
+          {courses.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className='py-16 text-center'
+            >
+              <BookOpen className='text-muted-foreground mx-auto mb-4 h-16 w-16' />
+              <h3 className='mb-2 text-xl font-semibold'>
+                Aún no hay cursos disponibles
+              </h3>
+              <p className='text-muted-foreground mx-auto mb-6 max-w-md'>
+                Esta academia está preparando contenido increíble. Regresa
+                pronto para ver los nuevos cursos.
+              </p>
+              <Button variant='outline' asChild>
+                <Link to='/academies'>Ver otras academias</Link>
+              </Button>
+            </motion.div>
+          ) : (
+            <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
+              {courses.map((course, index) => (
+                <motion.div
+                  key={course.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  whileHover={{ y: -10 }}
+                >
+                  <Link
+                    to='/courses/$courseSlug'
+                    params={{ courseSlug: course.slug }}
+                  >
+                    <Card className='group h-full cursor-pointer overflow-hidden'>
+                      <div className='relative'>
+                        <img
+                          src={
+                            course.thumbnail_url ||
+                            'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'
+                          }
+                          alt={course.title}
+                          className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                        />
+                        <div className='absolute top-4 left-4'>
+                          <Badge variant='secondary'>
+                            {formatDifficulty(course.difficulty_level)}
+                          </Badge>
+                        </div>
+                        <div className='absolute top-4 right-4'>
+                          <div className='rounded bg-black/70 px-2 py-1 text-sm font-medium text-white'>
+                            {course.is_free
+                              ? 'Gratis'
+                              : formatPrice(course.price)}
                           </div>
-                          <div className='flex items-center space-x-1'>
-                            <BookOpen className='text-muted-foreground h-4 w-4' />
-                            <span>{course.lessons} lecciones</span>
+                        </div>
+                        <div className='absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/20'>
+                          <Play className='h-12 w-12 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
+                        </div>
+                      </div>
+                      <CardHeader>
+                        <CardTitle className='line-clamp-2'>
+                          {course.title}
+                        </CardTitle>
+                        <CardDescription className='line-clamp-2'>
+                          {course.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className='space-y-4'>
+                          <div className='flex items-center justify-between text-sm'>
+                            <div className='flex items-center space-x-4'>
+                              <div className='flex items-center space-x-1'>
+                                <Clock className='text-muted-foreground h-4 w-4' />
+                                <span>
+                                  {course.duration_minutes > 0
+                                    ? `${Math.round(course.duration_minutes / 60)}h`
+                                    : 'Pronto'}
+                                </span>
+                              </div>
+                              <div className='flex items-center space-x-1'>
+                                <BookOpen className='text-muted-foreground h-4 w-4' />
+                                <span>
+                                  {course.is_published
+                                    ? 'Disponible'
+                                    : 'Próximamente'}
+                                </span>
+                              </div>
+                            </div>
                           </div>
+                          <div className='flex items-center justify-between text-sm'>
+                            <div className='text-muted-foreground text-sm'>
+                              Por {course.creator.name}
+                            </div>
+                            <div className='flex items-center space-x-1'>
+                              <Users className='text-muted-foreground h-4 w-4' />
+                              <span>{course.enrollment_count} estudiantes</span>
+                            </div>
+                          </div>
+                          <Button className='w-full'>
+                            Ver detalles del curso
+                            <Play className='ml-2 h-4 w-4' />
+                          </Button>
                         </div>
-                      </div>
-                      <div className='flex items-center justify-between text-sm'>
-                        <div className='flex items-center space-x-1'>
-                          <Star className='h-4 w-4 fill-yellow-400 text-yellow-400' />
-                          <span className='font-medium'>{course.rating}</span>
-                        </div>
-                        <div className='flex items-center space-x-1'>
-                          <Users className='text-muted-foreground h-4 w-4' />
-                          <span>{course.students} estudiantes</span>
-                        </div>
-                      </div>
-                      <Button className='w-full'>
-                        Ver detalles del curso
-                        <Play className='ml-2 h-4 w-4' />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
