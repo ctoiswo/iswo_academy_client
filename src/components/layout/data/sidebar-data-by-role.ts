@@ -19,6 +19,7 @@ import {
   MessagesSquare,
   Route,
   BookMarked,
+  Key,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -123,6 +124,11 @@ export function getSidebarDataByRole(
               title: 'My Courses',
               url: '/my-courses',
               icon: BookOpen,
+            },
+            {
+              title: 'Redeem Code',
+              url: '/redeem-code',
+              icon: Key,
             },
             {
               title: 'Certificates',

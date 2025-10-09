@@ -21,7 +21,10 @@ import { Route as PublicCoursesRouteImport } from './routes/public/courses'
 import { Route as CoursesCourseSlugRouteImport } from './routes/courses/$courseSlug'
 import { Route as AcademyAcademyIdRouteImport } from './routes/academy/$academyId'
 import { Route as AcademiesSlugRouteImport } from './routes/academies/$slug'
+import { Route as AuthenticatedRedeemCodeRouteImport } from './routes/_authenticated/redeem-code'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedMyCoursesRouteImport } from './routes/_authenticated/my-courses'
+import { Route as AuthenticatedLearningPathsRouteImport } from './routes/_authenticated/learning-paths'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
@@ -39,6 +42,7 @@ import { Route as authConfirmRouteImport } from './routes/(auth)/confirm'
 import { Route as ClerkAuthenticatedRouteRouteImport } from './routes/clerk/_authenticated/route'
 import { Route as ClerkauthRouteRouteImport } from './routes/clerk/(auth)/route'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
@@ -69,9 +73,12 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedAdminLearningPathsRouteImport } from './routes/_authenticated/admin/learning-paths'
+import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin/courses/index'
 import { Route as AcademyAcademyIdTeachingGradesRouteImport } from './routes/academy/$academyId/teaching/grades'
 import { Route as AcademyAcademyIdTeachingCoursesRouteImport } from './routes/academy/$academyId/teaching/courses'
 import { Route as AcademyAcademyIdTeachingAssignmentsRouteImport } from './routes/academy/$academyId/teaching/assignments'
+import { Route as AuthenticatedAdminCoursesCourseIdManageIndexRouteImport } from './routes/_authenticated/admin/courses/$courseId/manage/index'
 
 const LandingRoute = LandingRouteImport.update({
   id: '/landing',
@@ -132,11 +139,27 @@ const AcademiesSlugRoute = AcademiesSlugRouteImport.update({
   path: '/academies/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRedeemCodeRoute = AuthenticatedRedeemCodeRouteImport.update({
+  id: '/redeem-code',
+  path: '/redeem-code',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMyCoursesRoute = AuthenticatedMyCoursesRouteImport.update({
+  id: '/my-courses',
+  path: '/my-courses',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedLearningPathsRoute =
+  AuthenticatedLearningPathsRouteImport.update({
+    id: '/learning-paths',
+    path: '/learning-paths',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -221,6 +244,11 @@ const AuthenticatedSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
@@ -390,6 +418,18 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminLearningPathsRoute =
+  AuthenticatedAdminLearningPathsRouteImport.update({
+    id: '/learning-paths',
+    path: '/learning-paths',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminCoursesIndexRoute =
+  AuthenticatedAdminCoursesIndexRouteImport.update({
+    id: '/courses/',
+    path: '/courses/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AcademyAcademyIdTeachingGradesRoute =
   AcademyAcademyIdTeachingGradesRouteImport.update({
     id: '/grades',
@@ -408,6 +448,12 @@ const AcademyAcademyIdTeachingAssignmentsRoute =
     path: '/assignments',
     getParentRoute: () => AcademyAcademyIdTeachingRoute,
   } as any)
+const AuthenticatedAdminCoursesCourseIdManageIndexRoute =
+  AuthenticatedAdminCoursesCourseIdManageIndexRouteImport.update({
+    id: '/courses/$courseId/manage/',
+    path: '/courses/$courseId/manage/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -415,6 +461,7 @@ export interface FileRoutesByFullPath {
   '/academy-selection': typeof AcademySelectionRoute
   '/create-academy': typeof CreateAcademyRoute
   '/landing': typeof LandingRoute
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/clerk/': typeof ClerkauthRouteRouteWithChildren
   '/confirm': typeof authConfirmRoute
@@ -431,13 +478,17 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/learning-paths': typeof AuthenticatedLearningPathsRoute
+  '/my-courses': typeof AuthenticatedMyCoursesRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/redeem-code': typeof AuthenticatedRedeemCodeRoute
   '/academies/$slug': typeof AcademiesSlugRoute
   '/academy/$academyId': typeof AcademyAcademyIdRouteWithChildren
   '/courses/$courseSlug': typeof CoursesCourseSlugRoute
   '/public/courses': typeof PublicCoursesRouteWithChildren
   '/academies': typeof AcademiesIndexRoute
   '/courses': typeof CoursesIndexRoute
+  '/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -471,12 +522,15 @@ export interface FileRoutesByFullPath {
   '/academy/$academyId/teaching/assignments': typeof AcademyAcademyIdTeachingAssignmentsRoute
   '/academy/$academyId/teaching/courses': typeof AcademyAcademyIdTeachingCoursesRoute
   '/academy/$academyId/teaching/grades': typeof AcademyAcademyIdTeachingGradesRoute
+  '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/courses/$courseId/manage': typeof AuthenticatedAdminCoursesCourseIdManageIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/academy-selection': typeof AcademySelectionRoute
   '/create-academy': typeof CreateAcademyRoute
   '/landing': typeof LandingRoute
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
   '/confirm': typeof authConfirmRoute
   '/forgot-password': typeof authForgotPasswordRoute
@@ -492,13 +546,17 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/learning-paths': typeof AuthenticatedLearningPathsRoute
+  '/my-courses': typeof AuthenticatedMyCoursesRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/redeem-code': typeof AuthenticatedRedeemCodeRoute
   '/academies/$slug': typeof AcademiesSlugRoute
   '/academy/$academyId': typeof AcademyAcademyIdRouteWithChildren
   '/courses/$courseSlug': typeof CoursesCourseSlugRoute
   '/public/courses': typeof PublicCoursesRouteWithChildren
   '/academies': typeof AcademiesIndexRoute
   '/courses': typeof CoursesIndexRoute
+  '/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -532,6 +590,8 @@ export interface FileRoutesByTo {
   '/academy/$academyId/teaching/assignments': typeof AcademyAcademyIdTeachingAssignmentsRoute
   '/academy/$academyId/teaching/courses': typeof AcademyAcademyIdTeachingCoursesRoute
   '/academy/$academyId/teaching/grades': typeof AcademyAcademyIdTeachingGradesRoute
+  '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/courses/$courseId/manage': typeof AuthenticatedAdminCoursesCourseIdManageIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -541,6 +601,7 @@ export interface FileRoutesById {
   '/academy-selection': typeof AcademySelectionRoute
   '/create-academy': typeof CreateAcademyRoute
   '/landing': typeof LandingRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/clerk/(auth)': typeof ClerkauthRouteRouteWithChildren
   '/clerk/_authenticated': typeof ClerkAuthenticatedRouteRouteWithChildren
@@ -558,13 +619,17 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/learning-paths': typeof AuthenticatedLearningPathsRoute
+  '/_authenticated/my-courses': typeof AuthenticatedMyCoursesRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/redeem-code': typeof AuthenticatedRedeemCodeRoute
   '/academies/$slug': typeof AcademiesSlugRoute
   '/academy/$academyId': typeof AcademyAcademyIdRouteWithChildren
   '/courses/$courseSlug': typeof CoursesCourseSlugRoute
   '/public/courses': typeof PublicCoursesRouteWithChildren
   '/academies/': typeof AcademiesIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/_authenticated/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -598,6 +663,8 @@ export interface FileRoutesById {
   '/academy/$academyId/teaching/assignments': typeof AcademyAcademyIdTeachingAssignmentsRoute
   '/academy/$academyId/teaching/courses': typeof AcademyAcademyIdTeachingCoursesRoute
   '/academy/$academyId/teaching/grades': typeof AcademyAcademyIdTeachingGradesRoute
+  '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
+  '/_authenticated/admin/courses/$courseId/manage/': typeof AuthenticatedAdminCoursesCourseIdManageIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -607,6 +674,7 @@ export interface FileRouteTypes {
     | '/academy-selection'
     | '/create-academy'
     | '/landing'
+    | '/admin'
     | '/settings'
     | '/clerk/'
     | '/confirm'
@@ -623,13 +691,17 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/dashboard'
+    | '/learning-paths'
+    | '/my-courses'
     | '/onboarding'
+    | '/redeem-code'
     | '/academies/$slug'
     | '/academy/$academyId'
     | '/courses/$courseSlug'
     | '/public/courses'
     | '/academies'
     | '/courses'
+    | '/admin/learning-paths'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -663,12 +735,15 @@ export interface FileRouteTypes {
     | '/academy/$academyId/teaching/assignments'
     | '/academy/$academyId/teaching/courses'
     | '/academy/$academyId/teaching/grades'
+    | '/admin/courses'
+    | '/admin/courses/$courseId/manage'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/academy-selection'
     | '/create-academy'
     | '/landing'
+    | '/admin'
     | '/clerk'
     | '/confirm'
     | '/forgot-password'
@@ -684,13 +759,17 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/dashboard'
+    | '/learning-paths'
+    | '/my-courses'
     | '/onboarding'
+    | '/redeem-code'
     | '/academies/$slug'
     | '/academy/$academyId'
     | '/courses/$courseSlug'
     | '/public/courses'
     | '/academies'
     | '/courses'
+    | '/admin/learning-paths'
     | '/errors/$error'
     | '/settings/account'
     | '/settings/appearance'
@@ -724,6 +803,8 @@ export interface FileRouteTypes {
     | '/academy/$academyId/teaching/assignments'
     | '/academy/$academyId/teaching/courses'
     | '/academy/$academyId/teaching/grades'
+    | '/admin/courses'
+    | '/admin/courses/$courseId/manage'
   id:
     | '__root__'
     | '/'
@@ -732,6 +813,7 @@ export interface FileRouteTypes {
     | '/academy-selection'
     | '/create-academy'
     | '/landing'
+    | '/_authenticated/admin'
     | '/_authenticated/settings'
     | '/clerk/(auth)'
     | '/clerk/_authenticated'
@@ -749,13 +831,17 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/dashboard'
+    | '/_authenticated/learning-paths'
+    | '/_authenticated/my-courses'
     | '/_authenticated/onboarding'
+    | '/_authenticated/redeem-code'
     | '/academies/$slug'
     | '/academy/$academyId'
     | '/courses/$courseSlug'
     | '/public/courses'
     | '/academies/'
     | '/courses/'
+    | '/_authenticated/admin/learning-paths'
     | '/_authenticated/errors/$error'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
@@ -789,6 +875,8 @@ export interface FileRouteTypes {
     | '/academy/$academyId/teaching/assignments'
     | '/academy/$academyId/teaching/courses'
     | '/academy/$academyId/teaching/grades'
+    | '/_authenticated/admin/courses/'
+    | '/_authenticated/admin/courses/$courseId/manage/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -906,11 +994,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcademiesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/redeem-code': {
+      id: '/_authenticated/redeem-code'
+      path: '/redeem-code'
+      fullPath: '/redeem-code'
+      preLoaderRoute: typeof AuthenticatedRedeemCodeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/onboarding': {
       id: '/_authenticated/onboarding'
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/my-courses': {
+      id: '/_authenticated/my-courses'
+      path: '/my-courses'
+      fullPath: '/my-courses'
+      preLoaderRoute: typeof AuthenticatedMyCoursesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/learning-paths': {
+      id: '/_authenticated/learning-paths'
+      path: '/learning-paths'
+      fullPath: '/learning-paths'
+      preLoaderRoute: typeof AuthenticatedLearningPathsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
@@ -1030,6 +1139,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/users/': {
@@ -1242,6 +1358,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/learning-paths': {
+      id: '/_authenticated/admin/learning-paths'
+      path: '/learning-paths'
+      fullPath: '/admin/learning-paths'
+      preLoaderRoute: typeof AuthenticatedAdminLearningPathsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/courses/': {
+      id: '/_authenticated/admin/courses/'
+      path: '/courses'
+      fullPath: '/admin/courses'
+      preLoaderRoute: typeof AuthenticatedAdminCoursesIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/academy/$academyId/teaching/grades': {
       id: '/academy/$academyId/teaching/grades'
       path: '/grades'
@@ -1263,8 +1393,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcademyAcademyIdTeachingAssignmentsRouteImport
       parentRoute: typeof AcademyAcademyIdTeachingRoute
     }
+    '/_authenticated/admin/courses/$courseId/manage/': {
+      id: '/_authenticated/admin/courses/$courseId/manage/'
+      path: '/courses/$courseId/manage'
+      fullPath: '/admin/courses/$courseId/manage'
+      preLoaderRoute: typeof AuthenticatedAdminCoursesCourseIdManageIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
+
+interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminLearningPathsRoute: typeof AuthenticatedAdminLearningPathsRoute
+  AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
+  AuthenticatedAdminCoursesCourseIdManageIndexRoute: typeof AuthenticatedAdminCoursesCourseIdManageIndexRoute
+}
+
+const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
+  {
+    AuthenticatedAdminLearningPathsRoute: AuthenticatedAdminLearningPathsRoute,
+    AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
+    AuthenticatedAdminCoursesCourseIdManageIndexRoute:
+      AuthenticatedAdminCoursesCourseIdManageIndexRoute,
+  }
+
+const AuthenticatedAdminRouteRouteWithChildren =
+  AuthenticatedAdminRouteRoute._addFileChildren(
+    AuthenticatedAdminRouteRouteChildren,
+  )
 
 interface AuthenticatedSettingsRouteRouteChildren {
   AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
@@ -1290,9 +1446,13 @@ const AuthenticatedSettingsRouteRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedLearningPathsRoute: typeof AuthenticatedLearningPathsRoute
+  AuthenticatedMyCoursesRoute: typeof AuthenticatedMyCoursesRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedRedeemCodeRoute: typeof AuthenticatedRedeemCodeRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
@@ -1302,9 +1462,13 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedLearningPathsRoute: AuthenticatedLearningPathsRoute,
+  AuthenticatedMyCoursesRoute: AuthenticatedMyCoursesRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedRedeemCodeRoute: AuthenticatedRedeemCodeRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,

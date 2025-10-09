@@ -9,28 +9,39 @@ export { default as authService, authService as authApi } from './auth-service'
 export { default as academyService, academyService as academyApi } from './academy-service'
 export { default as academyCategoryService, academyCategoryService as academyCategoryApi } from './academy-category-service'
 export { default as courseService, courseService as courseApi } from './course-service'
+export { default as learningPathService, learningPathService as learningPathApi } from './learning-path-service'
 
 // Re-export types
-export type { 
-  AuthUser, 
-  AuthResponse, 
-  LoginCredentials, 
+export type {
+  AuthUser,
+  AuthResponse,
+  LoginCredentials,
   RegisterData,
   RegisterResponse,
   AcademyData,
-  AcademyMembership 
+  AcademyMembership
 } from './auth-service'
 
-export type { 
+export type {
   FeaturedAcademy,
   FeaturedAcademiesByCategory,
   AcademyCategory as AcademyCategoryFromService
 } from './academy-service'
 
-export type { 
+export type {
   AcademyCategory,
   AcademyCategoryMinimal,
   AcademyCategorySummary
 } from './academy-category-service'
+
+export type {
+  LearningPath,
+  Course,
+  CreateLearningPathData,
+  UpdateLearningPathData,
+  LearningPathFilters,
+  PaginationMeta,
+  LearningPathsResponse
+} from './learning-path-service'
 
 export type { FeaturedCourse } from './course-service'

@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { StatsWidget } from '@/components/dashboard'
-import { MyCourses, LearningProgress, Certificates } from './components'
+import { MyCourses, LearningProgress, Certificates, QuickAccessCodeRedemption } from './components'
 import { BookOpen, GraduationCap, Award, TrendingUp } from 'lucide-react'
 import type { DashboardProps } from '@/components/dashboard-router'
 import type { StudentDashboardData } from './types'
@@ -251,6 +251,9 @@ export function StudentDashboard({ user, academy }: DashboardProps) {
             description="Consecutive learning days"
           />
         </div>
+        
+        {/* Quick Access Code Redemption */}
+        <QuickAccessCodeRedemption />
         
         {/* My Courses Section */}
         <MyCourses

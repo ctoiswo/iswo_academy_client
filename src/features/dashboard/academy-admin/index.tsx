@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   AcademyStatsOverview, 
   CourseManagementPanel, 
-  UserManagementPanel 
+  UserManagementPanel
 } from './components'
 import type { DashboardProps } from '@/components/dashboard-router'
 
