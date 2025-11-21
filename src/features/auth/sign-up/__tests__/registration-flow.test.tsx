@@ -2,14 +2,16 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SignUp } from '../index'
-import * as apiClient from '@/lib/api-client'
 import { useAuthStore } from '@/stores/auth-store'
+
+// Create mock navigate function
+const mockNavigate = vi.fn()
 
 // Mock dependencies
 vi.mock('@/lib/api-client')
 vi.mock('@/stores/auth-store')
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => vi.fn(),
+  useNavigate: () => mockNavigate,
   Link: ({ children, to, ...props }: any) => (
     <a href={to} {...props}>
       {children}
@@ -23,39 +25,41 @@ vi.mock('sonner', () => ({
   },
 }))
 
-const mockAuthApi = vi.mocked(apiClient.authApi)
 const mockUseAuthStore = vi.mocked(useAuthStore)
+
+// Create default mock store to reuse
+const defaultMockStore = {
+  register: vi.fn(),
+  user: null,
+  tokens: null,
+  isAuthenticated: false,
+  isLoading: false,
+  error: null,
+  login: vi.fn(),
+  logout: vi.fn(),
+  refreshTokens: vi.fn(),
+  setUser: vi.fn(),
+  setTokens: vi.fn(),
+  setLoading: vi.fn(),
+  setError: vi.fn(),
+  reset: vi.fn(),
+  initialize: vi.fn(),
+  auth: {
+    user: null,
+    setUser: vi.fn(),
+    accessToken: '',
+    setAccessToken: vi.fn(),
+    refreshToken: '',
+    setRefreshToken: vi.fn(),
+    resetAccessToken: vi.fn(),
+    reset: vi.fn(),
+  },
+}
 
 describe('Registration Flow Integration', () => {
   beforeEach(() => {
-    // Mock auth store
-    mockUseAuthStore.mockReturnValue({
-      register: vi.fn(),
-      user: null,
-      tokens: null,
-      isAuthenticated: false,
-      isLoading: false,
-      error: null,
-      login: vi.fn(),
-      logout: vi.fn(),
-      refreshTokens: vi.fn(),
-      setUser: vi.fn(),
-      setTokens: vi.fn(),
-      setLoading: vi.fn(),
-      setError: vi.fn(),
-      reset: vi.fn(),
-      initialize: vi.fn(),
-      auth: {
-        user: null,
-        setUser: vi.fn(),
-        accessToken: '',
-        setAccessToken: vi.fn(),
-        refreshToken: '',
-        setRefreshToken: vi.fn(),
-        resetAccessToken: vi.fn(),
-        reset: vi.fn(),
-      },
-    })
+    // Mock auth store with default values
+    mockUseAuthStore.mockReturnValue(defaultMockStore)
   })
 
   afterEach(() => {
@@ -65,12 +69,12 @@ describe('Registration Flow Integration', () => {
   it('renders the complete sign-up page', () => {
     render(<SignUp />)
 
-    expect(screen.getAllByText(/create an account/i)[0]).toBeInTheDocument()
-    expect(screen.getByText(/enter your email and password to create an account/i)).toBeInTheDocument()
-    expect(screen.getByText(/already have an account/i)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /sign in/i })).toBeInTheDocument()
-    expect(screen.getByText(/terms of service/i)).toBeInTheDocument()
-    expect(screen.getByText(/privacy policy/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/crear una cuenta/i)[0]).toBeInTheDocument()
+    expect(screen.getByText(/ingresa tu información personal para comenzar/i)).toBeInTheDocument()
+    expect(screen.getByText(/¿ya tienes una cuenta?/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /inicia sesión/i })).toBeInTheDocument()
+    expect(screen.getByText(/términos de servicio/i)).toBeInTheDocument()
+    expect(screen.getByText(/política de privacidad/i)).toBeInTheDocument()
   })
 
   it('completes successful registration flow', async () => {
@@ -93,21 +97,21 @@ describe('Registration Flow Integration', () => {
 
     const mockRegister = vi.fn().mockResolvedValue(mockRegisterResponse)
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       register: mockRegister,
     })
 
     render(<SignUp />)
 
     // Fill out the registration form
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByPlaceholderText(/juan/i), 'John')
+    await user.type(screen.getByPlaceholderText(/pérez/i), 'Doe')
+    await user.type(screen.getByPlaceholderText(/nombre@ejemplo.com/i), 'john.doe@example.com')
+    await user.type(screen.getAllByPlaceholderText('********')[0], 'ValidPassword123')
+    await user.type(screen.getAllByPlaceholderText('********')[1], 'ValidPassword123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     // Wait for the registration to complete
@@ -121,10 +125,9 @@ describe('Registration Flow Integration', () => {
       })
     })
 
-    // Check that success message is displayed
+    // Check that navigation to success page occurred
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /registration successful!/i })).toBeInTheDocument()
-      expect(screen.getByText(/please check your email to confirm your account/i)).toBeInTheDocument()
+      expect(mockNavigate).toHaveBeenCalledWith({ to: '/sign-up-success' })
     })
   })
 
@@ -139,21 +142,21 @@ describe('Registration Flow Integration', () => {
 
     const mockRegister = vi.fn().mockRejectedValue(mockError)
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       register: mockRegister,
     })
 
     render(<SignUp />)
 
     // Fill out the form with existing email
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'existing@example.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByPlaceholderText(/juan/i), 'John')
+    await user.type(screen.getByPlaceholderText(/pérez/i), 'Doe')
+    await user.type(screen.getByPlaceholderText(/nombre@ejemplo.com/i), 'existing@example.com')
+    await user.type(screen.getAllByPlaceholderText('********')[0], 'ValidPassword123')
+    await user.type(screen.getAllByPlaceholderText('********')[1], 'ValidPassword123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     await waitFor(() => {
@@ -161,8 +164,8 @@ describe('Registration Flow Integration', () => {
     })
 
     // The form should remain visible (not show success message)
-    expect(screen.queryByRole('heading', { name: /registration successful!/i })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: /¡registro exitoso!/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /crear cuenta/i })).toBeInTheDocument()
   })
 
   it('handles server error during registration', async () => {
@@ -175,21 +178,21 @@ describe('Registration Flow Integration', () => {
 
     const mockRegister = vi.fn().mockRejectedValue(mockError)
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       register: mockRegister,
     })
 
     render(<SignUp />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByPlaceholderText(/juan/i), 'John')
+    await user.type(screen.getByPlaceholderText(/pérez/i), 'Doe')
+    await user.type(screen.getByPlaceholderText(/nombre@ejemplo.com/i), 'john.doe@example.com')
+    await user.type(screen.getAllByPlaceholderText('********')[0], 'ValidPassword123')
+    await user.type(screen.getAllByPlaceholderText('********')[1], 'ValidPassword123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     await waitFor(() => {
@@ -197,8 +200,8 @@ describe('Registration Flow Integration', () => {
     })
 
     // The form should remain visible
-    expect(screen.queryByRole('heading', { name: /registration successful!/i })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: /¡registro exitoso!/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /crear cuenta/i })).toBeInTheDocument()
   })
 
   it('handles network error during registration', async () => {
@@ -211,21 +214,21 @@ describe('Registration Flow Integration', () => {
 
     const mockRegister = vi.fn().mockRejectedValue(mockError)
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       register: mockRegister,
     })
 
     render(<SignUp />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByPlaceholderText(/juan/i), 'John')
+    await user.type(screen.getByPlaceholderText(/pérez/i), 'Doe')
+    await user.type(screen.getByPlaceholderText(/nombre@ejemplo.com/i), 'john.doe@example.com')
+    await user.type(screen.getAllByPlaceholderText('********')[0], 'ValidPassword123')
+    await user.type(screen.getAllByPlaceholderText('********')[1], 'ValidPassword123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     await waitFor(() => {
@@ -233,8 +236,8 @@ describe('Registration Flow Integration', () => {
     })
 
     // The form should remain visible
-    expect(screen.queryByRole('heading', { name: /registration successful!/i })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: /¡registro exitoso!/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /crear cuenta/i })).toBeInTheDocument()
   })
 
   it('allows user to navigate back to form after success', async () => {
@@ -245,35 +248,25 @@ describe('Registration Flow Integration', () => {
 
     const mockRegister = vi.fn().mockResolvedValue(mockRegisterResponse)
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       register: mockRegister,
     })
 
     render(<SignUp />)
 
     // Complete registration
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByPlaceholderText(/juan/i), 'John')
+    await user.type(screen.getByPlaceholderText(/pérez/i), 'Doe')
+    await user.type(screen.getByPlaceholderText(/nombre@ejemplo.com/i), 'john.doe@example.com')
+    await user.type(screen.getAllByPlaceholderText('********')[0], 'ValidPassword123')
+    await user.type(screen.getAllByPlaceholderText('********')[1], 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
-    // Wait for success message
+    // Wait for navigation to success page
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /registration successful!/i })).toBeInTheDocument()
-    })
-
-    // Click "Register Another Account"
-    const registerAnotherButton = screen.getByRole('button', { name: /register another account/i })
-    await user.click(registerAnotherButton)
-
-    // Should be back to the form
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument()
-      expect(screen.queryByRole('heading', { name: /registration successful!/i })).not.toBeInTheDocument()
+      expect(mockNavigate).toHaveBeenCalledWith({ to: '/sign-up-success' })
     })
   })
 
@@ -282,19 +275,18 @@ describe('Registration Flow Integration', () => {
     render(<SignUp />)
 
     // Try to submit empty form
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     // Should show validation errors
     await waitFor(() => {
-      expect(screen.getByText(/first name is required/i)).toBeInTheDocument()
-      expect(screen.getByText(/last name is required/i)).toBeInTheDocument()
-      expect(screen.getByText(/email is required/i)).toBeInTheDocument()
-      expect(screen.getByText(/password is required/i)).toBeInTheDocument()
+      expect(screen.getByText(/El nombre es obligatorio/i)).toBeInTheDocument()
+      expect(screen.getByText(/El apellido es obligatorio/i)).toBeInTheDocument()
+      expect(screen.getByText(/El correo electrónico es obligatorio/i)).toBeInTheDocument()
+      expect(screen.getByText(/La contraseña es obligatoria/i)).toBeInTheDocument()
     })
 
     // Form should not be submitted
-    const mockRegister = mockUseAuthStore().register
-    expect(mockRegister).not.toHaveBeenCalled()
+    expect(defaultMockStore.register).not.toHaveBeenCalled()
   })
 })

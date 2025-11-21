@@ -5,11 +5,14 @@ import { SignUpForm } from '../sign-up-form'
 import { useAuthStore } from '@/stores/auth-store'
 import { toast } from 'sonner'
 
+// Create mock navigate function
+const mockNavigate = vi.fn()
+
 // Mock dependencies
 vi.mock('@/stores/auth-store')
 vi.mock('sonner')
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => vi.fn(),
+  useNavigate: () => mockNavigate,
 }))
 
 const mockRegister = vi.fn()
@@ -57,26 +60,26 @@ describe('SignUpForm', () => {
   it('renders all form fields', () => {
     render(<SignUpForm />)
 
-    expect(screen.getByLabelText(/first name/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/last name/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^email$/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument()
+    expect(screen.getByLabelText(/nombre/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/apellido/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/^contraseña$/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/confirmar contraseña/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /crear cuenta/i })).toBeInTheDocument()
   })
 
   it('validates required fields', async () => {
     const user = userEvent.setup()
     render(<SignUpForm />)
 
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText(/first name is required/i)).toBeInTheDocument()
-      expect(screen.getByText(/last name is required/i)).toBeInTheDocument()
-      expect(screen.getByText(/email is required/i)).toBeInTheDocument()
-      expect(screen.getByText(/password is required/i)).toBeInTheDocument()
+      expect(screen.getByText(/el nombre es obligatorio/i)).toBeInTheDocument()
+      expect(screen.getByText(/el apellido es obligatorio/i)).toBeInTheDocument()
+      expect(screen.getByText(/el correo electrónico es obligatorio/i)).toBeInTheDocument()
+      expect(screen.getByText(/la contraseña es obligatoria/i)).toBeInTheDocument()
     })
   })
 
@@ -85,13 +88,13 @@ describe('SignUpForm', () => {
     render(<SignUpForm />)
 
     // Fill required fields first
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'invalid-email')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/nombre/i), 'John')
+    await user.type(screen.getByLabelText(/apellido/i), 'Doe')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'invalid-email')
+    await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     // Since the form validation might not be working as expected in tests,
@@ -105,15 +108,15 @@ describe('SignUpForm', () => {
     const user = userEvent.setup()
     render(<SignUpForm />)
 
-    const passwordInput = screen.getByLabelText(/^password$/i)
+    const passwordInput = screen.getByLabelText(/^contraseña$/i)
     
     // Test minimum length
     await user.type(passwordInput, '123')
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText(/password must be at least 8 characters long/i)).toBeInTheDocument()
+      expect(screen.getByText(/la contraseña debe tener al menos 8 caracteres/i)).toBeInTheDocument()
     })
 
     // Test complexity requirements
@@ -122,7 +125,7 @@ describe('SignUpForm', () => {
     await user.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText(/password must contain at least one lowercase letter, one uppercase letter, and one number/i)).toBeInTheDocument()
+      expect(screen.getByText(/la contraseña debe contener al menos una letra minúscula, una mayúscula y un número/i)).toBeInTheDocument()
     })
   })
 
@@ -130,17 +133,17 @@ describe('SignUpForm', () => {
     const user = userEvent.setup()
     render(<SignUpForm />)
 
-    const passwordInput = screen.getByLabelText(/^password$/i)
-    const confirmPasswordInput = screen.getByLabelText(/confirm password/i)
+    const passwordInput = screen.getByLabelText(/^contraseña$/i)
+    const confirmPasswordInput = screen.getByLabelText(/confirmar contraseña/i)
 
     await user.type(passwordInput, 'ValidPassword123')
     await user.type(confirmPasswordInput, 'DifferentPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText(/passwords don't match/i)).toBeInTheDocument()
+      expect(screen.getByText(/las contraseñas no coinciden/i)).toBeInTheDocument()
     })
   })
 
@@ -152,13 +155,13 @@ describe('SignUpForm', () => {
     render(<SignUpForm />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/nombre/i), 'John')
+    await user.type(screen.getByLabelText(/apellido/i), 'Doe')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     await waitFor(() => {
@@ -172,12 +175,12 @@ describe('SignUpForm', () => {
     })
 
     // Check success toast
-    expect(mockToast.success).toHaveBeenCalledWith('Account created successfully!', {
-      description: 'Please check your email to confirm your account.',
+    expect(mockToast.success).toHaveBeenCalledWith('¡Cuenta creada exitosamente!', {
+      description: 'Por favor revisa tu correo electrónico para confirmar tu cuenta.',
     })
   })
 
-  it('shows success message after successful registration', async () => {
+  it('navigates to success page after successful registration', async () => {
     const user = userEvent.setup()
     const mockResponse = { message: 'Registration successful! Please check your email.' }
     mockRegister.mockResolvedValue(mockResponse)
@@ -185,19 +188,18 @@ describe('SignUpForm', () => {
     render(<SignUpForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/nombre/i), 'John')
+    await user.type(screen.getByLabelText(/apellido/i), 'Doe')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
+    // Verify navigation to success page
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /registration successful!/i })).toBeInTheDocument()
-      expect(screen.getByText(/registration successful! please check your email/i)).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /go to sign in/i })).toBeInTheDocument()
+      expect(mockNavigate).toHaveBeenCalledWith({ to: '/sign-up-success' })
     })
   })
 
@@ -214,13 +216,13 @@ describe('SignUpForm', () => {
     render(<SignUpForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'existing@example.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/nombre/i), 'John')
+    await user.type(screen.getByLabelText(/apellido/i), 'Doe')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'existing@example.com')
+    await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     await waitFor(() => {
@@ -243,17 +245,17 @@ describe('SignUpForm', () => {
     render(<SignUpForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/nombre/i), 'John')
+    await user.type(screen.getByLabelText(/apellido/i), 'Doe')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     await waitFor(() => {
-      expect(mockToast.error).toHaveBeenCalledWith('Registration failed', {
+      expect(mockToast.error).toHaveBeenCalledWith('Error en el registro', {
         description: 'Internal server error',
       })
     })
@@ -271,19 +273,19 @@ describe('SignUpForm', () => {
     render(<SignUpForm />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/nombre/i), 'John')
+    await user.type(screen.getByLabelText(/apellido/i), 'Doe')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     // Check loading state
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /creating account.../i })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /creating account.../i })).toBeDisabled()
+      expect(screen.getByRole('button', { name: /creando cuenta.../i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /creando cuenta.../i })).toBeDisabled()
     })
 
     // Resolve the promise to finish the test
@@ -298,30 +300,25 @@ describe('SignUpForm', () => {
     render(<SignUpForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/first name/i), 'John')
-    await user.type(screen.getByLabelText(/last name/i), 'Doe')
-    await user.type(screen.getByLabelText(/^email$/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/^password$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirm password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/nombre/i), 'John')
+    await user.type(screen.getByLabelText(/apellido/i), 'Doe')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /create account/i })
+    const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
+    // Verify navigation occurred and form was reset
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /registration successful!/i })).toBeInTheDocument()
+      expect(mockNavigate).toHaveBeenCalledWith({ to: '/sign-up-success' })
     })
 
-    // Click "Register Another Account" to go back to form
-    const registerAnotherButton = screen.getByRole('button', { name: /register another account/i })
-    await user.click(registerAnotherButton)
-
-    // Form should be reset
-    await waitFor(() => {
-      expect(screen.getByLabelText(/first name/i)).toHaveValue('')
-      expect(screen.getByLabelText(/last name/i)).toHaveValue('')
-      expect(screen.getByLabelText(/^email$/i)).toHaveValue('')
-      expect(screen.getByLabelText(/^password$/i)).toHaveValue('')
-      expect(screen.getByLabelText(/confirm password/i)).toHaveValue('')
-    })
+    // Verify form inputs are cleared (form.reset() was called)
+    expect(screen.getByLabelText(/nombre/i)).toHaveValue('')
+    expect(screen.getByLabelText(/apellido/i)).toHaveValue('')
+    expect(screen.getByLabelText(/correo electrónico/i)).toHaveValue('')
+    expect(screen.getByLabelText(/^contraseña$/i)).toHaveValue('')
+    expect(screen.getByLabelText(/confirmar contraseña/i)).toHaveValue('')
   })
 })
