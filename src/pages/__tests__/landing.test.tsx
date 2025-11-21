@@ -30,8 +30,8 @@ describe('LandingPage', () => {
   it('renders hero section with main heading', () => {
     render(<LandingPage />)
     
-    expect(screen.getByText('Create Your Own')).toBeInTheDocument()
-    expect(screen.getByText('Online Academy')).toBeInTheDocument()
+    expect(screen.getByText('Crea tu Propia')).toBeInTheDocument()
+    expect(screen.getByText('Academia Online')).toBeInTheDocument()
   })
 
   it('renders navigation with brand name', () => {
@@ -43,32 +43,32 @@ describe('LandingPage', () => {
   it('renders call-to-action buttons', () => {
     render(<LandingPage />)
     
-    expect(screen.getByText('Start Building Now')).toBeInTheDocument()
-    expect(screen.getAllByText('Request Demo').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText('Comenzar a Construir')).toBeInTheDocument()
+    expect(screen.getAllByText('Solicitar Demo').length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders features section', () => {
     render(<LandingPage />)
     
-    expect(screen.getByText('Everything you need to build your academy')).toBeInTheDocument()
-    expect(screen.getByText('Course Creation')).toBeInTheDocument()
-    expect(screen.getByText('Student Management')).toBeInTheDocument()
-    expect(screen.getByText('Certificates & Badges')).toBeInTheDocument()
+    expect(screen.getByText('Todo lo que necesitas para construir tu academia')).toBeInTheDocument()
+    expect(screen.getByText('Creación de Cursos')).toBeInTheDocument()
+    expect(screen.getByText('Gestión de Estudiantes')).toBeInTheDocument()
+    expect(screen.getByText('Certificados y Badges')).toBeInTheDocument()
   })
 
   it('renders pricing section', () => {
     render(<LandingPage />)
     
-    expect(screen.getByText('Simple, transparent pricing')).toBeInTheDocument()
-    expect(screen.getByText('Starter')).toBeInTheDocument()
-    expect(screen.getByText('Professional')).toBeInTheDocument()
-    expect(screen.getByText('Enterprise')).toBeInTheDocument()
+    expect(screen.getByText('Precios simples y transparentes')).toBeInTheDocument()
+    expect(screen.getByText('Inicial')).toBeInTheDocument()
+    expect(screen.getByText('Profesional')).toBeInTheDocument()
+    expect(screen.getByText('Empresarial')).toBeInTheDocument()
   })
 
   it('renders testimonials section', () => {
     render(<LandingPage />)
     
-    expect(screen.getByText('Trusted by educators worldwide')).toBeInTheDocument()
+    expect(screen.getByText('Con la confianza de educadores de todo el mundo')).toBeInTheDocument()
     expect(screen.getByText('Sarah Johnson')).toBeInTheDocument()
     expect(screen.getByText('Michael Chen')).toBeInTheDocument()
     expect(screen.getByText('Emily Rodriguez')).toBeInTheDocument()
@@ -77,28 +77,28 @@ describe('LandingPage', () => {
   it('renders final CTA section', () => {
     render(<LandingPage />)
     
-    expect(screen.getByText('Ready to build your academy?')).toBeInTheDocument()
-    expect(screen.getByText('Start Your Free Academy')).toBeInTheDocument()
+    expect(screen.getByText('¿Listo para construir tu academia?')).toBeInTheDocument()
+    expect(screen.getByText('Inicia tu Academia Gratuita')).toBeInTheDocument()
   })
 
   it('renders footer', () => {
     render(<LandingPage />)
     
-    expect(screen.getByText('© 2025 ISWO Academy. All rights reserved.')).toBeInTheDocument()
+    expect(screen.getByText('© 2025 ISWO Academy. Todos los derechos reservados.')).toBeInTheDocument()
   })
 
   it('has responsive design classes', () => {
     render(<LandingPage />)
     
-    const heroSection = screen.getByText('Create Your Own').closest('section')
+    const heroSection = screen.getByText('Crea tu Propia').closest('section')
     expect(heroSection).toHaveClass('py-20', 'lg:py-32')
   })
 
   it('includes proper navigation links', () => {
     render(<LandingPage />)
     
-    const signInLinks = screen.getAllByRole('link', { name: /sign in/i })
-    const getStartedLinks = screen.getAllByRole('link', { name: /get started/i })
+    const signInLinks = screen.getAllByRole('link', { name: /iniciar sesión/i })
+    const getStartedLinks = screen.getAllByRole('link', { name: /comenzar/i })
     
     // Should have Sign In links in navigation and footer
     expect(signInLinks.length).toBeGreaterThanOrEqual(2)
@@ -117,9 +117,9 @@ describe('LandingPage', () => {
     it('renders navigation menu with smooth scroll buttons', () => {
       render(<LandingPage />)
       
-      const featuresButtons = screen.getAllByText('Features')
-      const pricingButtons = screen.getAllByText('Pricing')
-      const testimonialsButtons = screen.getAllByText('Testimonials')
+      const featuresButtons = screen.getAllByText('Características')
+      const pricingButtons = screen.getAllByText('Precios')
+      const testimonialsButtons = screen.getAllByText('Testimonios')
       
       expect(featuresButtons.length).toBeGreaterThanOrEqual(1)
       expect(pricingButtons.length).toBeGreaterThanOrEqual(1)
@@ -129,7 +129,7 @@ describe('LandingPage', () => {
     it('scrolls to features section when nav Features button is clicked', async () => {
       render(<LandingPage />)
       
-      const featuresButtons = screen.getAllByText('Features')
+      const featuresButtons = screen.getAllByText('Características')
       const navFeaturesButton = featuresButtons[0] // First one is in nav
       await user.click(navFeaturesButton)
       
@@ -142,7 +142,7 @@ describe('LandingPage', () => {
     it('scrolls to pricing section when nav Pricing button is clicked', async () => {
       render(<LandingPage />)
       
-      const pricingButtons = screen.getAllByText('Pricing')
+      const pricingButtons = screen.getAllByText('Precios')
       const navPricingButton = pricingButtons[0] // First one is in nav
       await user.click(navPricingButton)
       
@@ -155,7 +155,7 @@ describe('LandingPage', () => {
     it('scrolls to testimonials section when nav Testimonials button is clicked', async () => {
       render(<LandingPage />)
       
-      const testimonialsButtons = screen.getAllByText('Testimonials')
+      const testimonialsButtons = screen.getAllByText('Testimonios')
       const navTestimonialsButton = testimonialsButtons[0] // First one is in nav
       await user.click(navTestimonialsButton)
       
@@ -170,66 +170,66 @@ describe('LandingPage', () => {
     it('opens demo request modal when Request Demo button is clicked', async () => {
       render(<LandingPage />)
       
-      const requestDemoButtons = screen.getAllByText('Request Demo')
+      const requestDemoButtons = screen.getAllByText('Solicitar Demo')
       const heroRequestDemoButton = requestDemoButtons[0] // First one is in hero section
       await user.click(heroRequestDemoButton)
       
-      expect(screen.getByText('Request a Demo')).toBeInTheDocument()
-      expect(screen.getByText(/Get a personalized demo/)).toBeInTheDocument()
+      expect(screen.getByText('Solicitar una Demo')).toBeInTheDocument()
+      expect(screen.getByText(/Obtén una demostración personalizada/)).toBeInTheDocument()
     })
 
     it('renders demo form with all required fields', async () => {
       render(<LandingPage />)
       
-      const requestDemoButtons = screen.getAllByText('Request Demo')
+      const requestDemoButtons = screen.getAllByText('Solicitar Demo')
       const heroRequestDemoButton = requestDemoButtons[0]
       await user.click(heroRequestDemoButton)
       
-      expect(screen.getByLabelText('Name *')).toBeInTheDocument()
+      expect(screen.getByLabelText('Nombre *')).toBeInTheDocument()
       expect(screen.getByLabelText('Email *')).toBeInTheDocument()
-      expect(screen.getByLabelText('Company')).toBeInTheDocument()
-      expect(screen.getByLabelText('Phone')).toBeInTheDocument()
-      expect(screen.getByLabelText('Tell us about your needs')).toBeInTheDocument()
+      expect(screen.getByLabelText('Empresa')).toBeInTheDocument()
+      expect(screen.getByLabelText('Teléfono')).toBeInTheDocument()
+      expect(screen.getByLabelText('Cuéntanos sobre tus necesidades')).toBeInTheDocument()
     })
 
     it('submits demo form with valid data', async () => {
       render(<LandingPage />)
       
-      const requestDemoButtons = screen.getAllByText('Request Demo')
+      const requestDemoButtons = screen.getAllByText('Solicitar Demo')
       const heroRequestDemoButton = requestDemoButtons[0]
       await user.click(heroRequestDemoButton)
       
       // Fill out the form
-      await user.type(screen.getByLabelText('Name *'), 'John Doe')
+      await user.type(screen.getByLabelText('Nombre *'), 'John Doe')
       await user.type(screen.getByLabelText('Email *'), 'john@example.com')
-      await user.type(screen.getByLabelText('Company'), 'Test Company')
-      await user.type(screen.getByLabelText('Phone'), '+1234567890')
-      await user.type(screen.getByLabelText('Tell us about your needs'), 'I need an academy for my courses')
+      await user.type(screen.getByLabelText('Empresa'), 'Test Company')
+      await user.type(screen.getByLabelText('Teléfono'), '+1234567890')
+      await user.type(screen.getByLabelText('Cuéntanos sobre tus necesidades'), 'I need an academy for my courses')
       
-      const submitButton = screen.getByRole('button', { name: 'Request Demo' })
+      const submitButton = screen.getByRole('button', { name: 'Solicitar Demo' })
       await user.click(submitButton)
       
       // Should show loading state
-      expect(screen.getByText('Submitting...')).toBeInTheDocument()
+      expect(screen.getByText('Enviando...')).toBeInTheDocument()
       
       // Wait for success message
       await waitFor(() => {
-        expect(screen.getByText('Demo Request Submitted!')).toBeInTheDocument()
+        expect(screen.getByText('¡Solicitud de Demo Enviada!')).toBeInTheDocument()
       }, { timeout: 2000 })
     })
 
     it('requires name and email fields', async () => {
       render(<LandingPage />)
       
-      const requestDemoButtons = screen.getAllByText('Request Demo')
+      const requestDemoButtons = screen.getAllByText('Solicitar Demo')
       const heroRequestDemoButton = requestDemoButtons[0]
       await user.click(heroRequestDemoButton)
       
-      const submitButton = screen.getByRole('button', { name: 'Request Demo' })
+      const submitButton = screen.getByRole('button', { name: 'Solicitar Demo' })
       await user.click(submitButton)
       
       // Form should not submit without required fields
-      expect(screen.queryByText('Submitting...')).not.toBeInTheDocument()
+      expect(screen.queryByText('Enviando...')).not.toBeInTheDocument()
     })
   })
 
@@ -237,10 +237,10 @@ describe('LandingPage', () => {
     it('opens contact modal from CTA section', async () => {
       render(<LandingPage />)
       
-      const contactButton = screen.getByText('Need help getting started? Contact our team')
+      const contactButton = screen.getByText('¿Necesitas ayuda para comenzar? Contacta a nuestro equipo')
       await user.click(contactButton)
       
-      expect(screen.getByText('Contact Our Team')).toBeInTheDocument()
+      expect(screen.getByText('Contacta a Nuestro Equipo')).toBeInTheDocument()
       expect(screen.getByText('support@iswoacademy.com')).toBeInTheDocument()
       expect(screen.getByText('+1 (555) 123-4567')).toBeInTheDocument()
     })
@@ -248,10 +248,10 @@ describe('LandingPage', () => {
     it('opens enterprise sales modal from pricing section', async () => {
       render(<LandingPage />)
       
-      const contactSalesButton = screen.getByText('Contact Sales')
+      const contactSalesButton = screen.getByText('Contactar Ventas')
       await user.click(contactSalesButton)
       
-      expect(screen.getByRole('heading', { name: 'Enterprise Sales' })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'Ventas Empresariales' })).toBeInTheDocument()
       expect(screen.getByText('enterprise@iswoacademy.com')).toBeInTheDocument()
       expect(screen.getByText('+1 (555) 123-4568')).toBeInTheDocument()
     })
@@ -259,10 +259,10 @@ describe('LandingPage', () => {
     it('includes CTA buttons in enterprise modal', async () => {
       render(<LandingPage />)
       
-      const contactSalesButton = screen.getByText('Contact Sales')
+      const contactSalesButton = screen.getByText('Contactar Ventas')
       await user.click(contactSalesButton)
       
-      expect(screen.getByText('Start with Free Trial')).toBeInTheDocument()
+      expect(screen.getByText('Comenzar con Prueba Gratuita')).toBeInTheDocument()
     })
   })
 
@@ -301,18 +301,18 @@ describe('LandingPage', () => {
     it('renders footer with enhanced navigation and CTAs', () => {
       render(<LandingPage />)
       
-      expect(screen.getByText('Empowering educators to create amazing online learning experiences.')).toBeInTheDocument()
-      expect(screen.getByText('Product')).toBeInTheDocument()
-      expect(screen.getByText('Company')).toBeInTheDocument()
-      expect(screen.getByText('Support')).toBeInTheDocument()
+      expect(screen.getByText('Empoderando a educadores para crear experiencias de aprendizaje en línea increíbles.')).toBeInTheDocument()
+      expect(screen.getByText('Producto')).toBeInTheDocument()
+      expect(screen.getByText('Empresa')).toBeInTheDocument()
+      expect(screen.getByText('Soporte')).toBeInTheDocument()
     })
 
     it('includes multiple CTA buttons in footer', () => {
       render(<LandingPage />)
       
       // Should have multiple Get Started and Sign In buttons throughout the page
-      const getStartedButtons = screen.getAllByText(/get started|start free/i)
-      const signInButtons = screen.getAllByText(/sign in/i)
+      const getStartedButtons = screen.getAllByText(/comenzar/i)
+      const signInButtons = screen.getAllByText(/iniciar sesión/i)
       
       expect(getStartedButtons.length).toBeGreaterThanOrEqual(2)
       expect(signInButtons.length).toBeGreaterThanOrEqual(2)
@@ -322,7 +322,7 @@ describe('LandingPage', () => {
       render(<LandingPage />)
       
       // Find footer navigation buttons
-      const footerButtons = screen.getAllByText('Features')
+      const footerButtons = screen.getAllByText('Características')
       const footerFeaturesButton = footerButtons.find(button => 
         button.closest('footer') !== null
       )
@@ -359,13 +359,13 @@ describe('LandingPage', () => {
       render(<LandingPage />)
       
       // Starter plan should link to sign-up
-      expect(screen.getByText('Get Started Free')).toBeInTheDocument()
+      expect(screen.getAllByText('Comenzar Gratis')[0]).toBeInTheDocument()
       
       // Professional plan should link to sign-up
-      expect(screen.getByText('Start Free Trial')).toBeInTheDocument()
+      expect(screen.getByText('Iniciar Prueba Gratuita')).toBeInTheDocument()
       
       // Enterprise plan should open contact modal
-      expect(screen.getByText('Contact Sales')).toBeInTheDocument()
+      expect(screen.getByText('Contactar Ventas')).toBeInTheDocument()
     })
   })
 })

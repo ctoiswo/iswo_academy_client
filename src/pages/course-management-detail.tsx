@@ -52,12 +52,12 @@ export default function CourseManagementDetailPage() {
     return (
       <div className="container mx-auto py-8">
         <div className="text-center py-12">
-          <h3 className="text-lg font-bold text-red-600 mb-2">Error Loading Course</h3>
-          <p className="text-gray-600">Course not found or you don't have permission to access it</p>
+          <h3 className="text-lg font-bold text-red-600 mb-2">Error al Cargar el Curso</h3>
+          <p className="text-gray-600">Curso no encontrado o no tienes permiso para acceder</p>
           <Link to="/admin/courses" className="mt-4 inline-block">
             <Button variant="outline">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Courses
+              Volver a Cursos
             </Button>
           </Link>
         </div>
@@ -73,7 +73,7 @@ export default function CourseManagementDetailPage() {
           <Link to="/admin/courses">
             <Button variant="outline" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Courses
+              Volver a Cursos
             </Button>
           </Link>
         </div>
@@ -88,13 +88,13 @@ export default function CourseManagementDetailPage() {
               </Badge>
               <Badge variant="outline">{course.difficulty_level}</Badge>
               <Badge variant="outline" className="text-green-600">
-                {course.is_free ? 'Free' : `$${course.price}`}
+                {course.is_free ? 'Gratis' : `$${course.price}`}
               </Badge>
             </div>
           </div>
           <Button>
             <Settings className="w-4 h-4 mr-2" />
-            Course Settings
+            Configuración del Curso
           </Button>
         </div>
       </div>
@@ -103,7 +103,7 @@ export default function CourseManagementDetailPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Students</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Estudiantes</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
@@ -115,7 +115,7 @@ export default function CourseManagementDetailPage() {
         
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Lessons</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Lecciones</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
@@ -127,7 +127,7 @@ export default function CourseManagementDetailPage() {
         
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Duration</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Duración</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
@@ -141,7 +141,7 @@ export default function CourseManagementDetailPage() {
         
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Sections</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">Secciones</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
@@ -157,23 +157,23 @@ export default function CourseManagementDetailPage() {
         <TabsList>
           <TabsTrigger value="lessons">
             <PlayCircle className="w-4 h-4 mr-2" />
-            Lessons
+            Lecciones
           </TabsTrigger>
           <TabsTrigger value="assignments">
             <CheckSquare className="w-4 h-4 mr-2" />
-            Assignments
+            Tareas
           </TabsTrigger>
           <TabsTrigger value="certificates">
             <Award className="w-4 h-4 mr-2" />
-            Certificates
+            Certificados
           </TabsTrigger>
           <TabsTrigger value="students">
             <Users className="w-4 h-4 mr-2" />
-            Students
+            Estudiantes
           </TabsTrigger>
           <TabsTrigger value="access-codes">
             <Settings className="w-4 h-4 mr-2" />
-            Access Codes
+            Códigos de Acceso
           </TabsTrigger>
         </TabsList>
 
@@ -183,25 +183,25 @@ export default function CourseManagementDetailPage() {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle>Course Lessons</CardTitle>
+                  <CardTitle>Lecciones del Curso</CardTitle>
                   <CardDescription>
-                    Manage lessons, sections, and course content
+                    Gestiona lecciones, secciones y contenido del curso
                   </CardDescription>
                 </div>
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Lesson
+                  Añadir Lección
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
               <div className="text-center py-12 text-gray-500">
                 <PlayCircle className="mx-auto h-12 w-12 mb-4" />
-                <h3 className="text-lg font-medium mb-2">No lessons yet</h3>
-                <p className="mb-4">Start building your course by adding lessons and sections</p>
+                <h3 className="text-lg font-medium mb-2">Aún no hay lecciones</h3>
+                <p className="mb-4">Comienza a construir tu curso añadiendo lecciones y secciones</p>
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
-                  Create First Lesson
+                  Crear Primera Lección
                 </Button>
               </div>
             </CardContent>
@@ -214,25 +214,25 @@ export default function CourseManagementDetailPage() {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle>Course Assignments</CardTitle>
+                  <CardTitle>Tareas del Curso</CardTitle>
                   <CardDescription>
-                    Create and manage assignments, quizzes, and projects
+                    Crea y gestiona tareas, cuestionarios y proyectos
                   </CardDescription>
                 </div>
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Assignment
+                  Añadir Tarea
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
               <div className="text-center py-12 text-gray-500">
                 <CheckSquare className="mx-auto h-12 w-12 mb-4" />
-                <h3 className="text-lg font-medium mb-2">No assignments yet</h3>
-                <p className="mb-4">Add assignments to evaluate student progress</p>
+                <h3 className="text-lg font-medium mb-2">Aún no hay tareas</h3>
+                <p className="mb-4">Añade tareas para evaluar el progreso de los estudiantes</p>
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
-                  Create First Assignment
+                  Crear Primera Tarea
                 </Button>
               </div>
             </CardContent>
@@ -245,25 +245,25 @@ export default function CourseManagementDetailPage() {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle>Course Certificates</CardTitle>
+                  <CardTitle>Certificados del Curso</CardTitle>
                   <CardDescription>
-                    Configure completion certificates and requirements
+                    Configura los certificados de finalización y requisitos
                   </CardDescription>
                 </div>
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
-                  Configure Certificate
+                  Configurar Certificado
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
               <div className="text-center py-12 text-gray-500">
                 <Award className="mx-auto h-12 w-12 mb-4" />
-                <h3 className="text-lg font-medium mb-2">No certificate configured</h3>
-                <p className="mb-4">Set up completion certificates for students who finish the course</p>
+                <h3 className="text-lg font-medium mb-2">No hay certificado configurado</h3>
+                <p className="mb-4">Configura certificados de finalización para estudiantes que completen el curso</p>
                 <Button>
                   <Award className="w-4 h-4 mr-2" />
-                  Setup Certificate
+                  Configurar Certificado
                 </Button>
               </div>
             </CardContent>
@@ -276,14 +276,14 @@ export default function CourseManagementDetailPage() {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle>Enrolled Students</CardTitle>
+                  <CardTitle>Estudiantes Inscritos</CardTitle>
                   <CardDescription>
-                    View and manage students enrolled in this course
+                    Ver y gestionar estudiantes inscritos en este curso
                   </CardDescription>
                 </div>
                 <Button variant="outline">
                   <Target className="w-4 h-4 mr-2" />
-                  View Analytics
+                  Ver Análisis
                 </Button>
               </div>
             </CardHeader>
@@ -291,17 +291,17 @@ export default function CourseManagementDetailPage() {
               {course.enrollment_count === 0 ? (
                 <div className="text-center py-12 text-gray-500">
                   <Users className="mx-auto h-12 w-12 mb-4" />
-                  <h3 className="text-lg font-medium mb-2">No students enrolled</h3>
-                  <p className="mb-4">Students will appear here once they enroll in the course</p>
+                  <h3 className="text-lg font-medium mb-2">No hay estudiantes inscritos</h3>
+                  <p className="mb-4">Los estudiantes aparecerán aquí una vez se inscriban al curso</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   <p className="text-sm text-gray-600">
-                    {course.enrollment_count} student{course.enrollment_count !== 1 ? 's' : ''} enrolled
+                    {course.enrollment_count} estudiante{course.enrollment_count !== 1 ? 's' : ''} inscrito{course.enrollment_count !== 1 ? 's' : ''}
                   </p>
                   {/* TODO: Add student list component */}
                   <div className="text-center py-8 text-gray-500">
-                    <p>Student management interface coming soon...</p>
+                    <p>Interfaz de gestión de estudiantes próximamente...</p>
                   </div>
                 </div>
               )}

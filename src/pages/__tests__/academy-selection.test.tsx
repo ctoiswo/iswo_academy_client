@@ -32,6 +32,8 @@ const mockUser: AuthUser = {
   initials: 'JD',
   confirmed: true,
   is_super_admin: false,
+  avatar_url: null,
+  onboarding_completed_at: null,
   created_at: '2024-01-01T00:00:00Z',
   last_login_at: '2024-01-01T12:00:00Z'
 }

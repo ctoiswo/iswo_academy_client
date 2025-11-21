@@ -79,11 +79,11 @@ export default function CoursesManagementPage() {
   const getDifficultyBadge = (difficulty: string) => {
     switch (difficulty) {
       case 'beginner':
-        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Beginner</Badge>
+        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Principiante</Badge>
       case 'intermediate':
-        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Intermediate</Badge>
+        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Intermedio</Badge>
       case 'advanced':
-        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Advanced</Badge>
+        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Avanzado</Badge>
       default:
         return <Badge variant="outline">{difficulty}</Badge>
     }
@@ -92,11 +92,11 @@ export default function CoursesManagementPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'published':
-        return <Badge className="bg-green-100 text-green-800">Published</Badge>
+        return <Badge className="bg-green-100 text-green-800">Publicado</Badge>
       case 'draft':
-        return <Badge variant="secondary">Draft</Badge>
+        return <Badge variant="secondary">Borrador</Badge>
       case 'archived':
-        return <Badge variant="outline">Archived</Badge>
+        return <Badge variant="outline">Archivado</Badge>
       default:
         return <Badge variant="outline">{status}</Badge>
     }
@@ -104,11 +104,11 @@ export default function CoursesManagementPage() {
 
   const formatPrice = (price: string, isFree: boolean) => {
     if (isFree) {
-      return <Badge className="bg-green-100 text-green-800">Free</Badge>
+      return <Badge className="bg-green-100 text-green-800">Gratis</Badge>
     }
     const numPrice = parseFloat(price)
     if (numPrice === 0) {
-      return <Badge className="bg-green-100 text-green-800">Free</Badge>
+      return <Badge className="bg-green-100 text-green-800">Gratis</Badge>
     }
     return <Badge variant="outline" className="text-green-600">${numPrice}</Badge>
   }
@@ -128,8 +128,8 @@ export default function CoursesManagementPage() {
       <div className="container mx-auto py-8">
         <div className="text-center py-12">
           <BookOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No Academy Selected</h3>
-          <p className="text-gray-500">Please select an academy to manage courses</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No hay Academia Seleccionada</h3>
+          <p className="text-gray-500">Por favor selecciona una academia para gestionar cursos</p>
         </div>
       </div>
     )
@@ -140,8 +140,8 @@ export default function CoursesManagementPage() {
     return (
       <div className="container mx-auto py-8">
         <div className="text-center py-12">
-          <h3 className="text-lg font-bold text-red-600 mb-2">Error Loading Courses</h3>
-          <p className="text-gray-600">Please try refreshing the page</p>
+          <h3 className="text-lg font-bold text-red-600 mb-2">Error al Cargar Cursos</h3>
+          <p className="text-gray-600">Por favor intenta refrescar la página</p>
         </div>
       </div>
     )
@@ -152,12 +152,12 @@ export default function CoursesManagementPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Courses</h1>
-          <p className="text-gray-600 mt-2">Create and manage courses for your academy</p>
+          <h1 className="text-3xl font-bold">Cursos</h1>
+          <p className="text-gray-600 mt-2">Crea y gestiona cursos para tu academia</p>
         </div>
         <Button onClick={() => setIsCreateModalOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
-          Create Course
+          Crear Curso
         </Button>
       </div>
 
@@ -165,41 +165,41 @@ export default function CoursesManagementPage() {
       <div className="flex gap-4 mb-6">
         <div className="flex-1">
           <Input
-            placeholder="Search courses..."
+            placeholder="Buscar cursos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="Status" />
+            <SelectValue placeholder="Estado" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="published">Published</SelectItem>
-            <SelectItem value="draft">Draft</SelectItem>
-            <SelectItem value="archived">Archived</SelectItem>
+            <SelectItem value="all">Todos los Estados</SelectItem>
+            <SelectItem value="published">Publicado</SelectItem>
+            <SelectItem value="draft">Borrador</SelectItem>
+            <SelectItem value="archived">Archivado</SelectItem>
           </SelectContent>
         </Select>
         <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="Difficulty" />
+            <SelectValue placeholder="Dificultad" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Levels</SelectItem>
-            <SelectItem value="beginner">Beginner</SelectItem>
-            <SelectItem value="intermediate">Intermediate</SelectItem>
-            <SelectItem value="advanced">Advanced</SelectItem>
+            <SelectItem value="all">Todos los Niveles</SelectItem>
+            <SelectItem value="beginner">Principiante</SelectItem>
+            <SelectItem value="intermediate">Intermedio</SelectItem>
+            <SelectItem value="advanced">Avanzado</SelectItem>
           </SelectContent>
         </Select>
         <Select value={typeFilter} onValueChange={setTypeFilter}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="Type" />
+            <SelectValue placeholder="Tipo" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="free">Free</SelectItem>
-            <SelectItem value="paid">Paid</SelectItem>
+            <SelectItem value="all">Todos los Tipos</SelectItem>
+            <SelectItem value="free">Gratis</SelectItem>
+            <SelectItem value="paid">De Pago</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -217,11 +217,11 @@ export default function CoursesManagementPage() {
       {!isLoading && filteredCourses.length === 0 && courses.length === 0 && (
         <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-lg">
           <BookOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No courses yet</h3>
-          <p className="text-gray-500 mb-6">Create your first course to get started</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Aún no hay cursos</h3>
+          <p className="text-gray-500 mb-6">Crea tu primer curso para comenzar</p>
           <Button onClick={() => setIsCreateModalOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
-            Create Course
+            Crear Curso
           </Button>
         </div>
       )}
@@ -230,8 +230,8 @@ export default function CoursesManagementPage() {
       {!isLoading && filteredCourses.length === 0 && courses.length > 0 && (
         <div className="text-center py-12">
           <BookOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No courses found</h3>
-          <p className="text-gray-500">Try adjusting your search or filters</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron cursos</h3>
+          <p className="text-gray-500">Intenta ajustar tu búsqueda o filtros</p>
         </div>
       )}
 
@@ -254,7 +254,7 @@ export default function CoursesManagementPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleManageCourse(course)}
-                      title="Manage course content"
+                      title="Gestionar contenido del curso"
                     >
                       <Eye className="w-4 h-4" />
                     </Button>
@@ -262,7 +262,7 @@ export default function CoursesManagementPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => setEditingCourse(course)}
-                      title="Edit course details"
+                      title="Editar detalles del curso"
                     >
                       <Edit className="w-4 h-4" />
                     </Button>
@@ -271,7 +271,7 @@ export default function CoursesManagementPage() {
                       size="sm"
                       onClick={() => setCourseToDelete(course)}
                       className="text-red-600 hover:text-red-800"
-                      title="Delete course"
+                      title="Eliminar curso"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -289,7 +289,7 @@ export default function CoursesManagementPage() {
                   </div>
                   <div className="flex items-center gap-1">
                     <Users className="w-4 h-4" />
-                    {course.enrollment_count} enrolled
+                    {course.enrollment_count} inscritos
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
@@ -298,7 +298,7 @@ export default function CoursesManagementPage() {
                     {formatPrice(course.price, course.is_free)}
                   </div>
                   <div className="text-sm text-gray-500">
-                    {course.sections_count || 0} sections, {course.lessons_count || 0} lessons
+                    {course.sections_count || 0} secciones, {course.lessons_count || 0} lecciones
                   </div>
                 </div>
               </CardContent>
@@ -311,9 +311,9 @@ export default function CoursesManagementPage() {
       <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Create New Course</DialogTitle>
+            <DialogTitle>Crear Nuevo Curso</DialogTitle>
             <DialogDescription>
-              Add a new course to your academy
+              Añade un nuevo curso a tu academia
             </DialogDescription>
           </DialogHeader>
           <CourseForm
@@ -328,9 +328,9 @@ export default function CoursesManagementPage() {
       <Dialog open={!!editingCourse} onOpenChange={() => setEditingCourse(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Edit Course</DialogTitle>
+            <DialogTitle>Editar Curso</DialogTitle>
             <DialogDescription>
-              Update course information
+              Actualiza la información del curso
             </DialogDescription>
           </DialogHeader>
           {editingCourse && (
@@ -348,18 +348,18 @@ export default function CoursesManagementPage() {
       <AlertDialog open={!!courseToDelete} onOpenChange={() => setCourseToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Course</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar Curso</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete "{courseToDelete?.title}"? This action cannot be undone.
+              ¿Estás seguro de que quieres eliminar "{courseToDelete?.title}"? Esta acción no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               className="bg-red-600 hover:bg-red-700"
             >
-              Delete Course
+              Eliminar Curso
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
