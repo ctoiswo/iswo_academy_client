@@ -8,6 +8,7 @@ export interface Academy {
   slug: string
   description: string
   logo_url?: string
+  banner_url?: string
   is_public: boolean
   subscription_required: boolean
   monthly_price: string
@@ -51,24 +52,24 @@ export function useAcademies(filters?: AcademyFilters) {
     queryKey: ['academies', filters],
     queryFn: async () => {
       const params = new URLSearchParams()
-      
+
       if (filters?.search) {
         params.append('search', filters.search)
       }
-      
+
       if (filters?.category && filters.category !== 'all') {
         params.append('category', filters.category)
       }
-      
+
       if (filters?.sort_by) {
         params.append('sort_by', filters.sort_by)
       }
-      
+
       const queryString = params.toString()
       const url = queryString ? `/academies?${queryString}` : '/academies'
-      
+
       const response = await apiClient.get<AcademiesResponse>(url)
-      
+
       // El backend puede devolver { data: [...] } o directamente [...]
       // Manejamos ambos casos
       return Array.isArray(response.data) ? response.data : response.data.data
@@ -86,20 +87,20 @@ export function useFeaturedAcademies(categoryId?: number, limit = 10) {
     queryKey: ['academies', 'featured', categoryId, limit],
     queryFn: async () => {
       const params = new URLSearchParams()
-      
+
       if (categoryId) {
         params.append('academy_category_id', categoryId.toString())
       }
-      
+
       if (limit) {
         params.append('limit', limit.toString())
       }
-      
+
       const queryString = params.toString()
       const url = queryString
         ? `/academies/featured?${queryString}`
         : '/academies/featured'
-      
+
       const response = await apiClient.get<AcademiesResponse>(url)
       return Array.isArray(response.data) ? response.data : response.data.data
     },

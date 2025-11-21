@@ -1,4 +1,4 @@
-import { Link, useParams } from '@tanstack/react-router'
+import { Link, useParams, useRouter, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import {
   GraduationCap,
@@ -15,6 +15,8 @@ import {
   AlertCircle,
 } from 'lucide-react'
 import { useAcademy } from '@/hooks/use-academy'
+import { useWishlist } from '@/hooks/use-wishlist'
+import { useAuthStore } from '@/stores/auth-store'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -25,9 +27,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { toast } from 'sonner'
 
 export function PublicAcademyPage() {
   const { slug } = useParams({ strict: false })
+  const router = useRouter()
+  const navigate = useNavigate()
+  const { isAuthenticated } = useAuthStore()
+  const { isInWishlist, toggleWishlist } = useWishlist()
 
   // Fetch real academy data from backend
   const {
@@ -55,11 +62,9 @@ export function PublicAcademyPage() {
       <div className='bg-background min-h-screen'>
         <header className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 border-b backdrop-blur'>
           <div className='container flex h-16 items-center justify-between'>
-            <Button variant='ghost' size='sm' asChild>
-              <Link to='/'>
-                <ArrowLeft className='mr-2 h-4 w-4' />
-                Volver al inicio
-              </Link>
+            <Button variant='ghost' size='sm' onClick={() => router.history.back()}>
+              <ArrowLeft className='mr-2 h-4 w-4' />
+              Volver
             </Button>
           </div>
         </header>
@@ -95,10 +100,10 @@ export function PublicAcademyPage() {
       avatar:
         'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2', // TODO: Add avatar field to backend
     },
-    students: backendAcademy.student_count,
+    students: backendAcademy.enrolled_users_count || 0,
     rating: 4.5, // TODO: Implement rating system in backend
     totalRatings: 0, // TODO: Implement rating system in backend
-    coursesCount: backendAcademy.course_count,
+    coursesCount: backendAcademy.courses_count || 0,
     image:
       backendAcademy.logo_url ||
       'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=1260&h=400&dpr=2',
@@ -133,17 +138,58 @@ export function PublicAcademyPage() {
   // Use real courses from backend or show empty state
   const courses = backendAcademy.courses || []
 
+  // Check if academy is in wishlist
+  const isSaved = isInWishlist('academy', academy.id)
+
+  // Handle save button click
+  const handleSaveClick = () => {
+    if (!isAuthenticated) {
+      toast.info('Inicia sesión para guardar academias')
+      navigate({ to: '/sign-in' })
+      return
+    }
+
+    const added = toggleWishlist('academy', academy.id, academy.slug, academy.name)
+    if (added) {
+      toast.success(`${academy.name} guardada en tu lista`)
+    } else {
+      toast.info(`${academy.name} removida de tu lista`)
+    }
+  }
+
+  // Handle share button click
+  const handleShareClick = async () => {
+    const url = window.location.href
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: academy.name,
+          text: academy.description,
+          url: url,
+        })
+      } catch (err) {
+        // User cancelled share
+      }
+    } else {
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(url)
+        toast.success('Enlace copiado al portapapeles')
+      } catch (err) {
+        toast.error('No se pudo copiar el enlace')
+      }
+    }
+  }
+
   return (
     <div className='bg-background min-h-screen'>
       {/* Header */}
       <header className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 border-b backdrop-blur'>
         <div className='container flex h-16 items-center justify-between'>
           <div className='flex items-center space-x-4'>
-            <Button variant='ghost' size='sm' asChild>
-              <Link to='/'>
-                <ArrowLeft className='mr-2 h-4 w-4' />
-                Volver al inicio
-              </Link>
+            <Button variant='ghost' size='sm' onClick={() => router.history.back()}>
+              <ArrowLeft className='mr-2 h-4 w-4' />
+              Volver
             </Button>
           </div>
 
@@ -353,11 +399,21 @@ export function PublicAcademyPage() {
               </motion.div>
 
               <div className='flex space-x-2'>
-                <Button variant='outline' size='sm' className='flex-1'>
-                  <Heart className='mr-2 h-4 w-4' />
-                  Guardar
+                <Button 
+                  variant={isSaved ? 'default' : 'outline'} 
+                  size='sm' 
+                  className='flex-1'
+                  onClick={handleSaveClick}
+                >
+                  <Heart className={`mr-2 h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+                  {isSaved ? 'Guardada' : 'Guardar'}
                 </Button>
-                <Button variant='outline' size='sm' className='flex-1'>
+                <Button 
+                  variant='outline' 
+                  size='sm' 
+                  className='flex-1'
+                  onClick={handleShareClick}
+                >
                   <Share2 className='mr-2 h-4 w-4' />
                   Compartir
                 </Button>

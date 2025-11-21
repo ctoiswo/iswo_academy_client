@@ -1,4 +1,4 @@
-import { useParams } from '@tanstack/react-router'
+import { useParams, useRouter } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { 
   ArrowLeft, 
@@ -25,6 +25,7 @@ import { Link } from '@tanstack/react-router'
 
 export function AcademyDetailPage() {
   const { slug } = useParams({ from: '/academies/$slug' })
+  const router = useRouter()
   const { academy, loading, error } = useAcademy(slug)
 
   const pageVariants = {
@@ -158,16 +159,18 @@ export function AcademyDetailPage() {
                 <div className="flex items-center gap-6 text-sm">
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4" />
-                    <span>{academy.enrolled_users_count.toLocaleString()} estudiantes</span>
+                    <span>{(academy.enrolled_users_count || 0).toLocaleString()} estudiantes</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <BookOpen className="w-4 h-4" />
-                    <span>{academy.courses_count} cursos</span>
+                    <span>{academy.courses_count || 0} cursos</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    <span>{academy.total_duration_hours}h de contenido</span>
-                  </div>
+                  {academy.total_duration_hours && (
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      <span>{academy.total_duration_hours}h de contenido</span>
+                    </div>
+                  )}
                 </div>
               </motion.div>
 
@@ -175,7 +178,7 @@ export function AcademyDetailPage() {
               <motion.div variants={sectionVariants} className="flex flex-col gap-3">
                 <Button size="lg" className="bg-white text-black hover:bg-white/90">
                   <ShoppingCart className="w-4 h-4 mr-2" />
-                  Suscribirse ${academy.monthly_price}/mes
+                  Suscribirse ${academy.monthly_price || 0}/mes
                 </Button>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
@@ -191,11 +194,14 @@ export function AcademyDetailPage() {
 
           {/* Back Button */}
           <div className="absolute top-6 left-6">
-            <Button variant="outline" size="sm" asChild className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-              <Link to="/academies">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Volver
-              </Link>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => router.history.back()}
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Volver
             </Button>
           </div>
         </motion.div>
@@ -226,12 +232,12 @@ export function AcademyDetailPage() {
               <motion.div variants={sectionVariants}>
                 <Tabs defaultValue="courses" className="space-y-6">
                   <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="courses">Cursos ({academy.courses_count})</TabsTrigger>
-                    <TabsTrigger value="reviews">Reseñas ({academy.reviews_count})</TabsTrigger>
+                    <TabsTrigger value="courses">Cursos ({academy.courses_count || 0})</TabsTrigger>
+                    <TabsTrigger value="reviews">Reseñas ({academy.reviews_count || 0})</TabsTrigger>
                   </TabsList>
                   
                   <TabsContent value="courses" className="space-y-4">
-                    {academy.courses.length > 0 ? (
+                    {academy.courses && academy.courses.length > 0 ? (
                       <div className="grid gap-6">
                         {academy.courses.map((course, index) => (
                           <CourseCard 
@@ -306,28 +312,34 @@ export function AcademyDetailPage() {
                   <CardContent className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-muted-foreground">Estudiantes</span>
-                      <span className="font-semibold">{academy.enrolled_users_count.toLocaleString()}</span>
+                      <span className="font-semibold">{(academy.enrolled_users_count || 0).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-muted-foreground">Cursos</span>
-                      <span className="font-semibold">{academy.courses_count}</span>
+                      <span className="font-semibold">{academy.courses_count || 0}</span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Lecciones</span>
-                      <span className="font-semibold">{academy.total_lessons}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Duración total</span>
-                      <span className="font-semibold">{academy.total_duration_hours}h</span>
-                    </div>
-                    <Separator />
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Calificación</span>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-current text-yellow-500" />
-                        <span className="font-semibold">{academy.rating}</span>
+                    {academy.total_lessons && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Lecciones</span>
+                        <span className="font-semibold">{academy.total_lessons}</span>
                       </div>
-                    </div>
+                    )}
+                    {academy.total_duration_hours && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Duración total</span>
+                        <span className="font-semibold">{academy.total_duration_hours}h</span>
+                      </div>
+                    )}
+                    {(academy.rating || academy.total_lessons || academy.total_duration_hours) && <Separator />}
+                    {academy.rating && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Calificación</span>
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 fill-current text-yellow-500" />
+                          <span className="font-semibold">{academy.rating}</span>
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>
@@ -339,7 +351,7 @@ export function AcademyDetailPage() {
                     <div className="text-center mb-4">
                       <h3 className="text-xl font-bold mb-2">Acceso Completo</h3>
                       <div className="text-3xl font-bold text-blue-600">
-                        ${academy.monthly_price}
+                        ${academy.monthly_price || 0}
                         <span className="text-lg font-normal text-muted-foreground">/mes</span>
                       </div>
                     </div>

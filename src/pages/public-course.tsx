@@ -1,4 +1,4 @@
-import { Link, useParams } from '@tanstack/react-router'
+import { Link, useParams, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import {
   ArrowLeft,
@@ -13,6 +13,8 @@ import {
   AlertCircle,
 } from 'lucide-react'
 import { useCourseBySlug } from '@/hooks/use-featured-content'
+import { useWishlist } from '@/hooks/use-wishlist'
+import { useAuthStore } from '@/stores/auth-store'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -24,9 +26,14 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { PublicHeader } from '@/components/layout/public-header'
+import { toast } from 'sonner'
 
 export function PublicCoursePage() {
   const { courseSlug } = useParams({ strict: false })
+  const navigate = useNavigate()
+  const { isAuthenticated } = useAuthStore()
+  const { isInWishlist, toggleWishlist } = useWishlist()
+  
   const {
     data: courseData,
     isLoading,
@@ -157,6 +164,49 @@ export function PublicCoursePage() {
         return 'bg-red-100 text-red-800 border-red-200'
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200'
+    }
+  }
+
+  // Check if course is in wishlist
+  const isSaved = isInWishlist('course', courseData.id)
+
+  // Handle save button click
+  const handleSaveClick = () => {
+    if (!isAuthenticated) {
+      toast.info('Inicia sesión para guardar cursos')
+      navigate({ to: '/sign-in' })
+      return
+    }
+
+    const added = toggleWishlist('course', courseData.id, courseData.slug, courseData.title)
+    if (added) {
+      toast.success(`${courseData.title} guardado en tu lista`)
+    } else {
+      toast.info(`${courseData.title} removido de tu lista`)
+    }
+  }
+
+  // Handle share button click
+  const handleShareClick = async () => {
+    const url = window.location.href
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: courseData.title,
+          text: courseData.description,
+          url: url,
+        })
+      } catch (err) {
+        // User cancelled share
+      }
+    } else {
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(url)
+        toast.success('Enlace copiado al portapapeles')
+      } catch (err) {
+        toast.error('No se pudo copiar el enlace')
+      }
     }
   }
 
@@ -444,11 +494,21 @@ export function PublicCoursePage() {
                     </Button>
 
                     <div className='flex gap-2'>
-                      <Button variant='outline' size='sm' className='flex-1'>
-                        <Heart className='mr-1 h-4 w-4' />
-                        Guardar
+                      <Button 
+                        variant={isSaved ? 'default' : 'outline'} 
+                        size='sm' 
+                        className='flex-1'
+                        onClick={handleSaveClick}
+                      >
+                        <Heart className={`mr-1 h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+                        {isSaved ? 'Guardado' : 'Guardar'}
                       </Button>
-                      <Button variant='outline' size='sm' className='flex-1'>
+                      <Button 
+                        variant='outline' 
+                        size='sm' 
+                        className='flex-1'
+                        onClick={handleShareClick}
+                      >
                         <Share2 className='mr-1 h-4 w-4' />
                         Compartir
                       </Button>

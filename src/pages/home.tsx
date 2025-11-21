@@ -283,13 +283,13 @@ export function HomePage() {
                                       <div className='flex items-center space-x-1'>
                                         <Users className='text-muted-foreground h-4 w-4' />
                                         <span>
-                                          {academy.student_count.toLocaleString()}
+                                          {(academy.enrolled_users_count || 0).toLocaleString()}
                                         </span>
                                       </div>
                                       <div className='flex items-center space-x-1'>
                                         <BookOpen className='text-muted-foreground h-4 w-4' />
                                         <span>
-                                          {academy.course_count} cursos
+                                          {academy.courses_count || 0} cursos
                                         </span>
                                       </div>
                                     </div>
@@ -476,8 +476,8 @@ export function HomePage() {
             transition={{ duration: 0.6 }}
           >
             <Button size='lg' variant='outline' asChild>
-              <Link to='/courses'>
-                Explorar Todos los Cursos
+              <Link to='/academies'>
+                Explorar Todas las Academias
                 <ArrowRight className='ml-2 h-4 w-4' />
               </Link>
             </Button>

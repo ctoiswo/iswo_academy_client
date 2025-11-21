@@ -19,13 +19,17 @@ interface Academy {
   description?: string
   instructor?: string
   students?: number
+  enrolled_users_count?: number
   rating?: number
   courses?: number
-  image: string
+  courses_count?: number
+  image?: string
+  banner_url?: string
   category?: string
   duration?: string
   level?: 'Principiante' | 'Intermedio' | 'Avanzado'
   price?: number
+  monthly_price?: string
 }
 
 interface PublicAcademyCardProps {
@@ -68,29 +72,34 @@ export function PublicAcademyCard({
   }
 
   return (
-    <motion.div
-      variants={cardVariants}
-      initial='hidden'
-      animate='visible'
-      transition={{
-        duration: 0.5,
-        delay: index * 0.1,
-        ease: 'easeOut',
-      }}
-      whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      className='mx-auto w-full max-w-sm'
-    >
-      <Card className='bg-card group cursor-pointer overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl'>
-        {/* Image Container */}
+    <Link to='/academies/$slug' params={{ slug: academy.slug }} className='block'>
+      <motion.div
+        variants={cardVariants}
+        initial='hidden'
+        animate='visible'
+        transition={{
+          duration: 0.5,
+          delay: index * 0.1,
+          ease: 'easeOut',
+        }}
+        whileHover={{ y: -8, transition: { duration: 0.3 } }}
+        className='mx-auto w-full max-w-sm'
+      >
+        <Card className='bg-card group cursor-pointer overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl'>
+        {/* Image Container with Banner */}
         <div className='relative h-48 overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50'>
-          <motion.img
-            src={academy.image}
-            alt={academy.name}
-            className='h-full w-full object-cover'
-            variants={imageVariants}
-            whileHover='hover'
-            transition={{ duration: 0.3 }}
-          />
+          {(academy.banner_url || academy.image) ? (
+            <motion.img
+              src={academy.banner_url || academy.image}
+              alt={academy.name}
+              className='h-full w-full object-cover'
+              variants={imageVariants}
+              whileHover='hover'
+              transition={{ duration: 0.3 }}
+            />
+          ) : (
+            <div className='h-full w-full bg-gradient-to-br from-blue-500 to-indigo-600' />
+          )}
 
           {/* Overlay con categoria */}
           {academy.category && (
@@ -153,13 +162,13 @@ export function PublicAcademyCard({
             <div className='flex items-center gap-2'>
               <Users className='h-4 w-4 text-blue-600' />
               <span className='text-muted-foreground text-sm'>
-                {academy.students?.toLocaleString() || '0'} estudiantes
+                {(academy.students || academy.enrolled_users_count || 0).toLocaleString()} estudiantes
               </span>
             </div>
             <div className='flex items-center gap-2'>
               <BookOpen className='h-4 w-4 text-green-600' />
               <span className='text-muted-foreground text-sm'>
-                {academy.courses || 0} cursos
+                {(academy.courses || academy.courses_count || 0)} cursos
               </span>
             </div>
           </div>
@@ -175,15 +184,15 @@ export function PublicAcademyCard({
               </div>
             )}
 
-            {academy.price !== undefined && (
+            {(academy.price !== undefined || academy.monthly_price) && (
               <div className='text-right'>
-                {academy.price === 0 ? (
+                {(academy.price === 0 || academy.monthly_price === '0' || academy.monthly_price === '0.0') ? (
                   <Badge className='border-green-200 bg-green-100 text-green-800'>
                     Gratis
                   </Badge>
                 ) : (
                   <span className='text-foreground text-lg font-bold'>
-                    ${academy.price.toLocaleString()}
+                    ${(academy.price || parseFloat(academy.monthly_price || '0')).toLocaleString()}/mes
                   </span>
                 )}
               </div>
@@ -191,14 +200,13 @@ export function PublicAcademyCard({
           </div>
 
           {/* Action Button */}
-          <Button className='group/btn w-full' asChild>
-            <Link to='/academies/$slug' params={{ slug: academy.slug }}>
-              Ver Academia
-              <ArrowRight className='ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1' />
-            </Link>
-          </Button>
+          <div className='group/btn flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90'>
+            Ver Academia
+            <ArrowRight className='h-4 w-4 transition-transform group-hover/btn:translate-x-1' />
+          </div>
         </CardContent>
       </Card>
     </motion.div>
+    </Link>
   )
 }

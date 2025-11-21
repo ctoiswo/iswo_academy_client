@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Search, BookOpen, Loader2 } from 'lucide-react'
+import { useSearch, useNavigate } from '@tanstack/react-router'
 import { useAcademies } from '@/hooks/use-academies'
 import { useCategories } from '@/hooks/use-categories'
 import { useGeneralStatistics } from '@/hooks/use-statistics'
@@ -17,16 +18,28 @@ import {
 } from '@/components/ui/select'
 import { CategoryCarousel } from '@/components/category-carousel'
 import { PublicHeader } from '@/components/layout/public-header'
+import { PublicAcademyCard } from '@/components/public-academy-card'
 
 export function AcademiesPage() {
   console.log('📋 AcademiesPage (LIST) rendered')
 
+  // Read category from URL search params
+  const searchParams = useSearch({ strict: false }) as { category?: string }
+  const navigate = useNavigate()
+
   const [searchInput, setSearchInput] = useState('') // Input del usuario
   const [searchQuery, setSearchQuery] = useState('') // Query con debounce para la API
-  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.category || 'all')
   const [sortBy, setSortBy] = useState<
     'popular' | 'rating' | 'students' | 'newest'
   >('popular')
+
+  // Update selected category when URL changes
+  useEffect(() => {
+    if (searchParams.category) {
+      setSelectedCategory(searchParams.category)
+    }
+  }, [searchParams.category])
 
   // Debounce del search input - espera 500ms después del último cambio
   useEffect(() => {
@@ -61,27 +74,30 @@ export function AcademiesPage() {
   })
 
   // Agrupamos las academias por categoría SOLO cuando no hay filtros activos
-  // Cuando hay filtros, mostramos lista plana
+  // Cuando hay filtros, mostramos lista en cuadrícula
   const academiesByCategory = useMemo(() => {
     if (!academies.length) return []
 
-    // Si hay filtros activos, devolver las academias en un solo grupo
+    // Si hay filtros activos, devolver las academias para mostrar en cuadrícula
     if (hasFilters) {
-      return [
-        {
-          id: 0,
-          name: 'Resultados',
-          slug: 'resultados',
-          academies: academies.map((academy) => ({
-            id: academy.id,
-            name: academy.name,
-            slug: academy.slug,
-            monthly_price: academy.monthly_price,
-            enrolled_users_count: academy.enrolled_users_count,
-            courses_count: academy.courses_count,
-          })),
-        },
-      ]
+      const categoryName = selectedCategory !== 'all' 
+        ? allCategories.find(c => c.slug === selectedCategory)?.name || 'Resultados'
+        : 'Resultados'
+      
+      return {
+        filtered: true,
+        categoryName,
+        academies: academies.map((academy) => ({
+          id: academy.id,
+          name: academy.name,
+          slug: academy.slug,
+          description: academy.description,
+          banner_url: academy.banner_url,
+          monthly_price: academy.monthly_price,
+          enrolled_users_count: academy.enrolled_users_count,
+          courses_count: academy.courses_count,
+        })),
+      }
     }
 
     // Sin filtros: agrupamos por categoría para mostrar carruseles
@@ -103,6 +119,8 @@ export function AcademiesPage() {
           id: academy.id,
           name: academy.name,
           slug: academy.slug,
+          description: academy.description,
+          banner_url: academy.banner_url,
           monthly_price: academy.monthly_price,
           enrolled_users_count: academy.enrolled_users_count,
           courses_count: academy.courses_count,
@@ -113,8 +131,8 @@ export function AcademiesPage() {
       {} as Record<string, any>
     )
 
-    return Object.values(grouped)
-  }, [academies, hasFilters])
+    return { filtered: false, categories: Object.values(grouped) }
+  }, [academies, hasFilters, selectedCategory, allCategories])
 
   // Estadísticas: siempre del backend
   const stats = {
@@ -371,7 +389,7 @@ export function AcademiesPage() {
           </div>
 
           {/* Active Filters Indicator */}
-          {(searchQuery || selectedCategory !== 'all') && (
+          {(searchQuery || selectedCategory !== 'all' || sortBy !== 'popular') && (
             <div className='bg-muted/50 mt-4 flex flex-wrap items-center gap-2 rounded-lg p-3'>
               <span className='text-muted-foreground text-sm font-medium'>
                 Filtros activos:
@@ -401,6 +419,17 @@ export function AcademiesPage() {
                   </button>
                 </Badge>
               )}
+              {sortBy !== 'popular' && (
+                <Badge variant='secondary' className='gap-1'>
+                  Orden: {sortBy === 'rating' ? 'Mejor calificación' : sortBy === 'students' ? 'Más estudiantes' : sortBy === 'newest' ? 'Más reciente' : 'Más popular'}
+                  <button
+                    onClick={() => setSortBy('popular')}
+                    className='hover:bg-muted-foreground/20 ml-1 rounded-full p-0.5'
+                  >
+                    ×
+                  </button>
+                </Badge>
+              )}
               <Button
                 variant='ghost'
                 size='sm'
@@ -408,6 +437,8 @@ export function AcademiesPage() {
                   setSearchInput('')
                   setSearchQuery('')
                   setSelectedCategory('all')
+                  setSortBy('popular')
+                  navigate({ to: '/academies' })
                 }}
                 className='ml-auto h-6 text-xs'
               >
@@ -417,7 +448,7 @@ export function AcademiesPage() {
           )}
         </motion.div>
 
-        {/* Category Carousels */}
+        {/* Category Carousels or Filtered Grid */}
         <div className='relative'>
           {/* Indicador de loading sutil cuando se está filtrando */}
           {hasFilters && isFiltering && (
@@ -426,52 +457,115 @@ export function AcademiesPage() {
             </div>
           )}
 
-          {academiesByCategory.length > 0 ? (
-            academiesByCategory.map((category) => (
-              <CategoryCarousel
-                key={category.slug}
-                title={category.name}
-                academies={category.academies}
-              />
-            ))
-          ) : (
+          {'filtered' in academiesByCategory && academiesByCategory.filtered && academiesByCategory.academies ? (
+            /* Vista filtrada - Cuadrícula completa */
             <motion.div
-              className='py-16 text-center'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.5 }}
             >
-              <BookOpen className='text-muted-foreground mx-auto mb-4 h-16 w-16' />
-              <h3 className='mb-2 text-xl font-semibold'>
-                No se encontraron academias
-              </h3>
-              <p className='text-muted-foreground mx-auto mb-6 max-w-md'>
-                {searchQuery
-                  ? `No hay academias que coincidan con "${searchQuery}"${selectedCategory !== 'all' ? ' en esta categoría' : ''}`
-                  : 'No hay academias disponibles en esta categoría'}
-              </p>
-              <div className='flex justify-center gap-2'>
-                <Button
-                  onClick={() => {
-                    setSearchInput('')
-                    setSearchQuery('')
-                  }}
-                  variant='outline'
-                  size='sm'
-                  disabled={!searchQuery}
+              {academiesByCategory.academies.length > 0 ? (
+                <>
+                  <div className='mb-8 flex items-center justify-between'>
+                    <div>
+                      <h2 className='text-foreground mb-2 text-2xl font-bold'>
+                        {academiesByCategory.categoryName}
+                      </h2>
+                      <p className='text-muted-foreground text-sm'>
+                        {academiesByCategory.academies.length}{' '}
+                        {academiesByCategory.academies.length === 1
+                          ? 'academia encontrada'
+                          : 'academias encontradas'}
+                      </p>
+                    </div>
+                    <Button
+                      variant='outline'
+                      onClick={() => {
+                        setSelectedCategory('all')
+                        setSearchInput('')
+                        setSearchQuery('')
+                        navigate({ to: '/academies' })
+                      }}
+                    >
+                      Ver todas las categorías
+                    </Button>
+                  </div>
+                  
+                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
+                    {academiesByCategory.academies.map((academy: any, index: number) => (
+                      <div key={academy.id}>
+                        <PublicAcademyCard academy={academy} index={index} />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <motion.div
+                  className='py-16 text-center'
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
                 >
-                  Limpiar búsqueda
-                </Button>
-                <Button
-                  onClick={() => setSelectedCategory('all')}
-                  variant='outline'
-                  size='sm'
-                  disabled={selectedCategory === 'all'}
-                >
-                  Ver todas las categorías
-                </Button>
-              </div>
+                  <BookOpen className='text-muted-foreground mx-auto mb-4 h-16 w-16' />
+                  <h3 className='mb-2 text-xl font-semibold'>
+                    No se encontraron academias
+                  </h3>
+                  <p className='text-muted-foreground mx-auto mb-6 max-w-md'>
+                    {searchQuery
+                      ? `No hay academias que coincidan con "${searchQuery}"${selectedCategory !== 'all' ? ' en esta categoría' : ''}`
+                      : 'No hay academias disponibles en esta categoría'}
+                  </p>
+                  <div className='flex justify-center gap-2'>
+                    <Button
+                      onClick={() => {
+                        setSearchInput('')
+                        setSearchQuery('')
+                      }}
+                      variant='outline'
+                      size='sm'
+                      disabled={!searchQuery}
+                    >
+                      Limpiar búsqueda
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setSelectedCategory('all')
+                        navigate({ to: '/academies' })
+                      }}
+                      variant='outline'
+                      size='sm'
+                      disabled={selectedCategory === 'all'}
+                    >
+                      Ver todas las categorías
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
+          ) : (
+            /* Vista normal - Carruseles por categoría */
+            'categories' in academiesByCategory && academiesByCategory.categories && academiesByCategory.categories.length > 0 ? (
+              academiesByCategory.categories.map((category: any) => (
+                <CategoryCarousel
+                  key={category.slug}
+                  title={category.name}
+                  academies={category.academies}
+                  categorySlug={category.slug}
+                />
+              ))
+            ) : (
+              <motion.div
+                className='py-16 text-center'
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <BookOpen className='text-muted-foreground mx-auto mb-4 h-16 w-16' />
+                <h3 className='mb-2 text-xl font-semibold'>
+                  No hay academias disponibles
+                </h3>
+              </motion.div>
+            )
           )}
         </div>
 

@@ -61,7 +61,7 @@ export function PublicHeader({
             to='/academies'
             className='hover:text-primary text-sm font-medium transition-colors'
           >
-            Explorar Cursos
+            Explorar Academias
           </Link>
           <Link
             to='/landing'

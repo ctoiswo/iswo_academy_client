@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { PublicAcademyCard } from '@/components/public-academy-card'
 
@@ -13,7 +14,8 @@ interface Academy {
   students?: number
   rating?: number
   courses?: number
-  image: string
+  image?: string
+  banner_url?: string
   category?: string
   duration?: string
   level?: 'Principiante' | 'Intermedio' | 'Avanzado'
@@ -24,12 +26,14 @@ interface CategoryCarouselProps {
   title: string
   academies: Academy[]
   categoryIcon?: React.ReactNode
+  categorySlug?: string
 }
 
 export function CategoryCarousel({
   title,
   academies,
   categoryIcon,
+  categorySlug,
 }: CategoryCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -163,9 +167,14 @@ export function CategoryCarousel({
 
       {/* View All Button */}
       <motion.div variants={headerVariants} className='mt-8 text-center'>
-        <Button variant='outline' className='group hover:border-blue-500/50'>
-          Ver todas las academias de {title}
-          <ChevronRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+        <Button variant='outline' className='group hover:border-blue-500/50' asChild>
+          <Link 
+            to='/academies' 
+            search={{ category: categorySlug }}
+          >
+            Ver todas las academias de {title}
+            <ChevronRight className='ml-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
+          </Link>
         </Button>
       </motion.div>
     </motion.section>
