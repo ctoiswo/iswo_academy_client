@@ -2,15 +2,21 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ForgotPassword } from '../index'
-import * as apiClient from '@/lib/api-client'
+import { authApi, getErrorMessage } from '@/lib/api-client'
 
 // Create mock functions first
 const mockNavigate = vi.fn()
 
 // Mock dependencies
-vi.mock('@/lib/api-client')
+vi.mock('@/lib/api-client', () => ({
+  authApi: {
+    forgotPassword: vi.fn(),
+  },
+  getErrorMessage: vi.fn(),
+}))
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
+  useLocation: () => ({ pathname: '/forgot-password' }),
   Link: ({ children, to, ...props }: any) => (
     <a href={to} {...props}>
       {children}
@@ -24,19 +30,20 @@ vi.mock('sonner', () => ({
   },
 }))
 
-const mockAuthApi = vi.mocked(apiClient.authApi)
-const mockGetErrorMessage = vi.mocked(apiClient.getErrorMessage)
+const mockForgotPassword = vi.mocked(authApi.forgotPassword)
+const mockGetErrorMessage = vi.mocked(getErrorMessage)
 
-describe('Forgot Password Flow Integration', () => {
+describe('Flujo de Recuperación de Contraseña', () => {
   beforeEach(() => {
     // Reset mocks
     mockNavigate.mockClear()
+    mockForgotPassword.mockClear()
     
     // Mock getErrorMessage to return the error message
     mockGetErrorMessage.mockImplementation((error: any) => {
       if (error?.message) return error.message
       if (error?.details?.length > 0) return error.details.join(', ')
-      return 'An unexpected error occurred'
+      return 'Ocurrió un error inesperado'
     })
   })
 
@@ -44,284 +51,284 @@ describe('Forgot Password Flow Integration', () => {
     vi.clearAllMocks()
   })
 
-  it('renders the complete forgot password page', () => {
+  it('renderiza la página completa de recuperación de contraseña', () => {
     render(<ForgotPassword />)
 
     // Check for the card title
-    expect(screen.getByText('Forgot Password')).toBeInTheDocument()
-    expect(screen.getByText(/enter your registered email/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /send reset email/i })).toBeInTheDocument()
-    expect(screen.getByText(/remember your password/i)).toBeInTheDocument()
-    expect(screen.getByText(/don't have an account/i)).toBeInTheDocument()
+    expect(screen.getByText('Recuperar contraseña')).toBeInTheDocument()
+    expect(screen.getByText(/ingresa tu correo electrónico registrado/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /enviar correo/i })).toBeInTheDocument()
+    expect(screen.getByText(/recuerdas tu contraseña/i)).toBeInTheDocument()
+    expect(screen.getByText(/no tienes una cuenta/i)).toBeInTheDocument()
   })
 
-  it('completes successful forgot password flow', async () => {
+  it('completa el flujo exitoso de recuperación de contraseña', async () => {
     const user = userEvent.setup()
-    const testEmail = 'john.doe@example.com'
+    const testEmail = 'test@example.com'
     const mockResponse = {
-      message: 'If an account with that email exists, you will receive password reset instructions.'
+      message: 'Si existe una cuenta con ese correo, recibirás instrucciones para restablecer tu contraseña.'
     }
 
     // Mock successful API call
-    mockAuthApi.forgotPassword.mockResolvedValue(mockResponse)
+    mockForgotPassword.mockResolvedValue(mockResponse)
 
     render(<ForgotPassword />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), testEmail)
+    await user.type(screen.getByLabelText(/correo electrónico/i), testEmail)
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /send reset email/i })
+    const submitButton = screen.getByRole('button', { name: /enviar correo/i })
     await user.click(submitButton)
 
     // Wait for the API call
     await waitFor(() => {
-      expect(mockAuthApi.forgotPassword).toHaveBeenCalledWith(testEmail)
+      expect(mockForgotPassword).toHaveBeenCalledWith(testEmail)
     })
 
     // Should show success message
     await waitFor(() => {
-      expect(screen.getByText(/password reset instructions have been sent/i)).toBeInTheDocument()
-      expect(screen.getByText(/please check your email/i)).toBeInTheDocument()
+      expect(screen.getByText(/instrucciones para restablecer la contraseña han sido enviadas/i)).toBeInTheDocument()
+      expect(screen.getByText(/por favor revisa tu correo electrónico/i)).toBeInTheDocument()
     })
 
     // Form should be replaced with success message
-    expect(screen.queryByLabelText(/email/i)).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /send reset email/i })).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/correo electrónico/i)).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /enviar correo/i })).not.toBeInTheDocument()
   })
 
-  it('handles API error gracefully', async () => {
+  it('maneja errores de API apropiadamente', async () => {
     const user = userEvent.setup()
-    const testEmail = 'invalid@example.com'
+    const testEmail = 'invalido@example.com'
     const mockError = {
       type: 'ValidationError',
-      message: 'Email is invalid',
+      message: 'El correo es inválido',
       code: 'VALIDATION_ERROR',
-      details: ['Email format is invalid']
+      details: ['El formato del correo es inválido']
     }
 
     // Mock API error
-    mockAuthApi.forgotPassword.mockRejectedValue(mockError)
+    mockForgotPassword.mockRejectedValue(mockError)
 
     render(<ForgotPassword />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), testEmail)
+    await user.type(screen.getByLabelText(/correo electrónico/i), testEmail)
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /send reset email/i })
+    const submitButton = screen.getByRole('button', { name: /enviar correo/i })
     await user.click(submitButton)
 
     // Wait for the API call
     await waitFor(() => {
-      expect(mockAuthApi.forgotPassword).toHaveBeenCalledWith(testEmail)
+      expect(mockForgotPassword).toHaveBeenCalledWith(testEmail)
     })
 
     // Should still show the form (not success state)
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /send reset email/i })).toBeInTheDocument()
-    expect(screen.queryByText(/password reset instructions have been sent/i)).not.toBeInTheDocument()
+    expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /enviar correo/i })).toBeInTheDocument()
+    expect(screen.queryByText(/instrucciones para restablecer la contraseña han sido enviadas/i)).not.toBeInTheDocument()
   })
 
-  it('handles validation errors and sets field errors', async () => {
+  it('maneja errores de validación y establece errores en campos', async () => {
     const user = userEvent.setup()
-    const testEmail = 'invalid@example.com'
+    const testEmail = 'invalido@example.com'
     const mockError = {
       type: 'ValidationError',
-      message: 'Validation failed',
+      message: 'Validación fallida',
       code: 'VALIDATION_ERROR',
-      details: ['Email format is invalid']
+      details: ['El formato del email es inválido']
     }
 
     // Mock API error
-    mockAuthApi.forgotPassword.mockRejectedValue(mockError)
+    mockForgotPassword.mockRejectedValue(mockError)
 
     render(<ForgotPassword />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), testEmail)
+    await user.type(screen.getByLabelText(/correo electrónico/i), testEmail)
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /send reset email/i })
+    const submitButton = screen.getByRole('button', { name: /enviar correo/i })
     await user.click(submitButton)
 
     // Wait for the API call and error handling
     await waitFor(() => {
-      expect(mockAuthApi.forgotPassword).toHaveBeenCalledWith(testEmail)
+      expect(mockForgotPassword).toHaveBeenCalledWith(testEmail)
     })
 
     // Should show field error for email
     await waitFor(() => {
-      expect(screen.getByText('Email format is invalid')).toBeInTheDocument()
+      expect(screen.getByText('El formato del email es inválido')).toBeInTheDocument()
     })
   })
 
-  it('handles network error', async () => {
+  it('maneja errores de red', async () => {
     const user = userEvent.setup()
-    const testEmail = 'john.doe@example.com'
+    const testEmail = 'test@example.com'
     const mockError = {
       type: 'NetworkError',
-      message: 'Network connection failed',
+      message: 'Error de conexión de red',
       code: 'NETWORK_ERROR'
     }
 
     // Mock network error
-    mockAuthApi.forgotPassword.mockRejectedValue(mockError)
+    mockForgotPassword.mockRejectedValue(mockError)
 
     render(<ForgotPassword />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), testEmail)
+    await user.type(screen.getByLabelText(/correo electrónico/i), testEmail)
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /send reset email/i })
+    const submitButton = screen.getByRole('button', { name: /enviar correo/i })
     await user.click(submitButton)
 
     // Wait for the API call
     await waitFor(() => {
-      expect(mockAuthApi.forgotPassword).toHaveBeenCalledWith(testEmail)
+      expect(mockForgotPassword).toHaveBeenCalledWith(testEmail)
     })
 
     // Should still show the form
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /send reset email/i })).toBeInTheDocument()
+    expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /enviar correo/i })).toBeInTheDocument()
   })
 
-  it('validates form fields before submission', async () => {
+  it('valida los campos del formulario antes de enviar', async () => {
     const user = userEvent.setup()
     render(<ForgotPassword />)
 
     // Try to submit empty form
-    const submitButton = screen.getByRole('button', { name: /send reset email/i })
+    const submitButton = screen.getByRole('button', { name: /enviar correo/i })
     await user.click(submitButton)
 
     // Should show validation error
     await waitFor(() => {
-      expect(screen.getByText(/please enter your email/i)).toBeInTheDocument()
+      expect(screen.getByText(/por favor ingresa tu correo electrónico/i)).toBeInTheDocument()
     })
 
     // API should not be called
-    expect(mockAuthApi.forgotPassword).not.toHaveBeenCalled()
+    expect(mockForgotPassword).not.toHaveBeenCalled()
   })
 
-  it('validates email format', async () => {
+  it('valida el formato del correo electrónico', async () => {
     const user = userEvent.setup()
     render(<ForgotPassword />)
 
     // Enter invalid email
-    await user.type(screen.getByLabelText(/email/i), 'invalid-email')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'correo-invalido')
 
     // Try to submit
-    const submitButton = screen.getByRole('button', { name: /send reset email/i })
+    const submitButton = screen.getByRole('button', { name: /enviar correo/i })
     await user.click(submitButton)
 
     // Should show email validation error (check for any validation error text)
     await waitFor(() => {
       // The validation might show different text, so let's check if the form didn't submit
-      expect(mockAuthApi.forgotPassword).not.toHaveBeenCalled()
+      expect(mockForgotPassword).not.toHaveBeenCalled()
     })
   })
 
-  it('shows loading state during API call', async () => {
+  it('muestra estado de carga durante la llamada a la API', async () => {
     const user = userEvent.setup()
-    const testEmail = 'john.doe@example.com'
+    const testEmail = 'test@example.com'
 
     // Mock API call that takes time to resolve
-    mockAuthApi.forgotPassword.mockImplementation(() => 
-      new Promise(resolve => setTimeout(() => resolve({ message: 'Success' }), 100))
+    mockForgotPassword.mockImplementation(() => 
+      new Promise(resolve => setTimeout(() => resolve({ message: 'Éxito' }), 100))
     )
 
     render(<ForgotPassword />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), testEmail)
+    await user.type(screen.getByLabelText(/correo electrónico/i), testEmail)
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /send reset email/i })
+    const submitButton = screen.getByRole('button', { name: /enviar correo/i })
     await user.click(submitButton)
 
     // Should show loading state
-    expect(screen.getByText(/sending email/i)).toBeInTheDocument()
+    expect(screen.getByText(/enviando correo/i)).toBeInTheDocument()
     expect(submitButton).toBeDisabled()
-    expect(screen.getByLabelText(/email/i)).toBeDisabled()
+    expect(screen.getByLabelText(/correo electrónico/i)).toBeDisabled()
 
     // Wait for API call to complete
     await waitFor(() => {
-      expect(mockAuthApi.forgotPassword).toHaveBeenCalledWith(testEmail)
+      expect(mockForgotPassword).toHaveBeenCalledWith(testEmail)
     })
   })
 
-  it('resets form after successful submission', async () => {
+  it('resetea el formulario después de un envío exitoso', async () => {
     const user = userEvent.setup()
-    const testEmail = 'john.doe@example.com'
+    const testEmail = 'test@example.com'
     const mockResponse = {
-      message: 'If an account with that email exists, you will receive password reset instructions.'
+      message: 'Si existe una cuenta con ese correo, recibirás instrucciones para restablecer tu contraseña.'
     }
 
     // Mock successful API call
-    mockAuthApi.forgotPassword.mockResolvedValue(mockResponse)
+    mockForgotPassword.mockResolvedValue(mockResponse)
 
     render(<ForgotPassword />)
 
     // Fill out the form
-    const emailInput = screen.getByLabelText(/email/i)
+    const emailInput = screen.getByLabelText(/correo electrónico/i)
     await user.type(emailInput, testEmail)
     expect(emailInput).toHaveValue(testEmail)
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /send reset email/i })
+    const submitButton = screen.getByRole('button', { name: /enviar correo/i })
     await user.click(submitButton)
 
     // Wait for success state
     await waitFor(() => {
-      expect(screen.getByText(/password reset instructions have been sent/i)).toBeInTheDocument()
+      expect(screen.getByText(/instrucciones para restablecer la contraseña han sido enviadas/i)).toBeInTheDocument()
     })
 
     // Form should be replaced with success message, so email input should not exist
-    expect(screen.queryByLabelText(/email/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/correo electrónico/i)).not.toBeInTheDocument()
   })
 
-  it('handles rate limit error', async () => {
+  it('maneja error de límite de tasa', async () => {
     const user = userEvent.setup()
-    const testEmail = 'john.doe@example.com'
+    const testEmail = 'test@example.com'
     const mockError = {
       type: 'RateLimitError',
-      message: 'Too many password reset requests. Please try again later.',
+      message: 'Demasiadas solicitudes de restablecimiento de contraseña. Inténtalo de nuevo más tarde.',
       code: 'RATE_LIMIT_EXCEEDED'
     }
 
     // Mock rate limit error
-    mockAuthApi.forgotPassword.mockRejectedValue(mockError)
+    mockForgotPassword.mockRejectedValue(mockError)
 
     render(<ForgotPassword />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), testEmail)
+    await user.type(screen.getByLabelText(/correo electrónico/i), testEmail)
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /send reset email/i })
+    const submitButton = screen.getByRole('button', { name: /enviar correo/i })
     await user.click(submitButton)
 
     // Wait for the API call
     await waitFor(() => {
-      expect(mockAuthApi.forgotPassword).toHaveBeenCalledWith(testEmail)
+      expect(mockForgotPassword).toHaveBeenCalledWith(testEmail)
     })
 
     // Should still show the form
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /send reset email/i })).toBeInTheDocument()
+    expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /enviar correo/i })).toBeInTheDocument()
   })
 
-  it('has correct navigation links', () => {
+  it('tiene los links de navegación correctos', () => {
     render(<ForgotPassword />)
 
-    // Check for sign-in link
-    const signInLink = screen.getByRole('link', { name: /sign in/i })
-    expect(signInLink).toHaveAttribute('href', '/sign-in')
-
-    // Check for sign-up link
-    const signUpLink = screen.getByRole('link', { name: /sign up/i })
-    expect(signUpLink).toHaveAttribute('href', '/sign-up')
+    // Check for sign-in and sign-up links
+    const links = screen.getAllByRole('link')
+    const signInLink = links.find(link => link.getAttribute('href') === '/sign-in')
+    const signUpLink = links.find(link => link.getAttribute('href') === '/sign-up')
+    
+    expect(signInLink).toBeDefined()
+    expect(signUpLink).toBeDefined()
   })
 })

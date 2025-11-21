@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SignIn } from '../index'
-import * as apiClient from '@/lib/api-client'
 import { useAuthStore } from '@/stores/auth-store'
 
 // Create mock functions first
@@ -28,8 +27,36 @@ vi.mock('sonner', () => ({
   },
 }))
 
-const mockAuthApi = vi.mocked(apiClient.authApi)
 const mockUseAuthStore = vi.mocked(useAuthStore)
+
+// Default mock store configuration
+const defaultMockStore = {
+  login: vi.fn(),
+  register: vi.fn(),
+  user: null,
+  tokens: null,
+  isAuthenticated: false,
+  isLoading: false,
+  error: null,
+  logout: vi.fn(),
+  refreshTokens: vi.fn(),
+  setUser: vi.fn(),
+  setTokens: vi.fn(),
+  setLoading: vi.fn(),
+  setError: vi.fn(),
+  reset: vi.fn(),
+  initialize: vi.fn(),
+  auth: {
+    user: null,
+    setUser: vi.fn(),
+    accessToken: '',
+    setAccessToken: vi.fn(),
+    refreshToken: '',
+    setRefreshToken: vi.fn(),
+    resetAccessToken: vi.fn(),
+    reset: vi.fn(),
+  },
+}
 
 describe('Login Flow Integration', () => {
   beforeEach(() => {
@@ -37,34 +64,8 @@ describe('Login Flow Integration', () => {
     mockNavigate.mockClear()
     mockUseSearch.mockReturnValue({ redirect: undefined })
     
-    // Mock auth store
-    mockUseAuthStore.mockReturnValue({
-      login: vi.fn(),
-      register: vi.fn(),
-      user: null,
-      tokens: null,
-      isAuthenticated: false,
-      isLoading: false,
-      error: null,
-      logout: vi.fn(),
-      refreshTokens: vi.fn(),
-      setUser: vi.fn(),
-      setTokens: vi.fn(),
-      setLoading: vi.fn(),
-      setError: vi.fn(),
-      reset: vi.fn(),
-      initialize: vi.fn(),
-      auth: {
-        user: null,
-        setUser: vi.fn(),
-        accessToken: '',
-        setAccessToken: vi.fn(),
-        refreshToken: '',
-        setRefreshToken: vi.fn(),
-        resetAccessToken: vi.fn(),
-        reset: vi.fn(),
-      },
-    })
+    // Mock auth store with default configuration
+    mockUseAuthStore.mockReturnValue(defaultMockStore)
   })
 
   afterEach(() => {
@@ -76,14 +77,14 @@ describe('Login Flow Integration', () => {
 
     // Check for the card title specifically using querySelector
     const cardTitle = document.querySelector('[data-slot="card-title"]')
-    expect(cardTitle).toHaveTextContent('Sign in')
-    expect(screen.getByText(/enter your email and password below to/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
-    expect(screen.getByText(/forgot password/i)).toBeInTheDocument()
-    expect(screen.getByText(/terms of service/i)).toBeInTheDocument()
-    expect(screen.getByText(/privacy policy/i)).toBeInTheDocument()
+    expect(cardTitle).toHaveTextContent('Iniciar sesión')
+    expect(screen.getByText(/ingresa tu correo electrónico y contraseña/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/contraseña/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument()
+    expect(screen.getByText(/olvidaste tu contraseña/i)).toBeInTheDocument()
+    expect(screen.getByText(/términos de servicio/i)).toBeInTheDocument()
+    expect(screen.getByText(/política de privacidad/i)).toBeInTheDocument()
   })
 
   it('completes successful login flow', async () => {
@@ -92,7 +93,7 @@ describe('Login Flow Integration', () => {
     // Mock successful login
     const mockLogin = vi.fn().mockResolvedValue(undefined)
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       login: mockLogin,
       error: null,
       setError: vi.fn(),
@@ -101,18 +102,18 @@ describe('Login Flow Integration', () => {
     render(<SignIn />)
 
     // Fill out the login form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'test@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'password123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Wait for the login to complete
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith({
-        email: 'john.doe@example.com',
-        password: 'ValidPassword123',
+        email: 'test@example.com',
+        password: 'password123',
       })
     })
 
@@ -126,14 +127,14 @@ describe('Login Flow Integration', () => {
     const user = userEvent.setup()
     const mockError = {
       type: 'AuthenticationError',
-      message: 'Invalid credentials',
+      message: 'Credenciales inválidas',
       code: 'INVALID_CREDENTIALS'
     }
 
     const mockLogin = vi.fn().mockRejectedValue(mockError)
     const mockSetError = vi.fn()
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       login: mockLogin,
       error: null,
       setError: mockSetError,
@@ -142,11 +143,11 @@ describe('Login Flow Integration', () => {
     render(<SignIn />)
 
     // Fill out the form with invalid credentials
-    await user.type(screen.getByLabelText(/email/i), 'invalid@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'wrongpassword')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'invalid@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'wrongpassword')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     await waitFor(() => {
@@ -171,7 +172,7 @@ describe('Login Flow Integration', () => {
     const mockLogin = vi.fn().mockRejectedValue(mockError)
     const mockSetError = vi.fn()
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       login: mockLogin,
       error: null,
       setError: mockSetError,
@@ -180,17 +181,17 @@ describe('Login Flow Integration', () => {
     render(<SignIn />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), 'unconfirmed@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'unconfirmed@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'password123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith({
         email: 'unconfirmed@example.com',
-        password: 'ValidPassword123',
+        password: 'password123',
       })
     })
 
@@ -210,7 +211,7 @@ describe('Login Flow Integration', () => {
     const mockLogin = vi.fn().mockRejectedValue(mockError)
     const mockSetError = vi.fn()
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       login: mockLogin,
       error: null,
       setError: mockSetError,
@@ -219,11 +220,11 @@ describe('Login Flow Integration', () => {
     render(<SignIn />)
 
     // Fill out the form with valid data (client-side validation will pass)
-    await user.type(screen.getByLabelText(/email/i), 'test@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'test@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'password123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     await waitFor(() => {
@@ -245,7 +246,7 @@ describe('Login Flow Integration', () => {
     const mockLogin = vi.fn().mockRejectedValue(mockError)
     const mockSetError = vi.fn()
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       login: mockLogin,
       error: null,
       setError: mockSetError,
@@ -254,11 +255,11 @@ describe('Login Flow Integration', () => {
     render(<SignIn />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'test@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'password123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     await waitFor(() => {
@@ -280,7 +281,7 @@ describe('Login Flow Integration', () => {
     const mockLogin = vi.fn().mockRejectedValue(mockError)
     const mockSetError = vi.fn()
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       login: mockLogin,
       error: null,
       setError: mockSetError,
@@ -289,11 +290,11 @@ describe('Login Flow Integration', () => {
     render(<SignIn />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'test@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'password123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     await waitFor(() => {
@@ -309,7 +310,7 @@ describe('Login Flow Integration', () => {
     render(<SignIn />)
 
     // Try to submit empty form
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should show validation errors
@@ -319,7 +320,7 @@ describe('Login Flow Integration', () => {
     })
 
     // Form should not be submitted
-    const mockLogin = mockUseAuthStore().login
+    const mockLogin = defaultMockStore.login
     expect(mockLogin).not.toHaveBeenCalled()
   })
 
@@ -328,11 +329,11 @@ describe('Login Flow Integration', () => {
     render(<SignIn />)
 
     // Enter invalid email
-    await user.type(screen.getByLabelText(/email/i), 'invalid-email')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'invalid-email')
+    await user.type(screen.getByLabelText(/contraseña/i), 'password123')
 
     // Try to submit
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should show email validation error
@@ -341,7 +342,7 @@ describe('Login Flow Integration', () => {
     })
 
     // Form should not be submitted
-    const mockLogin = mockUseAuthStore().login
+    const mockLogin = defaultMockStore.login
     expect(mockLogin).not.toHaveBeenCalled()
   })
 
@@ -350,11 +351,11 @@ describe('Login Flow Integration', () => {
     render(<SignIn />)
 
     // Enter short password
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), '123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'test@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), '123')
 
     // Try to submit
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should show password validation error
@@ -363,7 +364,7 @@ describe('Login Flow Integration', () => {
     })
 
     // Form should not be submitted
-    const mockLogin = mockUseAuthStore().login
+    const mockLogin = defaultMockStore.login
     expect(mockLogin).not.toHaveBeenCalled()
   })
 
@@ -373,7 +374,7 @@ describe('Login Flow Integration', () => {
     // Mock login that takes time to resolve
     const mockLogin = vi.fn().mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       login: mockLogin,
       error: null,
       setError: vi.fn(),
@@ -382,16 +383,16 @@ describe('Login Flow Integration', () => {
     render(<SignIn />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'test@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'password123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should show loading state
     expect(submitButton).toBeDisabled()
-    expect(screen.getByRole('button', { name: /sign in/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeDisabled()
 
     // Wait for login to complete
     await waitFor(() => {
@@ -402,7 +403,7 @@ describe('Login Flow Integration', () => {
   it('displays auth store error when present', () => {
     const mockError = 'Authentication failed'
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       error: mockError,
     })
 
@@ -419,22 +420,22 @@ describe('Login Flow Integration', () => {
     // Mock successful login
     const mockLogin = vi.fn().mockResolvedValue(undefined)
     mockUseAuthStore.mockReturnValue({
-      ...mockUseAuthStore(),
+      ...defaultMockStore,
       login: mockLogin,
       error: null,
       setError: vi.fn(),
     })
 
     // Mock search with redirect
-    mockUseSearch.mockReturnValue({ redirect: redirectUrl })
+    mockUseSearch.mockReturnValue({ redirect: redirectUrl as any })
 
     render(<SignIn />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'test@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'password123')
 
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Wait for login and navigation
