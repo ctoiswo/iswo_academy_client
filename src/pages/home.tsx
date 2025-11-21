@@ -3,7 +3,6 @@ import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import {
   GraduationCap,
-  Search,
   BookOpen,
   Users,
   Clock,
@@ -26,11 +25,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { PublicHeader } from '@/components/layout/public-header'
+import { GlobalSearchBar } from '@/components/search/global-search-bar'
 
 export function HomePage() {
-  const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
 
   // Fetch categories and featured content from backend
@@ -92,7 +90,7 @@ export function HomePage() {
       <PublicHeader />
 
       {/* Hero Section */}
-      <section className='relative overflow-hidden py-20 lg:py-32'>
+      <section className='relative py-20 lg:py-32'>
         <div className='absolute inset-0 z-0'>
           <img
             src='https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
@@ -126,27 +124,12 @@ export function HomePage() {
             </motion.p>
 
             <motion.div
-              className='mx-auto mt-10 max-w-2xl'
+              className='mx-auto mt-10 flex w-full justify-center'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <div className='flex gap-4'>
-                <div className='relative flex-1'>
-                  <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2' />
-                  <Input
-                    type='text'
-                    placeholder='¿Qué quieres aprender hoy?'
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className='h-12 pl-10 text-lg'
-                  />
-                </div>
-                <Button size='lg' className='h-12 px-8'>
-                  <Search className='mr-2 h-4 w-4' />
-                  Buscar
-                </Button>
-              </div>
+              <GlobalSearchBar />
             </motion.div>
           </div>
         </div>

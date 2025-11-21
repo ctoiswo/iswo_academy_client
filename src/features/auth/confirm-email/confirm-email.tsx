@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
+import { motion } from 'framer-motion'
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { AuthLayout } from '../auth-layout'
+import { AnimatedAuthLayout } from '../components/animated-auth-layout'
 
 type ConfirmationStatus =
   | 'loading'
@@ -136,53 +137,131 @@ export function ConfirmEmail() {
     navigate({ to: '/sign-up' })
   }
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    visible: { opacity: 1, y: 0, scale: 1 },
+  }
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0 },
+  }
+
+  const contentVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  }
+
+  const iconVariants = {
+    hidden: { scale: 0, rotate: -180 },
+    visible: {
+      scale: 1,
+      rotate: 0,
+      transition: {
+        type: 'spring' as const,
+        stiffness: 200,
+        damping: 15,
+      },
+    },
+  }
+
   return (
-    <AuthLayout>
-      <Card className='gap-4'>
-        <CardHeader className='text-center'>
-          <div className='mb-4 flex justify-center'>{getStatusIcon()}</div>
-          <CardTitle className='text-2xl font-bold'>
-            {getStatusTitle()}
-          </CardTitle>
-          <CardDescription className='text-center'>{message}</CardDescription>
-        </CardHeader>
-        <CardContent className='space-y-4'>
-          {status === 'success' || status === 'already_confirmed' ? (
-            <Button onClick={handleGoToLogin} className='w-full'>
-              Iniciar Sesión
-            </Button>
-          ) : status === 'expired' ? (
-            <div className='space-y-2'>
-              <Button onClick={handleRequestNewToken} className='w-full'>
-                Solicitar Nuevo Token
-              </Button>
-              <Button
-                onClick={handleGoToLogin}
-                variant='outline'
-                className='w-full'
+    <AnimatedAuthLayout
+      title='Confirmación de Email'
+      subtitle='Estamos verificando tu correo electrónico para activar tu cuenta en ISWO Academy'
+      showBackButton={false}
+    >
+      <motion.div
+        variants={cardVariants}
+        initial='hidden'
+        animate='visible'
+        whileHover={{ y: -2, transition: { duration: 0.2 } }}
+      >
+        <Card className='gap-4 border-0 bg-white/95 shadow-xl backdrop-blur-sm'>
+          <motion.div variants={headerVariants}>
+            <CardHeader className='pb-4 text-center'>
+              <motion.div
+                className='mb-6 flex justify-center'
+                variants={iconVariants}
               >
-                Ir a Iniciar Sesión
-              </Button>
-            </div>
-          ) : status === 'error' ? (
-            <div className='space-y-2'>
-              <Button
-                onClick={() => window.location.reload()}
-                className='w-full'
-              >
-                Intentar Nuevamente
-              </Button>
-              <Button
-                onClick={handleGoToLogin}
-                variant='outline'
-                className='w-full'
-              >
-                Ir a Iniciar Sesión
-              </Button>
-            </div>
-          ) : null}
-        </CardContent>
-      </Card>
-    </AuthLayout>
+                {getStatusIcon()}
+              </motion.div>
+              <CardTitle className='text-2xl font-bold tracking-tight text-gray-900'>
+                {getStatusTitle()}
+              </CardTitle>
+              <CardDescription className='mt-2 text-base text-gray-600'>
+                {message}
+              </CardDescription>
+            </CardHeader>
+          </motion.div>
+
+          <motion.div variants={contentVariants} transition={{ delay: 0.2 }}>
+            <CardContent className='space-y-3 px-6 pb-6'>
+              {status === 'success' || status === 'already_confirmed' ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <Button
+                    onClick={handleGoToLogin}
+                    className='w-full'
+                    size='lg'
+                  >
+                    Iniciar Sesión
+                  </Button>
+                </motion.div>
+              ) : status === 'expired' ? (
+                <motion.div
+                  className='space-y-3'
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <Button
+                    onClick={handleRequestNewToken}
+                    className='w-full'
+                    size='lg'
+                  >
+                    Solicitar Nuevo Token
+                  </Button>
+                  <Button
+                    onClick={handleGoToLogin}
+                    variant='outline'
+                    className='w-full'
+                    size='lg'
+                  >
+                    Ir a Iniciar Sesión
+                  </Button>
+                </motion.div>
+              ) : status === 'error' ? (
+                <motion.div
+                  className='space-y-3'
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <Button
+                    onClick={() => window.location.reload()}
+                    className='w-full'
+                    size='lg'
+                  >
+                    Intentar Nuevamente
+                  </Button>
+                  <Button
+                    onClick={handleGoToLogin}
+                    variant='outline'
+                    className='w-full'
+                    size='lg'
+                  >
+                    Ir a Iniciar Sesión
+                  </Button>
+                </motion.div>
+              ) : null}
+            </CardContent>
+          </motion.div>
+        </Card>
+      </motion.div>
+    </AnimatedAuthLayout>
   )
 }

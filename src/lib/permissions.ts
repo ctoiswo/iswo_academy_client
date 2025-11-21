@@ -1,6 +1,6 @@
 // Permission types and validation utilities for academy access control
 
-export type AcademyRole = 'student' | 'teacher' | 'admin'
+export type AcademyRole = 'guest' | 'student' | 'teacher' | 'admin'
 export type Permission = 
   | 'read' 
   | 'create' 
@@ -26,6 +26,7 @@ export interface PermissionContext {
 
 // Role hierarchy for permission checking
 const ROLE_HIERARCHY: Record<AcademyRole, number> = {
+  guest: 0,
   student: 1,
   teacher: 2,
   admin: 3
@@ -35,7 +36,8 @@ const ROLE_HIERARCHY: Record<AcademyRole, number> = {
 const ROLE_PERMISSIONS: Record<AcademyRole, Permission[]> = {
   admin: ['read', 'create', 'update', 'delete', 'enroll', 'manage_courses', 'manage_users', 'manage_payments'],
   teacher: ['read', 'create', 'update', 'enroll', 'manage_courses'],
-  student: ['read', 'enroll']
+  student: ['read', 'enroll'],
+  guest: ['read'] // Guests can only read public content
 }
 
 /**

@@ -1,22 +1,9 @@
-import { useState } from 'react'
-import React from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import {
-  Search,
-  Code,
-  Palette,
-  TrendingUp,
-  Briefcase,
-  BookOpen,
-  Globe,
-  Microscope,
-  Heart,
-  Music,
-  GraduationCap,
-  Loader2,
-} from 'lucide-react'
-import { adaptCategoryForCarousel } from '@/lib/academy-adapters'
+import { Search, BookOpen, Loader2 } from 'lucide-react'
+import { useAcademies } from '@/hooks/use-academies'
 import { useCategories } from '@/hooks/use-categories'
+import { useGeneralStatistics } from '@/hooks/use-statistics'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -31,75 +18,117 @@ import {
 import { CategoryCarousel } from '@/components/category-carousel'
 import { PublicHeader } from '@/components/layout/public-header'
 
-// Mapeo de iconos para las categorías
-const iconMap = {
-  Code,
-  Briefcase,
-  Globe,
-  Palette,
-  Microscope,
-  Heart,
-  Music,
-  GraduationCap,
-  TrendingUp,
-}
-
 export function AcademiesPage() {
   console.log('📋 AcademiesPage (LIST) rendered')
 
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchInput, setSearchInput] = useState('') // Input del usuario
+  const [searchQuery, setSearchQuery] = useState('') // Query con debounce para la API
   const [selectedCategory, setSelectedCategory] = useState('all')
-  const [sortBy, setSortBy] = useState('popular')
+  const [sortBy, setSortBy] = useState<
+    'popular' | 'rating' | 'students' | 'newest'
+  >('popular')
 
-  // Obtenemos las categorías base sin filtros para los botones de categoría
+  // Debounce del search input - espera 500ms después del último cambio
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(searchInput)
+    }, 400)
+
+    return () => clearTimeout(timer)
+  }, [searchInput])
+
+  // Obtenemos estadísticas generales del backend
+  const {
+    data: generalStats,
+    isLoading: statsLoading,
+    error: statsError,
+  } = useGeneralStatistics()
+
+  // Obtenemos las categorías para los filtros
   const { categories: allCategories, loading: allCategoriesLoading } =
     useCategories()
 
-  // Obtenemos las categorías filtradas del backend solo cuando hay filtros
+  // Obtenemos las academias filtradas directamente del backend
   const hasFilters = searchQuery || selectedCategory !== 'all'
   const {
-    categories: filteredCategories,
-    loading: isFiltering,
-    error,
-    stats: filteredStats,
-  } = useCategories({
+    data: academies = [],
+    isLoading: isFiltering,
+    error: academiesError,
+  } = useAcademies({
     search: searchQuery || undefined,
     category: selectedCategory !== 'all' ? selectedCategory : undefined,
-    sortBy: sortBy,
+    sort_by: sortBy,
   })
 
-  // Determinamos qué categorías y estadísticas usar
-  const categoriesToShow = hasFilters ? filteredCategories : allCategories
-  const stats = hasFilters
-    ? filteredStats
-    : {
-        totalAcademies: allCategories.reduce(
-          (sum, cat) => sum + cat.academies_count,
-          0
-        ),
-        totalStudents: allCategories.reduce(
-          (sum, cat) =>
-            sum +
-            cat.academies.reduce(
-              (academySum, academy) =>
-                academySum + academy.enrolled_users_count,
-              0
-            ),
-          0
-        ),
-        totalCategories: allCategories.length,
-      }
+  // Agrupamos las academias por categoría SOLO cuando no hay filtros activos
+  // Cuando hay filtros, mostramos lista plana
+  const academiesByCategory = useMemo(() => {
+    if (!academies.length) return []
 
-  // Convertimos las categorías para los filtros (usamos allCategories para tener todos los botones)
+    // Si hay filtros activos, devolver las academias en un solo grupo
+    if (hasFilters) {
+      return [
+        {
+          id: 0,
+          name: 'Resultados',
+          slug: 'resultados',
+          academies: academies.map((academy) => ({
+            id: academy.id,
+            name: academy.name,
+            slug: academy.slug,
+            monthly_price: academy.monthly_price,
+            enrolled_users_count: academy.enrolled_users_count,
+            courses_count: academy.courses_count,
+          })),
+        },
+      ]
+    }
+
+    // Sin filtros: agrupamos por categoría para mostrar carruseles
+    const grouped = academies.reduce(
+      (acc, academy) => {
+        const categoryName = academy.academy_category?.name || 'Sin categoría'
+        const categorySlug = academy.academy_category?.slug || 'sin-categoria'
+
+        if (!acc[categorySlug]) {
+          acc[categorySlug] = {
+            id: academy.academy_category?.id || 0,
+            name: categoryName,
+            slug: categorySlug,
+            academies: [],
+          }
+        }
+
+        acc[categorySlug].academies.push({
+          id: academy.id,
+          name: academy.name,
+          slug: academy.slug,
+          monthly_price: academy.monthly_price,
+          enrolled_users_count: academy.enrolled_users_count,
+          courses_count: academy.courses_count,
+        })
+
+        return acc
+      },
+      {} as Record<string, any>
+    )
+
+    return Object.values(grouped)
+  }, [academies, hasFilters])
+
+  // Estadísticas: siempre del backend
+  const stats = {
+    totalAcademies: hasFilters
+      ? academies.length
+      : (generalStats?.total_academies ?? 0),
+    totalStudents: generalStats?.total_students ?? 0,
+    totalCategories: generalStats?.total_categories ?? 0,
+  }
+
+  // Convertimos las categorías para los filtros
   const categories = allCategories.map((category) => ({
     id: category.slug,
     name: category.name,
-    icon: React.createElement(
-      iconMap[category.icon as keyof typeof iconMap] || BookOpen,
-      {
-        className: 'w-5 h-5',
-      }
-    ),
     count: category.academies_count,
   }))
 
@@ -129,13 +158,17 @@ export function AcademiesPage() {
     visible: { opacity: 1, scale: 1 },
   }
 
-  // Las estadísticas ahora vienen directamente del backend filtrado
+  // Las estadísticas ahora vienen directamente del backend (sin cálculos)
   const totalAcademies = stats.totalAcademies
   const totalStudents = stats.totalStudents
   const totalCategories = stats.totalCategories
 
   // Estados de carga y error - solo mostrar loader completo en la carga inicial
-  if (allCategoriesLoading && !hasFilters) {
+  const isInitialLoading =
+    (allCategoriesLoading || statsLoading || isFiltering) && !hasFilters
+  const error = academiesError || statsError
+
+  if (isInitialLoading) {
     return (
       <div className='bg-background min-h-screen'>
         <PublicHeader />
@@ -159,7 +192,9 @@ export function AcademiesPage() {
               <CardTitle className='text-red-600'>Error</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className='text-muted-foreground'>{error}</p>
+              <p className='text-muted-foreground'>
+                {error instanceof Error ? error.message : String(error)}
+              </p>
               <Button
                 onClick={() => window.location.reload()}
                 className='mt-4 w-full'
@@ -229,7 +264,7 @@ export function AcademiesPage() {
           </div>
           <div className='bg-card rounded-2xl border p-6 text-center shadow-sm'>
             <div className='mb-2 text-3xl font-bold text-green-600'>
-              {(totalStudents / 1000).toFixed(1)}k+
+              {totalStudents}
             </div>
             <div className='text-muted-foreground font-medium'>
               Estudiantes Activos
@@ -257,9 +292,9 @@ export function AcademiesPage() {
             <div className='relative flex-1'>
               <Search className='text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform' />
               <Input
-                placeholder='Buscar academias por nombre, instructor o tecnología...'
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder='Buscar academias por nombre o descripción...'
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
                 className='h-12 pl-10'
               />
@@ -284,7 +319,14 @@ export function AcademiesPage() {
                 </SelectContent>
               </Select>
 
-              <Select value={sortBy} onValueChange={setSortBy}>
+              <Select
+                value={sortBy}
+                onValueChange={(value) =>
+                  setSortBy(
+                    value as 'popular' | 'rating' | 'students' | 'newest'
+                  )
+                }
+              >
                 <SelectTrigger className='h-12 w-40'>
                   <SelectValue placeholder='Ordenar por' />
                 </SelectTrigger>
@@ -319,8 +361,8 @@ export function AcademiesPage() {
                 onClick={() => setSelectedCategory(category.id)}
                 className='rounded-full'
               >
-                {category.icon}
-                <span className='ml-2'>{category.name}</span>
+                <BookOpen className='mr-2 h-4 w-4' />
+                <span>{category.name}</span>
                 <Badge variant='secondary' className='ml-2 text-xs'>
                   {category.count}
                 </Badge>
@@ -338,7 +380,10 @@ export function AcademiesPage() {
                 <Badge variant='secondary' className='gap-1'>
                   Búsqueda: "{searchQuery}"
                   <button
-                    onClick={() => setSearchQuery('')}
+                    onClick={() => {
+                      setSearchInput('')
+                      setSearchQuery('')
+                    }}
                     className='hover:bg-muted-foreground/20 ml-1 rounded-full p-0.5'
                   >
                     ×
@@ -360,6 +405,7 @@ export function AcademiesPage() {
                 variant='ghost'
                 size='sm'
                 onClick={() => {
+                  setSearchInput('')
                   setSearchQuery('')
                   setSelectedCategory('all')
                 }}
@@ -380,18 +426,14 @@ export function AcademiesPage() {
             </div>
           )}
 
-          {categoriesToShow.length > 0 ? (
-            categoriesToShow.map((category) => {
-              const adaptedData = adaptCategoryForCarousel(category)
-
-              return (
-                <CategoryCarousel
-                  key={category.id}
-                  title={adaptedData.title}
-                  academies={adaptedData.academies}
-                />
-              )
-            })
+          {academiesByCategory.length > 0 ? (
+            academiesByCategory.map((category) => (
+              <CategoryCarousel
+                key={category.slug}
+                title={category.name}
+                academies={category.academies}
+              />
+            ))
           ) : (
             <motion.div
               className='py-16 text-center'
@@ -410,7 +452,10 @@ export function AcademiesPage() {
               </p>
               <div className='flex justify-center gap-2'>
                 <Button
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => {
+                    setSearchInput('')
+                    setSearchQuery('')
+                  }}
                   variant='outline'
                   size='sm'
                   disabled={!searchQuery}

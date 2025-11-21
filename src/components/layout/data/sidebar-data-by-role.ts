@@ -37,27 +37,27 @@ export function getSidebarDataByRole(
   // Configuración común de Settings
   const settingsItems = [
     {
-      title: 'Profile',
+      title: 'Perfil',
       url: '/settings',
       icon: UserCog,
     },
     {
-      title: 'Account',
+      title: 'Cuenta',
       url: '/settings/account',
       icon: Wrench,
     },
     {
-      title: 'Appearance',
+      title: 'Apariencia',
       url: '/settings/appearance',
       icon: Palette,
     },
     {
-      title: 'Notifications',
+      title: 'Notificaciones',
       url: '/settings/notifications',
       icon: Bell,
     },
     {
-      title: 'Display',
+      title: 'Pantalla',
       url: '/settings/display',
       icon: Monitor,
     },
@@ -71,7 +71,7 @@ export function getSidebarDataByRole(
       // Usuario sin academias - solo dashboard básico
       const guestGeneralItems = [
         {
-          title: 'Dashboard',
+          title: 'Panel Principal',
           url: '/dashboard',
           icon: LayoutDashboard,
         },
@@ -93,15 +93,15 @@ export function getSidebarDataByRole(
           items: guestGeneralItems,
         },
         {
-          title: 'Configuration',
+          title: 'Configuración',
           items: [
             {
-              title: 'Settings',
+              title: 'Ajustes',
               icon: Settings,
               items: settingsItems,
             },
             {
-              title: 'Help Center',
+              title: 'Centro de Ayuda',
               url: '/help-center',
               icon: HelpCircle,
             },
@@ -116,37 +116,37 @@ export function getSidebarDataByRole(
           title: 'General',
           items: [
             {
-              title: 'Dashboard',
+              title: 'Panel Principal',
               url: '/dashboard',
               icon: LayoutDashboard,
             },
             {
-              title: 'My Courses',
+              title: 'Mis Cursos',
               url: '/my-courses',
               icon: BookOpen,
             },
             {
-              title: 'Redeem Code',
+              title: 'Canjear Código',
               url: '/redeem-code',
               icon: Key,
             },
             {
-              title: 'Certificates',
+              title: 'Certificados',
               url: '/certificates',
               icon: Award,
             },
           ],
         },
         {
-          title: 'Configuration',
+          title: 'Configuración',
           items: [
             {
-              title: 'Settings',
+              title: 'Ajustes',
               icon: Settings,
               items: settingsItems,
             },
             {
-              title: 'Help Center',
+              title: 'Centro de Ayuda',
               url: '/help-center',
               icon: HelpCircle,
             },
@@ -161,52 +161,52 @@ export function getSidebarDataByRole(
           title: 'General',
           items: [
             {
-              title: 'Dashboard',
+              title: 'Panel Principal',
               url: '/dashboard',
               icon: LayoutDashboard,
             },
             {
-              title: 'My Courses',
+              title: 'Mis Cursos',
               url: '/teacher/courses',
               icon: GraduationCap,
             },
             {
-              title: 'Students',
+              title: 'Estudiantes',
               url: '/teacher/students',
               icon: Users,
             },
             {
-              title: 'Analytics',
+              title: 'Analíticas',
               url: '/teacher/analytics',
               icon: BarChart3,
             },
           ],
         },
         {
-          title: 'Content',
+          title: 'Contenido',
           items: [
             {
-              title: 'Create Course',
+              title: 'Crear Curso',
               url: '/teacher/courses/create',
               icon: FileText,
             },
             {
-              title: 'Resources',
+              title: 'Recursos',
               url: '/teacher/resources',
               icon: FolderKanban,
             },
           ],
         },
         {
-          title: 'Configuration',
+          title: 'Configuración',
           items: [
             {
-              title: 'Settings',
+              title: 'Ajustes',
               icon: Settings,
               items: settingsItems,
             },
             {
-              title: 'Help Center',
+              title: 'Centro de Ayuda',
               url: '/help-center',
               icon: HelpCircle,
             },
@@ -221,27 +221,27 @@ export function getSidebarDataByRole(
           title: 'General',
           items: [
             {
-              title: 'Dashboard',
+              title: 'Panel principal',
               url: '/dashboard',
               icon: LayoutDashboard,
             },
             {
-              title: 'Wizard',
+              title: 'Onboarding',
               url: '/onboarding',
               icon: Sparkles,
             },
             {
-              title: 'Learning Paths',
+              title: 'Rutas de aprendizaje',
               url: '/admin/learning-paths',
               icon: Route,
             },
             {
-              title: 'Courses',
+              title: 'Cursos',
               url: '/admin/courses',
               icon: GraduationCap,
             },
             {
-              title: 'Lessons',
+              title: 'Lecciones',
               url: '/admin/lessons',
               icon: BookMarked,
             },
@@ -251,7 +251,7 @@ export function getSidebarDataByRole(
               icon: MessagesSquare,
             },
             {
-              title: 'Users',
+              title: 'Usuarios',
               url: '/admin/users',
               icon: Users,
             },
@@ -263,35 +263,35 @@ export function getSidebarDataByRole(
           ],
         },
         {
-          title: 'Management',
+          title: 'Gestión',
           items: [
             {
-              title: 'Teachers',
+              title: 'Profesores',
               url: '/admin/teachers',
               icon: Users,
             },
             {
-              title: 'Students',
+              title: 'Estudiantes',
               url: '/admin/students',
               icon: Users,
             },
             {
-              title: 'Payments',
+              title: 'Pagos',
               url: '/admin/payments',
               icon: ShoppingCart,
             },
           ],
         },
         {
-          title: 'Configuration',
+          title: 'Configuración',
           items: [
             {
-              title: 'Settings',
+              title: 'Ajustes',
               icon: Settings,
               items: settingsItems,
             },
             {
-              title: 'Help Center',
+              title: 'Centro de Ayuda',
               url: '/help-center',
               icon: HelpCircle,
             },
@@ -306,52 +306,52 @@ export function getSidebarDataByRole(
           title: 'General',
           items: [
             {
-              title: 'Dashboard',
+              title: 'Panel Principal',
               url: '/dashboard',
               icon: LayoutDashboard,
             },
             {
-              title: 'All Academies',
+              title: 'Todas las Academias',
               url: '/super-admin/academies',
               icon: GraduationCap,
             },
             {
-              title: 'Global Analytics',
+              title: 'Analíticas Globales',
               url: '/super-admin/analytics',
               icon: BarChart3,
             },
           ],
         },
         {
-          title: 'Management',
+          title: 'Gestión',
           items: [
             {
-              title: 'Users',
+              title: 'Usuarios',
               url: '/super-admin/users',
               icon: Users,
             },
             {
-              title: 'Payments',
+              title: 'Pagos',
               url: '/super-admin/payments',
               icon: ShoppingCart,
             },
             {
-              title: 'System Health',
+              title: 'Estado del Sistema',
               url: '/super-admin/health',
               icon: Monitor,
             },
           ],
         },
         {
-          title: 'Configuration',
+          title: 'Configuración',
           items: [
             {
-              title: 'Settings',
+              title: 'Ajustes',
               icon: Settings,
               items: settingsItems,
             },
             {
-              title: 'Help Center',
+              title: 'Centro de Ayuda',
               url: '/help-center',
               icon: HelpCircle,
             },

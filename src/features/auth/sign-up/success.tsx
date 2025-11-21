@@ -137,7 +137,7 @@ export function SignUpSuccess() {
                   </Link>
                 </CustomButton>
                 
-                <CustomButton asChild variant="outline" className="w-full">
+                <CustomButton asChild variant="primary" className="w-full">
                   <Link to="/sign-up">Registrar Otra Cuenta</Link>
                 </CustomButton>
               </motion.div>
