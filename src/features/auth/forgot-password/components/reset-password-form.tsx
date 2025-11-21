@@ -21,13 +21,13 @@ import { Input } from '@/components/ui/input'
 const formSchema = z.object({
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-    .regex(/[0-9]/, 'Password must contain at least one number'),
-  password_confirmation: z.string().min(1, 'Please confirm your password'),
+    .min(8, 'La contraseña debe tener al menos 8 caracteres')
+    .regex(/[A-Z]/, 'La contraseña debe contener al menos una letra mayúscula')
+    .regex(/[a-z]/, 'La contraseña debe contener al menos una letra minúscula')
+    .regex(/[0-9]/, 'La contraseña debe contener al menos un número'),
+  password_confirmation: z.string().min(1, 'Por favor confirma tu contraseña'),
 }).refine((data) => data.password === data.password_confirmation, {
-  message: "Passwords don't match",
+  message: "Las contraseñas no coinciden",
   path: ["password_confirmation"],
 })
 
@@ -109,12 +109,12 @@ export function ResetPasswordForm({
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>New Password</FormLabel>
+              <FormLabel>Nueva Contraseña</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input 
                     type={showPassword ? 'text' : 'password'}
-                    placeholder='Enter your new password'
+                    placeholder='Ingresa tu nueva contraseña'
                     disabled={isLoading}
                     {...field} 
                   />
@@ -144,12 +144,12 @@ export function ResetPasswordForm({
           name='password_confirmation'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm New Password</FormLabel>
+              <FormLabel>Confirmar Nueva Contraseña</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input 
                     type={showPasswordConfirmation ? 'text' : 'password'}
-                    placeholder='Confirm your new password'
+                    placeholder='Confirma tu nueva contraseña'
                     disabled={isLoading}
                     {...field} 
                   />
@@ -177,12 +177,12 @@ export function ResetPasswordForm({
         <Button className='mt-2' disabled={isLoading} type="submit">
           {isLoading ? (
             <>
-              Resetting password...
+              Restableciendo contraseña...
               <Loader2 className='ml-2 h-4 w-4 animate-spin' />
             </>
           ) : (
             <>
-              Reset password
+              Restablecer contraseña
               <ArrowRight className='ml-2 h-4 w-4' />
             </>
           )}

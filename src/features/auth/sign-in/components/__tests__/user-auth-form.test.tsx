@@ -70,11 +70,11 @@ describe('UserAuthForm', () => {
   it('renders all form fields and buttons', () => {
     render(<UserAuthForm />)
 
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
-    expect(screen.getByText(/forgot password/i)).toBeInTheDocument()
-    expect(screen.getByText(/or continue with/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/contraseña/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument()
+    expect(screen.getByText(/olvidaste tu contraseña/i)).toBeInTheDocument()
+    expect(screen.getByText(/o continúa con/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /github/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /facebook/i })).toBeInTheDocument()
   })
@@ -84,13 +84,13 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Try to submit empty form
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should show validation errors
     await waitFor(() => {
-      expect(screen.getByText(/please enter your email/i)).toBeInTheDocument()
-      expect(screen.getByText(/please enter your password/i)).toBeInTheDocument()
+      expect(screen.getByText(/por favor ingresa tu correo electrónico/i)).toBeInTheDocument()
+      expect(screen.getByText(/por favor ingresa tu contraseña/i)).toBeInTheDocument()
     })
 
     // Should not call login
@@ -103,16 +103,16 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Enter invalid email
-    await user.type(screen.getByLabelText(/email/i), 'invalid-email')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'invalid-email')
+    await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     // Try to submit
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should show email validation error
     await waitFor(() => {
-      expect(screen.getByText(/please enter a valid email address/i)).toBeInTheDocument()
+      expect(screen.getByText(/por favor ingresa una dirección de correo electrónico válida/i)).toBeInTheDocument()
     })
 
     // Should not call login
@@ -125,16 +125,16 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Enter short password
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), '123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), '123')
 
     // Try to submit
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should show password validation error
     await waitFor(() => {
-      expect(screen.getByText(/password must be at least 7 characters long/i)).toBeInTheDocument()
+      expect(screen.getByText(/la contraseña debe tener al menos 7 caracteres/i)).toBeInTheDocument()
     })
 
     // Should not call login
@@ -156,11 +156,11 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should call login with correct credentials
@@ -186,15 +186,15 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should navigate to default route
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith({ to: '/', replace: true })
+      expect(mockNavigate).toHaveBeenCalledWith({ to: '/academies', replace: true })
     })
   })
 
@@ -213,10 +213,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm redirectTo={redirectTo} />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should navigate to redirect route
@@ -239,11 +239,11 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     // Submit the form
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should show loading state
@@ -272,10 +272,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should clear error first
@@ -315,10 +315,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should clear error first
@@ -348,10 +348,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out and submit the form with valid data (client-side validation will pass)
-    await user.type(screen.getByLabelText(/email/i), 'test@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'test@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should clear error first
@@ -380,10 +380,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/email/i), 'john.doe@example.com')
-    await user.type(screen.getByLabelText(/password/i), 'ValidPassword123')
+    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
+    const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
     await user.click(submitButton)
 
     // Should clear error first

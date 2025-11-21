@@ -20,10 +20,10 @@ export function ResetPassword() {
         <Card className='gap-4'>
           <CardHeader>
             <CardTitle className='text-lg tracking-tight text-destructive'>
-              Invalid Reset Link
+              Enlace de Restablecimiento Inválido
             </CardTitle>
             <CardDescription>
-              The password reset link is invalid or missing. Please request a new password reset.
+              El enlace de restablecimiento de contraseña es inválido o falta. Por favor solicita un nuevo restablecimiento de contraseña.
             </CardDescription>
           </CardHeader>
           <CardFooter>
@@ -32,7 +32,7 @@ export function ResetPassword() {
                 to='/forgot-password'
                 className='hover:text-primary underline underline-offset-4'
               >
-                Request new password reset
+                Solicitar nuevo restablecimiento
               </Link>
             </div>
           </CardFooter>
@@ -46,10 +46,10 @@ export function ResetPassword() {
       <Card className='gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>
-            Reset Your Password
+            Restablecer tu Contraseña
           </CardTitle>
           <CardDescription>
-            Enter your new password below. Make sure it's strong and secure.
+            Ingresa tu nueva contraseña a continuación. Asegúrate de que sea fuerte y segura.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -57,12 +57,12 @@ export function ResetPassword() {
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground mx-auto px-8 text-center text-sm text-balance'>
-            Remember your password?{' '}
+            ¿Recuerdas tu contraseña?{' '}
             <Link
               to='/sign-in'
               className='hover:text-primary underline underline-offset-4'
             >
-              Sign in
+              Iniciar sesión
             </Link>
             .
           </p>

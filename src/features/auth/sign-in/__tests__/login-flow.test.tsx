@@ -117,9 +117,9 @@ describe('Login Flow Integration', () => {
       })
     })
 
-    // Should navigate to dashboard
+    // Should navigate to academies
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith({ to: '/', replace: true })
+      expect(mockNavigate).toHaveBeenCalledWith({ to: '/academies', replace: true })
     })
   })
 
@@ -315,8 +315,8 @@ describe('Login Flow Integration', () => {
 
     // Should show validation errors
     await waitFor(() => {
-      expect(screen.getByText(/please enter your email/i)).toBeInTheDocument()
-      expect(screen.getByText(/please enter your password/i)).toBeInTheDocument()
+      expect(screen.getByText(/por favor ingresa tu correo electrónico/i)).toBeInTheDocument()
+      expect(screen.getByText(/por favor ingresa tu contraseña/i)).toBeInTheDocument()
     })
 
     // Form should not be submitted
@@ -338,7 +338,7 @@ describe('Login Flow Integration', () => {
 
     // Should show email validation error
     await waitFor(() => {
-      expect(screen.getByText(/please enter a valid email address/i)).toBeInTheDocument()
+      expect(screen.getByText(/por favor ingresa una dirección de correo electrónico válida/i)).toBeInTheDocument()
     })
 
     // Form should not be submitted
@@ -360,7 +360,7 @@ describe('Login Flow Integration', () => {
 
     // Should show password validation error
     await waitFor(() => {
-      expect(screen.getByText(/password must be at least 7 characters long/i)).toBeInTheDocument()
+      expect(screen.getByText(/la contraseña debe tener al menos 7 caracteres/i)).toBeInTheDocument()
     })
 
     // Form should not be submitted
