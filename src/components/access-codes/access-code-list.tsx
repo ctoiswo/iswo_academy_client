@@ -48,9 +48,10 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
         <CardHeader>
           <div className='flex items-center justify-between'>
             <div>
-              <CardTitle>Access Codes</CardTitle>
+              <CardTitle>Códigos de Acceso</CardTitle>
               <CardDescription>
-                Generate access codes to allow free enrollment in this course
+                Genera códigos de acceso para permitir inscripción gratuita en
+                este curso
               </CardDescription>
             </div>
             <Skeleton className='h-10 w-32' />
@@ -68,7 +69,7 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
     return (
       <Card>
         <CardContent className='py-12 text-center'>
-          <p className='text-red-600'>Failed to load access codes</p>
+          <p className='text-red-600'>Error al cargar los códigos de acceso</p>
         </CardContent>
       </Card>
     )
@@ -87,15 +88,18 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
         <CardHeader>
           <div className='flex items-center justify-between'>
             <div>
-              <CardTitle>Access Codes</CardTitle>
+              <CardTitle>Códigos de Acceso</CardTitle>
               <CardDescription>
-                Generate access codes to allow free enrollment in this course
+                Genera códigos de acceso para permitir inscripción gratuita en
+                este curso
               </CardDescription>
             </div>
-            <Button onClick={() => setCreateDialogOpen(true)}>
-              <Plus className='mr-2 h-4 w-4' />
-              Create Access Code
-            </Button>
+            {accessCodes.length !== 0 && (
+              <Button onClick={() => setCreateDialogOpen(true)}>
+                <Plus className='mr-2 h-4 w-4' />
+                Crear Código de Acceso
+              </Button>
+            )}
           </div>
 
           {/* Filters */}
@@ -107,14 +111,14 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
                 onValueChange={handleFilterChange}
               >
                 <SelectTrigger className='w-[180px]'>
-                  <SelectValue placeholder='Filter by status' />
+                  <SelectValue placeholder='Filtrar por estado' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value='all'>All status</SelectItem>
-                  <SelectItem value='active'>Active</SelectItem>
-                  <SelectItem value='inactive'>Inactive</SelectItem>
-                  <SelectItem value='expired'>Expired</SelectItem>
-                  <SelectItem value='exhausted'>Exhausted</SelectItem>
+                  <SelectItem value='all'>Todos los estados</SelectItem>
+                  <SelectItem value='active'>Activo</SelectItem>
+                  <SelectItem value='inactive'>Inactivo</SelectItem>
+                  <SelectItem value='expired'>Expirado</SelectItem>
+                  <SelectItem value='exhausted'>Agotado</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -125,13 +129,16 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
           {accessCodes.length === 0 ? (
             <div className='py-12 text-center text-gray-500'>
               <Key className='mx-auto mb-4 h-12 w-12' />
-              <h3 className='mb-2 text-lg font-medium'>No access codes yet</h3>
+              <h3 className='mb-2 text-lg font-medium'>
+                Aún no hay códigos de acceso
+              </h3>
               <p className='mb-4'>
-                Create access codes to give students free access to this course
+                Crea códigos de acceso para dar acceso gratuito a los
+                estudiantes a este curso
               </p>
               <Button onClick={() => setCreateDialogOpen(true)}>
                 <Plus className='mr-2 h-4 w-4' />
-                Create First Access Code
+                Crear Primer Código de Acceso
               </Button>
             </div>
           ) : (

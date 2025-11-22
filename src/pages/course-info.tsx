@@ -214,18 +214,7 @@ export default function CourseInfoPage() {
             )}
           </CardContent>
         </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Códigos de Acceso</CardTitle>
-            <CardDescription>
-              Gestiona los códigos de acceso para este curso
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AccessCodeList courseSlug={course.slug} />
-          </CardContent>
-        </Card>
+        <AccessCodeList courseSlug={course.slug} />
       </div>
 
       {/* Dialog para editar curso */}

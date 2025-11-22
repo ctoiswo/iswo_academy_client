@@ -74,18 +74,18 @@ export function CreateAccessCodeDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent className='max-w-xl'>
         <DialogHeader>
-          <DialogTitle>Create Access Code</DialogTitle>
+          <DialogTitle>Crear Código de Acceso</DialogTitle>
           <DialogDescription>
-            Generate a new access code to allow students free enrollment in this
-            course.
+            Genera un nuevo código de acceso para permitir a los estudiantes
+            inscribirse gratuitamente en este curso.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className='space-y-4'>
           <div className='space-y-2'>
-            <Label htmlFor='usage_limit'>Usage Limit</Label>
+            <Label htmlFor='usage_limit'>Límite de Uso</Label>
             <Input
               id='usage_limit'
               type='number'
@@ -93,15 +93,15 @@ export function CreateAccessCodeDialog({
               max='1000'
               value={usageLimit}
               onChange={(e) => setUsageLimit(e.target.value)}
-              placeholder='How many people can use this code?'
+              placeholder='¿Cuántas personas pueden usar este código?'
             />
             <p className='text-muted-foreground text-sm'>
-              Maximum number of students who can use this code
+              Número máximo de estudiantes que pueden usar este código
             </p>
           </div>
 
           <div className='space-y-2'>
-            <Label>Expiry Date</Label>
+            <Label>Fecha de Expiración</Label>
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -114,7 +114,7 @@ export function CreateAccessCodeDialog({
                   <CalendarIcon className='mr-2 h-4 w-4' />
                   {expiresAt
                     ? format(expiresAt, 'PPP', { locale: es })
-                    : 'Select expiry date'}
+                    : 'Selecciona fecha de expiración'}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className='w-auto p-0' align='start'>
@@ -139,7 +139,7 @@ export function CreateAccessCodeDialog({
                 size='sm'
                 onClick={() => setQuickExpiry(2)}
               >
-                2 days
+                2 días
               </Button>
               <Button
                 type='button'
@@ -147,7 +147,7 @@ export function CreateAccessCodeDialog({
                 size='sm'
                 onClick={() => setQuickExpiry(7)}
               >
-                1 week
+                1 semana
               </Button>
               <Button
                 type='button'
@@ -155,18 +155,18 @@ export function CreateAccessCodeDialog({
                 size='sm'
                 onClick={() => setQuickExpiry(30)}
               >
-                1 month
+                1 mes
               </Button>
             </div>
           </div>
 
           <div className='space-y-2'>
-            <Label htmlFor='description'>Description (optional)</Label>
+            <Label htmlFor='description'>Descripción (opcional)</Label>
             <Textarea
               id='description'
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g., 'Special promotion for company employees'"
+              placeholder="ej., 'Promoción especial para empleados de la empresa'"
               rows={3}
             />
           </div>
@@ -177,13 +177,13 @@ export function CreateAccessCodeDialog({
               variant='outline'
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              Cancelar
             </Button>
             <Button
               type='submit'
               disabled={createAccessCode.isPending || !expiresAt || !usageLimit}
             >
-              {createAccessCode.isPending ? 'Creating...' : 'Create Code'}
+              {createAccessCode.isPending ? 'Creando...' : 'Crear Código'}
             </Button>
           </DialogFooter>
         </form>

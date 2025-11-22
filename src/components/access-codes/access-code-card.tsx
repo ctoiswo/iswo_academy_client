@@ -53,7 +53,10 @@ interface AccessCodeCardProps {
   courseSlug: number | string
 }
 
-export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) {
+export function AccessCodeCard({
+  accessCode,
+  courseSlug,
+}: AccessCodeCardProps) {
   const [showCode, setShowCode] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
@@ -63,9 +66,9 @@ export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) 
   const copyCode = async () => {
     try {
       await navigator.clipboard.writeText(accessCode.code)
-      toast.success('Code copied to clipboard')
+      toast.success('Código copiado al portapapeles')
     } catch (error) {
-      toast.error('Failed to copy code')
+      toast.error('Error al copiar el código')
     }
   }
 
@@ -87,28 +90,28 @@ export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) 
         return (
           <Badge variant='default' className='bg-green-100 text-green-800'>
             <CheckCircle className='mr-1 h-3 w-3' />
-            Active
+            Activo
           </Badge>
         )
       case 'inactive':
         return (
           <Badge variant='secondary'>
             <Ban className='mr-1 h-3 w-3' />
-            Inactive
+            Inactivo
           </Badge>
         )
       case 'expired':
         return (
           <Badge variant='destructive'>
             <Clock className='mr-1 h-3 w-3' />
-            Expired
+            Expirado
           </Badge>
         )
       case 'exhausted':
         return (
           <Badge variant='destructive'>
             <XCircle className='mr-1 h-3 w-3' />
-            Exhausted
+            Agotado
           </Badge>
         )
       default:
@@ -118,18 +121,18 @@ export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) 
 
   const getExpiryText = () => {
     if (accessCode.expired) {
-      return 'Expired'
+      return 'Expirado'
     }
 
     if (accessCode.days_until_expiry <= 0) {
-      return 'Expires today'
+      return 'Expira hoy'
     }
 
     if (accessCode.days_until_expiry === 1) {
-      return 'Expires tomorrow'
+      return 'Expira mañana'
     }
 
-    return `Expires in ${accessCode.days_until_expiry} days`
+    return `Expira en ${accessCode.days_until_expiry} días`
   }
 
   return (
@@ -166,7 +169,7 @@ export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) 
                 </div>
               </CardTitle>
               <CardDescription>
-                {accessCode.description || 'No description provided'}
+                {accessCode.description || 'Sin descripción'}
               </CardDescription>
             </div>
             <div className='flex items-center gap-2'>
@@ -174,15 +177,15 @@ export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant='ghost' className='h-8 w-8 p-0'>
-                    <span className='sr-only'>Open menu</span>
+                    <span className='sr-only'>Abrir menú</span>
                     <MoreHorizontal className='h-4 w-4' />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='end'>
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                   <DropdownMenuItem onClick={copyCode}>
                     <Copy className='mr-2 h-4 w-4' />
-                    Copy code
+                    Copiar código
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -192,12 +195,12 @@ export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) 
                     {accessCode.status === 'active' ? (
                       <>
                         <Ban className='mr-2 h-4 w-4' />
-                        Deactivate
+                        Desactivar
                       </>
                     ) : (
                       <>
                         <CheckCircle className='mr-2 h-4 w-4' />
-                        Activate
+                        Activar
                       </>
                     )}
                   </DropdownMenuItem>
@@ -207,7 +210,7 @@ export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) 
                     onClick={() => setDeleteDialogOpen(true)}
                   >
                     <XCircle className='mr-2 h-4 w-4' />
-                    Delete
+                    Eliminar
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -219,7 +222,7 @@ export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) 
           {/* Usage Progress */}
           <div className='space-y-2'>
             <div className='flex justify-between text-sm'>
-              <span className='text-muted-foreground'>Usage</span>
+              <span className='text-muted-foreground'>Uso</span>
               <span>
                 {accessCode.usage_count} / {accessCode.usage_limit}
               </span>
@@ -233,14 +236,14 @@ export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) 
               <Users className='h-4 w-4 text-blue-600' />
               <div>
                 <p className='font-medium'>{accessCode.remaining_uses}</p>
-                <p className='text-muted-foreground'>Remaining uses</p>
+                <p className='text-muted-foreground'>Usos restantes</p>
               </div>
             </div>
             <div className='flex items-center gap-2'>
               <Calendar className='h-4 w-4 text-orange-600' />
               <div>
                 <p className='font-medium'>{getExpiryText()}</p>
-                <p className='text-muted-foreground'>Expiry status</p>
+                <p className='text-muted-foreground'>Estado de expiración</p>
               </div>
             </div>
           </div>
@@ -249,15 +252,15 @@ export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) 
           <div className='border-t pt-2'>
             <div className='text-muted-foreground flex justify-between text-sm'>
               <span>
-                Total enrollments: {accessCode.statistics.total_enrollments}
+                Inscripciones totales: {accessCode.statistics.total_enrollments}
               </span>
-              <span>Active: {accessCode.statistics.active_enrollments}</span>
+              <span>Activas: {accessCode.statistics.active_enrollments}</span>
             </div>
           </div>
 
           {/* Created info */}
           <div className='text-muted-foreground border-t pt-2 text-xs'>
-            Created by {accessCode.created_by.full_name} •{' '}
+            Creado por {accessCode.created_by.full_name} •{' '}
             {formatDistanceToNow(new Date(accessCode.created_at), {
               addSuffix: true,
               locale: es,
@@ -270,21 +273,21 @@ export function AccessCodeCard({ accessCode, courseSlug }: AccessCodeCardProps) 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              access code "{accessCode.code}". Students who already used this
-              code will keep their enrollment.
+              Esta acción no se puede deshacer. Esto eliminará permanentemente
+              el código de acceso "{accessCode.code}". Los estudiantes que ya
+              usaron este código mantendrán su inscripción.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleteAccessCode.isPending}
               className='bg-red-600 hover:bg-red-700'
             >
-              {deleteAccessCode.isPending ? 'Deleting...' : 'Delete'}
+              {deleteAccessCode.isPending ? 'Eliminando...' : 'Eliminar'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
