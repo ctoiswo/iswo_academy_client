@@ -1,5 +1,8 @@
+import { Command } from 'lucide-react'
+import { useLocation } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { useLayout } from '@/context/layout-provider'
+import { useSidebarData } from '@/hooks/use-sidebar-data'
 import {
   Sidebar,
   SidebarContent,
@@ -8,67 +11,57 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar'
 import { AcademySwitcher } from '@/components/academy-switcher'
-import { sidebarData } from './data/sidebar-data'
-import { getSidebarDataByRole } from './data/sidebar-data-by-role'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
 import { TeamSwitcher } from './team-switcher'
+import { CourseStatsHeader } from './course-stats-header'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
-  const { user, academyData, currentAcademy } = useAuthStore()
-
-  // Determinar el role del usuario
-  const getUserRole = ():
-    | 'guest'
-    | 'student'
-    | 'teacher'
-    | 'admin'
-    | 'super_admin' => {
-
-    // Super admin siempre tiene prioridad - independiente de academias
-    if (user?.is_super_admin) {
-      return 'super_admin'
-    }
-
-    // Si no tiene academias, es guest
-    if (!academyData || academyData.count === 0) {
-      return 'guest'
-    }
-
-    // Si tiene academia seleccionada, usar su role en esa academia
-    if (currentAcademy) {
-      const role = currentAcademy.user_role
-      if (role === 'owner' || role === 'admin') return 'admin'
-      if (role === 'teacher') return 'teacher'
-      if (role === 'student') return 'student'
-    }
-    return 'student'
-  }
-
-  const userRole = getUserRole()
-  console.log('🔍 App Sidebar - User Role:', userRole, 'Is Super Admin:', user?.is_super_admin)
-  const navGroups = getSidebarDataByRole(userRole, user)
+  const { user, academyData } = useAuthStore()
+  const location = useLocation()
+  
+  // Usar el hook centralizado para obtener el sidebar apropiado
+  const navGroups = useSidebarData()
+  
+  // Determinar si el usuario es guest
+  const isGuest = !user?.is_super_admin && (!academyData || academyData.count === 0)
+  
+  // Detectar si estamos en una ruta de curso específico
+  const isInCourseRoute = location.pathname.match(/\/academy\/[^/]+\/courses\/([^/]+)/)
 
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>
         {/* Academy Switcher for authenticated users with academies */}
-        {userRole !== 'guest' ? (
+        {!isGuest ? (
           <AcademySwitcher
-            fallback={<TeamSwitcher teams={sidebarData.teams} />}
+            fallback={
+              <TeamSwitcher
+                teams={[
+                  {
+                    name: 'ISWO Academy',
+                    logo: Command,
+                    plan: 'Platform',
+                  },
+                ]}
+              />
+            }
           />
         ) : (
           <TeamSwitcher
             teams={[
               {
                 name: 'ISWO Academy',
-                logo: sidebarData.teams[0].logo,
+                logo: Command,
                 plan: 'Guest User',
               },
             ]}
           />
         )}
+        
+        {/* Course Stats Header - Only shown when viewing a specific course */}
+        {isInCourseRoute && <CourseStatsHeader />}
       </SidebarHeader>
       <SidebarContent>
         {navGroups.map((props) => (

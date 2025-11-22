@@ -78,7 +78,8 @@ export function DashboardRouter({
     )
   }
 
-  const { helpers } = useAcademyPermissions(currentAcademy?.id)
+  // Always call hooks at the top level, never conditionally
+  const { helpers, hasAccess } = useAcademyPermissions(currentAcademy?.id)
   
   // Determine dashboard type
   const dashboardType = getDashboardType(user, currentAcademy)
@@ -87,28 +88,24 @@ export function DashboardRouter({
   const dashboardConfig = getDashboardConfig(dashboardType)
   
   // Validate permissions if academy is selected
-  if (currentAcademy && !helpers.isSuperAdmin()) {
-    const { hasAccess } = useAcademyPermissions(currentAcademy.id)
-    
-    if (!hasAccess) {
-      // User doesn't have access to this academy
-      if (FallbackComponent) {
-        return <FallbackComponent user={user} academy={currentAcademy} />
-      }
-      
-      return (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold">
-              Access Denied
-            </h2>
-            <p className="mt-2 text-muted-foreground">
-              You don't have permission to access this academy.
-            </p>
-          </div>
-        </div>
-      )
+  if (currentAcademy && !helpers.isSuperAdmin() && !hasAccess) {
+    // User doesn't have access to this academy
+    if (FallbackComponent) {
+      return <FallbackComponent user={user} academy={currentAcademy} />
     }
+    
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold">
+            Access Denied
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            You don't have permission to access this academy.
+          </p>
+        </div>
+      </div>
+    )
   }
   
   // Render the appropriate dashboard component
@@ -127,7 +124,7 @@ export function DashboardRouter({
  */
 // Import dashboard components directly for now (can be made lazy later)
 import { SuperAdminDashboard } from '@/features/dashboard/super-admin/index'
-import { AcademyAdminDashboard } from '@/features/dashboard/academy-admin/index'
+import { AcademyAdminDashboard } from '@/features/dashboard/admin/index'
 import { TeacherDashboard } from '@/features/dashboard/teacher/index'
 import { StudentDashboard } from '@/features/dashboard/student/index'
 

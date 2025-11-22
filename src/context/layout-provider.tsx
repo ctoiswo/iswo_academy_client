@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import * as React from 'react'
 import { getCookie, setCookie } from '@/lib/cookies'
 
 export type Collapsible = 'offcanvas' | 'icon' | 'none'
@@ -25,19 +25,19 @@ type LayoutContextType = {
   setVariant: (variant: Variant) => void
 }
 
-const LayoutContext = createContext<LayoutContextType | null>(null)
+const LayoutContext = React.createContext<LayoutContextType | null>(null)
 
 type LayoutProviderProps = {
   children: React.ReactNode
 }
 
 export function LayoutProvider({ children }: LayoutProviderProps) {
-  const [collapsible, _setCollapsible] = useState<Collapsible>(() => {
+  const [collapsible, _setCollapsible] = React.useState<Collapsible>(() => {
     const saved = getCookie(LAYOUT_COLLAPSIBLE_COOKIE_NAME)
     return (saved as Collapsible) || DEFAULT_COLLAPSIBLE
   })
 
-  const [variant, _setVariant] = useState<Variant>(() => {
+  const [variant, _setVariant] = React.useState<Variant>(() => {
     const saved = getCookie(LAYOUT_VARIANT_COOKIE_NAME)
     return (saved as Variant) || DEFAULT_VARIANT
   })
@@ -77,7 +77,7 @@ export function LayoutProvider({ children }: LayoutProviderProps) {
 // Define the hook for the provider
 // eslint-disable-next-line react-refresh/only-export-components
 export function useLayout() {
-  const context = useContext(LayoutContext)
+  const context = React.useContext(LayoutContext)
   if (!context) {
     throw new Error('useLayout must be used within a LayoutProvider')
   }

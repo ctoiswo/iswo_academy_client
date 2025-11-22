@@ -21,12 +21,14 @@ import {
 export interface AcademyMembership {
   id: number
   name: string
+  slug: string
   description: string
   logo_url: string | null
   user_role: string
   user_role_display: string
   created_at: string
   last_accessed: string | null
+  last_accessed_at?: string | null
 }
 
 export interface AcademyData {
@@ -199,15 +201,8 @@ export function AcademySelectionPage() {
       // Select academy in store
       selectAcademy(academy.id)
       
-      // Determine dashboard path based on user role
-      let dashboardPath = `/academy/${academy.id}/dashboard`
-      if (academy.user_role === 'admin') {
-        dashboardPath = `/academy/${academy.id}/admin`
-      } else if (academy.user_role === 'teacher') {
-        dashboardPath = `/academy/${academy.id}/teacher/dashboard`
-      }
-      
-      // Navigate to role-specific dashboard
+      // Navigate to authenticated dashboard
+      const dashboardPath = `/academy/${academy.slug}/dashboard`
       navigate({ to: dashboardPath })
     } catch (error) {
       console.error('Failed to select academy:', error)

@@ -49,8 +49,9 @@ export default function CoursesManagementPage() {
 
   // Handle course management navigation
   const handleManageCourse = (course: Course) => {
-    // Navigate to course management page
-    navigate({ to: `/admin/courses/${course.id}/manage` })
+    // Navigate to course management page with slug
+    const academySlug = currentAcademy?.slug || currentAcademy?.id
+    navigate({ to: `/academy/${academySlug}/courses/${course.slug}` })
   }
 
   // Get data

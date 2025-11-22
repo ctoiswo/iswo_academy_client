@@ -89,7 +89,9 @@ export interface CoursesResponse {
  */
 class CourseService {
   /**
-   * Get courses for a specific academy with optional filters (admin endpoint)
+   * Get courses for a specific academy with optional filters
+   * Uses the main courses endpoint with academy_id filter
+   * Authorization handled by Pundit in backend
    * @param academyId - Academy ID
    * @param filters - Optional filters
    * @returns Promise with paginated courses
@@ -100,10 +102,10 @@ class CourseService {
       ...filters
     }
     console.log('Fetching courses for academy:', academyId, 'with filters:', filters)
-    const response = await apiClient.get('/admin/courses', { params })
+    const response = await apiClient.get('/courses', { params })
     console.log('Courses response:', response.data)
 
-    // Handle both array response and object with data property (same as learning paths)
+    // Handle both array response and object with data property
     return Array.isArray(response.data) ? response.data : (response.data?.data || [])
   }
 
@@ -133,13 +135,15 @@ class CourseService {
   }
 
   /**
-   * Get a single course by slug or ID (admin endpoint)
+   * Get a single course by slug or ID
+   * Authorization handled by Pundit in backend
+   * Returns public preview if not authenticated, full details if admin/teacher
    * @param slugOrId - Course slug or ID
    * @returns Promise with course details
    */
   async getCourseBySlug(slugOrId: string | number): Promise<Course> {
     console.log('CourseService.getCourseBySlug called with:', slugOrId)
-    const response = await apiClient.get(`/admin/courses/${slugOrId}`)
+    const response = await apiClient.get(`/courses/${slugOrId}`)
     console.log('CourseService.getCourseBySlug response:', response.data)
     return response.data
   }
@@ -157,14 +161,15 @@ class CourseService {
   }
 
   /**
-   * Create a new course (admin endpoint)
+   * Create a new course
+   * Authorization handled by Pundit in backend
    * @param academyId - Academy ID
    * @param data - Course creation data
    * @returns Promise with created course
    */
   async createCourse(academyId: number, data: CreateCourseData): Promise<Course> {
     console.log('Creating course for academy:', academyId, 'with data:', data)
-    const response = await apiClient.post('/admin/courses', {
+    const response = await apiClient.post('/courses', {
       course: {
         ...data,
         academy_id: academyId
@@ -175,7 +180,8 @@ class CourseService {
   }
 
   /**
-   * Update an existing course (admin endpoint)
+   * Update an existing course
+   * Authorization handled by Pundit in backend
    * @param academyId - Academy ID
    * @param courseId - Course ID
    * @param data - Course update data
@@ -183,7 +189,7 @@ class CourseService {
    */
   async updateCourse(academyId: number, courseId: number, data: UpdateCourseData): Promise<Course> {
     console.log('Updating course:', courseId, 'for academy:', academyId, 'with data:', data)
-    const response = await apiClient.put(`/admin/courses/${courseId}`, {
+    const response = await apiClient.put(`/courses/${courseId}`, {
       course: {
         ...data,
         academy_id: academyId
@@ -194,14 +200,15 @@ class CourseService {
   }
 
   /**
-   * Delete a course (admin endpoint)
+   * Delete a course
+   * Authorization handled by Pundit in backend
    * @param academyId - Academy ID
    * @param courseId - Course ID
    * @returns Promise with deletion confirmation
    */
   async deleteCourse(academyId: number, courseId: number): Promise<void> {
     console.log('Deleting course:', courseId, 'for academy:', academyId)
-    const response = await apiClient.delete(`/admin/courses/${courseId}`, {
+    const response = await apiClient.delete(`/courses/${courseId}`, {
       params: { academy_id: academyId }
     })
     console.log('Delete course response:', response.data)

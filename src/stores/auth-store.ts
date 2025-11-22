@@ -24,6 +24,7 @@ export interface AuthUser {
 export interface AcademyMembership {
   id: number
   name: string
+  slug: string
   description: string
   logo_url: string | null
   user_role: string

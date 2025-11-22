@@ -244,8 +244,24 @@ export function AcademyGuard({
 
     // Handle academy access validation for authenticated users
     if (!isLoading && isAuthenticated && academyData && academyId) {
-      const academyIdNum =
-        typeof academyId === 'string' ? parseInt(academyId, 10) : academyId
+      // Support both numeric IDs and slugs
+      const academyIdentifier = String(academyId)
+      const isNumericId = /^\d+$/.test(academyIdentifier)
+      
+      // Find academy by ID or slug
+      const academyMembership = academyData.academies.find((a) => 
+        isNumericId 
+          ? a.id === parseInt(academyIdentifier, 10)
+          : a.slug === academyIdentifier
+      )
+
+      if (!academyMembership) {
+        console.warn('Academy not found or access denied:', academyIdentifier)
+        router.navigate({ to: '/academy-selection' })
+        return
+      }
+
+      const academyIdNum = academyMembership.id
 
       const validation = validateRouteAccess(
         academyData.academies,
@@ -262,7 +278,7 @@ export function AcademyGuard({
           router.navigate({ to: '/academy-selection' })
         } else {
           // User has access but insufficient permissions - redirect to academy dashboard
-          router.navigate({ to: `/academy/${academyIdNum}/dashboard` })
+          router.navigate({ to: `/academy/${academyMembership.slug || academyIdNum}/dashboard` })
         }
         return
       }
@@ -296,12 +312,15 @@ export function AcademyGuard({
 
   // Don't render children if academy validation is still in progress
   if (academyId && academyData) {
-    const academyIdNum =
-      typeof academyId === 'string' ? parseInt(academyId, 10) : academyId
+    // Support both numeric IDs and slugs
+    const academyIdentifier = String(academyId)
+    const isNumericId = /^\d+$/.test(academyIdentifier)
 
     // Use synchronous validation for rendering decision
-    const academyMembership = academyData.academies.find(
-      (a) => a.id === academyIdNum
+    const academyMembership = academyData.academies.find((a) =>
+      isNumericId
+        ? a.id === parseInt(academyIdentifier, 10)
+        : a.slug === academyIdentifier
     )
 
     if (!academyMembership) {

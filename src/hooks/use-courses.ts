@@ -19,6 +19,24 @@ export function useCourse(slugOrId: string | number) {
   })
 }
 
+export function useCourseBySlug(academyId: number, slug: string) {
+  return useQuery({
+    queryKey: ['course', academyId, slug],
+    queryFn: async () => {
+      // Get all courses for the academy and find the one with matching slug
+      const courses = await courseService.getCourses(academyId)
+      const course = courses.find(c => c.slug === slug)
+
+      if (!course) {
+        throw new Error(`Course with slug "${slug}" not found`)
+      }
+
+      return course
+    },
+    enabled: !!academyId && !!slug,
+  })
+}
+
 export function useCreateCourse(academyId: number) {
   const queryClient = useQueryClient()
 

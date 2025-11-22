@@ -16,10 +16,13 @@ import {
   Eye,
   EyeOff,
   Calendar,
-  Ticket
+  Ticket,
+  FileQuestion,
+  Info
 } from 'lucide-react'
 
-import { useCourse } from '@/hooks/use-courses'
+import { useCourseBySlug } from '@/hooks/use-courses'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -28,13 +31,16 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { AccessCodeList } from '@/components/access-codes/access-code-list'
 
 export default function CourseManagementDetailPage() {
-  const { courseId } = useParams({ from: '/_authenticated/admin/courses/$courseId/manage/' })
+  const params = useParams({ strict: false }) as { academySlug: string; courseSlug: string }
+  const { academySlug, courseSlug } = params
+  const { currentAcademy } = useAuthStore()
   
-  // Fetch course data
-  const { data: course, isLoading, error } = useCourse(courseId)
+  // Fetch course data by slug
+  const academyId = currentAcademy?.id
+  const { data: course, isLoading, error } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
 
   // Tab state
-  const [activeTab, setActiveTab] = useState('lessons')
+  const [activeTab, setActiveTab] = useState('info')
 
   if (isLoading) {
     return (
@@ -54,7 +60,7 @@ export default function CourseManagementDetailPage() {
         <div className="text-center py-12">
           <h3 className="text-lg font-bold text-red-600 mb-2">Error al Cargar el Curso</h3>
           <p className="text-gray-600">Curso no encontrado o no tienes permiso para acceder</p>
-          <Link to="/admin/courses" className="mt-4 inline-block">
+          <Link to={`/academy/${academySlug}/courses`} className="mt-4 inline-block">
             <Button variant="outline">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Volver a Cursos
@@ -69,84 +75,105 @@ export default function CourseManagementDetailPage() {
     <div className="container mx-auto py-8">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <Link to="/admin/courses">
-            <Button variant="outline" size="sm">
+        <div className="flex items-center gap-4 mb-6">
+          <Link to={`/academy/${academySlug}/courses`}>
+            <Button variant="ghost" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Volver a Cursos
             </Button>
           </Link>
         </div>
         
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{course.title}</h1>
-            <p className="text-gray-600 mb-4">{course.description}</p>
-            <div className="flex gap-2">
-              <Badge variant={course.status === 'published' ? 'default' : 'secondary'}>
-                {course.status}
-              </Badge>
-              <Badge variant="outline">{course.difficulty_level}</Badge>
-              <Badge variant="outline" className="text-green-600">
-                {course.is_free ? 'Gratis' : `$${course.price}`}
-              </Badge>
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-3">
+                  <h1 className="text-3xl font-bold">{course.title}</h1>
+                  <Badge variant={course.status === 'published' ? 'default' : 'secondary'} className="h-6">
+                    {course.status === 'published' ? 'Publicado' : course.status === 'draft' ? 'Borrador' : 'Archivado'}
+                  </Badge>
+                </div>
+                <p className="text-gray-600 text-base mb-4">{course.description}</p>
+                <div className="flex gap-2">
+                  <Badge variant="outline">
+                    {course.difficulty_level === 'beginner' ? '📘 Principiante' : 
+                     course.difficulty_level === 'intermediate' ? '📙 Intermedio' : '📕 Avanzado'}
+                  </Badge>
+                  <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">
+                    {course.is_free ? '🎁 Gratis' : `💰 $${course.price}`}
+                  </Badge>
+                  <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50">
+                    ⏱️ {Math.floor(course.duration_minutes / 60)}h {course.duration_minutes % 60}m
+                  </Badge>
+                </div>
+              </div>
+              <Button onClick={() => setActiveTab('settings')} variant="outline">
+                <Settings className="w-4 h-4 mr-2" />
+                Configuración
+              </Button>
             </div>
-          </div>
-          <Button>
-            <Settings className="w-4 h-4 mr-2" />
-            Configuración del Curso
-          </Button>
-        </div>
+          </CardHeader>
+        </Card>
       </div>
 
       {/* Course Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Estudiantes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              <Users className="w-4 h-4 text-blue-600 mr-2" />
-              <span className="text-2xl font-bold">{course.enrollment_count || 0}</span>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <Card className="hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">Estudiantes</p>
+                <p className="text-3xl font-bold">{course.enrollment_count || 0}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+                <Users className="w-6 h-6 text-blue-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Lecciones</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              <PlayCircle className="w-4 h-4 text-green-600 mr-2" />
-              <span className="text-2xl font-bold">{course.lessons_count || 0}</span>
+        <Card className="hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">Lecciones</p>
+                <p className="text-3xl font-bold">{course.lessons_count || 0}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
+                <PlayCircle className="w-6 h-6 text-green-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Duración</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              <Clock className="w-4 h-4 text-orange-600 mr-2" />
-              <span className="text-2xl font-bold">
-                {Math.floor(course.duration_minutes / 60)}h {course.duration_minutes % 60}m
-              </span>
+        <Card className="hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">Duración Total</p>
+                <p className="text-3xl font-bold">
+                  {Math.floor(course.duration_minutes / 60)}
+                  <span className="text-lg text-gray-600">h</span>
+                </p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center">
+                <Clock className="w-6 h-6 text-orange-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-gray-600">Secciones</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              <BookOpen className="w-4 h-4 text-purple-600 mr-2" />
-              <span className="text-2xl font-bold">{course.sections_count || 0}</span>
+        <Card className="hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">Secciones</p>
+                <p className="text-3xl font-bold">{course.sections_count || 0}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-purple-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -154,7 +181,11 @@ export default function CourseManagementDetailPage() {
 
       {/* Management Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList>
+        <TabsList className="grid w-full grid-cols-7">
+          <TabsTrigger value="info">
+            <Info className="w-4 h-4 mr-2" />
+            Información
+          </TabsTrigger>
           <TabsTrigger value="lessons">
             <PlayCircle className="w-4 h-4 mr-2" />
             Lecciones
@@ -163,19 +194,108 @@ export default function CourseManagementDetailPage() {
             <CheckSquare className="w-4 h-4 mr-2" />
             Tareas
           </TabsTrigger>
-          <TabsTrigger value="certificates">
-            <Award className="w-4 h-4 mr-2" />
-            Certificados
+          <TabsTrigger value="exams">
+            <FileQuestion className="w-4 h-4 mr-2" />
+            Exámenes
           </TabsTrigger>
           <TabsTrigger value="students">
             <Users className="w-4 h-4 mr-2" />
             Estudiantes
           </TabsTrigger>
-          <TabsTrigger value="access-codes">
+          <TabsTrigger value="certificates">
+            <Award className="w-4 h-4 mr-2" />
+            Certificados
+          </TabsTrigger>
+          <TabsTrigger value="settings">
             <Settings className="w-4 h-4 mr-2" />
-            Códigos de Acceso
+            Configuración
           </TabsTrigger>
         </TabsList>
+
+        {/* Info Tab */}
+        <TabsContent value="info">
+          <div className="grid gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Información General del Curso</CardTitle>
+                <CardDescription>
+                  Detalles básicos y configuración del curso
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Título</h4>
+                    <p className="text-base">{course.title}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Estado</h4>
+                    <Badge variant={course.status === 'published' ? 'default' : 'secondary'}>
+                      {course.status === 'published' ? 'Publicado' : course.status === 'draft' ? 'Borrador' : 'Archivado'}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium text-gray-600 mb-1">Descripción</h4>
+                  <p className="text-base text-gray-700">{course.description}</p>
+                </div>
+
+                <div className="grid grid-cols-3 gap-6">
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Nivel de Dificultad</h4>
+                    <Badge variant="outline">
+                      {course.difficulty_level === 'beginner' ? 'Principiante' : 
+                       course.difficulty_level === 'intermediate' ? 'Intermedio' : 'Avanzado'}
+                    </Badge>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Precio</h4>
+                    <p className="text-base font-semibold text-green-600">
+                      {course.is_free ? 'Gratis' : `$${course.price}`}
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-1">Duración Estimada</h4>
+                    <p className="text-base">
+                      {Math.floor(course.duration_minutes / 60)}h {course.duration_minutes % 60}m
+                    </p>
+                  </div>
+                </div>
+
+                {course.thumbnail_url && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-2">Miniatura</h4>
+                    <img 
+                      src={course.thumbnail_url} 
+                      alt={course.title}
+                      className="w-full max-w-md rounded-lg border"
+                    />
+                  </div>
+                )}
+
+                <div className="pt-4 border-t">
+                  <Button className="w-full">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Editar Información del Curso
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Códigos de Acceso</CardTitle>
+                <CardDescription>
+                  Gestiona los códigos de acceso para este curso
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AccessCodeList courseId={course.id} />
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
 
         {/* Lessons Tab */}
         <TabsContent value="lessons">
@@ -239,31 +359,31 @@ export default function CourseManagementDetailPage() {
           </Card>
         </TabsContent>
 
-        {/* Certificates Tab */}
-        <TabsContent value="certificates">
+        {/* Exams Tab */}
+        <TabsContent value="exams">
           <Card>
             <CardHeader>
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle>Certificados del Curso</CardTitle>
+                  <CardTitle>Exámenes del Curso</CardTitle>
                   <CardDescription>
-                    Configura los certificados de finalización y requisitos
+                    Crea y gestiona exámenes y quizzes para evaluar conocimientos
                   </CardDescription>
                 </div>
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
-                  Configurar Certificado
+                  Añadir Examen
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
               <div className="text-center py-12 text-gray-500">
-                <Award className="mx-auto h-12 w-12 mb-4" />
-                <h3 className="text-lg font-medium mb-2">No hay certificado configurado</h3>
-                <p className="mb-4">Configura certificados de finalización para estudiantes que completen el curso</p>
+                <FileQuestion className="mx-auto h-12 w-12 mb-4" />
+                <h3 className="text-lg font-medium mb-2">Aún no hay exámenes</h3>
+                <p className="mb-4">Crea exámenes para evaluar el aprendizaje de los estudiantes</p>
                 <Button>
-                  <Award className="w-4 h-4 mr-2" />
-                  Configurar Certificado
+                  <Plus className="w-4 h-4 mr-2" />
+                  Crear Primer Examen
                 </Button>
               </div>
             </CardContent>
@@ -309,9 +429,134 @@ export default function CourseManagementDetailPage() {
           </Card>
         </TabsContent>
 
-        {/* Access Codes Tab */}
-        <TabsContent value="access-codes">
-          <AccessCodeList courseId={course.id} />
+        {/* Certificates Tab */}
+        <TabsContent value="certificates">
+          <Card>
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <div>
+                  <CardTitle>Certificados del Curso</CardTitle>
+                  <CardDescription>
+                    Configura los certificados de finalización y requisitos
+                  </CardDescription>
+                </div>
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Configurar Certificado
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-12 text-gray-500">
+                <Award className="mx-auto h-12 w-12 mb-4" />
+                <h3 className="text-lg font-medium mb-2">No hay certificado configurado</h3>
+                <p className="mb-4">Configura certificados de finalización para estudiantes que completen el curso</p>
+                <Button>
+                  <Award className="w-4 h-4 mr-2" />
+                  Configurar Certificado
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Settings Tab */}
+        <TabsContent value="settings">
+          <div className="grid gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Configuración del Curso</CardTitle>
+                <CardDescription>
+                  Ajustes avanzados y configuración del curso
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <h4 className="text-sm font-medium mb-3">Visibilidad y Acceso</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <p className="font-medium">Estado de Publicación</p>
+                        <p className="text-sm text-gray-600">Controla si el curso es visible para estudiantes</p>
+                      </div>
+                      <Badge variant={course.status === 'published' ? 'default' : 'secondary'}>
+                        {course.status === 'published' ? 'Publicado' : 'Borrador'}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <p className="font-medium">Tipo de Acceso</p>
+                        <p className="text-sm text-gray-600">Controla cómo los estudiantes acceden al curso</p>
+                      </div>
+                      <Badge variant="outline" className="text-green-600">
+                        {course.is_free ? 'Gratis' : 'Pago'}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium mb-3">Opciones del Curso</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <p className="font-medium">Certificado de Finalización</p>
+                        <p className="text-sm text-gray-600">Otorgar certificado al completar</p>
+                      </div>
+                      <Badge variant="outline">
+                        {course.has_certificate ? 'Activado' : 'Desactivado'}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <p className="font-medium">Inscripción</p>
+                        <p className="text-sm text-gray-600">Permitir que estudiantes se inscriban</p>
+                      </div>
+                      <Badge variant="outline">
+                        {course.enrollment_enabled !== false ? 'Abierta' : 'Cerrada'}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t">
+                  <Button className="w-full">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Editar Configuración
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-red-200">
+              <CardHeader>
+                <CardTitle className="text-red-600">Zona de Peligro</CardTitle>
+                <CardDescription>
+                  Acciones irreversibles del curso
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between p-3 border border-red-200 rounded-lg">
+                  <div>
+                    <p className="font-medium">Archivar Curso</p>
+                    <p className="text-sm text-gray-600">El curso no será visible pero se conservarán los datos</p>
+                  </div>
+                  <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
+                    Archivar
+                  </Button>
+                </div>
+                <div className="flex items-center justify-between p-3 border border-red-200 rounded-lg">
+                  <div>
+                    <p className="font-medium">Eliminar Curso</p>
+                    <p className="text-sm text-gray-600">Eliminar permanentemente el curso y todo su contenido</p>
+                  </div>
+                  <Button variant="destructive">
+                    Eliminar
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
