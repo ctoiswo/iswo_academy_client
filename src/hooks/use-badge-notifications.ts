@@ -10,7 +10,7 @@ interface UseBadgeNotificationsOptions {
 export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}) {
   const { enabled = true } = options
 
-  const { isAuthenticated, user, tokens } = useAuthStore()
+  const { isAuthenticated, user, tokens, currentAcademy } = useAuthStore()
   const [newBadges, setNewBadges] = useState<UserBadge[]>([])
   const [currentBadge, setCurrentBadge] = useState<UserBadge | null>(null)
   const [isConnected, setIsConnected] = useState(false)
@@ -90,16 +90,20 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
 
   // Load unviewed badges on mount/connection
   const loadUnviewedBadges = useCallback(async () => {
-    if (!isAuthenticated || !tokens?.access_token) {
+    if (!isAuthenticated || !tokens?.access_token || !currentAcademy) {
+      console.log('Skipping badge load:', { isAuthenticated, hasToken: !!tokens?.access_token, hasAcademy: !!currentAcademy })
       return
     }
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+      const academyIdOrSlug = currentAcademy.id.toString()
+
       const response = await fetch(`${apiUrl}/api/v1/badges/unviewed`, {
         headers: {
           'Authorization': `Bearer ${tokens.access_token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Academy-Slug': academyIdOrSlug
         }
       })
 
@@ -108,19 +112,22 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
         const unviewedBadges = data.data || []
 
         if (unviewedBadges.length > 0) {
-          console.log(`Found ${unviewedBadges.length} unviewed badges`)
+          console.log(`Found ${unviewedBadges.length} unviewed badges for academy ${currentAcademy.name}`)
           setNewBadges(unviewedBadges)
           setCurrentBadge(unviewedBadges[0])
         }
+      } else {
+        console.error('Failed to load badges:', response.status, response.statusText)
       }
     } catch (error) {
       console.error('Failed to load unviewed badges:', error)
     }
-  }, [isAuthenticated, tokens])
+  }, [isAuthenticated, tokens, currentAcademy])
 
-  // Connect to WebSocket when authenticated
+  // Connect to WebSocket when authenticated and academy is selected
   useEffect(() => {
-    if (!isAuthenticated || !user || !tokens?.access_token || !enabled) {
+    if (!isAuthenticated || !user || !tokens?.access_token || !enabled || !currentAcademy) {
+      console.log('Badge notifications disabled:', { isAuthenticated, hasUser: !!user, hasToken: !!tokens?.access_token, enabled, hasAcademy: !!currentAcademy })
       return
     }
 
@@ -163,7 +170,7 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
       }
       setIsConnected(false)
     }
-  }, [isAuthenticated, user, tokens, enabled, handleBadgeEarned, loadUnviewedBadges])
+  }, [isAuthenticated, user, tokens, enabled, currentAcademy, handleBadgeEarned, loadUnviewedBadges])
 
   return {
     currentBadge,

@@ -52,7 +52,7 @@ export function AcademyStatsOverview({ academy, loading = false }: AcademyStatsO
   if (error) {
     return (
       <DashboardCard title="Error" variant="outline">
-        <p className="text-destructive">Failed to load academy statistics. Please try again.</p>
+        <p className="text-destructive">Error al cargar las estadísticas. Por favor intenta de nuevo.</p>
       </DashboardCard>
     )
   }
@@ -62,47 +62,47 @@ export function AcademyStatsOverview({ academy, loading = false }: AcademyStatsO
       {/* Main Statistics Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsWidget
-          title="Total Students"
+          title="Total Estudiantes"
           value={stats?.totalStudents || 0}
           change={stats?.monthlyGrowth.students}
           changeType={getChangeType(stats?.monthlyGrowth.students || 0)}
           icon={Users}
           loading={isLoading}
           format="number"
-          description="Active enrolled students"
+          description="Estudiantes activos inscritos"
         />
         
         <StatsWidget
-          title="Total Teachers"
+          title="Total Profesores"
           value={stats?.totalTeachers || 0}
           change={stats?.monthlyGrowth.teachers}
           changeType={getChangeType(stats?.monthlyGrowth.teachers || 0)}
           icon={UserCheck}
           loading={isLoading}
           format="number"
-          description="Active teaching staff"
+          description="Personal docente activo"
         />
         
         <StatsWidget
-          title="Active Courses"
+          title="Cursos Activos"
           value={stats?.totalCourses || 0}
           change={stats?.monthlyGrowth.courses}
           changeType={getChangeType(stats?.monthlyGrowth.courses || 0)}
           icon={BookOpen}
           loading={isLoading}
           format="number"
-          description="Published courses"
+          description="Cursos publicados"
         />
         
         <StatsWidget
-          title="Academy Revenue"
+          title="Ingresos de la Academia"
           value={stats?.academyRevenue || 0}
           change={stats?.monthlyGrowth.revenue}
           changeType={getChangeType(stats?.monthlyGrowth.revenue || 0)}
           icon={DollarSign}
           loading={isLoading}
           format="currency"
-          description="Total monthly revenue"
+          description="Ingresos mensuales totales"
         />
       </div>
 
@@ -110,8 +110,8 @@ export function AcademyStatsOverview({ academy, loading = false }: AcademyStatsO
       <div className="grid gap-6 md:grid-cols-2">
         {/* Enrollment Trends */}
         <DashboardCard
-          title="Enrollment Trends"
-          description="Monthly enrollment growth"
+          title="Tendencias de Inscripción"
+          description="Crecimiento mensual de inscripciones"
           loading={isLoading}
         >
           {stats?.enrollmentTrends && (
@@ -140,8 +140,8 @@ export function AcademyStatsOverview({ academy, loading = false }: AcademyStatsO
 
         {/* Top Performing Courses */}
         <DashboardCard
-          title="Top Performing Courses"
-          description="Highest enrollment and revenue"
+          title="Cursos Más Populares"
+          description="Mayor inscripción e ingresos"
           loading={isLoading}
         >
           {stats?.topCourses && (
@@ -155,7 +155,7 @@ export function AcademyStatsOverview({ academy, loading = false }: AcademyStatsO
                     <div>
                       <p className="font-medium text-sm">{course.title}</p>
                       <p className="text-xs text-muted-foreground">
-                        {course.enrollments} students
+                        {course.enrollments} estudiantes
                       </p>
                     </div>
                   </div>
@@ -163,7 +163,7 @@ export function AcademyStatsOverview({ academy, loading = false }: AcademyStatsO
                     <p className="font-medium text-sm">
                       ${course.revenue.toLocaleString()}
                     </p>
-                    <p className="text-xs text-muted-foreground">revenue</p>
+                    <p className="text-xs text-muted-foreground">ingresos</p>
                   </div>
                 </div>
               ))}

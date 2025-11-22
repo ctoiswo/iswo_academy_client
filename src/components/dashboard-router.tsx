@@ -35,26 +35,27 @@ export function getDashboardType(
     return 'student' // Default fallback
   }
   
-  // Super Admin has access to global dashboard regardless of academy
+  // If academy is selected, use academy role (even for super admins in academy context)
+  if (academy) {
+    // Determine dashboard based on academy role
+    switch (academy.user_role) {
+      case 'admin':
+        return 'academy-admin'
+      case 'teacher':
+        return 'teacher'
+      case 'student':
+      default:
+        return 'student'
+    }
+  }
+  
+  // Super Admin dashboard only when no academy is selected (global context)
   if (user.is_super_admin) {
     return 'super-admin'
   }
   
-  // If no academy is selected, we can't determine role-based dashboard
-  if (!academy) {
-    return 'student' // Default fallback
-  }
-  
-  // Determine dashboard based on academy role
-  switch (academy.user_role) {
-    case 'admin':
-      return 'academy-admin'
-    case 'teacher':
-      return 'teacher'
-    case 'student':
-    default:
-      return 'student'
-  }
+  // Default fallback
+  return 'student'
 }
 
 /**

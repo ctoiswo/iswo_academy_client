@@ -169,14 +169,13 @@ function CompactLayout({
   academy,
   topNavLinks,
   showSearch,
-  showConfigDrawer,
   className
 }: Omit<DashboardLayoutProps, 'variant' | 'sidebar' | 'dashboardType'>) {
   if (!user) return null
   return (
     <SearchProvider>
       <LayoutProvider>
-        <div className={cn('min-h-screen bg-background', className)}>
+        <div className={cn('min-h-screen bg-background min-w-full', className)}>
           <SkipToMain />
           
           {/* Compact Header */}
@@ -279,7 +278,7 @@ function SidebarLayout({
               </Header>
               
               {/* Main Content */}
-              <Main>
+              <Main className="container mx-auto px-4 py-4">
                 {children}
               </Main>
             </SidebarInset>

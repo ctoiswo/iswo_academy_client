@@ -63,7 +63,8 @@ class AcademyCategoryService {
   ): Promise<T extends 'minimal' ? AcademyCategoryMinimal[] : T extends 'summary' ? AcademyCategorySummary[] : AcademyCategory[]> {
     const params = withView({}, view)
     const response = await apiClient.get('/academy_categories', { params })
-    return response.data.categories || response.data
+    // Backend returns { data: [...] } structure from render_with
+    return response.data.data || response.data.categories || response.data
   }
 
   /**

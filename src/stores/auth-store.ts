@@ -70,7 +70,7 @@ export interface AuthState {
   isLoading: boolean
   isInitialized: boolean
   error: string | null
-  
+
   // Academy state
   academyData: AcademyData | null
   currentAcademy: AcademyMembership | null
@@ -87,7 +87,7 @@ export interface AuthState {
   setError: (error: string | null) => void
   reset: () => void
   initialize: () => Promise<void>
-  
+
   // Academy actions
   selectAcademy: (academyId: number) => void
   switchAcademy: () => void
@@ -116,7 +116,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   isLoading: false,
   isInitialized: false,
   error: null,
-  
+
   // Academy state
   academyData: null,
   currentAcademy: null,
@@ -125,9 +125,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   login: async (credentials: LoginCredentials): Promise<LoginResult> => {
     try {
       set({ isLoading: true, error: null })
-      
+
       const response = await authService.login(credentials)
-      
+
       // DEBUG: Ver qué trae la respuesta del backend
       console.log('🔍 DEBUG Login Response:', {
         user: response.user ? { id: response.user.id, email: response.user.email } : null,
@@ -135,7 +135,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         hasAcademies: !!response.academies,
         academyCount: response.academies?.count
       })
-      
+
       const tokens: AuthTokens = {
         access_token: response.access_token,
         refresh_token: response.refresh_token,
@@ -144,13 +144,13 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
       // Store tokens securely
       tokenStorage.setTokens(tokens)
-      
+
       // Handle academy data from login response
       // Backend returns { count, academies: [...] }
       const academyData = response.academies || { count: 0, academies: [] }
-      
+
       console.log('🔍 DEBUG Academy Data to store:', academyData)
-      
+
       set({
         user: response.user,
         tokens,
@@ -159,13 +159,13 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         error: null,
         academyData
       })
-      
-      console.log('🔍 DEBUG Store after login:', { 
+
+      console.log('🔍 DEBUG Store after login:', {
         hasUser: !!response.user,
         academyData: academyData,
         willSelectAcademy: academyData.count === 1
       })
-      
+
       // Determine routing based on academy count
       if (academyData.count === 0) {
         // No academies - redirect to dashboard (guest student)
@@ -175,13 +175,22 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           showAcademySelection: false
         }
       } else if (academyData.count === 1) {
-        // Auto-select the single academy and redirect to its dashboard
+        // Auto-select the single academy and redirect to role-specific dashboard
         const singleAcademy = academyData.academies[0]
         set({ currentAcademy: singleAcademy })
         localStorage.setItem('currentAcademyId', singleAcademy.id.toString())
+
+        // Determine dashboard path based on user role
+        let dashboardPath = `/academy/${singleAcademy.id}/dashboard`
+        if (singleAcademy.user_role === 'admin') {
+          dashboardPath = `/academy/${singleAcademy.id}/admin`
+        } else if (singleAcademy.user_role === 'teacher') {
+          dashboardPath = `/academy/${singleAcademy.id}/teacher/dashboard`
+        }
+
         return {
           shouldRedirect: true,
-          redirectPath: `/academy/${singleAcademy.id}/dashboard`,
+          redirectPath: dashboardPath,
           showAcademySelection: false
         }
       } else {
@@ -210,14 +219,14 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   register: async (userData: RegisterData) => {
     try {
       set({ isLoading: true, error: null })
-      
+
       const response = await authService.register(userData)
-      
+
       set({
         isLoading: false,
         error: null
       })
-      
+
       return response
     } catch (error: any) {
       const errorMessage = error?.message || 'Registration failed'
@@ -232,7 +241,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   logout: async () => {
     try {
       set({ isLoading: true, error: null })
-      
+
       const { tokens } = get()
       if (tokens?.refresh_token) {
         try {
@@ -242,11 +251,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           console.warn('Logout API call failed:', error)
         }
       }
-      
+
       // Clear tokens from storage
       tokenStorage.clearTokens()
       localStorage.removeItem('currentAcademyId')
-      
+
       set({
         user: null,
         tokens: null,
@@ -274,7 +283,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   refreshTokens: async (): Promise<boolean> => {
     try {
       const newTokens = await tokenManager.refreshAccessToken()
-      
+
       // Tokens are already stored by tokenManager
       set({
         tokens: {
@@ -348,17 +357,17 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   initialize: async () => {
     try {
       const { isInitialized, isLoading } = get()
-      
+
       // Prevent multiple initializations
       if (isInitialized || isLoading) {
         return
       }
-      
+
       set({ isLoading: true })
-      
+
       // Try to load refresh token from storage
       const storedTokens = tokenStorage.getTokens()
-      
+
       if (!storedTokens || !storedTokens.refresh_token) {
         set({ isLoading: false, isInitialized: true, isAuthenticated: false })
         return
@@ -368,7 +377,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       // This ensures we always have a fresh access token on page reload
       try {
         const refreshed = await get().refreshTokens()
-        
+
         if (!refreshed) {
           // Refresh failed, tokens should already be cleared by refreshTokens method
           set({ isLoading: false, isInitialized: true, isAuthenticated: false })
@@ -385,7 +394,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       try {
         const user = await authService.getCurrentUser()
         set({ user, isLoading: false, isInitialized: true })
-        
+
         // Refresh academy data after successful profile fetch
         await get().refreshAcademies()
       } catch (error) {
@@ -400,34 +409,34 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       set({ isLoading: false, isInitialized: true })
     }
   },
-  
+
   // Academy actions
   selectAcademy: (academyId: number) => {
     const { academyData } = get()
     if (!academyData) return
-    
+
     const selectedAcademy = academyData.academies.find((academy: AcademyMembership) => academy.id === academyId)
     if (selectedAcademy) {
       set({ currentAcademy: selectedAcademy })
       localStorage.setItem('currentAcademyId', academyId.toString())
     }
   },
-  
+
   switchAcademy: () => {
     set({ currentAcademy: null })
   },
-  
+
   refreshAcademies: async () => {
     try {
       const { isAuthenticated } = get()
       if (!isAuthenticated) return
-      
+
       console.log('🔍 DEBUG refreshAcademies: Loading academies...')
       const academyData = await academyService.getUserAcademies()
       console.log('🔍 DEBUG refreshAcademies: Loaded academies:', academyData)
-      
+
       set({ academyData })
-      
+
       // If user had a currentAcademy stored, try to restore it
       const storedAcademyId = localStorage.getItem('currentAcademyId')
       if (storedAcademyId && academyData.academies.length > 0) {
@@ -452,11 +461,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       // Don't throw error to avoid breaking the flow
     }
   },
-  
+
   setAcademyData: (academyData: AcademyData | null) => {
     set({ academyData })
   },
-  
+
   setCurrentAcademy: (academy: AcademyMembership | null) => {
     set({ currentAcademy: academy })
   },

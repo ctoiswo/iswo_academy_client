@@ -20,6 +20,14 @@ import {
   Route,
   BookMarked,
   Key,
+  ClipboardList,
+  FileQuestion,
+  Target,
+  Calendar,
+  Trophy,
+  Building2,
+  UserCheck,
+  Layers,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -126,14 +134,29 @@ export function getSidebarDataByRole(
               icon: BookOpen,
             },
             {
-              title: 'Canjear Código',
-              url: '/redeem-code',
-              icon: Key,
+              title: 'Explorar Cursos',
+              url: '/courses',
+              icon: GraduationCap,
+            },
+            {
+              title: 'Mis Tareas',
+              url: '/assignments',
+              icon: ClipboardList,
+            },
+            {
+              title: 'Mis Insignias',
+              url: '/badges',
+              icon: Award,
             },
             {
               title: 'Certificados',
               url: '/certificates',
-              icon: Award,
+              icon: Trophy,
+            },
+            {
+              title: 'Canjear Código',
+              url: '/redeem-code',
+              icon: Key,
             },
           ],
         },
@@ -171,7 +194,7 @@ export function getSidebarDataByRole(
               icon: GraduationCap,
             },
             {
-              title: 'Estudiantes',
+              title: 'Mis Estudiantes',
               url: '/teacher/students',
               icon: Users,
             },
@@ -189,6 +212,21 @@ export function getSidebarDataByRole(
               title: 'Crear Curso',
               url: '/teacher/courses/create',
               icon: FileText,
+            },
+            {
+              title: 'Mis Lecciones',
+              url: '/teacher/lessons',
+              icon: BookMarked,
+            },
+            {
+              title: 'Tareas',
+              url: '/teacher/assignments',
+              icon: ClipboardList,
+            },
+            {
+              title: 'Exámenes',
+              url: '/teacher/exams',
+              icon: FileQuestion,
             },
             {
               title: 'Recursos',
@@ -221,17 +259,27 @@ export function getSidebarDataByRole(
           title: 'General',
           items: [
             {
-              title: 'Panel principal',
+              title: 'Panel Principal',
               url: '/dashboard',
               icon: LayoutDashboard,
             },
             {
-              title: 'Onboarding',
-              url: '/onboarding',
-              icon: Sparkles,
+              title: 'Analíticas',
+              url: '/admin/analytics',
+              icon: BarChart3,
+            },
+          ],
+        },
+        {
+          title: 'Academia',
+          items: [
+            {
+              title: 'Información',
+              url: '/admin/academy/info',
+              icon: Building2,
             },
             {
-              title: 'Rutas de aprendizaje',
+              title: 'Rutas de Aprendizaje',
               url: '/admin/learning-paths',
               icon: Route,
             },
@@ -246,19 +294,84 @@ export function getSidebarDataByRole(
               icon: BookMarked,
             },
             {
-              title: 'Chats',
-              url: '/chats',
-              icon: MessagesSquare,
+              title: 'Tareas',
+              url: '/admin/assignments',
+              icon: ClipboardList,
             },
             {
-              title: 'Usuarios',
+              title: 'Exámenes',
+              url: '/admin/exams',
+              icon: FileQuestion,
+            },
+            {
+              title: 'Quizzes',
+              url: '/admin/quizzes',
+              icon: Target,
+            },
+          ],
+        },
+        {
+          title: 'Usuarios',
+          items: [
+            {
+              title: 'Todos los Usuarios',
               url: '/admin/users',
               icon: Users,
             },
             {
-              title: 'Analytics',
-              url: '/admin/analytics',
+              title: 'Profesores',
+              url: '/admin/teachers',
+              icon: UserCheck,
+            },
+            {
+              title: 'Estudiantes',
+              url: '/admin/students',
+              icon: GraduationCap,
+            },
+            {
+              title: 'Inscripciones',
+              url: '/admin/enrollments',
+              icon: UserCog,
+            },
+          ],
+        },
+        {
+          title: 'Gamificación',
+          items: [
+            {
+              title: 'Insignias',
+              url: '/admin/badges',
+              icon: Award,
+            },
+            {
+              title: 'Logros',
+              url: '/admin/achievements',
+              icon: Trophy,
+            },
+            {
+              title: 'Tabla de Clasificación',
+              url: '/admin/leaderboard',
               icon: BarChart3,
+            },
+          ],
+        },
+        {
+          title: 'Comunicación',
+          items: [
+            {
+              title: 'Chats',
+              url: '/admin/chats',
+              icon: MessagesSquare,
+            },
+            {
+              title: 'Anuncios',
+              url: '/admin/announcements',
+              icon: Bell,
+            },
+            {
+              title: 'Eventos',
+              url: '/admin/events',
+              icon: Calendar,
             },
           ],
         },
@@ -266,19 +379,19 @@ export function getSidebarDataByRole(
           title: 'Gestión',
           items: [
             {
-              title: 'Profesores',
-              url: '/admin/teachers',
-              icon: Users,
-            },
-            {
-              title: 'Estudiantes',
-              url: '/admin/students',
-              icon: Users,
-            },
-            {
-              title: 'Pagos',
+              title: 'Pagos y Suscripciones',
               url: '/admin/payments',
               icon: ShoppingCart,
+            },
+            {
+              title: 'Recursos',
+              url: '/admin/resources',
+              icon: FolderKanban,
+            },
+            {
+              title: 'Categorías',
+              url: '/admin/categories',
+              icon: Layers,
             },
           ],
         },

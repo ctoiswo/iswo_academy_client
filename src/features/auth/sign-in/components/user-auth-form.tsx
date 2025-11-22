@@ -63,14 +63,19 @@ export function UserAuthForm({
         password: data.password,
       }
 
-      await login(credentials)
+      const result = await login(credentials)
 
       // Show success message
       toast.success(`¡Bienvenido de vuelta, ${data.email}!`)
 
-      // Redirect to the stored location or default to academies
-      const targetPath = redirectTo || '/academies'
-      navigate({ to: targetPath, replace: true })
+      // Redirect based on login result
+      if (result.shouldRedirect && result.redirectPath) {
+        navigate({ to: result.redirectPath, replace: true })
+      } else {
+        // Fallback to redirectTo prop or academies if no path specified
+        const targetPath = redirectTo || '/academies'
+        navigate({ to: targetPath, replace: true })
+      }
     } catch (error: any) {
       console.error('Login error:', error)
 
