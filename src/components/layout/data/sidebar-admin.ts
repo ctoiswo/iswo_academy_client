@@ -33,8 +33,75 @@ import { type SidebarData } from '../types'
  */
 export function getAdminSidebar(
   academySlug: string,
-  courseSlug?: string
+  courseSlug?: string,
+  learningPathSlug?: string
 ): SidebarData['navGroups'] {
+  // Si estamos en un learning path específico, mostrar acordeón de gestión de la ruta
+  if (learningPathSlug) {
+    return [
+      {
+        title: 'General',
+        items: [
+          {
+            title: 'Panel Principal',
+            url: `/academy/${academySlug}/dashboard`,
+            icon: LayoutDashboard,
+          },
+          {
+            title: 'Volver a Rutas',
+            url: `/academy/${academySlug}/learning-paths`,
+            icon: Route,
+          },
+        ],
+      },
+      {
+        title: 'Gestión de la Ruta',
+        items: [
+          {
+            title: 'Información',
+            url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/info`,
+            icon: Info,
+          },
+          {
+            title: 'Cursos',
+            url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/courses`,
+            icon: GraduationCap,
+          },
+          {
+            title: 'Desbloqueo',
+            url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/unlock-config`,
+            icon: Layers,
+          },
+          {
+            title: 'Precios',
+            url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/pricing`,
+            icon: ShoppingCart,
+          },
+          {
+            title: 'Estudiantes',
+            url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/students`,
+            icon: Users,
+          },
+          {
+            title: 'Estadísticas',
+            url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/analytics`,
+            icon: BarChart3,
+          },
+          {
+            title: 'Certificados',
+            url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/certificates`,
+            icon: Award,
+          },
+          {
+            title: 'Configuración',
+            url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/settings`,
+            icon: Settings,
+          },
+        ],
+      },
+    ]
+  }
+
   // Si estamos en un curso específico, mostrar acordeón de gestión del curso
   if (courseSlug) {
     return [

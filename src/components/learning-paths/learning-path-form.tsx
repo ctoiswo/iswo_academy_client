@@ -23,13 +23,13 @@ const learningPathSchema = z.object({
 type LearningPathFormData = z.infer<typeof learningPathSchema>
 
 interface LearningPathFormProps {
-  academyId: number
+  academySlug: string
   learningPath?: LearningPath
   onSuccess: () => void
   onCancel: () => void
 }
 
-export function LearningPathForm({ academyId, learningPath, onSuccess, onCancel }: LearningPathFormProps) {
+export function LearningPathForm({ academySlug, learningPath, onSuccess, onCancel }: LearningPathFormProps) {
   const isEditing = !!learningPath
   
   const form = useForm<LearningPathFormData>({
@@ -45,7 +45,7 @@ export function LearningPathForm({ academyId, learningPath, onSuccess, onCancel 
 
   // Create mutation
   const createMutation = useMutation({
-    mutationFn: (data: CreateLearningPathData) => learningPathService.createLearningPath(academyId, data),
+    mutationFn: (data: CreateLearningPathData) => learningPathService.createLearningPath(academySlug, data),
     onSuccess: () => {
       toast.success('Learning Path created successfully')
       onSuccess()
@@ -58,7 +58,7 @@ export function LearningPathForm({ academyId, learningPath, onSuccess, onCancel 
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: (data: UpdateLearningPathData) => 
-      learningPathService.updateLearningPath(academyId, learningPath!.id, data),
+      learningPathService.updateLearningPath(academySlug, learningPath!.slug, data),
     onSuccess: () => {
       toast.success('Learning Path updated successfully')
       onSuccess()

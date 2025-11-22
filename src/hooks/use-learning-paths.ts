@@ -3,30 +3,30 @@ import { toast } from 'sonner'
 
 import { learningPathService, type LearningPathFilters, type CreateLearningPathData, type UpdateLearningPathData } from '@/services'
 
-export function useLearningPaths(academyId: number, filters?: LearningPathFilters) {
+export function useLearningPaths(academySlug: string, filters?: LearningPathFilters) {
   return useQuery({
-    queryKey: ['learning-paths', academyId, filters],
-    queryFn: () => learningPathService.getLearningPaths(academyId, filters),
-    enabled: !!academyId,
+    queryKey: ['learning-paths', academySlug, filters],
+    queryFn: () => learningPathService.getLearningPaths(academySlug, filters),
+    enabled: !!academySlug,
   })
 }
 
-export function useLearningPath(slugOrId: string | number) {
+export function useLearningPath(academySlug: string, slugOrId: string | number) {
   return useQuery({
-    queryKey: ['learning-path', slugOrId],
-    queryFn: () => learningPathService.getLearningPathBySlug(slugOrId),
-    enabled: !!slugOrId,
+    queryKey: ['learning-path', academySlug, slugOrId],
+    queryFn: () => learningPathService.getLearningPathBySlug(academySlug, slugOrId),
+    enabled: !!academySlug && !!slugOrId,
   })
 }
 
-export function useCreateLearningPath(academyId: number) {
+export function useCreateLearningPath(academySlug: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (data: CreateLearningPathData) =>
-      learningPathService.createLearningPath(academyId, data),
+      learningPathService.createLearningPath(academySlug, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['learning-paths', academyId] })
+      queryClient.invalidateQueries({ queryKey: ['learning-paths', academySlug] })
       toast.success('Learning Path created successfully')
     },
     onError: (error) => {
@@ -35,14 +35,17 @@ export function useCreateLearningPath(academyId: number) {
   })
 }
 
-export function useUpdateLearningPath(academyId: number) {
+export function useUpdateLearningPath(academySlug: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ learningPathId, data }: { learningPathId: number; data: UpdateLearningPathData }) =>
-      learningPathService.updateLearningPath(academyId, learningPathId, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['learning-paths', academyId] })
+    mutationFn: ({ learningPathSlug, data }: { learningPathSlug: string; data: UpdateLearningPathData }) =>
+      learningPathService.updateLearningPath(academySlug, learningPathSlug, data),
+    onSuccess: (_, variables) => {
+      // Invalidate the list of learning paths
+      queryClient.invalidateQueries({ queryKey: ['learning-paths', academySlug] })
+      // Invalidate the specific learning path being updated
+      queryClient.invalidateQueries({ queryKey: ['learning-path', variables.learningPathSlug] })
       toast.success('Learning Path updated successfully')
     },
     onError: (error) => {
@@ -51,18 +54,45 @@ export function useUpdateLearningPath(academyId: number) {
   })
 }
 
-export function useDeleteLearningPath(academyId: number) {
+export function useDeleteLearningPath(academySlug: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (learningPathId: number) =>
-      learningPathService.deleteLearningPath(academyId, learningPathId),
+    mutationFn: (learningPathSlug: string) =>
+      learningPathService.deleteLearningPath(academySlug, learningPathSlug),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['learning-paths', academyId] })
-      toast.success('Learning Path deleted successfully')
+      queryClient.invalidateQueries({ queryKey: ['learning-paths', academySlug] })
+      toast.success('Ruta de aprendizaje eliminada exitosamente')
     },
-    onError: (error) => {
-      toast.error(`Failed to delete learning path: ${error.message}`)
+    onError: (error: any) => {
+      const errorMessage = error.response?.data?.error?.message || error.message || 'Error al eliminar'
+      toast.error(errorMessage)
     },
+  })
+}
+
+export function useUpdateLearningPathSettings(academySlug: string, learningPathSlug: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: { status?: string; position?: number }) =>
+      learningPathService.updateLearningPath(academySlug, learningPathSlug, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['learning-path', academySlug, learningPathSlug] })
+      queryClient.invalidateQueries({ queryKey: ['learning-paths', academySlug] })
+      toast.success('Configuración actualizada exitosamente')
+    },
+    onError: (error: any) => {
+      const errorMessage = error.response?.data?.error?.message || error.message || 'Error al actualizar'
+      toast.error(errorMessage)
+    },
+  })
+}
+
+export function useLearningPathAnalytics(academySlug: string, learningPathSlug: string) {
+  return useQuery({
+    queryKey: ['learning-path-analytics', academySlug, learningPathSlug],
+    queryFn: () => learningPathService.getLearningPathAnalytics(academySlug, learningPathSlug),
+    enabled: !!academySlug && !!learningPathSlug,
   })
 }

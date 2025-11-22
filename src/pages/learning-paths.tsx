@@ -26,9 +26,9 @@ export default function LearningPathsPage() {
   const [difficultyFilter, setDifficultyFilter] = useState<string>('all')
 
   // Use hooks
-  const academyId = currentAcademy?.id
-  const { data: learningPathsData, isLoading, error } = useLearningPaths(academyId ? Number(academyId) : 0)
-  const deleteMutation = useDeleteLearningPath(academyId ? Number(academyId) : 0)
+  const academySlug = currentAcademy?.slug || ''
+  const { data: learningPathsData, isLoading, error } = useLearningPaths(academySlug)
+  const deleteMutation = useDeleteLearningPath(academySlug)
 
   // Handle success callbacks
   const handleFormSuccess = () => {
@@ -39,7 +39,7 @@ export default function LearningPathsPage() {
   // Handle delete
   const handleDeleteConfirm = () => {
     if (learningPathToDelete) {
-      deleteMutation.mutate(learningPathToDelete.id)
+      deleteMutation.mutate(learningPathToDelete.slug)
       setLearningPathToDelete(null)
     }
   }
@@ -258,9 +258,9 @@ export default function LearningPathsPage() {
               Create a new learning path to guide students through a structured curriculum
             </DialogDescription>
           </DialogHeader>
-          {academyId && (
+          {academySlug && (
             <LearningPathForm
-              academyId={Number(academyId)}
+              academySlug={academySlug}
               onSuccess={handleFormSuccess}
               onCancel={() => setIsCreateModalOpen(false)}
             />
@@ -277,9 +277,9 @@ export default function LearningPathsPage() {
               Update the learning path information
             </DialogDescription>
           </DialogHeader>
-          {editingLearningPath && academyId && (
+          {editingLearningPath && academySlug && (
             <LearningPathForm
-              academyId={Number(academyId)}
+              academySlug={academySlug}
               learningPath={editingLearningPath}
               onSuccess={handleFormSuccess}
               onCancel={() => setEditingLearningPath(null)}

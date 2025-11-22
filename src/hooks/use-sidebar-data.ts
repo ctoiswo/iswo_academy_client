@@ -46,6 +46,10 @@ export function useSidebarData(): SidebarData['navGroups'] {
   const courseSlugMatch = location.pathname.match(/\/academy\/[^/]+\/courses\/([^/]+)/)
   const courseSlug = courseSlugMatch ? courseSlugMatch[1] : undefined
 
+  // Detectar si estamos en una ruta de learning path específico
+  const learningPathSlugMatch = location.pathname.match(/\/academy\/[^/]+\/learning-paths\/([^/]+)/)
+  const learningPathSlug = learningPathSlugMatch ? learningPathSlugMatch[1] : undefined
+
   // Obtener el sidebar según el rol y la ubicación
   if (userRole === 'super_admin') {
     // Super admin siempre usa su sidebar especial (sin slug de academia)
@@ -63,7 +67,7 @@ export function useSidebarData(): SidebarData['navGroups'] {
 
     switch (userRole) {
       case 'admin':
-        return getAdminSidebar(academySlug, courseSlug)
+        return getAdminSidebar(academySlug, courseSlug, learningPathSlug)
       case 'teacher':
         return getTeacherSidebar(academySlug)
       case 'student':

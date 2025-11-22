@@ -1,24 +1,179 @@
-import { Book, Clock, Users } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Book, Clock, Users, Plus, Trash2, GripVertical } from 'lucide-react'
+import { useParams } from '@tanstack/react-router'
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core'
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
-import { type LearningPath } from '@/services'
+import { type LearningPath, type Course } from '@/services'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { useAddCourseToLearningPath, useRemoveCourseFromLearningPath, useReorderCourses } from '@/hooks/use-learning-path-courses'
+import { useCourses } from '@/hooks/use-courses'
+import { useAuthStore } from '@/stores/auth-store'
 
 interface LearningPathCoursesProps {
   learningPath: LearningPath
 }
 
-export function LearningPathCourses({ learningPath }: LearningPathCoursesProps) {
-  const assignedCourses = learningPath.courses || []
+interface SortableCourseItemProps {
+  course: Course
+  index: number
+  onRemove: (courseId: number) => void
+}
+
+function SortableCourseItem({ course, index, onRemove }: SortableCourseItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: course.id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  }
 
   const getDifficultyBadge = (difficulty: string) => {
     switch (difficulty) {
       case 'beginner':
-        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Beginner</Badge>
+        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Principiante</Badge>
       case 'intermediate':
-        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Intermediate</Badge>
+        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Intermedio</Badge>
       case 'advanced':
-        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Advanced</Badge>
+        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Avanzado</Badge>
+      default:
+        return <Badge variant="outline">{difficulty}</Badge>
+    }
+  }
+
+  return (
+    <Card ref={setNodeRef} style={style} className={isDragging ? 'shadow-lg' : ''}>
+      <CardContent className="p-4">
+        <div className="flex items-start gap-3">
+          <button
+            className="mt-1 cursor-grab active:cursor-grabbing touch-none"
+            {...attributes}
+            {...listeners}
+          >
+            <GripVertical className="h-5 w-5 text-gray-400" />
+          </button>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-sm font-medium text-gray-500">#{index + 1}</span>
+              <h4 className="font-medium">{course.title}</h4>
+              {getDifficultyBadge(course.difficulty_level)}
+            </div>
+            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+              {course.description}
+            </p>
+            <div className="flex gap-4 text-sm text-gray-500">
+              <div className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                <span>{Math.round(course.duration_minutes / 60)}h</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Users className="w-4 h-4" />
+                <span>{course.enrollment_count} estudiantes</span>
+              </div>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onRemove(course.id)}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+export function LearningPathCourses({ learningPath }: LearningPathCoursesProps) {
+  const { academySlug, learningPathSlug } = useParams({
+    from: '/_authenticated/academy/$academySlug/learning-paths/$learningPathSlug/courses',
+  })
+  const { currentAcademy } = useAuthStore()
+  
+  const [courses, setCourses] = useState(learningPath.courses || [])
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const { data: allCoursesData } = useCourses(currentAcademy?.id || 0)
+  const addCourseMutation = useAddCourseToLearningPath(academySlug, learningPathSlug)
+  const removeCourseMutation = useRemoveCourseFromLearningPath(academySlug, learningPathSlug)
+  const reorderMutation = useReorderCourses(academySlug, learningPathSlug)
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
+
+  // Update local state when learningPath prop changes
+  useEffect(() => {
+    if (learningPath.courses) {
+      setCourses(learningPath.courses)
+    }
+  }, [learningPath.courses])
+
+  // Filter available courses (exclude already added ones and ensure same academy)
+  const assignedCourseIds = new Set(courses.map(c => c.id))
+  const allCourses = allCoursesData || []
+  const availableCourses = allCourses
+    .filter((course) => !assignedCourseIds.has(course.id))
+    .filter((course) => course.academy?.id === learningPath.academy.id) // Ensure same academy
+    .filter((course) =>
+      course.title.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (over && active.id !== over.id) {
+      setCourses((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id)
+        const newIndex = items.findIndex((item) => item.id === over.id)
+        const newOrder = arrayMove(items, oldIndex, newIndex)
+        
+        // Save new order to backend
+        reorderMutation.mutate(newOrder.map(c => c.id))
+        
+        return newOrder
+      })
+    }
+  }
+
+  const handleAddCourse = async (courseId: number) => {
+    await addCourseMutation.mutateAsync(courseId)
+    setIsAddDialogOpen(false)
+    setSearchTerm('')
+  }
+
+  const handleRemoveCourse = async (courseId: number) => {
+    await removeCourseMutation.mutateAsync(courseId)
+    setCourses(prev => prev.filter(c => c.id !== courseId))
+  }
+
+  const getDifficultyBadge = (difficulty: string) => {
+    switch (difficulty) {
+      case 'beginner':
+        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Principiante</Badge>
+      case 'intermediate':
+        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Intermedio</Badge>
+      case 'advanced':
+        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Avanzado</Badge>
       default:
         return <Badge variant="outline">{difficulty}</Badge>
     }
@@ -29,48 +184,105 @@ export function LearningPathCourses({ learningPath }: LearningPathCoursesProps) 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold">Courses in Learning Path</h2>
-          <p className="text-sm text-gray-600">{assignedCourses.length} course{assignedCourses.length !== 1 ? 's' : ''} in this path</p>
+          <h2 className="text-lg font-semibold">Cursos en la Ruta de Aprendizaje</h2>
+          <p className="text-sm text-gray-600">
+            {courses.length} curso{courses.length !== 1 ? 's' : ''} en esta ruta
+          </p>
         </div>
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Agregar Curso
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Agregar Curso a la Ruta de Aprendizaje</DialogTitle>
+              <DialogDescription>
+                Selecciona un curso para agregar a esta ruta de aprendizaje
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Input
+                placeholder="Buscar cursos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <div className="max-h-96 overflow-y-auto space-y-2">
+                {availableCourses.length === 0 ? (
+                  <p className="text-sm text-gray-500 text-center py-4">
+                    {searchTerm ? 'No se encontraron cursos' : 'Todos los cursos ya están agregados'}
+                  </p>
+                ) : (
+                  availableCourses.map((course) => (
+                    <Card
+                      key={course.id}
+                      className="cursor-pointer hover:bg-gray-50 transition-colors"
+                      onClick={() => handleAddCourse(course.id)}
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h4 className="font-medium">{course.title}</h4>
+                              {getDifficultyBadge(course.difficulty_level)}
+                            </div>
+                            <p className="text-sm text-gray-600 line-clamp-1">
+                              {course.description}
+                            </p>
+                          </div>
+                          <Plus className="h-5 w-5 text-gray-400" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      {/* Assigned Courses */}
-      {assignedCourses.length === 0 ? (
+      {/* Assigned Courses with Drag & Drop */}
+      {courses.length === 0 ? (
         <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
           <Book className="mx-auto h-8 w-8 text-gray-400 mb-3" />
-          <h3 className="text-sm font-medium text-gray-900 mb-1">No courses assigned</h3>
-          <p className="text-sm text-gray-500">This learning path doesn't have any courses yet</p>
+          <h3 className="text-sm font-medium text-gray-900 mb-1">No hay cursos asignados</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Esta ruta de aprendizaje aún no tiene cursos
+          </p>
+          <Button onClick={() => setIsAddDialogOpen(true)} variant="outline">
+            <Plus className="mr-2 h-4 w-4" />
+            Agregar Primer Curso
+          </Button>
         </div>
       ) : (
-        <div className="grid gap-4">
-          {assignedCourses.map((course, index) => (
-            <Card key={course.id}>
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-medium text-gray-500">#{index + 1}</span>
-                      <h4 className="font-medium">{course.title}</h4>
-                      {getDifficultyBadge(course.difficulty_level)}
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                      {course.description}
-                    </p>
-                    <div className="flex gap-4 text-sm text-gray-500">
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        <span>{Math.round(course.duration_minutes / 60)}h</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        <span>{course.enrollment_count} students</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="space-y-4">
+          <p className="text-sm text-gray-500">
+            Arrastra y suelta para reordenar los cursos
+          </p>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={courses.map(c => c.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-3">
+                {courses.map((course, index) => (
+                  <SortableCourseItem
+                    key={course.id}
+                    course={course}
+                    index={index}
+                    onRemove={handleRemoveCourse}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
         </div>
       )}
     </div>
