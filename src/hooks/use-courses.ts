@@ -3,11 +3,11 @@ import { toast } from 'sonner'
 
 import { courseService, type CourseFilters, type CreateCourseData, type UpdateCourseData } from '@/services/course-service'
 
-export function useCourses(academyId: number, filters?: CourseFilters) {
+export function useCourses(academySlug: string | number, filters?: CourseFilters) {
   return useQuery({
-    queryKey: ['courses', academyId, filters],
-    queryFn: () => courseService.getCourses(academyId, filters),
-    enabled: !!academyId,
+    queryKey: ['courses', academySlug, filters],
+    queryFn: () => courseService.getCourses(academySlug, filters),
+    enabled: !!academySlug,
   })
 }
 
@@ -44,7 +44,11 @@ export function useCreateCourse(academySlug: string) {
     mutationFn: (data: CreateCourseData) =>
       courseService.createCourse(academySlug, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['courses', academySlug] })
+      // Invalidate all course queries for this academy (with any filters)
+      queryClient.invalidateQueries({ 
+        queryKey: ['courses', academySlug],
+        exact: false 
+      })
       toast.success('Course created successfully')
     },
     onError: (error) => {
@@ -53,14 +57,18 @@ export function useCreateCourse(academySlug: string) {
   })
 }
 
-export function useUpdateCourse(academyId: number) {
+export function useUpdateCourse(academySlug: string | number) {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ courseId, data }: { courseId: number; data: UpdateCourseData }) =>
-      courseService.updateCourse(academyId, courseId, data),
+      courseService.updateCourse(academySlug, courseId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['courses', academyId] })
+      // Invalidate all course queries for this academy (with any filters)
+      queryClient.invalidateQueries({ 
+        queryKey: ['courses', academySlug],
+        exact: false 
+      })
       toast.success('Course updated successfully')
     },
     onError: (error) => {
@@ -76,7 +84,11 @@ export function useDeleteCourse(academySlug: string | number) {
     mutationFn: (courseSlug: string | number) =>
       courseService.deleteCourse(academySlug, courseSlug),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['courses'] })
+      // Invalidate all course queries for this academy (with any filters)
+      queryClient.invalidateQueries({ 
+        queryKey: ['courses', academySlug],
+        exact: false 
+      })
       toast.success('Course deleted successfully')
     },
     onError: (error) => {

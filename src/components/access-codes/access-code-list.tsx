@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { type AccessCodeFilters } from '@/services/access-code-service'
 import { Plus, Key, Filter } from 'lucide-react'
-
+import { useAccessCodes } from '@/hooks/use-access-codes'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -9,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -17,26 +18,27 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-
-import { useAccessCodes } from '@/hooks/use-access-codes'
 import { AccessCodeCard } from './access-code-card'
 import { CreateAccessCodeDialog } from './create-access-code-dialog'
-import { type AccessCodeFilters } from '@/services/access-code-service'
 
 interface AccessCodeListProps {
-  courseId: number
+  courseSlug: number | string
 }
 
-export function AccessCodeList({ courseId }: AccessCodeListProps) {
+export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [filters, setFilters] = useState<AccessCodeFilters>({})
 
-  const { data: accessCodesData, isLoading, error } = useAccessCodes(courseId, filters)
+  const {
+    data: accessCodesData,
+    isLoading,
+    error,
+  } = useAccessCodes(courseSlug, filters)
 
   const handleFilterChange = (status: string) => {
     setFilters({
       ...filters,
-      status: status === 'all' ? undefined : status as any
+      status: status === 'all' ? undefined : (status as any),
     })
   }
 
@@ -44,19 +46,19 @@ export function AccessCodeList({ courseId }: AccessCodeListProps) {
     return (
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
+          <div className='flex items-center justify-between'>
             <div>
               <CardTitle>Access Codes</CardTitle>
               <CardDescription>
                 Generate access codes to allow free enrollment in this course
               </CardDescription>
             </div>
-            <Skeleton className="h-10 w-32" />
+            <Skeleton className='h-10 w-32' />
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Skeleton className="h-32" />
-          <Skeleton className="h-32" />
+        <CardContent className='space-y-4'>
+          <Skeleton className='h-32' />
+          <Skeleton className='h-32' />
         </CardContent>
       </Card>
     )
@@ -65,8 +67,8 @@ export function AccessCodeList({ courseId }: AccessCodeListProps) {
   if (error) {
     return (
       <Card>
-        <CardContent className="text-center py-12">
-          <p className="text-red-600">Failed to load access codes</p>
+        <CardContent className='py-12 text-center'>
+          <p className='text-red-600'>Failed to load access codes</p>
         </CardContent>
       </Card>
     )
@@ -74,8 +76,8 @@ export function AccessCodeList({ courseId }: AccessCodeListProps) {
 
   // Handle different response structures
   console.log('AccessCodesData received:', accessCodesData)
-  const accessCodes = Array.isArray(accessCodesData) 
-    ? accessCodesData 
+  const accessCodes = Array.isArray(accessCodesData)
+    ? accessCodesData
     : accessCodesData?.data || []
   console.log('Processed accessCodes:', accessCodes)
 
@@ -83,7 +85,7 @@ export function AccessCodeList({ courseId }: AccessCodeListProps) {
     <>
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
+          <div className='flex items-center justify-between'>
             <div>
               <CardTitle>Access Codes</CardTitle>
               <CardDescription>
@@ -91,52 +93,54 @@ export function AccessCodeList({ courseId }: AccessCodeListProps) {
               </CardDescription>
             </div>
             <Button onClick={() => setCreateDialogOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className='mr-2 h-4 w-4' />
               Create Access Code
             </Button>
           </div>
-          
+
           {/* Filters */}
           {accessCodes.length > 0 && (
-            <div className="flex items-center gap-2 pt-4">
-              <Filter className="w-4 h-4 text-muted-foreground" />
+            <div className='flex items-center gap-2 pt-4'>
+              <Filter className='text-muted-foreground h-4 w-4' />
               <Select
                 value={filters.status || 'all'}
                 onValueChange={handleFilterChange}
               >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Filter by status" />
+                <SelectTrigger className='w-[180px]'>
+                  <SelectValue placeholder='Filter by status' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All status</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
-                  <SelectItem value="expired">Expired</SelectItem>
-                  <SelectItem value="exhausted">Exhausted</SelectItem>
+                  <SelectItem value='all'>All status</SelectItem>
+                  <SelectItem value='active'>Active</SelectItem>
+                  <SelectItem value='inactive'>Inactive</SelectItem>
+                  <SelectItem value='expired'>Expired</SelectItem>
+                  <SelectItem value='exhausted'>Exhausted</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           )}
         </CardHeader>
-        
+
         <CardContent>
           {accessCodes.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
-              <Key className="mx-auto h-12 w-12 mb-4" />
-              <h3 className="text-lg font-medium mb-2">No access codes yet</h3>
-              <p className="mb-4">Create access codes to give students free access to this course</p>
+            <div className='py-12 text-center text-gray-500'>
+              <Key className='mx-auto mb-4 h-12 w-12' />
+              <h3 className='mb-2 text-lg font-medium'>No access codes yet</h3>
+              <p className='mb-4'>
+                Create access codes to give students free access to this course
+              </p>
               <Button onClick={() => setCreateDialogOpen(true)}>
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className='mr-2 h-4 w-4' />
                 Create First Access Code
               </Button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className='space-y-4'>
               {accessCodes.map((accessCode: any) => (
                 <AccessCodeCard
                   key={accessCode.id}
                   accessCode={accessCode}
-                  courseId={courseId}
+                  courseSlug={courseSlug}
                 />
               ))}
             </div>
@@ -146,7 +150,7 @@ export function AccessCodeList({ courseId }: AccessCodeListProps) {
 
       {/* Create dialog */}
       <CreateAccessCodeDialog
-        courseId={courseId}
+        courseSlug={courseSlug}
         open={createDialogOpen}
         onOpenChange={setCreateDialogOpen}
       />

@@ -56,8 +56,8 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
     if (!tokens?.access_token) return
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
-      await fetch(`${apiUrl}/api/v1/badges/${badgeId}/mark_viewed`, {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
+      await fetch(`${apiUrl}/badges/${badgeId}/mark_viewed`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${tokens.access_token}`,
@@ -96,14 +96,14 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
-      const academyIdOrSlug = currentAcademy.id.toString()
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
+      const academySlug = currentAcademy.slug
 
-      const response = await fetch(`${apiUrl}/api/v1/badges/unviewed`, {
+      const response = await fetch(`${apiUrl}/badges/unviewed`, {
         headers: {
           'Authorization': `Bearer ${tokens.access_token}`,
           'Content-Type': 'application/json',
-          'X-Academy-Slug': academyIdOrSlug
+          'X-Academy-Slug': academySlug
         }
       })
 
@@ -132,8 +132,9 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
     }
 
     // Get WebSocket URL from environment or construct it
+    // Cable endpoint is at /cable (not under /api/v1)
     const wsUrl = import.meta.env.VITE_CABLE_URL ||
-      (import.meta.env.VITE_API_URL?.replace(/^http/, 'ws') + '/cable')
+      (import.meta.env.VITE_API_URL?.replace(/^http/, 'ws').replace('/api/v1', '') + '/cable')
 
     console.log('Connecting to WebSocket:', wsUrl)
 

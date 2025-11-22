@@ -9,7 +9,7 @@ import {
   type RedeemAccessCodeData
 } from '@/services/access-code-service'
 
-export function useAccessCodes(courseId: number, filters?: AccessCodeFilters) {
+export function useAccessCodes(courseId: number | string, filters?: AccessCodeFilters) {
   return useQuery({
     queryKey: ['access_codes', courseId, filters],
     queryFn: () => accessCodeService.getAccessCodes(courseId, filters),
@@ -17,7 +17,7 @@ export function useAccessCodes(courseId: number, filters?: AccessCodeFilters) {
   })
 }
 
-export function useAccessCode(courseId: number, accessCodeId: number) {
+export function useAccessCode(courseId: number | string, accessCodeId: number) {
   return useQuery({
     queryKey: ['access_code', courseId, accessCodeId],
     queryFn: () => accessCodeService.getAccessCode(courseId, accessCodeId),
@@ -25,7 +25,7 @@ export function useAccessCode(courseId: number, accessCodeId: number) {
   })
 }
 
-export function useCreateAccessCode(courseId: number) {
+export function useCreateAccessCode(courseId: number | string) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -41,7 +41,7 @@ export function useCreateAccessCode(courseId: number) {
   })
 }
 
-export function useUpdateAccessCode(courseId: number) {
+export function useUpdateAccessCode(courseId: number | string) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -57,7 +57,7 @@ export function useUpdateAccessCode(courseId: number) {
   })
 }
 
-export function useDeleteAccessCode(courseId: number) {
+export function useDeleteAccessCode(courseId: number | string) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -73,7 +73,7 @@ export function useDeleteAccessCode(courseId: number) {
   })
 }
 
-export function useToggleAccessCodeStatus(courseId: number) {
+export function useToggleAccessCodeStatus(courseId: number | string) {
   const queryClient = useQueryClient()
 
   return useMutation({
