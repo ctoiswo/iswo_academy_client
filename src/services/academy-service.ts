@@ -84,10 +84,10 @@ class AcademyService {
 
   /**
    * Get all academies (Super Admin only)
-   * @param params - Optional query parameters (search, page, per_page)
+   * @param params - Optional query parameters (search, page, per_page, gamification)
    * @returns Promise with paginated academies data
    */
-  async getAcademies(params?: { search?: string; page?: number; per_page?: number }): Promise<{
+  async getAcademies(params?: { search?: string; page?: number; per_page?: number; gamification?: string }): Promise<{
     data: FeaturedAcademy[]
     meta: {
       current_page: number

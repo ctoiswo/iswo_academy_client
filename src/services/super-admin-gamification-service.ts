@@ -122,9 +122,11 @@ class SuperAdminGamificationService {
   async getAcademyBadges(
     academySlug: string,
     filters?: {
+      search?: string
       category?: string
       tier?: string
-      is_active?: boolean
+      rarity?: string
+      status?: string
     }
   ): Promise<BadgeDetail[]> {
     console.log('Fetching badges for academy:', academySlug, filters)
@@ -155,10 +157,10 @@ class SuperAdminGamificationService {
   /**
    * Update an existing badge
    */
-  async updateBadge(badgeId: number, data: UpdateBadgeData): Promise<BadgeDetail> {
-    console.log('Updating badge:', badgeId, data)
+  async updateBadge(academySlug: string, badgeId: number, data: UpdateBadgeData): Promise<BadgeDetail> {
+    console.log('Updating badge:', academySlug, badgeId, data)
     const response = await apiClient.patch(
-      `/super_admin/gamification/badges/${badgeId}`,
+      `/super_admin/gamification/academies/${academySlug}/badges/${badgeId}`,
       { badge: data }
     )
     console.log('Update badge response:', response.data)
@@ -168,10 +170,10 @@ class SuperAdminGamificationService {
   /**
    * Delete a badge
    */
-  async deleteBadge(badgeId: number): Promise<void> {
-    console.log('Deleting badge:', badgeId)
+  async deleteBadge(academySlug: string, badgeId: number): Promise<void> {
+    console.log('Deleting badge:', academySlug, badgeId)
     const response = await apiClient.delete(
-      `/super_admin/gamification/badges/${badgeId}`
+      `/super_admin/gamification/academies/${academySlug}/badges/${badgeId}`
     )
     console.log('Delete badge response:', response.data)
   }

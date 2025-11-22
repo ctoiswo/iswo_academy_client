@@ -17,7 +17,7 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
   return (
     <SearchProvider>
       <LayoutProvider>
-        <BadgeNotificationProvider checkInterval={30000} checkOnMount={true} checkOnRouteChange={true}>
+        <BadgeNotificationProvider enabled={true}>
           <SidebarProvider defaultOpen={defaultOpen}>
             <SkipToMain />
             <AppSidebar />
