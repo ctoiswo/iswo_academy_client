@@ -30,8 +30,8 @@ export function useFeaturedCourses(categoryId?: number) {
 
 export function useCourseBySlug(slug: string) {
   return useQuery({
-    queryKey: ['course', slug],
-    queryFn: () => courseService.getCourseBySlug(slug),
+    queryKey: ['course', 'public', slug],
+    queryFn: () => courseService.getPublicCourseBySlug(slug),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     enabled: !!slug, // Solo ejecutar si hay slug

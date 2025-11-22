@@ -41,6 +41,7 @@ import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-p
 import { Route as authConfirmRouteImport } from './routes/(auth)/confirm'
 import { Route as ClerkAuthenticatedRouteRouteImport } from './routes/clerk/_authenticated/route'
 import { Route as ClerkauthRouteRouteImport } from './routes/clerk/(auth)/route'
+import { Route as AuthenticatedSuperAdminRouteRouteImport } from './routes/_authenticated/super-admin/route'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
@@ -68,6 +69,8 @@ import { Route as AcademyAcademyIdCalendarRouteImport } from './routes/academy/$
 import { Route as AcademyAcademyIdAppearanceRouteImport } from './routes/academy/$academyId/appearance'
 import { Route as AcademyAcademyIdAnalyticsRouteImport } from './routes/academy/$academyId/analytics'
 import { Route as AcademyAcademyIdAchievementsRouteImport } from './routes/academy/$academyId/achievements'
+import { Route as AuthenticatedSuperAdminGamificationRouteImport } from './routes/_authenticated/super-admin/gamification'
+import { Route as AuthenticatedSuperAdminAcademiesRouteImport } from './routes/_authenticated/super-admin/academies'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
@@ -238,6 +241,12 @@ const ClerkauthRouteRoute = ClerkauthRouteRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => ClerkRouteRoute,
 } as any)
+const AuthenticatedSuperAdminRouteRoute =
+  AuthenticatedSuperAdminRouteRouteImport.update({
+    id: '/super-admin',
+    path: '/super-admin',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsRouteRoute =
   AuthenticatedSettingsRouteRouteImport.update({
     id: '/settings',
@@ -388,6 +397,18 @@ const AcademyAcademyIdAchievementsRoute =
     path: '/achievements',
     getParentRoute: () => AcademyAcademyIdRoute,
   } as any)
+const AuthenticatedSuperAdminGamificationRoute =
+  AuthenticatedSuperAdminGamificationRouteImport.update({
+    id: '/gamification',
+    path: '/gamification',
+    getParentRoute: () => AuthenticatedSuperAdminRouteRoute,
+  } as any)
+const AuthenticatedSuperAdminAcademiesRoute =
+  AuthenticatedSuperAdminAcademiesRouteImport.update({
+    id: '/academies',
+    path: '/academies',
+    getParentRoute: () => AuthenticatedSuperAdminRouteRoute,
+  } as any)
 const AuthenticatedSettingsNotificationsRoute =
   AuthenticatedSettingsNotificationsRouteImport.update({
     id: '/notifications',
@@ -463,6 +484,7 @@ export interface FileRoutesByFullPath {
   '/landing': typeof LandingRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
+  '/super-admin': typeof AuthenticatedSuperAdminRouteRouteWithChildren
   '/clerk/': typeof ClerkauthRouteRouteWithChildren
   '/confirm': typeof authConfirmRoute
   '/forgot-password': typeof authForgotPasswordRoute
@@ -494,6 +516,8 @@ export interface FileRoutesByFullPath {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
+  '/super-admin/gamification': typeof AuthenticatedSuperAdminGamificationRoute
   '/academy/$academyId/achievements': typeof AcademyAcademyIdAchievementsRoute
   '/academy/$academyId/analytics': typeof AcademyAcademyIdAnalyticsRoute
   '/academy/$academyId/appearance': typeof AcademyAcademyIdAppearanceRoute
@@ -531,6 +555,7 @@ export interface FileRoutesByTo {
   '/create-academy': typeof CreateAcademyRoute
   '/landing': typeof LandingRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/super-admin': typeof AuthenticatedSuperAdminRouteRouteWithChildren
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
   '/confirm': typeof authConfirmRoute
   '/forgot-password': typeof authForgotPasswordRoute
@@ -562,6 +587,8 @@ export interface FileRoutesByTo {
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
+  '/super-admin/gamification': typeof AuthenticatedSuperAdminGamificationRoute
   '/academy/$academyId/achievements': typeof AcademyAcademyIdAchievementsRoute
   '/academy/$academyId/analytics': typeof AcademyAcademyIdAnalyticsRoute
   '/academy/$academyId/appearance': typeof AcademyAcademyIdAppearanceRoute
@@ -603,6 +630,7 @@ export interface FileRoutesById {
   '/landing': typeof LandingRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
+  '/_authenticated/super-admin': typeof AuthenticatedSuperAdminRouteRouteWithChildren
   '/clerk/(auth)': typeof ClerkauthRouteRouteWithChildren
   '/clerk/_authenticated': typeof ClerkAuthenticatedRouteRouteWithChildren
   '/(auth)/confirm': typeof authConfirmRoute
@@ -635,6 +663,8 @@ export interface FileRoutesById {
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
+  '/_authenticated/super-admin/gamification': typeof AuthenticatedSuperAdminGamificationRoute
   '/academy/$academyId/achievements': typeof AcademyAcademyIdAchievementsRoute
   '/academy/$academyId/analytics': typeof AcademyAcademyIdAnalyticsRoute
   '/academy/$academyId/appearance': typeof AcademyAcademyIdAppearanceRoute
@@ -676,6 +706,7 @@ export interface FileRouteTypes {
     | '/landing'
     | '/admin'
     | '/settings'
+    | '/super-admin'
     | '/clerk/'
     | '/confirm'
     | '/forgot-password'
@@ -707,6 +738,8 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/super-admin/academies'
+    | '/super-admin/gamification'
     | '/academy/$academyId/achievements'
     | '/academy/$academyId/analytics'
     | '/academy/$academyId/appearance'
@@ -744,6 +777,7 @@ export interface FileRouteTypes {
     | '/create-academy'
     | '/landing'
     | '/admin'
+    | '/super-admin'
     | '/clerk'
     | '/confirm'
     | '/forgot-password'
@@ -775,6 +809,8 @@ export interface FileRouteTypes {
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/super-admin/academies'
+    | '/super-admin/gamification'
     | '/academy/$academyId/achievements'
     | '/academy/$academyId/analytics'
     | '/academy/$academyId/appearance'
@@ -815,6 +851,7 @@ export interface FileRouteTypes {
     | '/landing'
     | '/_authenticated/admin'
     | '/_authenticated/settings'
+    | '/_authenticated/super-admin'
     | '/clerk/(auth)'
     | '/clerk/_authenticated'
     | '/(auth)/confirm'
@@ -847,6 +884,8 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
+    | '/_authenticated/super-admin/academies'
+    | '/_authenticated/super-admin/gamification'
     | '/academy/$academyId/achievements'
     | '/academy/$academyId/analytics'
     | '/academy/$academyId/appearance'
@@ -1134,6 +1173,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClerkauthRouteRouteImport
       parentRoute: typeof ClerkRouteRoute
     }
+    '/_authenticated/super-admin': {
+      id: '/_authenticated/super-admin'
+      path: '/super-admin'
+      fullPath: '/super-admin'
+      preLoaderRoute: typeof AuthenticatedSuperAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
@@ -1323,6 +1369,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcademyAcademyIdAchievementsRouteImport
       parentRoute: typeof AcademyAcademyIdRoute
     }
+    '/_authenticated/super-admin/gamification': {
+      id: '/_authenticated/super-admin/gamification'
+      path: '/gamification'
+      fullPath: '/super-admin/gamification'
+      preLoaderRoute: typeof AuthenticatedSuperAdminGamificationRouteImport
+      parentRoute: typeof AuthenticatedSuperAdminRouteRoute
+    }
+    '/_authenticated/super-admin/academies': {
+      id: '/_authenticated/super-admin/academies'
+      path: '/academies'
+      fullPath: '/super-admin/academies'
+      preLoaderRoute: typeof AuthenticatedSuperAdminAcademiesRouteImport
+      parentRoute: typeof AuthenticatedSuperAdminRouteRoute
+    }
     '/_authenticated/settings/notifications': {
       id: '/_authenticated/settings/notifications'
       path: '/notifications'
@@ -1445,9 +1505,28 @@ const AuthenticatedSettingsRouteRouteWithChildren =
     AuthenticatedSettingsRouteRouteChildren,
   )
 
+interface AuthenticatedSuperAdminRouteRouteChildren {
+  AuthenticatedSuperAdminAcademiesRoute: typeof AuthenticatedSuperAdminAcademiesRoute
+  AuthenticatedSuperAdminGamificationRoute: typeof AuthenticatedSuperAdminGamificationRoute
+}
+
+const AuthenticatedSuperAdminRouteRouteChildren: AuthenticatedSuperAdminRouteRouteChildren =
+  {
+    AuthenticatedSuperAdminAcademiesRoute:
+      AuthenticatedSuperAdminAcademiesRoute,
+    AuthenticatedSuperAdminGamificationRoute:
+      AuthenticatedSuperAdminGamificationRoute,
+  }
+
+const AuthenticatedSuperAdminRouteRouteWithChildren =
+  AuthenticatedSuperAdminRouteRoute._addFileChildren(
+    AuthenticatedSuperAdminRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
+  AuthenticatedSuperAdminRouteRoute: typeof AuthenticatedSuperAdminRouteRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedLearningPathsRoute: typeof AuthenticatedLearningPathsRoute
   AuthenticatedMyCoursesRoute: typeof AuthenticatedMyCoursesRoute
@@ -1464,6 +1543,8 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
+  AuthenticatedSuperAdminRouteRoute:
+    AuthenticatedSuperAdminRouteRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedLearningPathsRoute: AuthenticatedLearningPathsRoute,
   AuthenticatedMyCoursesRoute: AuthenticatedMyCoursesRoute,

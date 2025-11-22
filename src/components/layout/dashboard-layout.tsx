@@ -12,6 +12,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ConfigDrawer } from '@/components/config-drawer'
+import { PointsDisplay } from '@/components/gamification/points-display'
 import type { DashboardType } from '@/components/dashboard-router'
 import type { AuthUser, AcademyMembership } from '@/stores/auth-store'
 
@@ -141,6 +142,7 @@ function FullLayout({
               
               <div className="flex items-center space-x-4">
                 {showSearch && <Search />}
+                <PointsDisplay compact />
                 <ThemeSwitch />
                 {showConfigDrawer && <ConfigDrawer />}
                 <ProfileDropdown />
@@ -188,6 +190,7 @@ function CompactLayout({
               
               <div className="flex items-center space-x-2">
                 {showSearch && <Search />}
+                <PointsDisplay compact />
                 <ThemeSwitch />
                 <ProfileDropdown />
               </div>
@@ -267,6 +270,7 @@ function SidebarLayout({
                   
                   <div className="flex items-center space-x-4">
                     {showSearch && <Search />}
+                    <PointsDisplay compact />
                     <ThemeSwitch />
                     {showConfigDrawer && <ConfigDrawer />}
                     <ProfileDropdown />

@@ -10,6 +10,8 @@ export { default as academyService, academyService as academyApi } from './acade
 export { default as academyCategoryService, academyCategoryService as academyCategoryApi } from './academy-category-service'
 export { default as courseService, courseService as courseApi } from './course-service'
 export { default as learningPathService, learningPathService as learningPathApi } from './learning-path-service'
+export { default as gamificationService, gamificationService as gamificationApi } from './gamification-service'
+export { default as superAdminGamificationService, superAdminGamificationService as superAdminGamificationApi } from './super-admin-gamification-service'
 
 // Re-export types
 export type {
@@ -45,3 +47,11 @@ export type {
 } from './learning-path-service'
 
 export type { FeaturedCourse } from './course-service'
+
+export type {
+  Badge,
+  UserBadge,
+  GamificationProfile,
+  LeaderboardEntry,
+  BadgeFilters
+} from './gamification-service'

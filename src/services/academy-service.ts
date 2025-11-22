@@ -71,6 +71,32 @@ class AcademyService {
     console.log('AcademyService.getUserAcademies response:', response.data)
     return response.data
   }
+
+  /**
+   * Get all academies (Super Admin only)
+   * @param params - Optional query parameters (search, page, per_page)
+   * @returns Promise with paginated academies data
+   */
+  async getAcademies(params?: { search?: string; page?: number; per_page?: number }): Promise<{
+    data: FeaturedAcademy[]
+    meta: {
+      current_page: number
+      total_pages: number
+      total_count: number
+      per_page: number
+    }
+  }> {
+    const response = await apiClient.get('/academies', { params })
+    return {
+      data: Array.isArray(response.data) ? response.data : response.data.data || [],
+      meta: response.data.meta || {
+        current_page: 1,
+        total_pages: 1,
+        total_count: Array.isArray(response.data) ? response.data.length : 0,
+        per_page: params?.per_page || 15
+      }
+    }
+  }
 }
 
 // Export singleton instance

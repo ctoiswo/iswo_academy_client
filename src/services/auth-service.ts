@@ -66,7 +66,7 @@ class AuthService {
    */
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     const response = await apiClient.post<AuthResponse>('/auth/login', credentials)
-    
+
     // Store tokens automatically
     tokenManager.setTokens({
       access_token: response.data.access_token,
@@ -83,7 +83,7 @@ class AuthService {
    */
   async register(userData: RegisterData): Promise<RegisterResponse> {
     const response = await apiClient.post<RegisterResponse>('/auth/register', userData)
-    
+
     // Do NOT store tokens - registration requires email confirmation
     // Tokens will only be provided after successful login with confirmed account
 
@@ -146,8 +146,8 @@ class AuthService {
    * Get current authenticated user
    */
   async getCurrentUser(): Promise<AuthUser> {
-    const response = await apiClient.get<AuthUser>('/users/profile')
-    return response.data
+    const response = await apiClient.get<{ user: AuthUser }>('/users/profile')
+    return response.data.user
   }
 }
 

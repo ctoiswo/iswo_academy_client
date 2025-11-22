@@ -1,4 +1,4 @@
-import { Link, useParams, useNavigate } from '@tanstack/react-router'
+import { Link, useParams, useRouter, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import {
   ArrowLeft,
@@ -30,6 +30,7 @@ import { toast } from 'sonner'
 
 export function PublicCoursePage() {
   const { courseSlug } = useParams({ strict: false })
+  const router = useRouter()
   const navigate = useNavigate()
   const { isAuthenticated } = useAuthStore()
   const { isInWishlist, toggleWishlist } = useWishlist()
@@ -248,13 +249,13 @@ export function PublicCoursePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <Link
-                to='/courses'
+              <button
+                onClick={() => router.history.back()}
                 className='text-muted-foreground hover:text-foreground group mb-6 inline-flex items-center'
               >
                 <ArrowLeft className='mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1' />
-                Volver a cursos
-              </Link>
+                Volver
+              </button>
 
               <div className='mb-4 flex flex-wrap items-center gap-3'>
                 <Badge className={getDifficultyColor(course.difficulty_level)}>

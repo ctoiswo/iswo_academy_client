@@ -311,9 +311,25 @@ export function getSidebarDataByRole(
               icon: LayoutDashboard,
             },
             {
-              title: 'Todas las Academias',
-              url: '/super-admin/academies',
+              title: 'Academias',
               icon: GraduationCap,
+              items: [
+                {
+                  title: 'Todas las Academias',
+                  url: '/super-admin/academies',
+                  icon: GraduationCap,
+                },
+                {
+                  title: 'Categorías',
+                  url: '/super-admin/academies/categories',
+                  icon: FolderKanban,
+                },
+                {
+                  title: 'Gamificación',
+                  url: '/super-admin/gamification',
+                  icon: Award,
+                },
+              ],
             },
             {
               title: 'Analíticas Globales',

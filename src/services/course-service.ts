@@ -145,6 +145,18 @@ class CourseService {
   }
 
   /**
+   * Get a single course by slug (public endpoint)
+   * @param slug - Course slug
+   * @returns Promise with course details
+   */
+  async getPublicCourseBySlug(slug: string): Promise<Course> {
+    console.log('CourseService.getPublicCourseBySlug called with:', slug)
+    const response = await apiClient.get(`/courses/${slug}`)
+    console.log('CourseService.getPublicCourseBySlug response:', response.data)
+    return response.data
+  }
+
+  /**
    * Create a new course (admin endpoint)
    * @param academyId - Academy ID
    * @param data - Course creation data

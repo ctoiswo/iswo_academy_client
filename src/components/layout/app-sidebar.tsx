@@ -26,7 +26,7 @@ export function AppSidebar() {
     | 'admin'
     | 'super_admin' => {
 
-    // Super admin tiene prioridad
+    // Super admin siempre tiene prioridad - independiente de academias
     if (user?.is_super_admin) {
       return 'super_admin'
     }
@@ -47,6 +47,7 @@ export function AppSidebar() {
   }
 
   const userRole = getUserRole()
+  console.log('🔍 App Sidebar - User Role:', userRole, 'Is Super Admin:', user?.is_super_admin)
   const navGroups = getSidebarDataByRole(userRole, user)
 
   return (
