@@ -13,6 +13,8 @@ export interface LearningPath {
   courses_count: number
   estimated_completion_score: number
   total_duration_minutes: number
+  unlock_mode: 'all_unlocked' | 'sequential' | 'milestone_based'
+  milestone_size?: number
   creator: {
     id: number
     name: string
@@ -29,6 +31,15 @@ export interface LearningPath {
     completed_courses: number
     total_courses: number
     is_completed: boolean
+  }
+  pricing?: {
+    is_free: boolean
+    price: string
+    discount_percentage: number
+    bundle_price: string
+    savings: string
+    calculated_price: string
+    requires_payment: boolean
   }
   courses?: Course[]
 }
@@ -65,11 +76,16 @@ export interface CreateLearningPathData {
   description: string
   estimated_duration_hours: number
   difficulty_level?: string
-  status?: 'draft' | 'published'
+  status?: 'draft' | 'published' | 'archived'
 }
 
 export interface UpdateLearningPathData extends Partial<CreateLearningPathData> {
   position?: number
+  unlock_mode?: 'all_unlocked' | 'sequential' | 'milestone_based'
+  milestone_size?: number
+  is_free?: boolean
+  price?: string
+  discount_percentage?: number
 }
 
 export interface LearningPathFilters {
@@ -92,6 +108,42 @@ export interface LearningPathsResponse {
   meta: PaginationMeta
 }
 
+export interface CourseProgress {
+  course_id: number
+  course_title: string
+  completion_percentage: number
+}
+
+export interface EnrollmentTrend {
+  month: string
+  enrollments: number
+}
+
+export interface EngagementLevels {
+  very_active: number
+  moderately_active: number
+  low_activity: number
+}
+
+export interface HighestDropoutCourse {
+  course_id: number
+  course_title: string
+  dropout_rate: number
+}
+
+export interface LearningPathAnalytics {
+  total_enrollments: number
+  active_students: number
+  completed_students: number
+  completion_rate: number
+  avg_completion_time_days: number
+  dropout_rate: number
+  course_progress: CourseProgress[]
+  enrollment_trend: EnrollmentTrend[]
+  engagement_levels: EngagementLevels
+  highest_dropout_course: HighestDropoutCourse | null
+}
+
 /**
  * Learning Path Service
  * Handles all learning path-related API calls
@@ -99,18 +151,15 @@ export interface LearningPathsResponse {
 class LearningPathService {
   /**
    * Get learning paths for a specific academy with optional filters (admin endpoint)
-   * @param academyId - Academy ID
+   * @param academySlug - Academy slug
    * @param filters - Optional filters
    * @returns Promise with paginated learning paths
    */
-  async getLearningPaths(academyId: number, filters?: LearningPathFilters): Promise<LearningPathsResponse> {
+  async getLearningPaths(academySlug: string, filters?: LearningPathFilters): Promise<LearningPathsResponse> {
     const params = {
-      academy_id: academyId,
       ...filters
     }
-    console.log('Fetching learning paths for academy:', academyId, 'with filters:', filters)
-    const response = await apiClient.get('/admin/learning_paths', { params })
-    console.log('Learning paths response:', response.data)
+    const response = await apiClient.get(`/academies/${academySlug}/learning_paths`, { params })
     return response.data
   }
 
@@ -120,76 +169,61 @@ class LearningPathService {
    * @returns Promise with paginated learning paths
    */
   async getAllLearningPaths(filters?: LearningPathFilters): Promise<LearningPathsResponse> {
-    console.log('Fetching all learning paths with filters:', filters)
     const response = await apiClient.get('/learning_paths', { params: filters })
-    console.log('All learning paths response:', response.data)
     return response.data
   }
 
   /**
    * Get a single learning path by slug or ID
+   * @param academySlug - Academy slug
    * @param slugOrId - Learning path slug or ID
    * @returns Promise with learning path details
    */
-  async getLearningPathBySlug(slugOrId: string | number): Promise<LearningPath> {
-    console.log('LearningPathService.getLearningPathBySlug called with:', slugOrId)
-    const response = await apiClient.get(`/learning_paths/${slugOrId}`)
-    console.log('LearningPathService.getLearningPathBySlug response:', response.data)
+  async getLearningPathBySlug(academySlug: string, slugOrId: string | number): Promise<LearningPath> {
+    const response = await apiClient.get(`/academies/${academySlug}/learning_paths/${slugOrId}`)
     return response.data
   }
 
   /**
    * Create a new learning path (admin endpoint)
-   * @param academyId - Academy ID
+   * @param academySlug - Academy slug
    * @param data - Learning path data
    * @returns Promise with created learning path
    */
-  async createLearningPath(academyId: number, data: CreateLearningPathData): Promise<LearningPath> {
-    console.log('Creating learning path for academy:', academyId, 'with data:', data)
-    const response = await apiClient.post(`/admin/learning_paths`, {
-      learning_path: {
-        ...data,
-        academy_id: academyId
-      }
+  async createLearningPath(academySlug: string, data: CreateLearningPathData): Promise<LearningPath> {
+    const response = await apiClient.post(`/academies/${academySlug}/learning_paths`, {
+      learning_path: data
     })
-    console.log('Created learning path response:', response.data)
     return response.data
   }
 
   /**
    * Update an existing learning path (admin endpoint)
-   * @param academyId - Academy ID
-   * @param learningPathId - Learning path ID
+   * @param academySlug - Academy slug
+   * @param learningPathSlug - Learning path slug
    * @param data - Updated learning path data
    * @returns Promise with updated learning path
    */
   async updateLearningPath(
-    academyId: number,
-    learningPathId: number,
+    academySlug: string,
+    learningPathSlug: string,
     data: UpdateLearningPathData
   ): Promise<LearningPath> {
-    console.log('Updating learning path:', learningPathId, 'for academy:', academyId, 'with data:', data)
-    const response = await apiClient.put(`/admin/learning_paths/${learningPathId}`, {
-      learning_path: {
-        ...data,
-        academy_id: academyId
-      }
+    const response = await apiClient.patch(`/academies/${academySlug}/learning_paths/${learningPathSlug}`, {
+      learning_path: data
     })
-    console.log('Updated learning path response:', response.data)
     return response.data
   }
 
   /**
    * Delete a learning path (admin endpoint)
-   * @param academyId - Academy ID
-   * @param learningPathId - Learning path ID
+   * @param academySlug - Academy slug
+   * @param learningPathSlug - Learning path slug
    * @returns Promise with success message
    */
-  async deleteLearningPath(academyId: number, learningPathId: number): Promise<void> {
-    console.log('Deleting learning path:', learningPathId, 'from academy:', academyId)
-    const response = await apiClient.delete(`/admin/learning_paths/${learningPathId}`, {
-      params: { academy_id: academyId }
-    })
+  async deleteLearningPath(academySlug: string, learningPathSlug: string): Promise<void> {
+    console.log('Deleting learning path:', learningPathSlug, 'from academy:', academySlug)
+    const response = await apiClient.delete(`/academies/${academySlug}/learning_paths/${learningPathSlug}`)
     console.log('Deleted learning path response:', response.data)
   }
 
@@ -214,12 +248,21 @@ class LearningPathService {
    * @returns Promise with success response
    */
   async reorderLearningPaths(academyId: number, orderedIds: number[]): Promise<void> {
-    console.log('Reordering learning paths for academy:', academyId, 'with order:', orderedIds)
-    const response = await apiClient.patch(`/academies/${academyId}/learning_paths/reorder`, {
+    const response = await apiClient.post(`/admin/academies/${academyId}/learning_paths/reorder`, {
       ordered_ids: orderedIds
     })
-    console.log('Reorder learning paths response:', response.data)
     return response.data
+  }
+
+  /**
+   * Get analytics for a learning path
+   * @param academySlug - Academy slug
+   * @param learningPathSlug - Learning path slug
+   * @returns Promise with learning path analytics data
+   */
+  async getLearningPathAnalytics(academySlug: string, learningPathSlug: string): Promise<LearningPathAnalytics> {
+    const response = await apiClient.get(`/academies/${academySlug}/learning_paths/${learningPathSlug}/analytics`)
+    return response.data.data
   }
 }
 

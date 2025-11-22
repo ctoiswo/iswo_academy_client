@@ -10,6 +10,10 @@ export { default as academyService, academyService as academyApi } from './acade
 export { default as academyCategoryService, academyCategoryService as academyCategoryApi } from './academy-category-service'
 export { default as courseService, courseService as courseApi } from './course-service'
 export { default as learningPathService, learningPathService as learningPathApi } from './learning-path-service'
+export { default as learningPathCoursesService } from './learning-path-courses-service'
+export { learningPathCoursesApi } from './learning-path-courses-service'
+export { default as learningPathEnrollmentsService } from './learning-path-enrollments-service'
+export { default as certificateService, certificateService as certificateApi } from './certificate-service'
 export { default as gamificationService, gamificationService as gamificationApi } from './gamification-service'
 export { default as superAdminGamificationService, superAdminGamificationService as superAdminGamificationApi } from './super-admin-gamification-service'
 
@@ -43,7 +47,12 @@ export type {
   UpdateLearningPathData,
   LearningPathFilters,
   PaginationMeta,
-  LearningPathsResponse
+  LearningPathsResponse,
+  LearningPathAnalytics,
+  CourseProgress,
+  EnrollmentTrend,
+  EngagementLevels,
+  HighestDropoutCourse
 } from './learning-path-service'
 
 export type { FeaturedCourse } from './course-service'
@@ -55,3 +64,10 @@ export type {
   LeaderboardEntry,
   BadgeFilters
 } from './gamification-service'
+
+export type {
+  Certificate,
+  CertificateTemplate,
+  LearningPathCertificateConfiguration,
+  CertificatesResponse
+} from './certificate-service'
