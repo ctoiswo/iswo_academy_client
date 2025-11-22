@@ -18,7 +18,8 @@ export interface AcademyCategorySummary extends AcademyCategoryMinimal {
 
 // Full view - all fields including relations
 export interface AcademyCategory extends AcademyCategorySummary {
-  academies: Array<{
+  academies_count: number
+  academies?: Array<{
     id: number
     name: string
     slug: string
@@ -26,6 +27,25 @@ export interface AcademyCategory extends AcademyCategorySummary {
   }>
   created_at: string
   updated_at: string
+}
+
+export interface CreateAcademyCategoryData {
+  name: string
+  description: string
+  slug?: string
+}
+
+export interface UpdateAcademyCategoryData {
+  name?: string
+  description?: string
+  slug?: string
+}
+
+interface PaginationMeta {
+  current_page: number
+  total_pages: number
+  total_count: number
+  per_page: number
 }
 
 /**
@@ -73,6 +93,67 @@ class AcademyCategoryService {
   ): Promise<T extends 'minimal' ? AcademyCategoryMinimal : T extends 'summary' ? AcademyCategorySummary : AcademyCategory> {
     const params = withView({}, view)
     const response = await apiClient.get(`/academy_categories/slug/${slug}`, { params })
+    return response.data
+  }
+
+  // Admin Methods (requires authentication, Pundit handles authorization)
+
+  /**
+   * Get all categories with pagination and search (authenticated users get more features)
+   */
+  async getAllCategories(params?: {
+    search?: string
+    page?: number
+    per_page?: number
+  }): Promise<{
+    data: AcademyCategory[]
+    meta: PaginationMeta
+  }> {
+    const response = await apiClient.get('/academy_categories', { params })
+    return {
+      data: Array.isArray(response.data) ? response.data : response.data.data || [],
+      meta: response.data.meta || {
+        current_page: 1,
+        total_pages: 1,
+        total_count: Array.isArray(response.data) ? response.data.length : 0,
+        per_page: params?.per_page || 15
+      }
+    }
+  }
+
+  /**
+   * Get a category by ID (requires authentication)
+   */
+  async getCategoryByIdAdmin(id: number): Promise<AcademyCategory> {
+    const response = await apiClient.get(`/academy_categories/${id}`)
+    return response.data
+  }
+
+  /**
+   * Create a new category (requires super admin)
+   */
+  async createCategory(data: CreateAcademyCategoryData): Promise<AcademyCategory> {
+    const response = await apiClient.post('/academy_categories', {
+      academy_category: data
+    })
+    return response.data
+  }
+
+  /**
+   * Update a category (requires super admin)
+   */
+  async updateCategory(id: number, data: UpdateAcademyCategoryData): Promise<AcademyCategory> {
+    const response = await apiClient.patch(`/academy_categories/${id}`, {
+      academy_category: data
+    })
+    return response.data
+  }
+
+  /**
+   * Delete a category (requires super admin)
+   */
+  async deleteCategory(id: number): Promise<{ message: string }> {
+    const response = await apiClient.delete(`/academy_categories/${id}`)
     return response.data
   }
 }

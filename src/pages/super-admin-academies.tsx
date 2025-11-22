@@ -66,13 +66,16 @@ export default function SuperAdminAcademies() {
     loadAcademies(1, searchQuery)
   }, [searchQuery, loadAcademies])
 
-  const handleSearch = (value: string) => {
-    setSearchInput(value)
+  useEffect(() => {
     // Debounce search
     const timeoutId = setTimeout(() => {
-      setSearchQuery(value)
+      setSearchQuery(searchInput)
     }, 500)
     return () => clearTimeout(timeoutId)
+  }, [searchInput])
+
+  const handleSearch = (value: string) => {
+    setSearchInput(value)
   }
 
   const handlePageChange = (page: number) => {
@@ -96,7 +99,7 @@ export default function SuperAdminAcademies() {
       </div>
 
       {/* Filters and View Toggle */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -106,7 +109,7 @@ export default function SuperAdminAcademies() {
             className="pl-10"
           />
         </div>
-        <div className="flex items-center border rounded-lg">
+        <div className="flex items-center border rounded-lg self-start">
           <Button
             variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
             size="sm"
@@ -191,11 +194,11 @@ export default function SuperAdminAcademies() {
                 <div className="flex items-center gap-4 text-sm">
                   <div className="flex items-center gap-1.5">
                     <Users className="h-4 w-4 text-muted-foreground" />
-                    <span>{academy.student_count || 0} estudiantes</span>
+                    <span>{academy.enrolled_users_count || 0} estudiantes</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <BookOpen className="h-4 w-4 text-muted-foreground" />
-                    <span>{academy.course_count || 0} cursos</span>
+                    <span>{academy.courses_count || 0} cursos</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -246,13 +249,13 @@ export default function SuperAdminAcademies() {
                   <TableCell>
                     <div className="flex items-center gap-1.5">
                       <Users className="h-4 w-4 text-muted-foreground" />
-                      {academy.student_count || 0}
+                      {academy.enrolled_users_count || 0}
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1.5">
                       <BookOpen className="h-4 w-4 text-muted-foreground" />
-                      {academy.course_count || 0}
+                      {academy.courses_count || 0}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -304,13 +307,13 @@ export default function SuperAdminAcademies() {
 
       {/* Pagination */}
       {!loading && academies.length > 0 && pagination.total_pages > 1 && (
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm text-muted-foreground">
             Mostrando {(pagination.current_page - 1) * pagination.per_page + 1} a{' '}
             {Math.min(pagination.current_page * pagination.per_page, pagination.total_count)} de{' '}
             {pagination.total_count} academias
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap justify-center">
             <Button
               variant="outline"
               size="sm"

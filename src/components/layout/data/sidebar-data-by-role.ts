@@ -321,7 +321,7 @@ export function getSidebarDataByRole(
                 },
                 {
                   title: 'Categorías',
-                  url: '/super-admin/academies/categories',
+                  url: '/super-admin/categories',
                   icon: FolderKanban,
                 },
                 {

@@ -8,15 +8,25 @@ export interface FeaturedAcademy {
   description: string
   slug: string
   logo_url: string | null
+  banner_url?: string | null
   monthly_price: string
   subscription_required: boolean
   creator: {
     id: number
     name: string
+    email?: string
   } | null
-  student_count: number
-  course_count: number
+  academy_category?: {
+    id: number
+    name: string
+    slug: string
+  } | null
+  enrolled_users_count: number
+  courses_count: number
   courses?: FeaturedCourse[]
+  // Legacy fields for backwards compatibility
+  student_count?: number
+  course_count?: number
 }
 
 export interface AcademyCategory {

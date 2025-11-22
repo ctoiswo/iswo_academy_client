@@ -70,6 +70,7 @@ import { Route as AcademyAcademyIdAppearanceRouteImport } from './routes/academy
 import { Route as AcademyAcademyIdAnalyticsRouteImport } from './routes/academy/$academyId/analytics'
 import { Route as AcademyAcademyIdAchievementsRouteImport } from './routes/academy/$academyId/achievements'
 import { Route as AuthenticatedSuperAdminGamificationRouteImport } from './routes/_authenticated/super-admin/gamification'
+import { Route as AuthenticatedSuperAdminCategoriesRouteImport } from './routes/_authenticated/super-admin/categories'
 import { Route as AuthenticatedSuperAdminAcademiesRouteImport } from './routes/_authenticated/super-admin/academies'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
@@ -403,6 +404,12 @@ const AuthenticatedSuperAdminGamificationRoute =
     path: '/gamification',
     getParentRoute: () => AuthenticatedSuperAdminRouteRoute,
   } as any)
+const AuthenticatedSuperAdminCategoriesRoute =
+  AuthenticatedSuperAdminCategoriesRouteImport.update({
+    id: '/categories',
+    path: '/categories',
+    getParentRoute: () => AuthenticatedSuperAdminRouteRoute,
+  } as any)
 const AuthenticatedSuperAdminAcademiesRoute =
   AuthenticatedSuperAdminAcademiesRouteImport.update({
     id: '/academies',
@@ -517,6 +524,7 @@ export interface FileRoutesByFullPath {
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
+  '/super-admin/categories': typeof AuthenticatedSuperAdminCategoriesRoute
   '/super-admin/gamification': typeof AuthenticatedSuperAdminGamificationRoute
   '/academy/$academyId/achievements': typeof AcademyAcademyIdAchievementsRoute
   '/academy/$academyId/analytics': typeof AcademyAcademyIdAnalyticsRoute
@@ -588,6 +596,7 @@ export interface FileRoutesByTo {
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
+  '/super-admin/categories': typeof AuthenticatedSuperAdminCategoriesRoute
   '/super-admin/gamification': typeof AuthenticatedSuperAdminGamificationRoute
   '/academy/$academyId/achievements': typeof AcademyAcademyIdAchievementsRoute
   '/academy/$academyId/analytics': typeof AcademyAcademyIdAnalyticsRoute
@@ -664,6 +673,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
+  '/_authenticated/super-admin/categories': typeof AuthenticatedSuperAdminCategoriesRoute
   '/_authenticated/super-admin/gamification': typeof AuthenticatedSuperAdminGamificationRoute
   '/academy/$academyId/achievements': typeof AcademyAcademyIdAchievementsRoute
   '/academy/$academyId/analytics': typeof AcademyAcademyIdAnalyticsRoute
@@ -739,6 +749,7 @@ export interface FileRouteTypes {
     | '/settings/display'
     | '/settings/notifications'
     | '/super-admin/academies'
+    | '/super-admin/categories'
     | '/super-admin/gamification'
     | '/academy/$academyId/achievements'
     | '/academy/$academyId/analytics'
@@ -810,6 +821,7 @@ export interface FileRouteTypes {
     | '/settings/display'
     | '/settings/notifications'
     | '/super-admin/academies'
+    | '/super-admin/categories'
     | '/super-admin/gamification'
     | '/academy/$academyId/achievements'
     | '/academy/$academyId/analytics'
@@ -885,6 +897,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
     | '/_authenticated/super-admin/academies'
+    | '/_authenticated/super-admin/categories'
     | '/_authenticated/super-admin/gamification'
     | '/academy/$academyId/achievements'
     | '/academy/$academyId/analytics'
@@ -1376,6 +1389,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSuperAdminGamificationRouteImport
       parentRoute: typeof AuthenticatedSuperAdminRouteRoute
     }
+    '/_authenticated/super-admin/categories': {
+      id: '/_authenticated/super-admin/categories'
+      path: '/categories'
+      fullPath: '/super-admin/categories'
+      preLoaderRoute: typeof AuthenticatedSuperAdminCategoriesRouteImport
+      parentRoute: typeof AuthenticatedSuperAdminRouteRoute
+    }
     '/_authenticated/super-admin/academies': {
       id: '/_authenticated/super-admin/academies'
       path: '/academies'
@@ -1507,6 +1527,7 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 
 interface AuthenticatedSuperAdminRouteRouteChildren {
   AuthenticatedSuperAdminAcademiesRoute: typeof AuthenticatedSuperAdminAcademiesRoute
+  AuthenticatedSuperAdminCategoriesRoute: typeof AuthenticatedSuperAdminCategoriesRoute
   AuthenticatedSuperAdminGamificationRoute: typeof AuthenticatedSuperAdminGamificationRoute
 }
 
@@ -1514,6 +1535,8 @@ const AuthenticatedSuperAdminRouteRouteChildren: AuthenticatedSuperAdminRouteRou
   {
     AuthenticatedSuperAdminAcademiesRoute:
       AuthenticatedSuperAdminAcademiesRoute,
+    AuthenticatedSuperAdminCategoriesRoute:
+      AuthenticatedSuperAdminCategoriesRoute,
     AuthenticatedSuperAdminGamificationRoute:
       AuthenticatedSuperAdminGamificationRoute,
   }
