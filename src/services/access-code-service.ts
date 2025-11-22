@@ -105,7 +105,7 @@ export interface ValidationResponse {
 }
 
 class AccessCodeService {
-  async getAccessCodes(courseId: number, filters?: AccessCodeFilters) {
+  async getAccessCodes(courseId: number | string, filters?: AccessCodeFilters) {
     const params = new URLSearchParams()
 
     if (filters?.status) params.append('status', filters.status)
@@ -116,30 +116,30 @@ class AccessCodeService {
     return response.data
   }
 
-  async getAccessCode(courseId: number, accessCodeId: number) {
+  async getAccessCode(courseId: number | string, accessCodeId: number) {
     const response = await apiClient.get(`/courses/${courseId}/access_codes/${accessCodeId}`)
     return response.data.data as AccessCode
   }
 
-  async createAccessCode(courseId: number, data: CreateAccessCodeData) {
+  async createAccessCode(courseId: number | string, data: CreateAccessCodeData) {
     const response = await apiClient.post(`/courses/${courseId}/access_codes`, {
       access_code: data
     })
     return response.data.data as AccessCode
   }
 
-  async updateAccessCode(courseId: number, accessCodeId: number, data: UpdateAccessCodeData) {
+  async updateAccessCode(courseId: number | string, accessCodeId: number, data: UpdateAccessCodeData) {
     const response = await apiClient.patch(`/courses/${courseId}/access_codes/${accessCodeId}`, {
       access_code: data
     })
     return response.data.data as AccessCode
   }
 
-  async deleteAccessCode(courseId: number, accessCodeId: number) {
+  async deleteAccessCode(courseId: number | string, accessCodeId: number) {
     await apiClient.delete(`/courses/${courseId}/access_codes/${accessCodeId}`)
   }
 
-  async toggleAccessCodeStatus(courseId: number, accessCodeId: number) {
+  async toggleAccessCodeStatus(courseId: number | string, accessCodeId: number) {
     const response = await apiClient.post(`/courses/${courseId}/access_codes/${accessCodeId}/toggle_status`)
     return response.data.data as AccessCode
   }

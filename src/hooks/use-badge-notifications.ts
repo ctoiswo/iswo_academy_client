@@ -53,26 +53,27 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
   }, [newBadges, currentBadge])
 
   const markBadgeViewed = useCallback(async (badgeId: number) => {
-    if (!tokens?.access_token) return
+    if (!tokens?.access_token || !currentAcademy) return
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
-      await fetch(`${apiUrl}/api/v1/badges/${badgeId}/mark_viewed`, {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
+      await fetch(`${apiUrl}/badges/${badgeId}/mark_viewed`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${tokens.access_token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Academy-Slug': currentAcademy.slug
         }
       })
     } catch (error) {
       console.error('Failed to mark badge as viewed:', error)
     }
-  }, [tokens])
+  }, [tokens, currentAcademy])
 
   const dismissCurrentBadge = useCallback(() => {
-    if (currentBadge) {
+    if (currentBadge?.badge?.id) {
       // Mark as viewed via API
-      markBadgeViewed(currentBadge.badge_id)
+      markBadgeViewed(currentBadge.badge.id)
     }
     showNextBadge()
   }, [currentBadge, showNextBadge, markBadgeViewed])
@@ -81,7 +82,9 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
     if (newBadges.length > 0) {
       // Mark all as viewed
       newBadges.forEach((badge) => {
-        markBadgeViewed(badge.badge_id)
+        if (badge.badge?.id) {
+          markBadgeViewed(badge.badge.id)
+        }
       })
     }
     setNewBadges([])
@@ -96,14 +99,14 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
-      const academyIdOrSlug = currentAcademy.id.toString()
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
+      const academySlug = currentAcademy.slug
 
-      const response = await fetch(`${apiUrl}/api/v1/badges/unviewed`, {
+      const response = await fetch(`${apiUrl}/badges/unviewed`, {
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${tokens.access_token}`,
-          'Content-Type': 'application/json',
-          'X-Academy-Slug': academyIdOrSlug
+          'X-Academy-Slug': academySlug
         }
       })
 
@@ -132,8 +135,9 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
     }
 
     // Get WebSocket URL from environment or construct it
+    // Cable endpoint is at /cable (not under /api/v1)
     const wsUrl = import.meta.env.VITE_CABLE_URL ||
-      (import.meta.env.VITE_API_URL?.replace(/^http/, 'ws') + '/cable')
+      (import.meta.env.VITE_API_URL?.replace(/^http/, 'ws').replace('/api/v1', '') + '/cable')
 
     console.log('Connecting to WebSocket:', wsUrl)
 
@@ -162,6 +166,7 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
 
     // Cleanup on unmount
     return () => {
+      console.log('Cleaning up WebSocket connection')
       if (subscriptionRef.current) {
         subscriptionRef.current.unsubscribe()
       }
@@ -170,7 +175,7 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
       }
       setIsConnected(false)
     }
-  }, [isAuthenticated, user, tokens, enabled, currentAcademy, handleBadgeEarned, loadUnviewedBadges])
+  }, [isAuthenticated, user, tokens?.access_token, enabled, currentAcademy?.id])
 
   return {
     currentBadge,

@@ -29,18 +29,18 @@ export type {
 class CourseService {
   /**
    * Get courses for a specific academy with optional filters
-   * Uses the main courses endpoint with academy_id filter
+   * Uses the main courses endpoint with academy_slug filter
    * Authorization handled by Pundit in backend
-   * @param academyId - Academy ID
+   * @param academySlug - Academy slug
    * @param filters - Optional filters
    * @returns Promise with paginated courses
    */
-  async getCourses(academyId: number, filters?: CourseFilters): Promise<Course[]> {
+  async getCourses(academySlug: string | number, filters?: CourseFilters): Promise<Course[]> {
     const params = {
-      academy_id: academyId,
+      academy_slug: academySlug,
       ...filters
     }
-    console.log('Fetching courses for academy:', academyId, 'with filters:', filters)
+    console.log('Fetching courses for academy:', academySlug, 'with filters:', filters)
     const response = await apiClient.get('/courses', { params })
     console.log('Courses response:', response.data)
 
