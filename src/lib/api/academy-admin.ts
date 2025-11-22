@@ -1,7 +1,7 @@
 import { apiClient } from '../api-client'
 import type { AcademyStats } from '@/features/dashboard/admin/components/academy-stats-overview'
-import type { Course } from '@/features/dashboard/admin/components/course-management-panel'
 import type { AcademyUser } from '@/features/dashboard/admin/components/user-management-panel'
+import { Course } from '../models/course'
 
 export interface AcademyAdminApiResponse<T> {
   data: T

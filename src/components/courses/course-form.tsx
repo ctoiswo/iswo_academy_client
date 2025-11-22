@@ -14,9 +14,9 @@ import { DialogFooter } from '@/components/ui/dialog'
 import { Checkbox } from '@/components/ui/checkbox'
 
 const courseSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
-  description: z.string().min(1, 'Description is required').max(1000, 'Description must be less than 1000 characters'),
-  duration_minutes: z.number().min(1, 'Duration must be at least 1 minute').max(10000, 'Duration must be less than 10000 minutes'),
+  title: z.string().min(1, 'El título es requerido').max(100, 'El título debe tener menos de 100 caracteres'),
+  description: z.string().min(1, 'La descripción es requerida').max(1000, 'La descripción debe tener menos de 1000 caracteres'),
+  duration_minutes: z.number().min(1, 'La duración debe ser al menos 1 minuto').max(10000, 'La duración debe ser menor a 10000 minutos'),
   difficulty_level: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
   status: z.enum(['draft', 'published']).optional(),
   is_free: z.boolean().optional(),
@@ -102,12 +102,12 @@ export function CourseForm({ academyId, course, onSuccess, onCancel }: CourseFor
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel>Título</FormLabel>
               <FormControl>
-                <Input placeholder="Enter course title" {...field} />
+                <Input placeholder="Ingresa el título del curso" {...field} />
               </FormControl>
               <FormDescription>
-                A clear, descriptive title for your course
+                Un título claro y descriptivo para tu curso
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -120,16 +120,16 @@ export function CourseForm({ academyId, course, onSuccess, onCancel }: CourseFor
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Descripción</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Describe what students will learn in this course"
+                  placeholder="Describe lo que los estudiantes aprenderán en este curso"
                   className="min-h-[100px]"
                   {...field} 
                 />
               </FormControl>
               <FormDescription>
-                Explain the course content, objectives, and what students will achieve
+                Explica el contenido del curso, los objetivos y lo que los estudiantes lograrán
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -142,7 +142,7 @@ export function CourseForm({ academyId, course, onSuccess, onCancel }: CourseFor
           name="duration_minutes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Duration (minutes)</FormLabel>
+              <FormLabel>Duración (minutos)</FormLabel>
               <FormControl>
                 <Input 
                   type="number" 
@@ -154,63 +154,84 @@ export function CourseForm({ academyId, course, onSuccess, onCancel }: CourseFor
                 />
               </FormControl>
               <FormDescription>
-                Estimated time to complete the course in minutes
+                Tiempo estimado para completar el curso en minutos
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {/* Difficulty Level Field */}
-        <FormField
-          control={form.control}
-          name="difficulty_level"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Difficulty Level</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select difficulty level" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="beginner">Beginner</SelectItem>
-                  <SelectItem value="intermediate">Intermediate</SelectItem>
-                  <SelectItem value="advanced">Advanced</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Choose the appropriate difficulty level for your target audience
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* Difficulty Level, Status, and Free Course in one row */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Difficulty Level Field */}
+          <FormField
+            control={form.control}
+            name="difficulty_level"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nivel de Dificultad</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona nivel" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="beginner">Principiante</SelectItem>
+                    <SelectItem value="intermediate">Intermedio</SelectItem>
+                    <SelectItem value="advanced">Avanzado</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {/* Is Free Checkbox */}
-        <FormField
-          control={form.control}
-          name="is_free"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Free Course
-                </FormLabel>
-                <FormDescription>
-                  Check this if the course should be free for all students
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
+          {/* Status Field */}
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Estado</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona estado" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="draft">Borrador</SelectItem>
+                    <SelectItem value="published">Publicado</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Is Free Checkbox */}
+          <FormField
+            control={form.control}
+            name="is_free"
+            render={({ field }) => (
+              <FormItem className="flex flex-col justify-end">
+                <div className="flex flex-row items-center space-x-3 space-y-0 h-9">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel className="font-normal">
+                    Curso Gratuito
+                  </FormLabel>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         {/* Price Field (only show if not free) */}
         {!isFree && (
@@ -219,7 +240,7 @@ export function CourseForm({ academyId, course, onSuccess, onCancel }: CourseFor
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>Precio</FormLabel>
                 <FormControl>
                   <Input 
                     placeholder="29.99"
@@ -227,7 +248,7 @@ export function CourseForm({ academyId, course, onSuccess, onCancel }: CourseFor
                   />
                 </FormControl>
                 <FormDescription>
-                  Course price (e.g., 29.99, 100, 199.50)
+                  Precio del curso (ej: 29.99, 100, 199.50)
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -235,38 +256,12 @@ export function CourseForm({ academyId, course, onSuccess, onCancel }: CourseFor
           />
         )}
 
-        {/* Status Field */}
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Status</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="published">Published</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Draft courses are only visible to instructors, published courses are visible to students
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <DialogFooter>
           <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
-            Cancel
+            Cancelar
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : isEditing ? 'Update Course' : 'Create Course'}
+            {isLoading ? 'Guardando...' : isEditing ? 'Actualizar Curso' : 'Crear Curso'}
           </Button>
         </DialogFooter>
       </form>

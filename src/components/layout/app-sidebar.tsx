@@ -26,9 +26,7 @@ export function AppSidebar() {
   
   // Determinar si el usuario es guest
   const isGuest = !user?.is_super_admin && (!academyData || academyData.count === 0)
-  
-  // Detectar si estamos en una ruta de curso específico
-  const isInCourseRoute = location.pathname.match(/\/academy\/[^/]+\/courses\/([^/]+)/)
+
 
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
@@ -59,9 +57,7 @@ export function AppSidebar() {
             ]}
           />
         )}
-        
-        {/* Course Stats Header - Only shown when viewing a specific course */}
-        {isInCourseRoute && <CourseStatsHeader />}
+
       </SidebarHeader>
       <SidebarContent>
         {navGroups.map((props) => (

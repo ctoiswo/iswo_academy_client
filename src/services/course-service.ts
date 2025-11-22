@@ -1,86 +1,25 @@
 import apiClient from '@/lib/api-client'
+import type {
+  Course,
+  CreateCourseData,
+  UpdateCourseData,
+  CourseFilters,
+  FeaturedCourse,
+  CategoryWithCourses,
+  PaginationMeta,
+  CoursesResponse
+} from '@/lib/models/course'
 
-// TypeScript interfaces for Courses
-export interface Course {
-  id: number
-  title: string
-  slug: string
-  description: string
-  thumbnail_url: string | null
-  is_free: boolean
-  price: string
-  difficulty_level: string
-  duration_minutes: number
-  is_published: boolean
-  enrollment_count: number
-  sections_count: number
-  lessons_count: number
-  status: 'draft' | 'published' | 'archived'
-  creator: {
-    id: number
-    name: string
-  }
-  academy: {
-    id: number
-    name: string
-    slug: string
-  }
-  created_at: string
-  updated_at: string
-  progress?: {
-    completion_percentage: number
-    completed_lessons: number
-    total_lessons: number
-    is_completed: boolean
-  }
-}
-
-export interface FeaturedCourse extends Course { }
-
-export interface CategoryWithCourses {
-  category: {
-    id: number
-    name: string
-    description: string
-    slug: string
-  }
-  courses: FeaturedCourse[]
-}
-
-export interface CreateCourseData {
-  title: string
-  description: string
-  difficulty_level?: string
-  duration_minutes?: number
-  is_free?: boolean
-  price?: string
-  status?: 'draft' | 'published'
-}
-
-export interface UpdateCourseData extends Partial<CreateCourseData> {
-  is_published?: boolean
-}
-
-export interface CourseFilters {
-  status?: string
-  difficulty_level?: string
-  is_free?: boolean
-  is_published?: boolean
-  search?: string
-  page?: number
-  per_page?: number
-}
-
-export interface PaginationMeta {
-  current_page: number
-  per_page: number
-  total_pages: number
-  total_count: number
-}
-
-export interface CoursesResponse {
-  data: Course[]
-  meta: PaginationMeta
+// Re-export types for convenience
+export type {
+  Course,
+  CreateCourseData,
+  UpdateCourseData,
+  CourseFilters,
+  FeaturedCourse,
+  CategoryWithCourses,
+  PaginationMeta,
+  CoursesResponse
 }
 
 /**
