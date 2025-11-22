@@ -37,14 +37,14 @@ export function useCourseBySlug(academyId: number, slug: string) {
   })
 }
 
-export function useCreateCourse(academyId: number) {
+export function useCreateCourse(academySlug: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (data: CreateCourseData) =>
-      courseService.createCourse(academyId, data),
+      courseService.createCourse(academySlug, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['courses', academyId] })
+      queryClient.invalidateQueries({ queryKey: ['courses', academySlug] })
       toast.success('Course created successfully')
     },
     onError: (error) => {
@@ -69,14 +69,14 @@ export function useUpdateCourse(academyId: number) {
   })
 }
 
-export function useDeleteCourse(academyId: number) {
+export function useDeleteCourse(academySlug: string | number) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (courseId: number) =>
-      courseService.deleteCourse(academyId, courseId),
+    mutationFn: (courseSlug: string | number) =>
+      courseService.deleteCourse(academySlug, courseSlug),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['courses', academyId] })
+      queryClient.invalidateQueries({ queryKey: ['courses'] })
       toast.success('Course deleted successfully')
     },
     onError: (error) => {

@@ -26,13 +26,13 @@ const courseSchema = z.object({
 type CourseFormData = z.infer<typeof courseSchema>
 
 interface CourseFormProps {
-  academyId: number
+  academySlug: string | number
   course?: Course
   onSuccess: () => void
   onCancel: () => void
 }
 
-export function CourseForm({ academyId, course, onSuccess, onCancel }: CourseFormProps) {
+export function CourseForm({ academySlug, course, onSuccess, onCancel }: CourseFormProps) {
   const isEditing = !!course
   
   const form = useForm<CourseFormData>({
@@ -52,7 +52,7 @@ export function CourseForm({ academyId, course, onSuccess, onCancel }: CourseFor
 
   // Create mutation
   const createMutation = useMutation({
-    mutationFn: (data: CreateCourseData) => courseService.createCourse(academyId, data),
+    mutationFn: (data: CreateCourseData) => courseService.createCourse(academySlug, data),
     onSuccess: () => {
       toast.success('Course created successfully')
       onSuccess()
@@ -65,8 +65,9 @@ export function CourseForm({ academyId, course, onSuccess, onCancel }: CourseFor
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: (data: UpdateCourseData) => {
-      if (!course?.id) throw new Error('Course ID is required for update')
-      return courseService.updateCourse(academyId, course.id, data)
+      if (!course?.slug && !course?.id) throw new Error('Course slug or ID is required for update')
+      const courseIdentifier = course.slug || course.id
+      return courseService.updateCourse(academySlug, courseIdentifier, data)
     },
     onSuccess: () => {
       toast.success('Course updated successfully')

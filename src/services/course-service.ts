@@ -102,37 +102,29 @@ class CourseService {
   /**
    * Create a new course
    * Authorization handled by Pundit in backend
-   * @param academyId - Academy ID
+   * @param academySlug - Academy slug
    * @param data - Course creation data
    * @returns Promise with created course
    */
-  async createCourse(academyId: number, data: CreateCourseData): Promise<Course> {
-    console.log('Creating course for academy:', academyId, 'with data:', data)
-    const response = await apiClient.post('/courses', {
-      course: {
-        ...data,
-        academy_id: academyId
-      }
+  async createCourse(academySlug: string | number, data: CreateCourseData): Promise<Course> {
+    const response = await apiClient.post(`/academies/${academySlug}/courses`, {
+      course: data
     })
-    console.log('Create course response:', response.data)
     return response.data
   }
 
   /**
    * Update an existing course
    * Authorization handled by Pundit in backend
-   * @param academyId - Academy ID
-   * @param courseId - Course ID
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug or ID
    * @param data - Course update data
    * @returns Promise with updated course
    */
-  async updateCourse(academyId: number, courseId: number, data: UpdateCourseData): Promise<Course> {
-    console.log('Updating course:', courseId, 'for academy:', academyId, 'with data:', data)
-    const response = await apiClient.put(`/courses/${courseId}`, {
-      course: {
-        ...data,
-        academy_id: academyId
-      }
+  async updateCourse(academySlug: string | number, courseSlug: string | number, data: UpdateCourseData): Promise<Course> {
+    console.log('Updating course:', courseSlug, 'for academy:', academySlug, 'with data:', data)
+    const response = await apiClient.put(`/academies/${academySlug}/courses/${courseSlug}`, {
+      course: data
     })
     console.log('Update course response:', response.data)
     return response.data
@@ -141,15 +133,13 @@ class CourseService {
   /**
    * Delete a course
    * Authorization handled by Pundit in backend
-   * @param academyId - Academy ID
-   * @param courseId - Course ID
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug or ID
    * @returns Promise with deletion confirmation
    */
-  async deleteCourse(academyId: number, courseId: number): Promise<void> {
-    console.log('Deleting course:', courseId, 'for academy:', academyId)
-    const response = await apiClient.delete(`/courses/${courseId}`, {
-      params: { academy_id: academyId }
-    })
+  async deleteCourse(academySlug: string | number, courseSlug: string | number): Promise<void> {
+    console.log('Deleting course:', courseSlug, 'for academy:', academySlug)
+    const response = await apiClient.delete(`/academies/${academySlug}/courses/${courseSlug}`)
     console.log('Delete course response:', response.data)
   }
 

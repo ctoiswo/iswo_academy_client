@@ -50,8 +50,9 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
 
   // Use hooks with filters - data comes filtered from backend
   const academyId = academy.id
+  const academySlug = academy.slug || academy.id
   const { data: coursesData, isLoading, error } = useCourses(Number(academyId), filters)
-  const deleteMutation = useDeleteCourse(Number(academyId))
+  const deleteMutation = useDeleteCourse(academySlug)
 
   // Get data - Handle both array response and object with data property
   // All data comes pre-filtered from the backend
@@ -90,7 +91,8 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
   // Handle delete
   const handleDeleteConfirm = () => {
     if (courseToDelete) {
-      deleteMutation.mutate(courseToDelete.id)
+      const courseIdentifier = courseToDelete.slug || courseToDelete.id
+      deleteMutation.mutate(courseIdentifier)
       setCourseToDelete(null)
     }
   }
@@ -326,7 +328,7 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
             </DialogDescription>
           </DialogHeader>
           <CourseForm
-            academyId={academyId}
+            academySlug={academySlug}
             onSuccess={handleFormSuccess}
             onCancel={() => setIsCreateModalOpen(false)}
           />
@@ -344,7 +346,7 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
           </DialogHeader>
           {editingCourse && (
             <CourseForm
-              academyId={academyId}
+              academySlug={academySlug}
               course={editingCourse}
               onSuccess={handleFormSuccess}
               onCancel={() => setEditingCourse(null)}
