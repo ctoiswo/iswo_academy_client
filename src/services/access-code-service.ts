@@ -105,14 +105,8 @@ export interface ValidationResponse {
 }
 
 class AccessCodeService {
-  async getAccessCodes(courseId: number | string, filters?: AccessCodeFilters) {
-    const params = new URLSearchParams()
-
-    if (filters?.status) params.append('status', filters.status)
-    if (filters?.page) params.append('page', filters.page.toString())
-    if (filters?.per_page) params.append('per_page', filters.per_page.toString())
-
-    const response = await apiClient.get(`/courses/${courseId}/access_codes?${params}`)
+  async getAccessCodes(courseId: number | string) {
+    const response = await apiClient.get(`/courses/${courseId}/access_codes`)
     return response.data
   }
 

@@ -1,36 +1,82 @@
+import { useState } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
-import { ArrowLeft, Plus, FileQuestion } from 'lucide-react'
-import { useCourseBySlug } from '@/hooks/use-courses'
+import type { AssessmentType, Assessment } from '@/services/assessment-service'
+import { ArrowLeft, FileQuestion } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
+import { useAssessments } from '@/hooks/use-assessments'
+import { useCourseBySlug } from '@/hooks/use-courses'
+import { useSections } from '@/hooks/use-sections'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { AssessmentAttemptsDialog } from '@/components/assessments/assessment-attempts-dialog'
+import { AssessmentCard } from '@/components/assessments/assessment-card'
+import { AssessmentStatisticsDialog } from '@/components/assessments/assessment-statistics-dialog'
+import { CreateAssessmentDialog } from '@/components/assessments/create-assessment-dialog'
+import { EditAssessmentDialog } from '@/components/assessments/edit-assessment-dialog'
 
 export default function CourseExamsPage() {
-  const params = useParams({ strict: false }) as { academySlug: string; courseSlug: string }
+  const params = useParams({ strict: false }) as {
+    academySlug: string
+    courseSlug: string
+  }
   const { academySlug, courseSlug } = params
   const { currentAcademy } = useAuthStore()
-  
+
+  // Estados - DEBEN estar antes de cualquier return condicional
+  const [filterType, setFilterType] = useState<AssessmentType | 'all'>('all')
+  const [editingAssessment, setEditingAssessment] = useState<Assessment | null>(
+    null
+  )
+  const [statsAssessment, setStatsAssessment] = useState<Assessment | null>(
+    null
+  )
+  const [attemptsAssessment, setAttemptsAssessment] =
+    useState<Assessment | null>(null)
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
+
+  // Hooks de datos
   const academyId = currentAcademy?.id
-  const { data: course, isLoading, error } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  const {
+    data: course,
+    isLoading,
+    error,
+  } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  const { data: sections } = useSections(academySlug, courseSlug)
+
+  const { data: assessments, isLoading: assessmentsLoading } = useAssessments(
+    academySlug,
+    courseSlug,
+    {
+      type: filterType === 'all' ? undefined : filterType,
+    }
+  )
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8">
-        <Skeleton className="h-64" />
+      <div className='container mx-auto py-8'>
+        <Skeleton className='h-64' />
       </div>
     )
   }
 
   if (error || !course) {
     return (
-      <div className="container mx-auto py-8">
-        <div className="text-center py-12">
-          <h3 className="text-lg font-bold text-red-600 mb-2">Error al Cargar el Curso</h3>
-          <p className="text-gray-600">Curso no encontrado o no tienes permiso para acceder</p>
-          <Link to={`/academy/${academySlug}/courses`} className="mt-4 inline-block">
-            <Button variant="outline">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+      <div className='container mx-auto py-8'>
+        <div className='py-12 text-center'>
+          <h3 className='mb-2 text-lg font-bold text-red-600'>
+            Error al Cargar el Curso
+          </h3>
+          <p className='text-gray-600'>
+            Curso no encontrado o no tienes permiso para acceder
+          </p>
+          <Link
+            to='/academy/$academySlug/courses'
+            params={{ academySlug }}
+            className='mt-4 inline-block'
+          >
+            <Button variant='outline'>
+              <ArrowLeft className='mr-2 h-4 w-4' />
               Volver a Cursos
             </Button>
           </Link>
@@ -39,40 +85,161 @@ export default function CourseExamsPage() {
     )
   }
 
+  // Variables calculadas
+  const filteredAssessments = assessments || []
+  const quizzesCount = assessments?.filter((a) => a.type === 'Quiz').length || 0
+  const examsCount = assessments?.filter((a) => a.type === 'Exam').length || 0
+  const hasExam = assessments?.some((a) => a.type === 'Exam') || false
+
+  // Handlers
+  const handleEdit = (assessment: Assessment) => {
+    setEditingAssessment(assessment)
+  }
+
+  const handleViewStats = (assessment: Assessment) => {
+    setStatsAssessment(assessment)
+  }
+
+  const handleViewAttempts = (assessment: Assessment) => {
+    setAttemptsAssessment(assessment)
+  }
+
   return (
-    <div className="container mx-auto py-8">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">{course.title}</h1>
-        <p className="text-gray-600">Crea y gestiona exámenes y quizzes para evaluar conocimientos</p>
+    <div className='container mx-auto py-8'>
+      <div className='mb-6 flex items-start justify-between'>
+        <div>
+          <Link
+            to='/academy/$academySlug/courses/$courseSlug'
+            params={{ academySlug, courseSlug }}
+          >
+            <Button variant='ghost' size='sm' className='mb-2'>
+              <ArrowLeft className='mr-2 h-4 w-4' />
+              Volver al Curso
+            </Button>
+          </Link>
+          <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
+          <p className='text-gray-600'>
+            Crea y gestiona exámenes y quizzes para evaluar conocimientos
+          </p>
+        </div>
+        <Button onClick={() => setCreateDialogOpen(true)} size='lg'>
+          Crear Evaluación
+        </Button>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-center">
+      <div className='mb-6'>
+        <Tabs
+          value={filterType}
+          onValueChange={(v) => setFilterType(v as AssessmentType | 'all')}
+        >
+          <TabsList>
+            <TabsTrigger value='all'>
+              Todas ({assessments?.length || 0})
+            </TabsTrigger>
+            <TabsTrigger value='Quiz'>📝 Quizzes ({quizzesCount})</TabsTrigger>
+            <TabsTrigger value='Exam'>🎓 Exámenes ({examsCount})</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
+      {hasExam && (
+        <div className='mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4'>
+          <div className='flex items-start gap-3'>
+            <span className='text-2xl'>ℹ️</span>
             <div>
-              <CardTitle>Exámenes del Curso</CardTitle>
-              <CardDescription>
-                Crea exámenes para evaluar el aprendizaje de los estudiantes
-              </CardDescription>
+              <h4 className='font-semibold text-amber-900'>
+                Examen Final Existente
+              </h4>
+              <p className='text-sm text-amber-800'>
+                Este curso ya tiene un examen final. Solo puede existir un
+                examen final por curso. Puedes editar el examen existente o
+                crear quizzes adicionales para las secciones.
+              </p>
             </div>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Añadir Examen
-            </Button>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-12 text-gray-500">
-            <FileQuestion className="mx-auto h-12 w-12 mb-4" />
-            <h3 className="text-lg font-medium mb-2">Aún no hay exámenes</h3>
-            <p className="mb-4">Crea exámenes para evaluar el aprendizaje de los estudiantes</p>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Crear Primer Examen
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      )}
+
+      {assessmentsLoading && (
+        <div className='grid gap-6 lg:grid-cols-2'>
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className='h-64' />
+          ))}
+        </div>
+      )}
+
+      {!assessmentsLoading && filteredAssessments.length === 0 && (
+        <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 py-16 text-center'>
+          <FileQuestion className='mx-auto mb-4 h-16 w-16 text-gray-400' />
+          <h3 className='mb-2 text-xl font-semibold text-gray-700'>
+            {filterType === 'all' && 'Aún no hay evaluaciones'}
+            {filterType === 'Quiz' && 'Aún no hay quizzes'}
+            {filterType === 'Exam' &&
+              (hasExam
+                ? 'Ya existe un examen final'
+                : 'Aún no hay exámenes finales')}
+          </h3>
+          <p className='mx-auto mb-6 max-w-md text-gray-600'>
+            {filterType === 'all' &&
+              'Crea quizzes para evaluar secciones individuales o exámenes finales para evaluar todo el curso'}
+            {filterType === 'Quiz' &&
+              'Los quizzes son evaluaciones de secciones específicas con múltiples intentos permitidos'}
+            {filterType === 'Exam' &&
+              !hasExam &&
+              'Los exámenes finales evalúan todo el curso y requieren completar todas las secciones primero'}
+            {filterType === 'Exam' &&
+              hasExam &&
+              'Solo puede existir un examen final por curso. El examen puede estar en otra vista si aplicas filtros diferentes.'}
+          </p>
+        </div>
+      )}
+
+      {!assessmentsLoading && filteredAssessments.length > 0 && (
+        <div className='grid gap-6 lg:grid-cols-2'>
+          {filteredAssessments.map((assessment) => (
+            <AssessmentCard
+              key={assessment.id}
+              assessment={assessment}
+              academySlug={academySlug}
+              courseSlug={courseSlug}
+              onEdit={handleEdit}
+              onViewStats={handleViewStats}
+              onViewAttempts={handleViewAttempts}
+            />
+          ))}
+        </div>
+      )}
+
+      <CreateAssessmentDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+        academySlug={academySlug}
+        courseSlug={courseSlug}
+        sections={sections || []}
+        hasExistingExam={hasExam}
+      />
+
+      <EditAssessmentDialog
+        assessment={editingAssessment}
+        onOpenChange={(open) => !open && setEditingAssessment(null)}
+        academySlug={academySlug}
+        courseSlug={courseSlug}
+        sections={sections || []}
+      />
+
+      <AssessmentStatisticsDialog
+        assessment={statsAssessment}
+        onOpenChange={(open) => !open && setStatsAssessment(null)}
+        academySlug={academySlug}
+        courseSlug={courseSlug}
+      />
+
+      <AssessmentAttemptsDialog
+        assessment={attemptsAssessment}
+        onOpenChange={(open) => !open && setAttemptsAssessment(null)}
+        academySlug={academySlug}
+        courseSlug={courseSlug}
+      />
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { type AccessCodeFilters } from '@/services/access-code-service'
 import { Plus, Key, Filter } from 'lucide-react'
 import { useAccessCodes } from '@/hooks/use-access-codes'
 import { Button } from '@/components/ui/button'
@@ -27,19 +26,12 @@ interface AccessCodeListProps {
 
 export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
-  const [filters, setFilters] = useState<AccessCodeFilters>({})
+  const [statusFilter, setStatusFilter] = useState<string>('all')
 
-  const {
-    data: accessCodesData,
-    isLoading,
-    error,
-  } = useAccessCodes(courseSlug, filters)
+  const { data: accessCodesData, isLoading, error } = useAccessCodes(courseSlug)
 
   const handleFilterChange = (status: string) => {
-    setFilters({
-      ...filters,
-      status: status === 'all' ? undefined : (status as any),
-    })
+    setStatusFilter(status)
   }
 
   if (isLoading) {
@@ -77,10 +69,16 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
 
   // Handle different response structures
   console.log('AccessCodesData received:', accessCodesData)
-  const accessCodes = Array.isArray(accessCodesData)
+  const allAccessCodes = Array.isArray(accessCodesData)
     ? accessCodesData
     : accessCodesData?.data || []
-  console.log('Processed accessCodes:', accessCodes)
+  console.log('Processed accessCodes:', allAccessCodes)
+
+  // Apply client-side filtering
+  const accessCodes = allAccessCodes.filter((code: any) => {
+    if (statusFilter === 'all') return true
+    return code.status === statusFilter
+  })
 
   return (
     <>
@@ -103,13 +101,10 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
           </div>
 
           {/* Filters */}
-          {accessCodes.length > 0 && (
+          {allAccessCodes.length > 0 && (
             <div className='flex items-center gap-2 pt-4'>
               <Filter className='text-muted-foreground h-4 w-4' />
-              <Select
-                value={filters.status || 'all'}
-                onValueChange={handleFilterChange}
-              >
+              <Select value={statusFilter} onValueChange={handleFilterChange}>
                 <SelectTrigger className='w-[180px]'>
                   <SelectValue placeholder='Filtrar por estado' />
                 </SelectTrigger>
@@ -126,7 +121,7 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
         </CardHeader>
 
         <CardContent>
-          {accessCodes.length === 0 ? (
+          {allAccessCodes.length === 0 ? (
             <div className='py-12 text-center text-gray-500'>
               <Key className='mx-auto mb-4 h-12 w-12' />
               <h3 className='mb-2 text-lg font-medium'>
@@ -140,6 +135,16 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
                 <Plus className='mr-2 h-4 w-4' />
                 Crear Primer Código de Acceso
               </Button>
+            </div>
+          ) : accessCodes.length === 0 ? (
+            <div className='py-12 text-center text-gray-500'>
+              <Filter className='mx-auto mb-4 h-12 w-12' />
+              <h3 className='mb-2 text-lg font-medium'>
+                No hay códigos de acceso con este filtro
+              </h3>
+              <p className='mb-4'>
+                Prueba con otro filtro para ver más códigos
+              </p>
             </div>
           ) : (
             <div className='space-y-4'>

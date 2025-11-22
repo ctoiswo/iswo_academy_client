@@ -1,18 +1,21 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { authApi } from '@/services'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { getErrorMessage } from '@/lib/api-client'
 import { ForgotPassword } from '../index'
-import { authApi, getErrorMessage } from '@/lib/api-client'
 
 // Create mock functions first
 const mockNavigate = vi.fn()
 
 // Mock dependencies
 vi.mock('@/lib/api-client', () => ({
+  getErrorMessage: vi.fn(),
+}))
+vi.mock('@/services', () => ({
   authApi: {
     forgotPassword: vi.fn(),
   },
-  getErrorMessage: vi.fn(),
 }))
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
@@ -38,7 +41,7 @@ describe('Flujo de Recuperación de Contraseña', () => {
     // Reset mocks
     mockNavigate.mockClear()
     mockForgotPassword.mockClear()
-    
+
     // Mock getErrorMessage to return the error message
     mockGetErrorMessage.mockImplementation((error: any) => {
       if (error?.message) return error.message
@@ -56,9 +59,13 @@ describe('Flujo de Recuperación de Contraseña', () => {
 
     // Check for the card title
     expect(screen.getByText('Recuperar contraseña')).toBeInTheDocument()
-    expect(screen.getByText(/ingresa tu correo electrónico registrado/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/ingresa tu correo electrónico registrado/i)
+    ).toBeInTheDocument()
     expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /enviar correo/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /enviar correo/i })
+    ).toBeInTheDocument()
     expect(screen.getByText(/recuerdas tu contraseña/i)).toBeInTheDocument()
     expect(screen.getByText(/no tienes una cuenta/i)).toBeInTheDocument()
   })
@@ -67,7 +74,8 @@ describe('Flujo de Recuperación de Contraseña', () => {
     const user = userEvent.setup()
     const testEmail = 'test@example.com'
     const mockResponse = {
-      message: 'Si existe una cuenta con ese correo, recibirás instrucciones para restablecer tu contraseña.'
+      message:
+        'Si existe una cuenta con ese correo, recibirás instrucciones para restablecer tu contraseña.',
     }
 
     // Mock successful API call
@@ -89,13 +97,23 @@ describe('Flujo de Recuperación de Contraseña', () => {
 
     // Should show success message
     await waitFor(() => {
-      expect(screen.getByText(/instrucciones para restablecer la contraseña han sido enviadas/i)).toBeInTheDocument()
-      expect(screen.getByText(/por favor revisa tu correo electrónico/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /instrucciones para restablecer la contraseña han sido enviadas/i
+        )
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(/por favor revisa tu correo electrónico/i)
+      ).toBeInTheDocument()
     })
 
     // Form should be replaced with success message
-    expect(screen.queryByLabelText(/correo electrónico/i)).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /enviar correo/i })).not.toBeInTheDocument()
+    expect(
+      screen.queryByLabelText(/correo electrónico/i)
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /enviar correo/i })
+    ).not.toBeInTheDocument()
   })
 
   it('maneja errores de API apropiadamente', async () => {
@@ -105,7 +123,7 @@ describe('Flujo de Recuperación de Contraseña', () => {
       type: 'ValidationError',
       message: 'El correo es inválido',
       code: 'VALIDATION_ERROR',
-      details: ['El formato del correo es inválido']
+      details: ['El formato del correo es inválido'],
     }
 
     // Mock API error
@@ -127,8 +145,14 @@ describe('Flujo de Recuperación de Contraseña', () => {
 
     // Should still show the form (not success state)
     expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /enviar correo/i })).toBeInTheDocument()
-    expect(screen.queryByText(/instrucciones para restablecer la contraseña han sido enviadas/i)).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /enviar correo/i })
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByText(
+        /instrucciones para restablecer la contraseña han sido enviadas/i
+      )
+    ).not.toBeInTheDocument()
   })
 
   it('maneja errores de validación y establece errores en campos', async () => {
@@ -138,7 +162,7 @@ describe('Flujo de Recuperación de Contraseña', () => {
       type: 'ValidationError',
       message: 'Validación fallida',
       code: 'VALIDATION_ERROR',
-      details: ['El formato del email es inválido']
+      details: ['El formato del email es inválido'],
     }
 
     // Mock API error
@@ -160,7 +184,9 @@ describe('Flujo de Recuperación de Contraseña', () => {
 
     // Should show field error for email
     await waitFor(() => {
-      expect(screen.getByText('El formato del email es inválido')).toBeInTheDocument()
+      expect(
+        screen.getByText('El formato del email es inválido')
+      ).toBeInTheDocument()
     })
   })
 
@@ -170,7 +196,7 @@ describe('Flujo de Recuperación de Contraseña', () => {
     const mockError = {
       type: 'NetworkError',
       message: 'Error de conexión de red',
-      code: 'NETWORK_ERROR'
+      code: 'NETWORK_ERROR',
     }
 
     // Mock network error
@@ -192,7 +218,9 @@ describe('Flujo de Recuperación de Contraseña', () => {
 
     // Should still show the form
     expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /enviar correo/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /enviar correo/i })
+    ).toBeInTheDocument()
   })
 
   it('valida los campos del formulario antes de enviar', async () => {
@@ -205,7 +233,9 @@ describe('Flujo de Recuperación de Contraseña', () => {
 
     // Should show validation error
     await waitFor(() => {
-      expect(screen.getByText(/por favor ingresa tu correo electrónico/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/por favor ingresa tu correo electrónico/i)
+      ).toBeInTheDocument()
     })
 
     // API should not be called
@@ -217,7 +247,10 @@ describe('Flujo de Recuperación de Contraseña', () => {
     render(<ForgotPassword />)
 
     // Enter invalid email
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'correo-invalido')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'correo-invalido'
+    )
 
     // Try to submit
     const submitButton = screen.getByRole('button', { name: /enviar correo/i })
@@ -235,8 +268,11 @@ describe('Flujo de Recuperación de Contraseña', () => {
     const testEmail = 'test@example.com'
 
     // Mock API call that takes time to resolve
-    mockForgotPassword.mockImplementation(() => 
-      new Promise(resolve => setTimeout(() => resolve({ message: 'Éxito' }), 100))
+    mockForgotPassword.mockImplementation(
+      () =>
+        new Promise((resolve) =>
+          setTimeout(() => resolve({ message: 'Éxito' }), 100)
+        )
     )
 
     render(<ForgotPassword />)
@@ -263,7 +299,8 @@ describe('Flujo de Recuperación de Contraseña', () => {
     const user = userEvent.setup()
     const testEmail = 'test@example.com'
     const mockResponse = {
-      message: 'Si existe una cuenta con ese correo, recibirás instrucciones para restablecer tu contraseña.'
+      message:
+        'Si existe una cuenta con ese correo, recibirás instrucciones para restablecer tu contraseña.',
     }
 
     // Mock successful API call
@@ -282,11 +319,17 @@ describe('Flujo de Recuperación de Contraseña', () => {
 
     // Wait for success state
     await waitFor(() => {
-      expect(screen.getByText(/instrucciones para restablecer la contraseña han sido enviadas/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /instrucciones para restablecer la contraseña han sido enviadas/i
+        )
+      ).toBeInTheDocument()
     })
 
     // Form should be replaced with success message, so email input should not exist
-    expect(screen.queryByLabelText(/correo electrónico/i)).not.toBeInTheDocument()
+    expect(
+      screen.queryByLabelText(/correo electrónico/i)
+    ).not.toBeInTheDocument()
   })
 
   it('maneja error de límite de tasa', async () => {
@@ -294,8 +337,9 @@ describe('Flujo de Recuperación de Contraseña', () => {
     const testEmail = 'test@example.com'
     const mockError = {
       type: 'RateLimitError',
-      message: 'Demasiadas solicitudes de restablecimiento de contraseña. Inténtalo de nuevo más tarde.',
-      code: 'RATE_LIMIT_EXCEEDED'
+      message:
+        'Demasiadas solicitudes de restablecimiento de contraseña. Inténtalo de nuevo más tarde.',
+      code: 'RATE_LIMIT_EXCEEDED',
     }
 
     // Mock rate limit error
@@ -317,7 +361,9 @@ describe('Flujo de Recuperación de Contraseña', () => {
 
     // Should still show the form
     expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /enviar correo/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /enviar correo/i })
+    ).toBeInTheDocument()
   })
 
   it('tiene los links de navegación correctos', () => {
@@ -325,9 +371,13 @@ describe('Flujo de Recuperación de Contraseña', () => {
 
     // Check for sign-in and sign-up links
     const links = screen.getAllByRole('link')
-    const signInLink = links.find(link => link.getAttribute('href') === '/sign-in')
-    const signUpLink = links.find(link => link.getAttribute('href') === '/sign-up')
-    
+    const signInLink = links.find(
+      (link) => link.getAttribute('href') === '/sign-in'
+    )
+    const signUpLink = links.find(
+      (link) => link.getAttribute('href') === '/sign-up'
+    )
+
     expect(signInLink).toBeDefined()
     expect(signUpLink).toBeDefined()
   })

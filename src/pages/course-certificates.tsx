@@ -1,36 +1,127 @@
+import { useState } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
-import { ArrowLeft, Plus, Award } from 'lucide-react'
-import { useCourseBySlug } from '@/hooks/use-courses'
+import {
+  ArrowLeft,
+  Plus,
+  Award,
+  Eye,
+  Trash2,
+  Star,
+  Settings,
+  FileText,
+} from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
+import {
+  useCertificateTemplates,
+  useDeleteCertificateTemplate,
+  useSetDefaultTemplate,
+} from '@/hooks/use-certificate-templates'
+import { useCourseBySlug } from '@/hooks/use-courses'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { CertificatePreviewDialog } from '@/components/certificates/certificate-preview-dialog'
+import { CreateCertificateTemplateDialog } from '@/components/certificates/create-certificate-template-dialog'
+import { EditCertificateTemplateDialog } from '@/components/certificates/edit-certificate-template-dialog'
 
 export default function CourseCertificatesPage() {
-  const params = useParams({ strict: false }) as { academySlug: string; courseSlug: string }
+  const params = useParams({ strict: false }) as {
+    academySlug: string
+    courseSlug: string
+  }
   const { academySlug, courseSlug } = params
   const { currentAcademy } = useAuthStore()
-  
+
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(
+    null
+  )
+
   const academyId = currentAcademy?.id
-  const { data: course, isLoading, error } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  const {
+    data: course,
+    isLoading: courseLoading,
+    error: courseError,
+  } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  const { data: templates, isLoading: templatesLoading } =
+    useCertificateTemplates(academySlug)
+  const deleteTemplate = useDeleteCertificateTemplate(academySlug)
+  const setDefaultTemplate = useSetDefaultTemplate(academySlug)
+
+  const isLoading = courseLoading || templatesLoading
+  const error = courseError
+
+  const handleDelete = (templateId: number) => {
+    setSelectedTemplateId(templateId)
+    setDeleteDialogOpen(true)
+  }
+
+  const confirmDelete = async () => {
+    if (selectedTemplateId) {
+      await deleteTemplate.mutateAsync(selectedTemplateId)
+      setDeleteDialogOpen(false)
+      setSelectedTemplateId(null)
+    }
+  }
+
+  const handleSetDefault = async (templateId: number) => {
+    await setDefaultTemplate.mutateAsync(templateId)
+  }
+
+  const handlePreview = (templateId: number) => {
+    setSelectedTemplateId(templateId)
+    setPreviewDialogOpen(true)
+  }
+
+  const handleEdit = (templateId: number) => {
+    setSelectedTemplateId(templateId)
+    setEditDialogOpen(true)
+  }
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8">
-        <Skeleton className="h-64" />
+      <div className='container mx-auto py-8'>
+        <Skeleton className='h-64' />
       </div>
     )
   }
 
   if (error || !course) {
     return (
-      <div className="container mx-auto py-8">
-        <div className="text-center py-12">
-          <h3 className="text-lg font-bold text-red-600 mb-2">Error al Cargar el Curso</h3>
-          <p className="text-gray-600">Curso no encontrado o no tienes permiso para acceder</p>
-          <Link to={`/academy/${academySlug}/courses`} className="mt-4 inline-block">
-            <Button variant="outline">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+      <div className='container mx-auto py-8'>
+        <div className='py-12 text-center'>
+          <h3 className='mb-2 text-lg font-bold text-red-600'>
+            Error al Cargar el Curso
+          </h3>
+          <p className='text-gray-600'>
+            Curso no encontrado o no tienes permiso para acceder
+          </p>
+          <Link
+            to={`/academy/${academySlug}/courses`}
+            className='mt-4 inline-block'
+          >
+            <Button variant='outline'>
+              <ArrowLeft className='mr-2 h-4 w-4' />
               Volver a Cursos
             </Button>
           </Link>
@@ -39,40 +130,318 @@ export default function CourseCertificatesPage() {
     )
   }
 
+  const defaultTemplate = templates?.find((t) => t.is_default)
+  const otherTemplates = templates?.filter((t) => !t.is_default) || []
+
   return (
-    <div className="container mx-auto py-8">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">{course.title}</h1>
-        <p className="text-gray-600">Configura los certificados de finalización y requisitos</p>
+    <div className='container mx-auto py-8'>
+      <div className='mb-6'>
+        <Link to={`/academy/${academySlug}/courses/${courseSlug}`}>
+          <Button variant='ghost' size='sm' className='mb-4'>
+            <ArrowLeft className='mr-2 h-4 w-4' />
+            Volver al Curso
+          </Button>
+        </Link>
+        <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
+        <p className='text-gray-600'>
+          Configura las plantillas de certificados de finalización
+        </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-center">
+      {/* Info Card */}
+      <Card className='mb-6 border-blue-200 bg-blue-50'>
+        <CardContent className='pt-6'>
+          <div className='flex items-start gap-3'>
+            <Award className='mt-0.5 h-5 w-5 text-blue-600' />
             <div>
-              <CardTitle>Certificados del Curso</CardTitle>
-              <CardDescription>
-                Define los certificados que obtendrán los estudiantes al completar el curso
-              </CardDescription>
+              <h3 className='mb-1 font-semibold text-blue-900'>
+                Acerca de los Certificados
+              </h3>
+              <p className='mb-2 text-sm text-blue-800'>
+                Los certificados se generan automáticamente cuando los
+                estudiantes completan el curso según los requisitos
+                establecidos.
+              </p>
+              <ul className='list-inside list-disc space-y-1 text-sm text-blue-700'>
+                <li>
+                  Tamaño recomendado: A4 (210 x 297mm) o Letter (216 x 279mm)
+                </li>
+                <li>
+                  Formato: Orientación horizontal (landscape) o vertical
+                  (portrait)
+                </li>
+                <li>El fondo blanco permite mejor impresión y visualización</li>
+                <li>
+                  Usa placeholders como {'{{student_name}}'} o{' '}
+                  {'{{course_title}}'} para datos dinámicos
+                </li>
+              </ul>
             </div>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Configurar Certificado
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-12 text-gray-500">
-            <Award className="mx-auto h-12 w-12 mb-4" />
-            <h3 className="text-lg font-medium mb-2">No hay certificado configurado</h3>
-            <p className="mb-4">Configura certificados de finalización para estudiantes que completen el curso</p>
-            <Button>
-              <Award className="w-4 h-4 mr-2" />
-              Configurar Certificado
-            </Button>
           </div>
         </CardContent>
       </Card>
+
+      {/* Actions */}
+      <div className='mb-6 flex items-center justify-between'>
+        <div>
+          <h2 className='text-xl font-semibold'>Plantillas de Certificados</h2>
+          <p className='text-sm text-gray-600'>
+            {templates?.length || 0}{' '}
+            {templates?.length === 1 ? 'plantilla' : 'plantillas'} configuradas
+          </p>
+        </div>
+        <Button onClick={() => setCreateDialogOpen(true)}>
+          <Plus className='mr-2 h-4 w-4' />
+          Nueva Plantilla
+        </Button>
+      </div>
+
+      {/* Default Template */}
+      {defaultTemplate && (
+        <div className='mb-6'>
+          <h3 className='mb-3 flex items-center gap-2 text-sm font-medium text-gray-700'>
+            <Star className='h-4 w-4 fill-yellow-500 text-yellow-500' />
+            Plantilla Predeterminada
+          </h3>
+          <Card>
+            <CardHeader>
+              <div className='flex items-start justify-between'>
+                <div className='flex-1'>
+                  <div className='mb-1 flex items-center gap-2'>
+                    <CardTitle className='text-lg'>
+                      {defaultTemplate.name}
+                    </CardTitle>
+                    <Badge variant='default' className='bg-yellow-500'>
+                      Predeterminada
+                    </Badge>
+                    {defaultTemplate.is_active && (
+                      <Badge variant='outline'>Activa</Badge>
+                    )}
+                  </div>
+                  <CardDescription>
+                    {defaultTemplate.description || 'Sin descripción'}
+                  </CardDescription>
+                </div>
+                <div className='flex gap-2'>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => handlePreview(defaultTemplate.id)}
+                  >
+                    <Eye className='mr-2 h-4 w-4' />
+                    Vista Previa
+                  </Button>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => handleEdit(defaultTemplate.id)}
+                  >
+                    <Settings className='mr-2 h-4 w-4' />
+                    Configurar
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className='grid grid-cols-2 gap-4 text-sm md:grid-cols-4'>
+                <div>
+                  <span className='text-gray-600'>Orientación:</span>
+                  <p className='font-medium capitalize'>
+                    {defaultTemplate.design.layout}
+                  </p>
+                </div>
+                <div>
+                  <span className='text-gray-600'>Estilo de Borde:</span>
+                  <p className='font-medium capitalize'>
+                    {defaultTemplate.design.border_style}
+                  </p>
+                </div>
+                <div>
+                  <span className='text-gray-600'>Firmas:</span>
+                  <p className='font-medium'>
+                    {defaultTemplate.design.signature_count}
+                  </p>
+                </div>
+                <div>
+                  <span className='text-gray-600'>Usos:</span>
+                  <p className='font-medium'>{defaultTemplate.usage_count}</p>
+                </div>
+              </div>
+              {defaultTemplate.requirements &&
+                Object.keys(defaultTemplate.requirements).length > 0 && (
+                  <div className='mt-4 rounded-lg bg-gray-50 p-3'>
+                    <p className='mb-2 text-sm font-medium text-gray-700'>
+                      Requisitos:
+                    </p>
+                    <ul className='space-y-1 text-sm text-gray-600'>
+                      {defaultTemplate.requirements.lessons_completion && (
+                        <li>
+                          • Completar{' '}
+                          {defaultTemplate.requirements.lessons_completion}% de
+                          las lecciones
+                        </li>
+                      )}
+                      {defaultTemplate.requirements.minimum_score && (
+                        <li>
+                          • Puntaje mínimo:{' '}
+                          {defaultTemplate.requirements.minimum_score}%
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Other Templates */}
+      {otherTemplates.length > 0 && (
+        <div>
+          <h3 className='mb-3 flex items-center gap-2 text-sm font-medium text-gray-700'>
+            <FileText className='h-4 w-4' />
+            Otras Plantillas
+          </h3>
+          <div className='grid gap-4 md:grid-cols-2'>
+            {otherTemplates.map((template) => (
+              <Card key={template.id}>
+                <CardHeader>
+                  <div className='flex items-start justify-between'>
+                    <div className='flex-1'>
+                      <div className='mb-1 flex items-center gap-2'>
+                        <CardTitle className='text-base'>
+                          {template.name}
+                        </CardTitle>
+                        {template.is_active && (
+                          <Badge variant='outline'>Activa</Badge>
+                        )}
+                      </div>
+                      <CardDescription className='text-xs'>
+                        {template.description || 'Sin descripción'}
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className='mb-3 grid grid-cols-2 gap-3 text-xs'>
+                    <div>
+                      <span className='text-gray-600'>Orientación:</span>
+                      <p className='font-medium capitalize'>
+                        {template.design.layout}
+                      </p>
+                    </div>
+                    <div>
+                      <span className='text-gray-600'>Usos:</span>
+                      <p className='font-medium'>{template.usage_count}</p>
+                    </div>
+                  </div>
+                  <div className='flex gap-2'>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      onClick={() => handlePreview(template.id)}
+                      className='flex-1'
+                    >
+                      <Eye className='mr-1 h-3 w-3' />
+                      Vista Previa
+                    </Button>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      onClick={() => handleSetDefault(template.id)}
+                      className='flex-1'
+                    >
+                      <Star className='mr-1 h-3 w-3' />
+                      Predeterminar
+                    </Button>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      onClick={() => handleEdit(template.id)}
+                    >
+                      <Settings className='h-3 w-3' />
+                    </Button>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      onClick={() => handleDelete(template.id)}
+                      className='text-red-600 hover:text-red-700'
+                    >
+                      <Trash2 className='h-3 w-3' />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!templates || templates.length === 0 ? (
+        <Card>
+          <CardContent className='py-12 text-center'>
+            <Award className='mx-auto mb-4 h-12 w-12 text-gray-400' />
+            <h3 className='mb-2 text-lg font-medium'>
+              No hay plantillas configuradas
+            </h3>
+            <p className='mb-4 text-gray-600'>
+              Crea tu primera plantilla de certificado para que los estudiantes
+              puedan obtenerlos al completar el curso
+            </p>
+            <Button onClick={() => setCreateDialogOpen(true)}>
+              <Plus className='mr-2 h-4 w-4' />
+              Crear Primera Plantilla
+            </Button>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {/* Dialogs */}
+      <CreateCertificateTemplateDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+        academySlug={academySlug}
+      />
+
+      {selectedTemplateId && (
+        <>
+          <EditCertificateTemplateDialog
+            open={editDialogOpen}
+            onOpenChange={setEditDialogOpen}
+            academySlug={academySlug}
+            templateId={selectedTemplateId}
+          />
+
+          <CertificatePreviewDialog
+            open={previewDialogOpen}
+            onOpenChange={setPreviewDialogOpen}
+            academySlug={academySlug}
+            templateId={selectedTemplateId}
+          />
+        </>
+      )}
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Eliminar plantilla?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer. Los certificados ya emitidos con
+              esta plantilla no se verán afectados.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className='bg-red-600 hover:bg-red-700'
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

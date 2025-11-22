@@ -3,16 +3,15 @@ import { toast } from 'sonner'
 
 import {
   accessCodeService,
-  type AccessCodeFilters,
   type CreateAccessCodeData,
   type UpdateAccessCodeData,
   type RedeemAccessCodeData
 } from '@/services/access-code-service'
 
-export function useAccessCodes(courseId: number | string, filters?: AccessCodeFilters) {
+export function useAccessCodes(courseId: number | string) {
   return useQuery({
-    queryKey: ['access_codes', courseId, filters],
-    queryFn: () => accessCodeService.getAccessCodes(courseId, filters),
+    queryKey: ['access_codes', courseId],
+    queryFn: () => accessCodeService.getAccessCodes(courseId),
     enabled: !!courseId,
   })
 }
@@ -33,10 +32,10 @@ export function useCreateAccessCode(courseId: number | string) {
       accessCodeService.createAccessCode(courseId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['access_codes', courseId] })
-      toast.success('Access code created successfully')
+      toast.success('Código de acceso creado exitosamente')
     },
     onError: (error) => {
-      toast.error(`Failed to create access code: ${error.message}`)
+      toast.error(`Error al crear el código de acceso: ${error.message}`)
     },
   })
 }
@@ -49,10 +48,10 @@ export function useUpdateAccessCode(courseId: number | string) {
       accessCodeService.updateAccessCode(courseId, accessCodeId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['access_codes', courseId] })
-      toast.success('Access code updated successfully')
+      toast.success('Código de acceso actualizado exitosamente')
     },
     onError: (error) => {
-      toast.error(`Failed to update access code: ${error.message}`)
+      toast.error(`Error al actualizar el código de acceso: ${error.message}`)
     },
   })
 }
@@ -65,10 +64,10 @@ export function useDeleteAccessCode(courseId: number | string) {
       accessCodeService.deleteAccessCode(courseId, accessCodeId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['access_codes', courseId] })
-      toast.success('Access code deleted successfully')
+      toast.success('Código de acceso eliminado exitosamente')
     },
     onError: (error) => {
-      toast.error(`Failed to delete access code: ${error.message}`)
+      toast.error(`Error al eliminar el código de acceso: ${error.message}`)
     },
   })
 }
@@ -81,10 +80,10 @@ export function useToggleAccessCodeStatus(courseId: number | string) {
       accessCodeService.toggleAccessCodeStatus(courseId, accessCodeId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['access_codes', courseId] })
-      toast.success('Access code status updated successfully')
+      toast.success('Estado del código de acceso actualizado exitosamente')
     },
     onError: (error) => {
-      toast.error(`Failed to update access code status: ${error.message}`)
+      toast.error(`Error al actualizar el estado del código de acceso: ${error.message}`)
     },
   })
 }
@@ -97,7 +96,7 @@ export function useRedeemAccessCode() {
       toast.success(response.message)
     },
     onError: (error) => {
-      toast.error(`Failed to redeem access code: ${error.message}`)
+      toast.error(`Error al canjear el código de acceso: ${error.message}`)
     },
   })
 }
@@ -107,7 +106,7 @@ export function useValidateAccessCode() {
     mutationFn: (code: string) =>
       accessCodeService.validateAccessCode(code),
     onError: (error) => {
-      toast.error(`Failed to validate access code: ${error.message}`)
+      toast.error(`Error al validar el código de acceso: ${error.message}`)
     },
   })
 }

@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { useAuthStore } from '../auth-store'
 import { tokenStorage } from '@/lib/token-storage'
-import { authApi, tokenManager } from '@/lib/api-client'
+import { tokenManager } from '@/lib/api-client'
+import { authApi } from '@/services'
 import type { AuthUser, AuthTokens, LoginCredentials, RegisterData, AcademyMembership, AcademyData } from '../auth-store'
 
 // Mock dependencies
@@ -17,7 +18,7 @@ vi.mock('@/lib/token-storage', () => ({
   }
 }))
 
-vi.mock('@/lib/api-client', () => ({
+vi.mock('@/services', () => ({
   authApi: {
     login: vi.fn(),
     register: vi.fn(),
@@ -26,7 +27,10 @@ vi.mock('@/lib/api-client', () => ({
   },
   userApi: {
     getProfile: vi.fn()
-  },
+  }
+}))
+
+vi.mock('@/lib/api-client', () => ({
   academyApi: {
     getUserAcademies: vi.fn()
   },

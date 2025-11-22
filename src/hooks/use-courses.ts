@@ -61,18 +61,18 @@ export function useUpdateCourse(academySlug: string | number) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ courseId, data }: { courseId: number; data: UpdateCourseData }) =>
-      courseService.updateCourse(academySlug, courseId, data),
+    mutationFn: ({ courseSlug, data }: { courseSlug: string | number; data: UpdateCourseData }) =>
+      courseService.updateCourse(academySlug, courseSlug, data),
     onSuccess: () => {
       // Invalidate all course queries for this academy (with any filters)
       queryClient.invalidateQueries({ 
         queryKey: ['courses', academySlug],
         exact: false 
       })
-      toast.success('Course updated successfully')
+      toast.success('Curso actualizado exitosamente')
     },
     onError: (error) => {
-      toast.error(`Failed to update course: ${error.message}`)
+      toast.error(`Error al actualizar el curso: ${error.message}`)
     },
   })
 }

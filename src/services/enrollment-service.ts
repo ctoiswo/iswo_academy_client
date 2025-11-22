@@ -68,6 +68,16 @@ class EnrollmentService {
     const response = await apiClient.patch(`/enrollments/${enrollmentId}/progress`, progressData)
     return response.data.data as Enrollment
   }
+
+  async getCourseEnrollments(academySlug: string, courseSlug: string) {
+    const response = await apiClient.get(`/academies/${academySlug}/courses/${courseSlug}/enrollments`)
+    return response.data.data as Enrollment[]
+  }
+
+  async deleteEnrollment(academySlug: string, courseSlug: string, enrollmentId: number) {
+    const response = await apiClient.delete(`/academies/${academySlug}/courses/${courseSlug}/enrollments/${enrollmentId}`)
+    return response.data
+  }
 }
 
 export const enrollmentService = new EnrollmentService()
