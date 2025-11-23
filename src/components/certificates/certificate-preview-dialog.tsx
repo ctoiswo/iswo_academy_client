@@ -1,3 +1,4 @@
+import { ExternalLink } from 'lucide-react'
 import { useCertificateTemplatePreview } from '@/hooks/use-certificate-templates'
 import { Button } from '@/components/ui/button'
 import {
@@ -26,23 +27,54 @@ export function CertificatePreviewDialog({
     templateId
   )
 
+  // URL for opening in new tab (direct HTML endpoint)
+  const apiBaseUrl =
+    import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1'
+  const baseUrl = apiBaseUrl.replace(/\/api\/v1\/?$/, '')
+  const directUrl = `${baseUrl}/api/v1/academies/${academySlug}/certificate_templates/${templateId}/preview_html`
+
+  const handleOpenInNewTab = () => {
+    window.open(directUrl, '_blank')
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='max-h-[90vh] max-w-4xl'>
         <DialogHeader>
-          <DialogTitle>Vista Previa del Certificado</DialogTitle>
+          <DialogTitle className='flex items-center justify-between'>
+            <span>Vista Previa del Certificado</span>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={handleOpenInNewTab}
+              className='gap-2'
+            >
+              <ExternalLink className='h-4 w-4' />
+              Abrir en Nueva Pestaña
+            </Button>
+          </DialogTitle>
         </DialogHeader>
         <div className='max-h-[70vh] overflow-auto rounded-lg bg-gray-50 p-4'>
           {isLoading ? (
             <Skeleton className='h-[600px] w-full' />
           ) : preview?.html ? (
-            <div dangerouslySetInnerHTML={{ __html: preview.html }} />
+            <div
+              dangerouslySetInnerHTML={{ __html: preview.html }}
+              className='certificate-preview'
+              style={{
+                transform: 'scale(0.7)',
+                transformOrigin: 'top center',
+                width: '142%',
+                marginLeft: '-21%',
+              }}
+            />
           ) : (
             <div className='py-12 text-center text-gray-600'>
               <p>No se pudo cargar la vista previa</p>
-              <Button onClick={() => onOpenChange(false)} className='mt-4'>
-                Cerrar
-              </Button>
+              <p className='mt-2 text-sm text-gray-500'>
+                Haz clic en "Abrir en Nueva Pestaña" para ver el certificado
+                completo
+              </p>
             </div>
           )}
         </div>

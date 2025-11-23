@@ -5,15 +5,8 @@ import {
   BarChart3,
   Award,
   Bell,
-  Calendar,
   UserCheck,
-  Trophy,
-  FolderKanban,
-  Layers,
-  ShoppingCart,
   Route,
-  MessageSquare,
-  Megaphone,
   UserCog,
   Settings,
   Palette,
@@ -24,6 +17,8 @@ import {
   PlayCircle,
   CheckSquare,
   FileQuestion,
+  Layers,
+  ShoppingCart,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -173,11 +168,6 @@ export function getAdminSidebar(
           url: `/academy/${academySlug}/dashboard`,
           icon: LayoutDashboard,
         },
-        {
-          title: 'Analíticas',
-          url: `/academy/${academySlug}/analytics`,
-          icon: BarChart3,
-        },
       ],
     },
     {
@@ -218,11 +208,6 @@ export function getAdminSidebar(
           url: `/academy/${academySlug}/students`,
           icon: GraduationCap,
         },
-        {
-          title: 'Inscripciones',
-          url: `/academy/${academySlug}/enrollments`,
-          icon: UserCog,
-        },
       ],
     },
     {
@@ -233,93 +218,7 @@ export function getAdminSidebar(
           url: `/academy/${academySlug}/badges`,
           icon: Award,
         },
-        {
-          title: 'Logros',
-          url: `/academy/${academySlug}/achievements`,
-          icon: Trophy,
-        },
-        {
-          title: 'Tabla de Clasificación',
-          url: `/academy/${academySlug}/leaderboard`,
-          icon: BarChart3,
-        },
       ],
-    },
-    {
-      title: 'Comunicación',
-      items: [
-        {
-          title: 'Chats',
-          url: `/academy/${academySlug}/chats`,
-          icon: MessageSquare,
-        },
-        {
-          title: 'Anuncios',
-          url: `/academy/${academySlug}/announcements`,
-          icon: Megaphone,
-        },
-        {
-          title: 'Eventos',
-          url: `/academy/${academySlug}/events`,
-          icon: Calendar,
-        },
-      ],
-    },
-    {
-      title: 'Gestión',
-      items: [
-        {
-          title: 'Pagos y Suscripciones',
-          url: `/academy/${academySlug}/payments`,
-          icon: ShoppingCart,
-        },
-        {
-          title: 'Recursos',
-          url: `/academy/${academySlug}/resources`,
-          icon: FolderKanban,
-        },
-        {
-          title: 'Categorías',
-          url: `/academy/${academySlug}/categories`,
-          icon: Layers,
-        },
-      ],
-    },
-    {
-      title: 'Configuración',
-      items: [
-        {
-          title: 'Ajustes',
-          icon: Settings,
-          items: [
-            {
-              title: 'Perfil',
-              url: `/settings`,
-              icon: UserCog,
-            },
-            {
-              title: 'Notificaciones',
-              url: `/settings/notifications`,
-              icon: Bell,
-            },
-            {
-              title: 'Apariencia',
-              url: `/settings/appearance`,
-              icon: Palette,
-            },
-            {
-              title: 'Pantalla',
-              url: `/settings/display`,
-              icon: Monitor,
-            },
-          ],
-        },
-        {
-          title: 'Centro de Ayuda',
-          url: '/help-center',
-          icon: HelpCircle,
-        },
-      ],
-    },
+    }
   ]
 }

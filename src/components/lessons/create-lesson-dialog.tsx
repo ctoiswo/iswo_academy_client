@@ -99,7 +99,21 @@ export function CreateLessonDialog({
     }
 
     if (formData.lesson_type === 'text' && formData.content) {
-      dataToSubmit.content = formData.content.trim()
+      // Convert plain text content to structured JSON format for the backend
+      dataToSubmit.content_json = {
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                text: formData.content.trim(),
+              },
+            ],
+          },
+        ],
+      }
     }
 
     if (formData.duration_minutes && formData.duration_minutes > 0) {
@@ -164,10 +178,6 @@ export function CreateLessonDialog({
               <SelectContent>
                 <SelectItem value='video'>Video</SelectItem>
                 <SelectItem value='text'>Texto</SelectItem>
-                <SelectItem value='quiz'>Quiz</SelectItem>
-                <SelectItem value='assignment'>Tarea</SelectItem>
-                <SelectItem value='interactive'>Interactivo</SelectItem>
-                <SelectItem value='document'>Documento</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -195,7 +205,7 @@ export function CreateLessonDialog({
               </div>
 
               <div className='space-y-2'>
-                <Label htmlFor='video_identifier'>ID del Video</Label>
+                <Label htmlFor='video_identifier'>URL o ID del Video</Label>
                 <Input
                   id='video_identifier'
                   value={formData.video_identifier}
@@ -207,17 +217,19 @@ export function CreateLessonDialog({
                   }
                   placeholder={
                     formData.video_provider === 'youtube'
-                      ? 'ej. dQw4w9WgXcQ'
-                      : 'ID del video'
+                      ? 'ej. https://www.youtube.com/watch?v=dQw4w9WgXcQ o dQw4w9WgXcQ'
+                      : formData.video_provider === 'vimeo'
+                        ? 'ej. https://vimeo.com/123456789 o 123456789'
+                        : 'URL o ID del video'
                   }
                 />
                 <p className='text-muted-foreground text-xs'>
                   {formData.video_provider === 'youtube' &&
-                    'El ID del video de YouTube (después de ?v=)'}
+                    'Puedes pegar la URL completa de YouTube o solo el ID del video'}
                   {formData.video_provider === 'vimeo' &&
-                    'El ID numérico del video de Vimeo'}
+                    'Puedes pegar la URL completa de Vimeo o solo el ID numérico'}
                   {formData.video_provider === 'google_drive' &&
-                    'El ID del archivo de Google Drive'}
+                    'Pega la URL de compartir de Google Drive o el ID del archivo'}
                 </p>
               </div>
             </>
