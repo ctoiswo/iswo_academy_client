@@ -27,7 +27,16 @@ export interface CreateLessonData {
   title: string
   lesson_type: 'video' | 'text' | 'quiz' | 'assignment' | 'interactive' | 'document'
   content?: string
-  content_json?: Record<string, any>
+  content_json?: {
+    type: string
+    content: Array<{
+      type: string
+      content?: Array<{
+        type: string
+        text?: string
+      }>
+    }>
+  }
   video_provider?: 'none' | 'youtube' | 'vimeo' | 'google_drive' | 's3_direct' | 'bunny_cdn'
   video_identifier?: string
   video_url?: string

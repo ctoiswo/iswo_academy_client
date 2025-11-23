@@ -117,8 +117,6 @@ export function CreateQuestionDialog({
       value: 'multiple_select',
       label: 'Selección Múltiple (varias correctas)',
     },
-    { value: 'short_answer', label: 'Respuesta Corta' },
-    { value: 'essay', label: 'Ensayo' },
   ]
 
   const needsAnswers = [
