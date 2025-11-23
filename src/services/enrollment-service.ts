@@ -13,6 +13,7 @@ export interface Course {
   enrollment_count: number
   academy_id: number
   academy_name: string
+  academy_slug?: string
   created_at?: string
   updated_at?: string
 }

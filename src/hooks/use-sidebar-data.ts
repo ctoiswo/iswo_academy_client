@@ -6,6 +6,7 @@ import { getStudentSidebar } from '@/components/layout/data/sidebar-student'
 import { getSuperAdminSidebar } from '@/components/layout/data/sidebar-super-admin'
 import { getGuestSidebar } from '@/components/layout/data/sidebar-guest'
 import { type SidebarData } from '@/components/layout/types'
+import { useUserEnrollments } from '@/hooks/use-enrollments'
 
 type UserRole = 'guest' | 'student' | 'teacher' | 'admin' | 'super_admin'
 
@@ -16,6 +17,7 @@ type UserRole = 'guest' | 'student' | 'teacher' | 'admin' | 'super_admin'
 export function useSidebarData(): SidebarData['navGroups'] {
   const { user, academyData, currentAcademy } = useAuthStore()
   const location = useLocation()
+  const { data: enrollmentsData } = useUserEnrollments({ status: 'active' })
 
   // Determinar el role del usuario
   const getUserRole = (): UserRole => {
@@ -74,6 +76,14 @@ export function useSidebarData(): SidebarData['navGroups'] {
         return getStudentSidebar(academySlug)
       default:
         return getStudentSidebar(academySlug)
+    }
+  }
+
+  // Si es estudiante y no está en una ruta de academia, usar la primera academia de sus enrollments
+  if (userRole === 'student' && enrollmentsData?.enrollments?.length) {
+    const firstAcademySlug = enrollmentsData.enrollments[0]?.course?.academy_slug
+    if (firstAcademySlug) {
+      return getStudentSidebar(firstAcademySlug)
     }
   }
 

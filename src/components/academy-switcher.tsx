@@ -152,7 +152,7 @@ export function AcademySwitcher({ fallback }: AcademySwitcherProps) {
               className="gap-2 p-2 cursor-pointer"
             >
               <ArrowLeftRight className="size-4" />
-              <span>Switch Academy</span>
+              <span>Cambiar Academia</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

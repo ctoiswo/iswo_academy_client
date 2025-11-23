@@ -43,6 +43,10 @@ export default function CourseLessonsPage() {
   }
   const { academySlug, courseSlug } = params
   const { currentAcademy } = useAuthStore()
+  
+  // Check if user is student
+  const isStudent = currentAcademy?.user_role === 'student'
+  
   const [createSectionDialogOpen, setCreateSectionDialogOpen] = useState(false)
   const [editSectionDialogOpen, setEditSectionDialogOpen] = useState(false)
   const [createLessonDialogOpen, setCreateLessonDialogOpen] = useState(false)
@@ -169,25 +173,38 @@ export default function CourseLessonsPage() {
                 {course.lessons_count !== 1 ? 'es' : ''}
               </CardDescription>
             </div>
-            <Button onClick={() => setCreateSectionDialogOpen(true)}>
-              <Plus className='mr-2 h-4 w-4' />
-              Nueva Sección
-            </Button>
+            {!isStudent && (
+              <Button onClick={() => setCreateSectionDialogOpen(true)}>
+                <Plus className='mr-2 h-4 w-4' />
+                Nueva Sección
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent>
           {sections.length === 0 ? (
             <div className='py-12 text-center text-gray-500'>
               <FolderOpen className='mx-auto mb-4 h-12 w-12' />
-              <h3 className='mb-2 text-lg font-medium'>Aún no hay secciones</h3>
-              <p className='mb-4'>
-                Comienza a construir tu curso creando secciones y añadiendo
-                lecciones
-              </p>
-              <Button onClick={() => setCreateSectionDialogOpen(true)}>
-                <Plus className='mr-2 h-4 w-4' />
-                Crear Primera Sección
-              </Button>
+              {isStudent ? (
+                <>
+                  <h3 className='mb-2 text-lg font-medium'>Aún no hay contenido disponible</h3>
+                  <p className='mb-4'>
+                    El instructor está preparando el material del curso. Vuelve pronto para ver las lecciones.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h3 className='mb-2 text-lg font-medium'>Aún no hay secciones</h3>
+                  <p className='mb-4'>
+                    Comienza a construir tu curso creando secciones y añadiendo
+                    lecciones
+                  </p>
+                  <Button onClick={() => setCreateSectionDialogOpen(true)}>
+                    <Plus className='mr-2 h-4 w-4' />
+                    Crear Primera Sección
+                  </Button>
+                </>
+              )}
             </div>
           ) : (
             <DndContext

@@ -84,12 +84,34 @@ export function PublicHeader({
  * UserMenu component - Shows login/register buttons or user avatar
  */
 function UserMenu() {
-  const { isAuthenticated, user, logout } = useAuthStore()
+  const { isAuthenticated, user, logout, academyData, currentAcademy } = useAuthStore()
   const navigate = useNavigate()
 
   const handleLogout = async () => {
     await logout()
     navigate({ to: '/' })
+  }
+
+  const handleDashboardClick = () => {
+    // Si hay una academia actual, ir a su dashboard
+    if (currentAcademy?.slug) {
+      navigate({ 
+        to: '/academy/$academySlug/dashboard',
+        params: { academySlug: currentAcademy.slug }
+      })
+    } 
+    // Si no hay academia actual pero tiene academias, ir a la primera
+    else if (academyData?.academies && academyData.academies.length > 0) {
+      const firstAcademy = academyData.academies[0]
+      navigate({ 
+        to: '/academy/$academySlug/dashboard',
+        params: { academySlug: firstAcademy.slug }
+      })
+    }
+    // Si no tiene academias, ir a la selección de academias
+    else {
+      navigate({ to: '/academy-selection' })
+    }
   }
 
   // Show user avatar and menu when authenticated
@@ -121,11 +143,9 @@ function UserMenu() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link to='/dashboard' className='cursor-pointer'>
-              <LayoutDashboard className='mr-2 h-4 w-4' />
-              Dashboard
-            </Link>
+          <DropdownMenuItem onClick={handleDashboardClick} className='cursor-pointer'>
+            <LayoutDashboard className='mr-2 h-4 w-4' />
+            Dashboard
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to='/settings' className='cursor-pointer'>
