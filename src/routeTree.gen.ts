@@ -59,6 +59,7 @@ import { Route as AuthenticatedAdminLearningPathsRouteImport } from './routes/_a
 import { Route as AuthenticatedSuperAdminGamificationIndexRouteImport } from './routes/_authenticated/super-admin/gamification/index'
 import { Route as AuthenticatedMyCoursesCourseSlugIndexRouteImport } from './routes/_authenticated/my-courses/$courseSlug/index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin/courses/index'
+import { Route as AuthenticatedAcademyAcademySlugRedeemCodeRouteImport } from './routes/_authenticated/academy/$academySlug/redeem-code'
 import { Route as AuthenticatedAcademyAcademySlugMyCoursesRouteImport } from './routes/_authenticated/academy/$academySlug/my-courses'
 import { Route as AuthenticatedAcademyAcademySlugMyAssignmentsRouteImport } from './routes/_authenticated/academy/$academySlug/my-assignments'
 import { Route as AuthenticatedAcademyAcademySlugDashboardRouteImport } from './routes/_authenticated/academy/$academySlug/dashboard'
@@ -354,6 +355,12 @@ const AuthenticatedAdminCoursesIndexRoute =
     path: '/courses/',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAcademyAcademySlugRedeemCodeRoute =
+  AuthenticatedAcademyAcademySlugRedeemCodeRouteImport.update({
+    id: '/academy/$academySlug/redeem-code',
+    path: '/academy/$academySlug/redeem-code',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAcademyAcademySlugMyCoursesRoute =
   AuthenticatedAcademyAcademySlugMyCoursesRouteImport.update({
     id: '/academy/$academySlug/my-courses',
@@ -618,6 +625,7 @@ export interface FileRoutesByFullPath {
   '/academy/$academySlug/dashboard': typeof AuthenticatedAcademyAcademySlugDashboardRoute
   '/academy/$academySlug/my-assignments': typeof AuthenticatedAcademyAcademySlugMyAssignmentsRoute
   '/academy/$academySlug/my-courses': typeof AuthenticatedAcademyAcademySlugMyCoursesRoute
+  '/academy/$academySlug/redeem-code': typeof AuthenticatedAcademyAcademySlugRedeemCodeRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/my-courses/$courseSlug': typeof AuthenticatedMyCoursesCourseSlugIndexRoute
   '/super-admin/gamification': typeof AuthenticatedSuperAdminGamificationIndexRoute
@@ -695,6 +703,7 @@ export interface FileRoutesByTo {
   '/academy/$academySlug/dashboard': typeof AuthenticatedAcademyAcademySlugDashboardRoute
   '/academy/$academySlug/my-assignments': typeof AuthenticatedAcademyAcademySlugMyAssignmentsRoute
   '/academy/$academySlug/my-courses': typeof AuthenticatedAcademyAcademySlugMyCoursesRoute
+  '/academy/$academySlug/redeem-code': typeof AuthenticatedAcademyAcademySlugRedeemCodeRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/my-courses/$courseSlug': typeof AuthenticatedMyCoursesCourseSlugIndexRoute
   '/super-admin/gamification': typeof AuthenticatedSuperAdminGamificationIndexRoute
@@ -775,6 +784,7 @@ export interface FileRoutesById {
   '/_authenticated/academy/$academySlug/dashboard': typeof AuthenticatedAcademyAcademySlugDashboardRoute
   '/_authenticated/academy/$academySlug/my-assignments': typeof AuthenticatedAcademyAcademySlugMyAssignmentsRoute
   '/_authenticated/academy/$academySlug/my-courses': typeof AuthenticatedAcademyAcademySlugMyCoursesRoute
+  '/_authenticated/academy/$academySlug/redeem-code': typeof AuthenticatedAcademyAcademySlugRedeemCodeRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/my-courses/$courseSlug/': typeof AuthenticatedMyCoursesCourseSlugIndexRoute
   '/_authenticated/super-admin/gamification/': typeof AuthenticatedSuperAdminGamificationIndexRoute
@@ -856,6 +866,7 @@ export interface FileRouteTypes {
     | '/academy/$academySlug/dashboard'
     | '/academy/$academySlug/my-assignments'
     | '/academy/$academySlug/my-courses'
+    | '/academy/$academySlug/redeem-code'
     | '/admin/courses'
     | '/my-courses/$courseSlug'
     | '/super-admin/gamification'
@@ -933,6 +944,7 @@ export interface FileRouteTypes {
     | '/academy/$academySlug/dashboard'
     | '/academy/$academySlug/my-assignments'
     | '/academy/$academySlug/my-courses'
+    | '/academy/$academySlug/redeem-code'
     | '/admin/courses'
     | '/my-courses/$courseSlug'
     | '/super-admin/gamification'
@@ -1012,6 +1024,7 @@ export interface FileRouteTypes {
     | '/_authenticated/academy/$academySlug/dashboard'
     | '/_authenticated/academy/$academySlug/my-assignments'
     | '/_authenticated/academy/$academySlug/my-courses'
+    | '/_authenticated/academy/$academySlug/redeem-code'
     | '/_authenticated/admin/courses/'
     | '/_authenticated/my-courses/$courseSlug/'
     | '/_authenticated/super-admin/gamification/'
@@ -1420,6 +1433,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCoursesIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/academy/$academySlug/redeem-code': {
+      id: '/_authenticated/academy/$academySlug/redeem-code'
+      path: '/academy/$academySlug/redeem-code'
+      fullPath: '/academy/$academySlug/redeem-code'
+      preLoaderRoute: typeof AuthenticatedAcademyAcademySlugRedeemCodeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/academy/$academySlug/my-courses': {
       id: '/_authenticated/academy/$academySlug/my-courses'
       path: '/academy/$academySlug/my-courses'
@@ -1803,6 +1823,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAcademyAcademySlugDashboardRoute: typeof AuthenticatedAcademyAcademySlugDashboardRoute
   AuthenticatedAcademyAcademySlugMyAssignmentsRoute: typeof AuthenticatedAcademyAcademySlugMyAssignmentsRoute
   AuthenticatedAcademyAcademySlugMyCoursesRoute: typeof AuthenticatedAcademyAcademySlugMyCoursesRoute
+  AuthenticatedAcademyAcademySlugRedeemCodeRoute: typeof AuthenticatedAcademyAcademySlugRedeemCodeRoute
   AuthenticatedAcademyAcademySlugCoursesCourseSlugRouteRoute: typeof AuthenticatedAcademyAcademySlugCoursesCourseSlugRouteRouteWithChildren
   AuthenticatedAcademyAcademySlugCoursesIndexRoute: typeof AuthenticatedAcademyAcademySlugCoursesIndexRoute
 }
@@ -1831,6 +1852,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedAcademyAcademySlugMyAssignmentsRoute,
   AuthenticatedAcademyAcademySlugMyCoursesRoute:
     AuthenticatedAcademyAcademySlugMyCoursesRoute,
+  AuthenticatedAcademyAcademySlugRedeemCodeRoute:
+    AuthenticatedAcademyAcademySlugRedeemCodeRoute,
   AuthenticatedAcademyAcademySlugCoursesCourseSlugRouteRoute:
     AuthenticatedAcademyAcademySlugCoursesCourseSlugRouteRouteWithChildren,
   AuthenticatedAcademyAcademySlugCoursesIndexRoute:
