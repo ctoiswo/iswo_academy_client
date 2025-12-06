@@ -6,7 +6,12 @@ import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { IconFacebook, IconGithub } from '@/assets/brand-icons'
 import { useAuthStore } from '@/stores/auth-store'
-import { getErrorMessage, isApiError } from '@/lib/api-client'
+import { isApiError } from '@/lib/api-client'
+import {
+  getErrorMessage,
+  getValidationDetails,
+  isValidationError,
+} from '@/lib/error-handler'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -88,60 +93,33 @@ export function SignUpForm({
       // Reset form and redirect to success page
       form.reset()
       navigate({ to: '/sign-up-success' })
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Registration error:', error)
 
-      // Handle different types of errors
-      if (isApiError(error)) {
-        // Handle validation errors
-        if (error.type === 'ValidationError' && error.details) {
-          // Set field-specific errors if available
-          error.details.forEach((detail: string) => {
-            // Translate common validation messages to Spanish
-            let translatedDetail = detail
-            if (detail.includes('Email has already been taken')) {
-              translatedDetail = 'Este correo electrónico ya está registrado'
-              toast.error('Error en el registro', {
-                description: translatedDetail,
-              })
-            } else if (detail.includes('Email')) {
-              translatedDetail = detail.replace('Email', 'Correo electrónico')
-            } else if (detail.includes('Password')) {
-              translatedDetail = detail.replace('Password', 'Contraseña')
-            } else if (detail.includes('First name')) {
-              translatedDetail = detail.replace('First name', 'Nombre')
-            } else if (detail.includes('Last name')) {
-              translatedDetail = detail.replace('Last name', 'Apellido')
-            }
+      // Usar error handler centralizado
+      const errorMessage = getErrorMessage(error)
 
-            // Set the error on the specific field
-            if (detail.toLowerCase().includes('email')) {
-              form.setError('email', { message: translatedDetail })
-            } else if (detail.toLowerCase().includes('password')) {
-              form.setError('password', { message: translatedDetail })
-            } else if (
-              detail.toLowerCase().includes('first name') ||
-              detail.toLowerCase().includes('first_name')
-            ) {
-              form.setError('first_name', { message: translatedDetail })
-            } else if (
-              detail.toLowerCase().includes('last name') ||
-              detail.toLowerCase().includes('last_name')
-            ) {
-              form.setError('last_name', { message: translatedDetail })
-            }
-          })
-        } else {
-          // Show general error message
-          toast.error('Error en el registro', {
-            description: getErrorMessage(error),
-          })
-        }
-      } else {
-        // Handle unexpected errors
-        toast.error('Error en el registro', {
-          description:
-            'Ocurrió un error inesperado. Por favor intenta de nuevo.',
+      toast.error('Error en el registro', {
+        description: errorMessage,
+      })
+
+      // Si es error de validación, asignar mensajes a campos específicos
+      if (isApiError(error) && isValidationError(error)) {
+        const validationDetails = getValidationDetails(error)
+
+        // Asignar errores a los campos correspondientes
+        Object.entries(validationDetails).forEach(([field, message]) => {
+          if (
+            field === 'email' ||
+            field === 'password' ||
+            field === 'first_name' ||
+            field === 'last_name'
+          ) {
+            form.setError(
+              field as 'email' | 'password' | 'first_name' | 'last_name',
+              { message }
+            )
+          }
         })
       }
     } finally {

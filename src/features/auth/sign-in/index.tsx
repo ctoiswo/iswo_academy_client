@@ -96,7 +96,7 @@ export function SignIn() {
                   ¿No tienes una cuenta?{' '}
                   <Link 
                     to="/sign-up" 
-                    className="font-semibold text-blue-600 hover:text-blue-500 underline underline-offset-2"
+                    className="font-semibold text-blue-800 hover:text-blue-800/80 underline underline-offset-2"
                   >
                     Regístrate aquí
                   </Link>

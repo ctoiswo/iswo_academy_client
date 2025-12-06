@@ -1,20 +1,18 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api-client'
+import type { SearchResult, SearchResponse, SearchFilters } from '@/types'
 
-export interface SearchResult {
-  id: number
-  type: 'academy' | 'course'
+// Re-export types for backward compatibility
+export type { SearchResult, SearchResponse, SearchFilters }
+
+// Extended search result with additional fields
+interface ExtendedSearchResult extends SearchResult {
   // Academy fields
   name?: string
-  slug: string
-  description?: string
-  logo_url?: string
   course_count?: number
   student_count?: number
   is_public?: boolean
   // Course fields
-  title?: string
-  thumbnail_url?: string
   price?: string
   is_free?: boolean
   difficulty_level?: string

@@ -1,46 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api-client'
+import type { Academy, AcademyFilters, PaginatedResponse } from '@/types'
 
-// Tipos para Academy (basado en la serialización del backend)
-export interface Academy {
-  id: number
-  name: string
-  slug: string
-  description: string
-  logo_url?: string
-  banner_url?: string
-  is_public: boolean
-  subscription_required: boolean
-  monthly_price: string
-  enrolled_users_count: number
-  courses_count: number
-  creator?: {
-    id: number
-    email: string
-    first_name: string
-    last_name: string
-  }
-  academy_category?: {
-    id: number
-    name: string
-    slug: string
-  }
-}
-
-export interface AcademiesResponse {
-  data: Academy[]
-  meta?: {
-    total: number
-    page: number
-    per_page: number
-  }
-}
-
-export interface AcademyFilters {
-  search?: string
-  category?: string
-  sort_by?: 'popular' | 'rating' | 'students' | 'newest'
-}
+// Re-export types for backward compatibility
+export type { Academy, AcademyFilters }
+export type AcademiesResponse = PaginatedResponse<Academy>
 
 /**
  * Hook para obtener academias con filtros

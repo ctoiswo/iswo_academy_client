@@ -6,7 +6,12 @@ import { useNavigate } from '@tanstack/react-router'
 import { authApi } from '@/services'
 import { ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'sonner'
-import { getErrorMessage } from '@/lib/api-client'
+import { isApiError } from '@/lib/api-client'
+import {
+  getErrorMessage,
+  getValidationDetails,
+  isValidationError,
+} from '@/lib/error-handler'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -80,28 +85,31 @@ export function ResetPasswordForm({
 
       // Redirect to sign-in page after successful reset
       navigate({ to: '/sign-in' })
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage = getErrorMessage(error)
       toast.error(errorMessage)
 
-      // Handle specific validation errors
-      if (error?.type === 'ValidationError' && error?.details) {
-        error.details.forEach((detail: string) => {
-          if (detail.toLowerCase().includes('password confirmation')) {
-            form.setError('password_confirmation', { message: detail })
-          } else if (detail.toLowerCase().includes('password')) {
-            form.setError('password', { message: detail })
-          }
-        })
+      // Si es error de validación, asignar mensajes a campos específicos
+      if (isApiError(error) && isValidationError(error)) {
+        const validationDetails = getValidationDetails(error)
+
+        if (validationDetails.password) {
+          form.setError('password', { message: validationDetails.password })
+        }
+        if (validationDetails.password_confirmation) {
+          form.setError('password_confirmation', {
+            message: validationDetails.password_confirmation,
+          })
+        }
       }
 
-      // Handle authentication errors (invalid/expired token)
-      if (error?.type === 'AuthenticationError') {
+      // Manejar tokens inválidos/expirados
+      if (isApiError(error)) {
         if (
-          error?.code === 'INVALID_RESET_TOKEN' ||
-          error?.code === 'EXPIRED_RESET_TOKEN'
+          error.code === 'INVALID_RESET_TOKEN' ||
+          error.code === 'EXPIRED_RESET_TOKEN'
         ) {
-          // Show error and redirect to forgot password page
+          // Mostrar error y redirigir a la página de recuperación
           setTimeout(() => {
             navigate({ to: '/forgot-password' })
           }, 3000)
@@ -137,7 +145,7 @@ export function ResetPasswordForm({
                     type='button'
                     variant='ghost'
                     size='sm'
-                    className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
+                    className='absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent'
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={isLoading}
                   >
@@ -172,7 +180,7 @@ export function ResetPasswordForm({
                     type='button'
                     variant='ghost'
                     size='sm'
-                    className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
+                    className='absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent'
                     onClick={() =>
                       setShowPasswordConfirmation(!showPasswordConfirmation)
                     }

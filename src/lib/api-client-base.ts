@@ -226,11 +226,30 @@ class APIClient {
   /**
    * Interceptor de Response
    * Maneja errores de autenticación y refresca tokens expirados
+   * Extrae el objeto error del response.data para errores del backend
    */
   private setupResponseInterceptor() {
     this.client.interceptors.response.use(
       (response: AxiosResponse) => response,
       async (error) => {
+        // Si hay un error del backend en response.data.error, extraerlo
+        if (error.response?.data?.error) {
+          const backendError = error.response.data.error
+          // Crear un nuevo error con los datos del backend
+          const apiError: ApiError = {
+            message: backendError.message || 'Unknown error',
+            user_message: backendError.user_message,
+            code: backendError.code,
+            type: backendError.type,
+            status: backendError.status || error.response.status,
+            details: backendError.details,
+            metadata: backendError.metadata,
+            timestamp: backendError.timestamp
+          }
+          // Reemplazar el error con nuestro ApiError
+          return Promise.reject(apiError)
+        }
+
         const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
 
         // Si el error no es 401 o ya intentamos refrescar, rechazar
@@ -355,11 +374,14 @@ export function setAuthStore(store: AuthStore) {
  */
 export interface ApiError {
   message: string
+  user_message?: string // Mensaje amigable del backend para mostrar al usuario
   code?: string
   type?: string
   status?: number
   errors?: Record<string, string[]>
-  details?: string[]
+  details?: string[] | Record<string, unknown>
+  metadata?: Record<string, unknown>
+  timestamp?: string
 }
 
 /**
@@ -376,46 +398,27 @@ export function isApiError(error: unknown): error is ApiError {
 
 /**
  * Extrae el mensaje de error de diferentes tipos de errores
+ * @deprecated Use el nuevo getErrorMessage de lib/error-handler.ts
  */
 export function getErrorMessage(error: unknown): string {
-  // Si es un error de Axios
-  if (axios.isAxiosError(error)) {
-    // Priorizar el mensaje del backend si existe
-    if (error.response?.data?.message) {
-      return error.response.data.message
+  // Si es un error de Axios, extraer el ApiError del response
+  if (axios.isAxiosError(error) && error.response?.data) {
+    const apiError = error.response.data as ApiError
+    
+    // Priorizar user_message del backend
+    if (apiError.user_message) {
+      return apiError.user_message
     }
     
-    // Mensajes por código de estado
-    if (error.response?.status) {
-      switch (error.response.status) {
-        case 400:
-          return 'Solicitud inválida. Por favor verifica los datos.'
-        case 401:
-          return 'No autorizado. Por favor inicia sesión.'
-        case 403:
-          return 'No tienes permisos para realizar esta acción.'
-        case 404:
-          return 'Recurso no encontrado.'
-        case 409:
-          return 'El recurso ya existe.'
-        case 422:
-          return 'Error de validación. Por favor verifica los datos.'
-        case 500:
-          return 'Error del servidor. Por favor intenta más tarde.'
-        case 503:
-          return 'Servicio no disponible. Por favor intenta más tarde.'
-      }
-    }
-    
-    // Si hay un mensaje de error genérico
-    if (error.message) {
-      return error.message
+    // Si tiene mensaje normal del backend
+    if (apiError.message) {
+      return apiError.message
     }
   }
   
   // Si es nuestro ApiError custom
   if (isApiError(error)) {
-    return error.message
+    return error.user_message || error.message
   }
   
   // Si es un Error estándar

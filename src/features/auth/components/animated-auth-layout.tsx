@@ -4,6 +4,7 @@ import { Link } from '@tanstack/react-router'
 import { ArrowLeft, BookOpen, Users, Award, Sparkles } from 'lucide-react'
 import { Logo } from '@/assets/logo'
 import { CustomButton } from '@/components/ui/custom-button'
+import { LargeLogo } from '@/components/large-logo'
 
 type AnimatedAuthLayoutProps = {
   children: React.ReactNode
@@ -164,7 +165,7 @@ export function AnimatedAuthLayout({
               className={`absolute top-6 ${reversed ? 'right-6' : 'left-6'}`}
               variants={itemVariants}
             >
-              <CustomButton variant="ghost" className="" asChild>
+              <CustomButton variant="secondary" className="" asChild>
                 <Link to='/'>
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Volver al inicio
@@ -175,11 +176,12 @@ export function AnimatedAuthLayout({
 
           <div className="max-w-md">
             <motion.div 
-              className="flex items-center mb-8"
+              className="flex items-center "
               variants={itemVariants}
             >
-              <Logo className="me-3 text-white" />
-              <h1 className="text-2xl font-bold">ISWO Academy</h1>
+              <Link to='/'>
+                <LargeLogo className='invert size-26' />
+              </Link>
             </motion.div>
 
             <motion.h2 

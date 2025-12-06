@@ -1,0 +1,6 @@
+export { PageHeader } from './page-header'
+export { StatsSection } from './stats-section'
+export { SearchFilters } from './search-filters'
+export { AcademyGrid } from './academy-grid'
+export { CategoryCarouselList } from './category-carousel-list'
+export { CTASection } from './cta-section'

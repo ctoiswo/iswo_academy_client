@@ -1,12 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
-import {
-  GraduationCap,
-  ArrowLeft,
-  LogOut,
-  Settings,
-  LayoutDashboard,
-} from 'lucide-react'
+import { ArrowLeft, LogOut, Settings, LayoutDashboard } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -18,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { LargeLogo } from '@/components/large-logo'
 import { ThemeSwitch } from '@/components/theme-switch'
 
 interface PublicHeaderProps {
@@ -50,9 +45,8 @@ export function PublicHeader({
           whileHover={{ scale: 1.05 }}
           transition={{ type: 'spring', stiffness: 400, damping: 10 }}
         >
-          <Link to='/' className='flex items-center space-x-2'>
-            <GraduationCap className='text-primary h-8 w-8' />
-            <span className='text-xl font-bold'>ISWO Academy</span>
+          <Link to='/' className='flex items-center'>
+            <LargeLogo />
           </Link>
         </motion.div>
 
@@ -84,7 +78,8 @@ export function PublicHeader({
  * UserMenu component - Shows login/register buttons or user avatar
  */
 function UserMenu() {
-  const { isAuthenticated, user, logout, academyData, currentAcademy } = useAuthStore()
+  const { isAuthenticated, user, logout, academyData, currentAcademy } =
+    useAuthStore()
   const navigate = useNavigate()
 
   const handleLogout = async () => {
@@ -95,17 +90,17 @@ function UserMenu() {
   const handleDashboardClick = () => {
     // Si hay una academia actual, ir a su dashboard
     if (currentAcademy?.slug) {
-      navigate({ 
+      navigate({
         to: '/academy/$academySlug/dashboard',
-        params: { academySlug: currentAcademy.slug }
+        params: { academySlug: currentAcademy.slug },
       })
-    } 
+    }
     // Si no hay academia actual pero tiene academias, ir a la primera
     else if (academyData?.academies && academyData.academies.length > 0) {
       const firstAcademy = academyData.academies[0]
-      navigate({ 
+      navigate({
         to: '/academy/$academySlug/dashboard',
-        params: { academySlug: firstAcademy.slug }
+        params: { academySlug: firstAcademy.slug },
       })
     }
     // Si no tiene academias, ir a la selección de academias
@@ -143,7 +138,10 @@ function UserMenu() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleDashboardClick} className='cursor-pointer'>
+          <DropdownMenuItem
+            onClick={handleDashboardClick}
+            className='cursor-pointer'
+          >
             <LayoutDashboard className='mr-2 h-4 w-4' />
             Dashboard
           </DropdownMenuItem>

@@ -1,37 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api-client'
+import type { GeneralStatistics, AcademyStatistics, TrendingStatistics } from '@/types'
 
-// Tipos para las estadísticas generales
-export interface GeneralStatistics {
-  total_academies: number
-  total_students: number
-  total_categories: number
-  total_courses: number
-}
+// Re-export types for backward compatibility
+export type { GeneralStatistics, AcademyStatistics, TrendingStatistics }
 
-// Tipos para estadísticas detalladas de academias
-export interface AcademyStatistics {
-  total: number
-  by_category: Array<{
-    name: string
-    count: number
-  }>
-  most_popular: Array<{
-    id: number
-    name: string
-    slug: string
-    students_count: number
-  }>
-  newest: Array<{
-    id: number
-    name: string
-    slug: string
-    created_at: string
-  }>
-}
-
-// Tipos para contenido trending
-export interface TrendingStatistics {
+// Local interface for extended academy statistics
+interface ExtendedAcademyStatistics {
   academies: Array<{
     id: number
     name: string

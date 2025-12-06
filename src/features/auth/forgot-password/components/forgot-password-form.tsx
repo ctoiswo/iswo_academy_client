@@ -5,7 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { authApi } from '@/services'
 import { ArrowRight, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { getErrorMessage } from '@/lib/api-client'
+import { isApiError } from '@/lib/api-client'
+import {
+  getErrorMessage,
+  getValidationDetails,
+  isValidationError,
+} from '@/lib/error-handler'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -46,17 +51,17 @@ export function ForgotPasswordForm({
       setIsSuccess(true)
       form.reset()
       toast.success(response.message)
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage = getErrorMessage(error)
       toast.error(errorMessage)
 
-      // Handle specific validation errors
-      if (error?.type === 'ValidationError' && error?.details) {
-        error.details.forEach((detail: string) => {
-          if (detail.toLowerCase().includes('email')) {
-            form.setError('email', { message: detail })
-          }
-        })
+      // Si es error de validación, asignar mensajes a campos específicos
+      if (isApiError(error) && isValidationError(error)) {
+        const validationDetails = getValidationDetails(error)
+
+        if (validationDetails.email) {
+          form.setError('email', { message: validationDetails.email })
+        }
       }
     } finally {
       setIsLoading(false)

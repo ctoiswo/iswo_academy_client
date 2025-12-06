@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { academyCategoryService, type AcademyCategory } from '@/services/academy-category-service'
+import { academyCategoryService } from '@/services/academy-category-service'
 import { useDebounce } from './use-debounce'
+import type { AcademyCategory, CategoryWithCount } from '@/types'
 
 interface UseCategoriesOptions {
   search?: string
@@ -10,13 +11,8 @@ interface UseCategoriesOptions {
   minAcademies?: number
 }
 
-// Extended interface with computed count
-interface AcademyCategoryWithCount extends AcademyCategory {
-  academies_count: number
-}
-
 export function useCategories(options?: UseCategoriesOptions) {
-  const [categories, setCategories] = useState<AcademyCategoryWithCount[]>([])
+  const [categories, setCategories] = useState<CategoryWithCount[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

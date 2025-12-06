@@ -13,7 +13,7 @@ export {
   tokenManager,
   setAuthStore,
   isApiError,
-  getErrorMessage
+  getErrorMessage // @deprecated Use getErrorMessage from lib/error-handler.ts
 } from './api-client-base'
 
 // Re-exportar tipos útiles

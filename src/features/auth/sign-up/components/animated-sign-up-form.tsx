@@ -1,13 +1,18 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
+import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import { IconFacebook, IconGithub } from '@/assets/brand-icons'
 import { useAuthStore } from '@/stores/auth-store'
-import { getErrorMessage, isApiError } from '@/lib/api-client'
+import { isApiError } from '@/lib/api-client'
+import {
+  getErrorMessage,
+  getValidationDetails,
+  isValidationError,
+} from '@/lib/error-handler'
 import { cn } from '@/lib/utils'
 import { CustomButton } from '@/components/ui/custom-button'
 import {
@@ -81,14 +86,14 @@ export function AnimatedSignUpForm({
       opacity: 1,
       transition: {
         duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   }
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
   }
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
@@ -104,60 +109,33 @@ export function AnimatedSignUpForm({
       })
 
       form.reset()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Registration error:', error)
 
-      // Handle different types of errors
-      if (isApiError(error)) {
-        // Handle validation errors
-        if (error.type === 'ValidationError' && error.details) {
-          // Set field-specific errors if available
-          error.details.forEach((detail: string) => {
-            // Translate common validation messages to Spanish
-            let translatedDetail = detail
-            if (detail.includes('Email has already been taken')) {
-              translatedDetail = 'Este correo electrónico ya está registrado'
-              toast.error('Error en el registro', {
-                description: translatedDetail,
-              })
-            } else if (detail.includes('Email')) {
-              translatedDetail = detail.replace('Email', 'Correo electrónico')
-            } else if (detail.includes('Password')) {
-              translatedDetail = detail.replace('Password', 'Contraseña')
-            } else if (detail.includes('First name')) {
-              translatedDetail = detail.replace('First name', 'Nombre')
-            } else if (detail.includes('Last name')) {
-              translatedDetail = detail.replace('Last name', 'Apellido')
-            }
+      // Usar error handler centralizado
+      const errorMessage = getErrorMessage(error)
 
-            // Set the error on the specific field
-            if (detail.toLowerCase().includes('email')) {
-              form.setError('email', { message: translatedDetail })
-            } else if (detail.toLowerCase().includes('password')) {
-              form.setError('password', { message: translatedDetail })
-            } else if (
-              detail.toLowerCase().includes('first name') ||
-              detail.toLowerCase().includes('first_name')
-            ) {
-              form.setError('first_name', { message: translatedDetail })
-            } else if (
-              detail.toLowerCase().includes('last name') ||
-              detail.toLowerCase().includes('last_name')
-            ) {
-              form.setError('last_name', { message: translatedDetail })
-            }
-          })
-        } else {
-          // Show general error message
-          toast.error('Error en el registro', {
-            description: getErrorMessage(error),
-          })
-        }
-      } else {
-        // Handle unexpected errors
-        toast.error('Error en el registro', {
-          description:
-            'Ocurrió un error inesperado. Por favor intenta de nuevo.',
+      toast.error('Error en el registro', {
+        description: errorMessage,
+      })
+
+      // Si es error de validación, asignar mensajes a campos específicos
+      if (isApiError(error) && isValidationError(error)) {
+        const validationDetails = getValidationDetails(error)
+
+        // Asignar errores a los campos correspondientes
+        Object.entries(validationDetails).forEach(([field, message]) => {
+          if (
+            field === 'email' ||
+            field === 'password' ||
+            field === 'first_name' ||
+            field === 'last_name'
+          ) {
+            form.setError(
+              field as 'email' | 'password' | 'first_name' | 'last_name',
+              { message }
+            )
+          }
         })
       }
     } finally {
@@ -169,180 +147,196 @@ export function AnimatedSignUpForm({
     <Form {...form}>
       <motion.div
         variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="w-full"
+        initial='hidden'
+        animate='visible'
+        className='w-full'
       >
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className={cn('grid gap-4', className)}
           {...props}
         >
-        <motion.div className='grid grid-cols-2 gap-3' variants={itemVariants}>
-          <FormField
-            control={form.control}
-            name='first_name'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">Nombre</FormLabel>
-                <FormControl>
-                  <motion.div
-                    whileFocus={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Input 
-                      placeholder='Juan' 
-                      className="transition-all duration-200 focus:ring-2 focus:ring-blue-500/20 text-black" 
-                      {...field} 
-                    />
-                  </motion.div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='last_name'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">Apellido</FormLabel>
-                <FormControl>
-                  <motion.div
-                    whileFocus={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Input 
-                      placeholder='Pérez' 
-                      className="transition-all duration-200 focus:ring-2 focus:ring-blue-500/20 text-black" 
-                      {...field} 
-                    />
-                  </motion.div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </motion.div>
-
-        <motion.div variants={itemVariants}>
-          <FormField
-            control={form.control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">Correo electrónico</FormLabel>
-                <FormControl>
-                  <motion.div
-                    whileFocus={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Input
-                      placeholder='nombre@ejemplo.com'
-                      type='email'
-                      className="transition-all duration-200 focus:ring-2 focus:ring-blue-500/20 text-black"
-                      {...field}
-                    />
-                  </motion.div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </motion.div>
-
-        <motion.div variants={itemVariants}>
-          <FormField
-            control={form.control}
-            name='password'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">Contraseña</FormLabel>
-                <FormControl>
-                  <motion.div
-                    whileFocus={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <PasswordInput 
-                      placeholder='********' 
-                      className="transition-all duration-200 focus:ring-2 focus:ring-blue-500/20 text-black"
-                      {...field} 
-                    />
-                  </motion.div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </motion.div>
-
-        <motion.div variants={itemVariants}>
-          <FormField
-            control={form.control}
-            name='password_confirmation'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-medium text-gray-700">Confirmar contraseña</FormLabel>
-                <FormControl>
-                  <motion.div
-                    whileFocus={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <PasswordInput 
-                      placeholder='********' 
-                      className="transition-all duration-200 focus:ring-2 focus:ring-blue-500/20 text-black"
-                      {...field} 
-                    />
-                  </motion.div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </motion.div>
-
-        <motion.div variants={itemVariants}>
-          <CustomButton
-            className='w-full mt-3'
-            variant='primary'
-            isLoading={isLoading}
-            disabled={isLoading}
-            type='submit'
+          <motion.div
+            className='grid grid-cols-2 gap-3'
+            variants={itemVariants}
           >
-            {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
-          </CustomButton>
-        </motion.div>
+            <FormField
+              control={form.control}
+              name='first_name'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-sm font-medium text-gray-700'>
+                    Nombre
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Input
+                        placeholder='Juan'
+                        className='text-black transition-all duration-200 focus:ring-2 focus:ring-blue-500/20'
+                        {...field}
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='last_name'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-sm font-medium text-gray-700'>
+                    Apellido
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Input
+                        placeholder='Pérez'
+                        className='text-black transition-all duration-200 focus:ring-2 focus:ring-blue-500/20'
+                        {...field}
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
 
-        <motion.div className='relative my-3' variants={itemVariants}>
-          <div className='absolute inset-0 flex items-center'>
-            <span className='w-full border-t border-gray-200' />
-          </div>
-          <div className='relative flex justify-center text-xs uppercase'>
-            <span className='bg-white text-gray-500 px-3 font-medium'>
-              O continúa con
-            </span>
-          </div>
-        </motion.div>
+          <motion.div variants={itemVariants}>
+            <FormField
+              control={form.control}
+              name='email'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-sm font-medium text-gray-700'>
+                    Correo electrónico
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Input
+                        placeholder='nombre@ejemplo.com'
+                        type='email'
+                        className='text-black transition-all duration-200 focus:ring-2 focus:ring-blue-500/20'
+                        {...field}
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
 
-        <motion.div className='grid grid-cols-2 gap-3' variants={itemVariants}>
-          <CustomButton
-            variant='outline'
-            className='w-full'
-            type='button'
-            disabled={isLoading}
+          <motion.div variants={itemVariants}>
+            <FormField
+              control={form.control}
+              name='password'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-sm font-medium text-gray-700'>
+                    Contraseña
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <PasswordInput
+                        placeholder='********'
+                        className='text-black transition-all duration-200 focus:ring-2 focus:ring-blue-500/20'
+                        {...field}
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <FormField
+              control={form.control}
+              name='password_confirmation'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-sm font-medium text-gray-700'>
+                    Confirmar contraseña
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <PasswordInput
+                        placeholder='********'
+                        className='text-black transition-all duration-200 focus:ring-2 focus:ring-blue-500/20'
+                        {...field}
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <CustomButton
+              className='mt-3 w-full'
+              variant='primary'
+              isLoading={isLoading}
+              disabled={isLoading}
+              type='submit'
+            >
+              {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
+            </CustomButton>
+          </motion.div>
+
+          <motion.div className='relative my-3' variants={itemVariants}>
+            <div className='absolute inset-0 flex items-center'>
+              <span className='w-full border-t border-gray-200' />
+            </div>
+            <div className='relative flex justify-center text-xs uppercase'>
+              <span className='bg-white px-3 font-medium text-gray-500'>
+                O continúa con
+              </span>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className='grid grid-cols-2 gap-3'
+            variants={itemVariants}
           >
-            <IconGithub className='h-4 w-4 mr-2' /> GitHub
-          </CustomButton>
-          
-          <CustomButton
-            variant='outline'
-            className='w-full'
-            type='button'
-            disabled={isLoading}
-          >
-            <IconFacebook className='h-4 w-4 mr-2' /> Facebook
-          </CustomButton>
-        </motion.div>
+            <CustomButton
+              variant='outline'
+              className='w-full'
+              type='button'
+              disabled={isLoading}
+            >
+              <IconGithub className='mr-2 h-4 w-4' /> GitHub
+            </CustomButton>
+
+            <CustomButton
+              variant='outline'
+              className='w-full'
+              type='button'
+              disabled={isLoading}
+            >
+              <IconFacebook className='mr-2 h-4 w-4' /> Facebook
+            </CustomButton>
+          </motion.div>
         </form>
       </motion.div>
     </Form>

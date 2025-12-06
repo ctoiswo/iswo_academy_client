@@ -1,0 +1,5 @@
+export { PageHeader } from './page-header'
+export { PageFooter } from './page-footer'
+export { AcademyHero } from './academy-hero'
+export { AcademyInfo } from './academy-info'
+export { CoursesSection } from './courses-section'

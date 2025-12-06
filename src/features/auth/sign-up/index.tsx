@@ -95,7 +95,7 @@ export function SignUp() {
                 >
                   <Link 
                     to='/sign-in'
-                    className='font-medium text-secondary hover:text-secondary/80 underline underline-offset-4 transition-colors'
+                    className='font-medium text-blue-800 hover:text-blue-800/80 underline underline-offset-4 transition-colors'
                   >
                     Inicia sesión
                   </Link>

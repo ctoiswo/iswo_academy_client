@@ -7,7 +7,13 @@ import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
 import { IconFacebook, IconGithub } from '@/assets/brand-icons'
 import { useAuthStore, type LoginCredentials } from '@/stores/auth-store'
-import { getErrorMessage, isApiError } from '@/lib/api-client'
+import { isApiError } from '@/lib/api-client'
+import {
+  getErrorMessage,
+  getValidationDetails,
+  isValidationError,
+  shouldLogout,
+} from '@/lib/error-handler'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -43,7 +49,7 @@ export function UserAuthForm({
 }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  const { login, error, setError } = useAuthStore()
+  const { login, logout, error, setError } = useAuthStore()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -76,58 +82,30 @@ export function UserAuthForm({
         const targetPath = redirectTo || '/academies'
         navigate({ to: targetPath, replace: true })
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Login error:', error)
 
-      let errorMessage = 'Error al iniciar sesión. Por favor intenta de nuevo.'
-
-      if (isApiError(error)) {
-        switch (error.code) {
-          case 'INVALID_CREDENTIALS':
-            errorMessage =
-              'Correo electrónico o contraseña incorrectos. Por favor verifica tus credenciales e intenta de nuevo.'
-            break
-          case 'ACCOUNT_NOT_CONFIRMED':
-            errorMessage =
-              'Por favor revisa tu correo electrónico y confirma tu cuenta antes de iniciar sesión.'
-            break
-          case 'ACCOUNT_LOCKED':
-            errorMessage =
-              'Tu cuenta ha sido bloqueada. Por favor contacta a soporte.'
-            break
-          case 'VALIDATION_ERROR':
-            errorMessage = getErrorMessage(error)
-            break
-          case 'RATE_LIMIT_EXCEEDED':
-            errorMessage =
-              'Demasiados intentos de inicio de sesión. Por favor intenta más tarde.'
-            break
-          case 'NETWORK_ERROR':
-            errorMessage =
-              'Falló la conexión de red. Por favor verifica tu conexión a internet.'
-            break
-          default:
-            errorMessage = getErrorMessage(error)
-        }
-      } else if (error.message) {
-        errorMessage = error.message
-      }
+      // Usar el error handler centralizado
+      const errorMessage = getErrorMessage(error)
 
       toast.error(errorMessage)
+      setError(errorMessage)
 
-      // Set specific field errors if validation failed
-      if (
-        isApiError(error) &&
-        error.code === 'VALIDATION_ERROR' &&
-        error.details
-      ) {
-        error.details.forEach((detail: string) => {
-          if (detail.toLowerCase().includes('email')) {
-            form.setError('email', { message: detail })
-          } else if (detail.toLowerCase().includes('password')) {
-            form.setError('password', { message: detail })
+      // Si es error de validación, asignar mensajes a campos específicos
+      if (isApiError(error) && isValidationError(error)) {
+        const validationDetails = getValidationDetails(error)
+
+        // Asignar errores a los campos correspondientes
+        Object.entries(validationDetails).forEach(([field, message]) => {
+          if (field === 'email' || field === 'password') {
+            form.setError(field, { message })
           }
         })
+      }
+
+      // Si el error requiere logout, cerrar sesión
+      if (shouldLogout(error)) {
+        logout()
       }
     } finally {
       setIsLoading(false)
@@ -154,7 +132,11 @@ export function UserAuthForm({
             <FormItem>
               <FormLabel className='text-black'>Correo electrónico</FormLabel>
               <FormControl>
-                <Input className='text-black' placeholder='nombre@ejemplo.com' {...field} />
+                <Input
+                  className='text-black'
+                  placeholder='nombre@ejemplo.com'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -167,12 +149,16 @@ export function UserAuthForm({
             <FormItem className='relative'>
               <FormLabel className='text-black'>Contraseña</FormLabel>
               <FormControl>
-                <PasswordInput className='text-black' placeholder='********' {...field} />
+                <PasswordInput
+                  className='text-black'
+                  placeholder='********'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
               <Link
                 to='/forgot-password'
-                className='text-muted-foreground absolute end-0 -top-0.5 text-sm font-medium hover:opacity-75'
+                className='text-muted-foreground absolute -top-0.5 end-0 text-sm font-medium hover:opacity-75'
               >
                 ¿Olvidaste tu contraseña?
               </Link>
@@ -189,17 +175,25 @@ export function UserAuthForm({
             <span className='w-full border-t' />
           </div>
           <div className='relative flex justify-center text-xs uppercase'>
-            <span className='px-2 text-black'>
-              O continúa con
-            </span>
+            <span className='px-2 text-black'>O continúa con</span>
           </div>
         </div>
 
         <div className='grid grid-cols-2 gap-2'>
-          <Button variant='default' type='button' disabled={isLoading} className='bg-background text-white'>
+          <Button
+            variant='default'
+            type='button'
+            disabled={isLoading}
+            className='bg-background text-white'
+          >
             <IconGithub className='h-4 w-4' /> GitHub
           </Button>
-          <Button variant='default' type='button' disabled={isLoading} className='bg-background text-white'>
+          <Button
+            variant='default'
+            type='button'
+            disabled={isLoading}
+            className='bg-background text-white'
+          >
             <IconFacebook className='h-4 w-4' /> Facebook
           </Button>
         </div>

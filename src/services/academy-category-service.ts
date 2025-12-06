@@ -1,8 +1,10 @@
 import apiClient from '@/lib/api-client'
 import type { ViewMode } from '@/lib/api-view-modes'
 import { withView } from '@/lib/api-view-modes'
+import type { AcademyCategory } from '@/types'
 
-// TypeScript interfaces for Academy Categories
+// Re-export type for backward compatibility
+export type { AcademyCategory }
 
 // Minimal view - only essential fields
 export interface AcademyCategoryMinimal {
@@ -14,19 +16,6 @@ export interface AcademyCategoryMinimal {
 // Summary view - key fields without full relations
 export interface AcademyCategorySummary extends AcademyCategoryMinimal {
   description: string
-}
-
-// Full view - all fields including relations
-export interface AcademyCategory extends AcademyCategorySummary {
-  academies_count: number
-  academies?: Array<{
-    id: number
-    name: string
-    slug: string
-    monthly_price: string
-  }>
-  created_at: string
-  updated_at: string
 }
 
 export interface CreateAcademyCategoryData {
