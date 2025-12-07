@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import {
-  accessCodeService,
-  type CreateAccessCodeData,
-  type UpdateAccessCodeData,
-  type RedeemAccessCodeData
-} from '@/services/access-code-service'
+import { accessCodeService } from '@/services/access-code-service'
+import type {
+  CreateAccessCodeRequest,
+  UpdateAccessCodeRequest,
+  RedeemAccessCodeRequest
+} from '@/types'
 
 export function useAccessCodes(courseId: number | string) {
   return useQuery({
@@ -28,7 +28,7 @@ export function useCreateAccessCode(courseId: number | string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: CreateAccessCodeData) =>
+    mutationFn: (data: CreateAccessCodeRequest) =>
       accessCodeService.createAccessCode(courseId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['access_codes', courseId] })
@@ -44,7 +44,7 @@ export function useUpdateAccessCode(courseId: number | string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ accessCodeId, data }: { accessCodeId: number; data: UpdateAccessCodeData }) =>
+    mutationFn: ({ accessCodeId, data }: { accessCodeId: number; data: UpdateAccessCodeRequest }) =>
       accessCodeService.updateAccessCode(courseId, accessCodeId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['access_codes', courseId] })
@@ -90,7 +90,7 @@ export function useToggleAccessCodeStatus(courseId: number | string) {
 
 export function useRedeemAccessCode() {
   return useMutation({
-    mutationFn: (data: RedeemAccessCodeData) =>
+    mutationFn: (data: RedeemAccessCodeRequest) =>
       accessCodeService.redeemAccessCode(data),
     onSuccess: (response) => {
       toast.success(response.message)

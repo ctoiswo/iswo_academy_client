@@ -1,4 +1,5 @@
 import apiClient from '@/lib/api-client'
+import type { AddCourseToPathRequest, ReorderCoursesRequest } from '@/types'
 
 /**
  * Learning Path Courses Service
@@ -10,15 +11,15 @@ class LearningPathCoursesService {
    * @param academySlug - Academy slug
    * @param learningPathSlug - Learning path slug
    * @param courseId - Course ID to add
+   * @returns Promise that resolves when course is added
    */
   async addCourse(academySlug: string, learningPathSlug: string, courseId: number): Promise<void> {
     console.log('Adding course:', courseId, 'to learning path:', learningPathSlug)
-    const response = await apiClient.post(
+    const data: AddCourseToPathRequest = { course_id: courseId }
+    await apiClient.post(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}/courses`,
-      { course_id: courseId }
+      data
     )
-    console.log('Add course response:', response.data)
-    return response.data
   }
 
   /**
@@ -26,14 +27,13 @@ class LearningPathCoursesService {
    * @param academySlug - Academy slug
    * @param learningPathSlug - Learning path slug
    * @param courseId - Course ID to remove
+   * @returns Promise that resolves when course is removed
    */
   async removeCourse(academySlug: string, learningPathSlug: string, courseId: number): Promise<void> {
     console.log('Removing course:', courseId, 'from learning path:', learningPathSlug)
-    const response = await apiClient.delete(
+    await apiClient.delete(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}/courses/${courseId}`
     )
-    console.log('Remove course response:', response.data)
-    return response.data
   }
 
   /**
@@ -41,6 +41,7 @@ class LearningPathCoursesService {
    * @param academySlug - Academy slug
    * @param learningPathSlug - Learning path slug
    * @param orderedIds - Array of course IDs in new order
+   * @returns Promise that resolves when courses are reordered
    */
   async reorderCourses(
     academySlug: string,
@@ -48,15 +49,17 @@ class LearningPathCoursesService {
     orderedIds: number[]
   ): Promise<void> {
     console.log('Reordering courses for learning path:', learningPathSlug, 'with order:', orderedIds)
-    const response = await apiClient.patch(
+    const data: ReorderCoursesRequest = { ordered_ids: orderedIds }
+    await apiClient.patch(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}/courses/reorder`,
-      { ordered_ids: orderedIds }
+      data
     )
-    console.log('Reorder courses response:', response.data)
-    return response.data
   }
 }
 
+// Export singleton instance
 const learningPathCoursesService = new LearningPathCoursesService()
 export default learningPathCoursesService
-export { learningPathCoursesService as learningPathCoursesApi }
+
+// Also export as named export
+export { learningPathCoursesService }

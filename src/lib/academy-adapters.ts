@@ -1,4 +1,4 @@
-import type { AcademyCategory } from '@/services/academy-category-service'
+import type { AcademyCategory } from '@/types'
 
 // Interfaz esperada por CategoryCarousel y PublicAcademyCard
 export interface AcademyCardData {

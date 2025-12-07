@@ -1,49 +1,31 @@
 import apiClient from '@/lib/api-client'
-import type { FeaturedCourse } from './course-service'
+import type { 
+  Academy,
+  AcademyMinimal,
+  AcademySummaryLight,
+  AcademySummary,
+  AcademyFull,
+  AcademyCategory,
+  PaginationMeta,
+  CreateAcademyRequest,
+  UpdateAcademyRequest,
+  ApiViewMode
+} from '@/types'
 
-// TypeScript interfaces for Academies
-export interface FeaturedAcademy {
-  id: number
-  name: string
-  description: string
-  slug: string
-  logo_url: string | null
-  banner_url?: string | null
-  monthly_price: string
-  subscription_required: boolean
-  creator: {
-    id: number
-    name: string
-    email?: string
-  } | null
-  academy_category?: {
-    id: number
-    name: string
-    slug: string
-  } | null
-  enrolled_users_count: number
-  courses_count: number
-  courses?: FeaturedCourse[]
-  // Legacy fields for backwards compatibility
-  student_count?: number
-  course_count?: number
-}
-
-export interface AcademyCategory {
-  id: number
-  name: string
-  description: string
-  slug: string
-}
-
+// Response types for specific endpoints
 export interface FeaturedAcademiesByCategory {
   category: AcademyCategory
-  academies: FeaturedAcademy[]
+  academies: AcademySummary[] // Featured academies use summary view (with courses)
+}
+
+export interface UserAcademiesResponse {
+  count: number
+  academies: AcademySummaryLight[] // User academies use summary_light (without courses array)
 }
 
 /**
  * Academy Service
- * Handles all academy-related API calls
+ * Handles all academy-related API calls with view mode support
  */
 class AcademyService {
   /**
@@ -53,21 +35,28 @@ class AcademyService {
    */
   async getFeaturedAcademies(categoryId?: number): Promise<FeaturedAcademiesByCategory[]> {
     const params = categoryId ? { academy_category_id: categoryId } : {}
-    console.log('AcademyService.getFeaturedAcademies called with:', { categoryId, params })
     const response = await apiClient.get('/academies/featured', { params })
-    console.log('AcademyService.getFeaturedAcademies response:', response.data)
     return response.data
   }
 
   /**
    * Get a single academy by slug
    * @param slug - Academy slug
-   * @returns Promise with academy details
+   * @param view - View mode: 'minimal' | 'summary' | 'summary_light' | 'full' (default: 'summary')
+   * @returns Promise with academy details typed according to view
    */
-  async getAcademyBySlug(slug: string): Promise<FeaturedAcademy> {
-    console.log('AcademyService.getAcademyBySlug called with:', slug)
-    const response = await apiClient.get(`/academies/${slug}`)
-    console.log('AcademyService.getAcademyBySlug response:', response.data)
+  async getAcademyBySlug<TView extends ApiViewMode | 'summary_light' = 'summary'>(
+    slug: string,
+    view?: TView
+  ): Promise<
+    TView extends 'minimal' ? AcademyMinimal :
+    TView extends 'summary_light' ? AcademySummaryLight :
+    TView extends 'summary' ? AcademySummary :
+    TView extends 'full' ? AcademyFull :
+    AcademySummary
+  > {
+    const params = view ? { view } : {}
+    const response = await apiClient.get(`/academies/${slug}`, { params })
     return response.data
   }
 
@@ -75,28 +64,40 @@ class AcademyService {
    * Get current user's academies (requires authentication)
    * @returns Promise with user's academy memberships
    */
-  async getUserAcademies(): Promise<{ count: number; academies: any[] }> {
-    console.log('AcademyService.getUserAcademies called')
+  async getUserAcademies(): Promise<UserAcademiesResponse> {
     const response = await apiClient.get('/users/me/academies')
-    console.log('AcademyService.getUserAcademies response:', response.data)
     return response.data
   }
 
   /**
-   * Get all academies (Super Admin only)
-   * @param params - Optional query parameters (search, page, per_page, gamification)
-   * @returns Promise with paginated academies data
+   * Get all academies
+   * @param params - Query parameters (search, page, per_page, gamification, view)
+   * @param view - View mode: 'minimal' | 'summary_light' | 'summary' | 'full' (default: 'summary_light')
+   * @returns Promise with paginated academies data typed according to view
    */
-  async getAcademies(params?: { search?: string; page?: number; per_page?: number; gamification?: string }): Promise<{
-    data: FeaturedAcademy[]
-    meta: {
-      current_page: number
-      total_pages: number
-      total_count: number
-      per_page: number
-    }
+  async getAcademies<TView extends ApiViewMode | 'summary_light' = 'summary_light'>(
+    params?: { 
+      search?: string
+      page?: number
+      per_page?: number
+      gamification?: string
+    },
+    view?: TView
+  ): Promise<{
+    data: (
+      TView extends 'minimal' ? AcademyMinimal :
+      TView extends 'summary_light' ? AcademySummaryLight :
+      TView extends 'summary' ? AcademySummary :
+      TView extends 'full' ? AcademyFull :
+      AcademySummaryLight
+    )[]
+    meta: PaginationMeta
   }> {
-    const response = await apiClient.get('/academies', { params })
+    const queryParams = {
+      ...params,
+      ...(view && { view })
+    }
+    const response = await apiClient.get('/academies', { params: queryParams })
     return {
       data: Array.isArray(response.data) ? response.data : response.data.data || [],
       meta: response.data.meta || {
@@ -106,6 +107,41 @@ class AcademyService {
         per_page: params?.per_page || 15
       }
     }
+  }
+
+  /**
+   * Create a new academy (requires admin)
+   * @param data - Academy data
+   * @returns Promise with created academy
+   */
+  async createAcademy(data: CreateAcademyRequest): Promise<Academy> {
+    const response = await apiClient.post('/academies', {
+      academy: data
+    })
+    return response.data
+  }
+
+  /**
+   * Update an academy (requires admin)
+   * @param id - Academy ID
+   * @param data - Updated academy data
+   * @returns Promise with updated academy
+   */
+  async updateAcademy(id: number, data: UpdateAcademyRequest): Promise<Academy> {
+    const response = await apiClient.patch(`/academies/${id}`, {
+      academy: data
+    })
+    return response.data
+  }
+
+  /**
+   * Delete an academy (requires admin)
+   * @param id - Academy ID
+   * @returns Promise with success message
+   */
+  async deleteAcademy(id: number): Promise<{ message: string }> {
+    const response = await apiClient.delete(`/academies/${id}`)
+    return response.data
   }
 }
 

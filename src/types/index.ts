@@ -17,10 +17,21 @@ export * from './entities/assessment'
 export * from './entities/wishlist'
 export * from './entities/badge'
 export * from './entities/statistics'
+export * from './entities/access-code'
+export * from './entities/certificate'
+export * from './entities/enrollment'
+export * from './entities/gamification'
+export * from './entities/learning-path-enrollment'
+export * from './entities/learning-path'
+export * from './entities/user-profile'
+export * from './entities/student-assignment'
+export * from './entities/super-admin-gamification'
 
 // API types
 export * from './api/responses'
+export * from './api/requests'
 export * from './api/search'
+export * from './api/filters'
 
 // UI types
 export * from './ui/forms'

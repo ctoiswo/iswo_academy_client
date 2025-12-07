@@ -1,91 +1,46 @@
-import { apiClient } from '@/lib/api-client'
+import apiClient from '@/lib/api-client'
+import type {
+  CertificateTemplate,
+  CreateCertificateTemplateRequest,
+  UpdateCertificateTemplateRequest
+} from '@/types'
 
-export interface CertificateTemplate {
-  id: number
-  academy_id: number
-  name: string
-  description: string | null
-  is_default: boolean
-  is_active: boolean
-  usage_count: number
-  design: {
-    layout: 'portrait' | 'landscape'
-    background_color: string
-    border_style: 'classic' | 'minimal' | 'modern' | 'none'
-    font_family: string
-    logo_position: 'top-left' | 'top-center' | 'top-right'
-    signature_count: number
-  }
-  content: {
-    title: string
-    subtitle: string
-    body: string
-    footer: string
-    signatures: Array<{
-      title: string
-      name_placeholder: string
-    }>
-  }
-  requirements: {
-    lessons_completion?: number
-    minimum_score?: number
-  }
-  background_image_url?: string
-  logo_url?: string
-  created_at: string
-  updated_at: string
-}
-
-export interface CreateCertificateTemplateData {
-  name: string
-  description?: string
-  is_default?: boolean
-  design: {
-    layout: 'portrait' | 'landscape'
-    background_color: string
-    border_style: string
-    font_family: string
-    logo_position: string
-    signature_count: number
-  }
-  content: {
-    title: string
-    subtitle: string
-    body: string
-    footer: string
-    signatures: Array<{
-      title: string
-      name_placeholder: string
-    }>
-  }
-  requirements?: {
-    lessons_completion?: number
-    minimum_score?: number
-  }
-  background_image?: File
-  logo?: File
-}
-
-export interface UpdateCertificateTemplateData extends Partial<CreateCertificateTemplateData> {}
-
-const certificateTemplateService = {
-  // Get all templates for an academy
-  getAcademyTemplates: async (academySlug: string): Promise<CertificateTemplate[]> => {
+/**
+ * Certificate Template Service
+ * Handles all certificate template-related API calls
+ */
+class CertificateTemplateService {
+  /**
+   * Get all templates for an academy
+   * @param academySlug - Academy slug
+   * @returns Promise with array of certificate templates
+   */
+  async getAcademyTemplates(academySlug: string): Promise<CertificateTemplate[]> {
     const response = await apiClient.get(`/academies/${academySlug}/certificate_templates`)
     return response.data.data || response.data.certificate_templates || []
-  },
+  }
 
-  // Get single template
-  getTemplate: async (academySlug: string, templateId: number): Promise<CertificateTemplate> => {
+  /**
+   * Get a single template
+   * @param academySlug - Academy slug
+   * @param templateId - Template ID
+   * @returns Promise with certificate template details
+   */
+  async getTemplate(academySlug: string, templateId: number): Promise<CertificateTemplate> {
     const response = await apiClient.get(`/academies/${academySlug}/certificate_templates/${templateId}`)
     return response.data.data || response.data.certificate_template
-  },
+  }
 
-  // Create template
-  createTemplate: async (
+  /**
+   * Create a new certificate template
+   * @param academySlug - Academy slug
+   * @param data - Template data (with optional files)
+   * @returns Promise with created template
+   */
+  async createTemplate(
     academySlug: string,
-    data: CreateCertificateTemplateData
-  ): Promise<CertificateTemplate> => {
+    data: CreateCertificateTemplateRequest
+  ): Promise<CertificateTemplate> {
     const formData = new FormData()
     
     formData.append('certificate_template[name]', data.name)
@@ -123,14 +78,20 @@ const certificateTemplateService = {
       }
     )
     return response.data.data || response.data.certificate_template
-  },
+  }
 
-  // Update template
-  updateTemplate: async (
+  /**
+   * Update an existing certificate template
+   * @param academySlug - Academy slug
+   * @param templateId - Template ID
+   * @param data - Updated template data (with optional files)
+   * @returns Promise with updated template
+   */
+  async updateTemplate(
     academySlug: string,
     templateId: number,
-    data: UpdateCertificateTemplateData
-  ): Promise<CertificateTemplate> => {
+    data: UpdateCertificateTemplateRequest
+  ): Promise<CertificateTemplate> {
     const formData = new FormData()
     
     if (data.name) formData.append('certificate_template[name]', data.name)
@@ -168,28 +129,48 @@ const certificateTemplateService = {
       }
     )
     return response.data.data || response.data.certificate_template
-  },
+  }
 
-  // Delete template
-  deleteTemplate: async (academySlug: string, templateId: number): Promise<void> => {
+  /**
+   * Delete a certificate template
+   * @param academySlug - Academy slug
+   * @param templateId - Template ID
+   * @returns Promise that resolves when template is deleted
+   */
+  async deleteTemplate(academySlug: string, templateId: number): Promise<void> {
     await apiClient.delete(`/academies/${academySlug}/certificate_templates/${templateId}`)
-  },
+  }
 
-  // Set as default
-  setAsDefault: async (academySlug: string, templateId: number): Promise<CertificateTemplate> => {
+  /**
+   * Set a template as the default for the academy
+   * @param academySlug - Academy slug
+   * @param templateId - Template ID
+   * @returns Promise with updated template
+   */
+  async setAsDefault(academySlug: string, templateId: number): Promise<CertificateTemplate> {
     const response = await apiClient.post(
       `/academies/${academySlug}/certificate_templates/${templateId}/set_default`
     )
     return response.data.data || response.data.certificate_template
-  },
+  }
 
-  // Get preview
-  getPreview: async (academySlug: string, templateId: number): Promise<{ html: string }> => {
+  /**
+   * Get HTML preview of a template
+   * @param academySlug - Academy slug
+   * @param templateId - Template ID
+   * @returns Promise with HTML preview
+   */
+  async getPreview(academySlug: string, templateId: number): Promise<{ html: string }> {
     const response = await apiClient.get(
       `/academies/${academySlug}/certificate_templates/${templateId}/preview`
     )
     return response.data
-  },
+  }
 }
 
+// Export singleton instance
+const certificateTemplateService = new CertificateTemplateService()
 export default certificateTemplateService
+
+// Also export as named export
+export { certificateTemplateService }

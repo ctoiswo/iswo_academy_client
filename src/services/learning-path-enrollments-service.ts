@@ -1,55 +1,26 @@
 import apiClient from '@/lib/api-client'
+import type {
+  LearningPathEnrollment,
+  LearningPathEnrollmentsResponse,
+  LearningPathEnrollmentFilters
+} from '@/types'
 
-export interface LearningPathEnrollment {
-  id: number
-  user_id: number
-  learning_path_id: number
-  status: string
-  progress_percentage: number
-  enrolled_at: string
-  completed_at: string | null
-  user: {
-    id: number
-    name: string
-    email: string
-    avatar_url: string | null
-  }
-  completed_courses: number
-  total_courses: number
-  remaining_courses: number
-  next_course: {
-    id: number
-    title: string
-    slug: string
-    difficulty_level: string
-  } | null
-}
-
-export interface LearningPathEnrollmentsResponse {
-  data: LearningPathEnrollment[]
-  meta?: {
-    current_page: number
-    total_pages: number
-    total_count: number
-    per_page: number
-  }
-}
-
-export interface EnrollmentFilters {
-  status?: string
-  min_progress?: number
-  page?: number
-  per_page?: number
-}
-
+/**
+ * Learning Path Enrollments Service
+ * Handles enrollment management for learning paths
+ */
 class LearningPathEnrollmentsService {
   /**
    * Get enrollments for a learning path
+   * @param academySlug - Academy slug
+   * @param learningPathSlug - Learning path slug
+   * @param filters - Optional filters for status, progress, pagination
+   * @returns Promise with enrollments response
    */
   async getEnrollments(
     academySlug: string,
     learningPathSlug: string,
-    filters?: EnrollmentFilters
+    filters?: LearningPathEnrollmentFilters
   ): Promise<LearningPathEnrollmentsResponse> {
     const response = await apiClient.get(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}/enrollments`,
@@ -60,6 +31,10 @@ class LearningPathEnrollmentsService {
 
   /**
    * Get a single enrollment by ID
+   * @param academySlug - Academy slug
+   * @param learningPathSlug - Learning path slug
+   * @param enrollmentId - Enrollment ID
+   * @returns Promise with enrollment details
    */
   async getEnrollment(
     academySlug: string,
@@ -74,6 +49,10 @@ class LearningPathEnrollmentsService {
 
   /**
    * Delete an enrollment
+   * @param academySlug - Academy slug
+   * @param learningPathSlug - Learning path slug
+   * @param enrollmentId - Enrollment ID
+   * @returns Promise that resolves when enrollment is deleted
    */
   async deleteEnrollment(
     academySlug: string,
@@ -86,5 +65,9 @@ class LearningPathEnrollmentsService {
   }
 }
 
-export const learningPathEnrollmentsService = new LearningPathEnrollmentsService()
+// Export singleton instance
+const learningPathEnrollmentsService = new LearningPathEnrollmentsService()
 export default learningPathEnrollmentsService
+
+// Also export as named export
+export { learningPathEnrollmentsService }

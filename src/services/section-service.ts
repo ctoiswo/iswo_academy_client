@@ -1,31 +1,20 @@
 import { apiClient } from '@/lib/api-client'
+import type {
+  Section,
+  CreateSectionRequest,
+  UpdateSectionRequest
+} from '@/types'
 
-export interface Section {
-  id: number
-  course_id: number
-  title: string
-  description?: string
-  position: number
-  created_at: string
-  updated_at: string
-  lessons_count?: number
-  duration_minutes?: number
-}
-
-export interface CreateSectionData {
-  title: string
-  description?: string
-}
-
-export interface UpdateSectionData {
-  title?: string
-  description?: string
-  position?: number
-}
-
+/**
+ * Section Service
+ * Handles all section-related API calls for courses
+ */
 class SectionService {
   /**
    * Get all sections for a course
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @returns Promise with sections array
    */
   async getSections(academySlug: string, courseSlug: string): Promise<Section[]> {
     const response = await apiClient.get(
@@ -36,6 +25,10 @@ class SectionService {
 
   /**
    * Get a single section by ID
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param sectionId - Section ID
+   * @returns Promise with section details
    */
   async getSection(
     academySlug: string,
@@ -50,11 +43,15 @@ class SectionService {
 
   /**
    * Create a new section
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param data - Section creation data
+   * @returns Promise with created section
    */
   async createSection(
     academySlug: string,
     courseSlug: string,
-    data: CreateSectionData
+    data: CreateSectionRequest
   ): Promise<Section> {
     const response = await apiClient.post(
       `/academies/${academySlug}/courses/${courseSlug}/sections`,
@@ -65,12 +62,17 @@ class SectionService {
 
   /**
    * Update an existing section
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param sectionId - Section ID
+   * @param data - Section update data
+   * @returns Promise with updated section
    */
   async updateSection(
     academySlug: string,
     courseSlug: string,
     sectionId: number,
-    data: UpdateSectionData
+    data: UpdateSectionRequest
   ): Promise<Section> {
     const response = await apiClient.patch(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}`,
@@ -81,6 +83,10 @@ class SectionService {
 
   /**
    * Delete a section
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param sectionId - Section ID
+   * @returns Promise that resolves when section is deleted
    */
   async deleteSection(
     academySlug: string,
@@ -94,6 +100,11 @@ class SectionService {
 
   /**
    * Reorder a section
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param sectionId - Section ID
+   * @param position - New position for the section
+   * @returns Promise with updated section
    */
   async reorderSection(
     academySlug: string,
@@ -109,4 +120,9 @@ class SectionService {
   }
 }
 
-export const sectionService = new SectionService()
+// Export singleton instance
+const sectionService = new SectionService()
+export default sectionService
+
+// Also export as named export
+export { sectionService }

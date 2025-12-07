@@ -1,26 +1,11 @@
 import apiClient from '@/lib/api-client'
 import type {
   Course,
-  CreateCourseData,
-  UpdateCourseData,
-  CourseFilters,
-  FeaturedCourse,
   CategoryWithCourses,
-  PaginationMeta,
-  CoursesResponse
-} from '@/lib/models/course'
-
-// Re-export types for convenience
-export type {
-  Course,
-  CreateCourseData,
-  UpdateCourseData,
-  CourseFilters,
-  FeaturedCourse,
-  CategoryWithCourses,
-  PaginationMeta,
-  CoursesResponse
-}
+  CreateCourseRequest,
+  UpdateCourseRequest,
+  CourseFilters
+} from '@/types'
 
 /**
  * Course Service
@@ -106,7 +91,7 @@ class CourseService {
    * @param data - Course creation data
    * @returns Promise with created course
    */
-  async createCourse(academySlug: string | number, data: CreateCourseData): Promise<Course> {
+  async createCourse(academySlug: string | number, data: CreateCourseRequest): Promise<Course> {
     const response = await apiClient.post(`/academies/${academySlug}/courses`, {
       course: data
     })
@@ -121,7 +106,7 @@ class CourseService {
    * @param data - Course update data
    * @returns Promise with updated course
    */
-  async updateCourse(academySlug: string | number, courseSlug: string | number, data: UpdateCourseData): Promise<Course> {
+  async updateCourse(academySlug: string | number, courseSlug: string | number, data: UpdateCourseRequest): Promise<Course> {
     console.log('Updating course:', courseSlug, 'for academy:', academySlug, 'with data:', data)
     const response = await apiClient.put(`/academies/${academySlug}/courses/${courseSlug}`, {
       course: data

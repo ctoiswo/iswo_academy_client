@@ -3,59 +3,19 @@ import { tokenManager } from '@/lib/api-client'
 import { tokenStorage } from '@/lib/token-storage'
 import authService from '@/services/auth-service'
 import academyService from '@/services/academy-service'
+import type {
+  AuthUser,
+  AcademyMembership,
+  AcademyData,
+  AuthTokens,
+  LoginRequest,
+  RegisterRequest
+} from '@/types'
 
-// TypeScript interfaces for auth state
-export interface AuthUser {
-  id: number
-  first_name: string
-  last_name: string
-  email: string
-  full_name: string
-  initials: string
-  avatar_url: string | null
-  confirmed: boolean
-  is_super_admin: boolean
-  onboarding_completed_at: string | null
-  created_at: string
-  last_login_at: string | null
-}
-
-// Academy-related interfaces
-export interface AcademyMembership {
-  id: number
-  name: string
-  slug: string
-  description: string
-  logo_url: string | null
-  user_role: string
-  user_role_display: string
-  created_at: string
-  last_accessed: string | null
-}
-
-export interface AcademyData {
-  count: number
-  academies: AcademyMembership[]
-}
-
-export interface AuthTokens {
-  access_token: string
-  refresh_token: string
-  expires_in: number
-}
-
-export interface LoginCredentials {
-  email: string
-  password: string
-}
-
-export interface RegisterData {
-  first_name: string
-  last_name: string
-  email: string
-  password: string
-  password_confirmation: string
-}
+// Re-export types for backward compatibility
+export type { AuthUser, AcademyMembership, AcademyData, AuthTokens }
+export type LoginCredentials = LoginRequest
+export type RegisterData = RegisterRequest
 
 export interface LoginResult {
   shouldRedirect: boolean

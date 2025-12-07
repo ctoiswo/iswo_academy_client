@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { academyService, type FeaturedAcademy } from '@/services/academy-service'
+import { academyService } from '@/services/academy-service'
+import type { AcademySummary } from '@/types'
 
 export function useAcademy(slug: string) {
-  const [academy, setAcademy] = useState<FeaturedAcademy | null>(null)
+  const [academy, setAcademy] = useState<AcademySummary | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

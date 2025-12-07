@@ -1,61 +1,13 @@
-import apiClient, { tokenManager, type AuthTokens } from '@/lib/api-client'
-
-// TypeScript interfaces for Auth
-export interface AuthUser {
-  id: number
-  first_name: string
-  last_name: string
-  email: string
-  full_name: string
-  initials: string
-  avatar_url: string | null
-  confirmed: boolean
-  is_super_admin: boolean
-  onboarding_completed_at: string | null
-  created_at: string
-  last_login_at: string | null
-}
-
-export interface AcademyMembership {
-  id: number
-  name: string
-  slug: string
-  description: string
-  logo_url: string | null
-  user_role: string
-  user_role_display: string
-  created_at: string
-  last_accessed: string | null
-}
-
-export interface AcademyData {
-  count: number
-  academies: AcademyMembership[]
-}
-
-export interface AuthResponse extends AuthTokens {
-  user: AuthUser
-  message: string
-  academies?: AcademyData
-}
-
-export interface LoginCredentials {
-  email: string
-  password: string
-}
-
-export interface RegisterData {
-  email: string
-  password: string
-  password_confirmation: string
-  first_name: string
-  last_name: string
-}
-
-export interface RegisterResponse {
-  message: string
-  user: AuthUser
-}
+import apiClient, { tokenManager } from '@/lib/api-client'
+import type {
+  AuthUser,
+  AuthTokens,
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+  MessageResponse
+} from '@/types'
 
 /**
  * Authentication Service
@@ -64,9 +16,11 @@ export interface RegisterResponse {
 class AuthService {
   /**
    * Login user
+   * @param credentials - User email and password
+   * @returns Promise with login response (user, tokens, academies)
    */
-  async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>('/auth/login', {
+  async login(credentials: LoginRequest): Promise<LoginResponse> {
+    const response = await apiClient.post<LoginResponse>('/auth/login', {
       auth: credentials
     })
 
@@ -83,8 +37,10 @@ class AuthService {
   /**
    * Register new user
    * Note: Registration does NOT return tokens - user must confirm email first
+   * @param userData - Registration data (email, password, names)
+   * @returns Promise with registration response (message, user)
    */
-  async register(userData: RegisterData): Promise<RegisterResponse> {
+  async register(userData: RegisterRequest): Promise<RegisterResponse> {
     const response = await apiClient.post<RegisterResponse>('/auth/register', {
       auth: userData
     })
@@ -97,10 +53,17 @@ class AuthService {
 
   /**
    * Logout user
+   * Revokes refresh token and clears local tokens
+   * @returns Promise that resolves when logout is complete
    */
   async logout(): Promise<void> {
     try {
-      await apiClient.delete('/auth/logout')
+      const refreshToken = tokenManager.getRefreshToken()
+      if (refreshToken) {
+        await apiClient.delete('/auth/logout', {
+          data: { refresh_token: refreshToken }
+        })
+      }
     } finally {
       tokenManager.clearTokens()
     }
@@ -108,6 +71,7 @@ class AuthService {
 
   /**
    * Refresh authentication tokens
+   * @returns Promise with new auth tokens
    */
   async refreshTokens(): Promise<AuthTokens> {
     const refreshToken = tokenManager.getRefreshToken()
@@ -125,21 +89,27 @@ class AuthService {
 
   /**
    * Request password reset email
+   * @param email - User email address
+   * @returns Promise with success message
    */
-  async forgotPassword(email: string): Promise<{ message: string }> {
-    const response = await apiClient.post<{ message: string }>('/auth/forgot_password', { email })
+  async forgotPassword(email: string): Promise<MessageResponse> {
+    const response = await apiClient.post<MessageResponse>('/auth/forgot_password', { email })
     return response.data
   }
 
   /**
    * Reset password with token
+   * @param token - Password reset token from email
+   * @param password - New password
+   * @param passwordConfirmation - Password confirmation
+   * @returns Promise with success message
    */
   async resetPassword(
     token: string,
     password: string,
     passwordConfirmation: string
-  ): Promise<{ message: string }> {
-    const response = await apiClient.post<{ message: string }>('/auth/reset_password', {
+  ): Promise<MessageResponse> {
+    const response = await apiClient.post<MessageResponse>('/auth/reset_password', {
       token,
       password,
       password_confirmation: passwordConfirmation,
@@ -148,7 +118,8 @@ class AuthService {
   }
 
   /**
-   * Get current authenticated user
+   * Get current authenticated user profile
+   * @returns Promise with user data
    */
   async getCurrentUser(): Promise<AuthUser> {
     const response = await apiClient.get<{ user: AuthUser }>('/users/profile')

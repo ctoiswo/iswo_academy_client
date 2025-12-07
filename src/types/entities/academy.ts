@@ -1,84 +1,86 @@
 /**
  * Academy related types
+ * Matches backend AcademySerializer views
  * 
  * Active Storage Attachments:
  * - Backend: has_one_attached :logo, has_one_attached :banner
  * - Upload: Send File objects with keys 'logo' and 'banner' in FormData
  * - Response: logo_url and banner_url are generated URLs from Active Storage
- * 
- * Example creating academy with banner:
- * ```typescript
- * const formData = new FormData()
- * formData.append('academy[name]', 'My Academy')
- * formData.append('academy[description]', 'Description')
- * formData.append('academy[banner]', bannerFile) // File object
- * formData.append('academy[logo]', logoFile) // File object
- * 
- * await fetch('/api/v1/academies', {
- *   method: 'POST',
- *   body: formData
- * })
- * ```
  */
 
 import type { BaseFilters } from '../common'
 import type { AcademyCategory } from './category'
 import type { Creator } from './user'
+import type { Course } from './course'
 
-export type AcademyStatus = 0 | 1 | 2 // 0: draft, 1: active, 2: archived
+export type AcademyStatus = 'draft' | 'active' | 'archived'
 
-export interface Academy {
+// Base fields present in ALL views
+export interface AcademyBase {
   id: number
   name: string
   slug: string
-  description?: string | null
-  
-  // Active Storage URLs (generated from attachments)
-  logo_url?: string | null // Generated from has_one_attached :logo
-  banner_url?: string | null // Generated from has_one_attached :banner
-  
-  // Visibility and access
+}
+
+// Minimal view - Only essential fields for dropdowns/selects
+// Backend: minimal_hash
+export interface AcademyMinimal extends AcademyBase {
+  monthly_price: string
+}
+
+// Search view - For search results display
+// Backend: search_hash
+export interface AcademySearch extends AcademyBase {
+  description: string
+  logo_url: string | null
+  course_count: number
+  student_count: number
   is_public: boolean
+}
+
+// Summary Light view - Key information without courses array
+// Backend: summary_light_hash
+export interface AcademySummaryLight extends AcademyBase {
+  description: string
+  logo_url: string | null
+  banner_url: string | null
+  monthly_price: string
   subscription_required: boolean
-  featured: boolean
-  
-  // Pricing
-  monthly_price: number // decimal in DB
-  
-  // About
-  mission?: string | null
-  vision?: string | null
-  website_url?: string | null
-  
-  // Status
-  status?: AcademyStatus
-  
-  // Subscription info
-  subscription_expires_at?: string | null
-  
-  // Relations
-  academy_category_id?: number | null
-  creator_id: number
-  
-  // Computed/Stats fields (from serializer)
-  enrolled_users_count?: number
-  courses_count?: number
-  
-  // Relations data
-  creator?: Creator
-  academy_category?: AcademyCategory
-  courses?: Array<{
-    id: number
-    title: string
-    slug: string
-    duration_minutes: number
-    [key: string]: any
-  }>
-  
-  // Timestamps
+  creator: Creator | null
+  academy_category: AcademyCategory | null
+  academy_configuration: {
+    enable_gamification: boolean
+  }
+  courses_count: number
+  enrolled_users_count: number
+  badges_count: number
+}
+
+// Summary view - Complete data WITH courses array
+// Backend: summary_hash
+export interface AcademySummary extends AcademySummaryLight {
+  courses: Course[]
+}
+
+// Full view - All data including timestamps
+// Backend: full_hash
+export interface AcademyFull extends AcademyBase {
+  description: string
+  logo_url: string | null
+  banner_url: string | null
+  monthly_price: string
+  subscription_required: boolean
+  is_public: boolean
+  status: AcademyStatus
+  creator: Creator | null
+  courses_count: number
+  enrolled_users_count: number
   created_at: string
   updated_at: string
 }
+
+// Default export - Full view (backward compatibility)
+export type Academy = AcademyFull
 
 export interface AcademyMembership {
   id: number
@@ -94,6 +96,7 @@ export interface AcademyFilters extends BaseFilters {
   subscription_required?: boolean
 }
 
+// Legacy type - use FeaturedAcademiesByCategory from academy-service instead
 export interface FeaturedAcademyByCategory {
   category: AcademyCategory
   academies: Academy[]

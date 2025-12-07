@@ -61,3 +61,42 @@ export interface Creator {
   name?: string
   avatar_url?: string | null
 }
+
+// ============================================
+// Auth-specific user types
+// ============================================
+
+// Authenticated user (from auth controller user_response)
+export interface AuthUser {
+  id: number
+  first_name: string
+  last_name: string
+  email: string
+  full_name: string
+  initials: string
+  avatar_url: string | null
+  confirmed: boolean
+  is_super_admin: boolean
+  onboarding_completed_at: string | null
+  created_at: string
+  last_login_at: string | null
+}
+
+// Academy membership for authenticated user
+export interface AcademyMembership {
+  id: number
+  name: string
+  slug: string
+  description: string
+  logo_url: string | null
+  user_role: string
+  user_role_display: string
+  created_at: string
+  last_accessed: string | null
+}
+
+// Academy data structure returned in auth responses
+export interface AcademyData {
+  count: number
+  academies: AcademyMembership[]
+}

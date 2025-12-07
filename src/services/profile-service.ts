@@ -1,115 +1,27 @@
 import apiClient from '@/lib/api-client'
+import type {
+  UserDetail,
+  UserAddress,
+  SocialNetwork,
+  UserDetailRequest,
+  UserAddressRequest,
+  SocialNetworkRequest,
+  UserDetailResponse,
+  UserAddressResponse,
+  UserAddressesResponse,
+  SocialNetworkResponse,
+  SocialNetworksResponse
+} from '@/types'
 
-// User Details Types
-export interface UserDetail {
-  id: number
-  user_id: number
-  birth_date: string | null
-  gender: string | null
-  phone: string | null
-  bio: string | null
-  occupation: string | null
-  website_url: string | null
-  preferences: Record<string, unknown> | null
-  created_at: string
-  updated_at: string
-}
-
-export interface UserDetailInput {
-  birth_date?: string | null
-  gender?: string | null
-  phone?: string | null
-  bio?: string | null
-  occupation?: string | null
-  website_url?: string | null
-}
-
-// User Address Types
-export interface UserAddress {
-  id: number
-  user_id: number
-  street: string | null
-  city: string | null
-  state: string | null
-  postal_code: string | null
-  country: string | null // ISO 2-char code
-  address_type: 'home' | 'work' | 'other'
-  is_primary: boolean
-  latitude: number | null
-  longitude: number | null
-  created_at: string
-  updated_at: string
-}
-
-export interface UserAddressInput {
-  street?: string
-  city?: string
-  state?: string
-  postal_code?: string
-  country?: string
-  address_type?: 'home' | 'work' | 'other'
-  is_primary?: boolean
-}
-
-// Social Network Types
-export type SocialPlatform =
-  | 'facebook'
-  | 'twitter'
-  | 'instagram'
-  | 'linkedin'
-  | 'github'
-  | 'youtube'
-  | 'tiktok'
-  | 'twitch'
-  | 'discord'
-  | 'telegram'
-  | 'whatsapp'
-  | 'other'
-
-export interface SocialNetwork {
-  id: number
-  user_id: number
-  platform: SocialPlatform
-  username: string | null
-  profile_url: string
-  is_public: boolean
-  order_index: number | null
-  created_at: string
-  updated_at: string
-}
-
-export interface SocialNetworkInput {
-  platform: SocialPlatform
-  username?: string | null
-  profile_url: string
-  is_public?: boolean
-  order_index?: number | null
-}
-
-// API Response Types
-export interface UserDetailResponse {
-  user_detail: UserDetail
-}
-
-export interface UserAddressResponse {
-  user_address: UserAddress
-}
-
-export interface UserAddressesResponse {
-  user_addresses: UserAddress[]
-}
-
-export interface SocialNetworkResponse {
-  social_network: SocialNetwork
-}
-
-export interface SocialNetworksResponse {
-  social_networks: SocialNetwork[]
-}
-
-// Profile Service
-const profileService = {
-  // User Details
+/**
+ * Profile Service
+ * Handles all user profile-related API calls (details, addresses, social networks)
+ */
+class ProfileService {
+  /**
+   * Get current user's detail information
+   * @returns Promise with user detail or null if not found
+   */
   async getUserDetail(): Promise<UserDetail | null> {
     try {
       const response = await apiClient.get<UserDetailResponse>('/user_details/me')
@@ -118,23 +30,36 @@ const profileService = {
       // If 404, user doesn't have details yet
       return null
     }
-  },
+  }
 
-  async updateUserDetail(data: UserDetailInput): Promise<UserDetail> {
+  /**
+   * Update current user's detail information
+   * @param data - User detail data to update
+   * @returns Promise with updated user detail
+   */
+  async updateUserDetail(data: UserDetailRequest): Promise<UserDetail> {
     const response = await apiClient.put<UserDetailResponse>('/user_details/me', {
       user_detail: data,
     })
     return response.data.user_detail
-  },
+  }
 
-  async createUserDetail(data: UserDetailInput): Promise<UserDetail> {
+  /**
+   * Create user detail information for current user
+   * @param data - User detail data to create
+   * @returns Promise with created user detail
+   */
+  async createUserDetail(data: UserDetailRequest): Promise<UserDetail> {
     const response = await apiClient.post<UserDetailResponse>('/user_details', {
       user_detail: data,
     })
     return response.data.user_detail
-  },
+  }
 
-  // User Addresses
+  /**
+   * Get all addresses for current user
+   * @returns Promise with array of user addresses
+   */
   async getUserAddresses(): Promise<UserAddress[]> {
     try {
       const response = await apiClient.get<UserAddressesResponse>('/user_addresses')
@@ -142,27 +67,46 @@ const profileService = {
     } catch (error) {
       return []
     }
-  },
+  }
 
-  async createUserAddress(data: UserAddressInput): Promise<UserAddress> {
+  /**
+   * Create a new address for current user
+   * @param data - Address data to create
+   * @returns Promise with created user address
+   */
+  async createUserAddress(data: UserAddressRequest): Promise<UserAddress> {
     const response = await apiClient.post<UserAddressResponse>('/user_addresses', {
       user_address: data,
     })
     return response.data.user_address
-  },
+  }
 
-  async updateUserAddress(id: number, data: UserAddressInput): Promise<UserAddress> {
+  /**
+   * Update an existing address
+   * @param id - Address ID
+   * @param data - Address data to update
+   * @returns Promise with updated user address
+   */
+  async updateUserAddress(id: number, data: UserAddressRequest): Promise<UserAddress> {
     const response = await apiClient.put<UserAddressResponse>(`/user_addresses/${id}`, {
       user_address: data,
     })
     return response.data.user_address
-  },
+  }
 
+  /**
+   * Delete a user address
+   * @param id - Address ID
+   * @returns Promise that resolves when address is deleted
+   */
   async deleteUserAddress(id: number): Promise<void> {
     await apiClient.delete(`/user_addresses/${id}`)
-  },
+  }
 
-  // Social Networks
+  /**
+   * Get all social networks for current user
+   * @returns Promise with array of social networks
+   */
   async getSocialNetworks(): Promise<SocialNetwork[]> {
     try {
       const response = await apiClient.get<SocialNetworksResponse>('/social_networks')
@@ -170,30 +114,54 @@ const profileService = {
     } catch (error) {
       return []
     }
-  },
+  }
 
-  async createSocialNetwork(data: SocialNetworkInput): Promise<SocialNetwork> {
+  /**
+   * Create a new social network profile for current user
+   * @param data - Social network data to create
+   * @returns Promise with created social network
+   */
+  async createSocialNetwork(data: SocialNetworkRequest): Promise<SocialNetwork> {
     const response = await apiClient.post<SocialNetworkResponse>('/social_networks', {
       social_network: data,
     })
     return response.data.social_network
-  },
+  }
 
-  async updateSocialNetwork(id: number, data: SocialNetworkInput): Promise<SocialNetwork> {
+  /**
+   * Update an existing social network profile
+   * @param id - Social network ID
+   * @param data - Social network data to update
+   * @returns Promise with updated social network
+   */
+  async updateSocialNetwork(id: number, data: SocialNetworkRequest): Promise<SocialNetwork> {
     const response = await apiClient.put<SocialNetworkResponse>(`/social_networks/${id}`, {
       social_network: data,
     })
     return response.data.social_network
-  },
+  }
 
+  /**
+   * Delete a social network profile
+   * @param id - Social network ID
+   * @returns Promise that resolves when social network is deleted
+   */
   async deleteSocialNetwork(id: number): Promise<void> {
     await apiClient.delete(`/social_networks/${id}`)
-  },
+  }
 
-  // Complete Onboarding
+  /**
+   * Mark user onboarding as complete
+   * @returns Promise that resolves when onboarding is marked complete
+   */
   async completeOnboarding(): Promise<void> {
     await apiClient.post('/users/complete_onboarding')
-  },
+  }
 }
 
+// Export singleton instance
+const profileService = new ProfileService()
 export default profileService
+
+// Also export as named export
+export { profileService }

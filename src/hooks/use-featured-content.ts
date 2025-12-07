@@ -12,7 +12,7 @@ export function useFeaturedAcademies(categoryId?: number) {
 
 export function useAcademyCategories() {
   return useQuery({
-    queryKey: ['academy', 'categories', { view: 'minimal' }],
+    queryKey: ['academy', 'categories', 'minimal'],
     queryFn: () => academyCategoryService.getCategories('minimal'),
     staleTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes

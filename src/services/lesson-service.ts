@@ -1,56 +1,22 @@
-import { apiClient } from '@/lib/api-client'
+import apiClient from '@/lib/api-client'
+import type {
+  Lesson,
+  CreateLessonRequest,
+  UpdateLessonRequest,
+  VideoUrlResponse
+} from '@/types'
 
-export interface Lesson {
-  id: number
-  course_id: number
-  section_id: number
-  title: string
-  content?: string
-  content_json?: Record<string, any>
-  lesson_type: 'video' | 'text' | 'quiz' | 'assignment' | 'interactive' | 'document'
-  video_provider?: 'none' | 'youtube' | 'vimeo' | 'google_drive' | 's3_direct' | 'bunny_cdn'
-  video_identifier?: string
-  video_url?: string
-  video_metadata?: Record<string, any>
-  duration_minutes?: number
-  position: number
-  is_free: boolean
-  processing_status?: 'pending' | 'processing' | 'completed' | 'failed'
-  processing_error?: string
-  created_at: string
-  updated_at: string
-  mux_playback_id?: string
-  mux_asset_id?: string
-}
-
-export interface CreateLessonData {
-  title: string
-  lesson_type: 'video' | 'text' | 'quiz' | 'assignment' | 'interactive' | 'document'
-  content?: string
-  content_json?: {
-    type: string
-    content: Array<{
-      type: string
-      content?: Array<{
-        type: string
-        text?: string
-      }>
-    }>
-  }
-  video_provider?: 'none' | 'youtube' | 'vimeo' | 'google_drive' | 's3_direct' | 'bunny_cdn'
-  video_identifier?: string
-  video_url?: string
-  duration_minutes?: number
-  is_free?: boolean
-}
-
-export interface UpdateLessonData extends Partial<CreateLessonData> {
-  position?: number
-}
-
+/**
+ * Lesson Service
+ * Handles all lesson-related API calls
+ */
 class LessonService {
   /**
    * Get all lessons for a section
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param sectionId - Section ID
+   * @returns Promise with lessons array
    */
   async getLessons(
     academySlug: string,
@@ -65,6 +31,11 @@ class LessonService {
 
   /**
    * Get a single lesson by ID
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param sectionId - Section ID
+   * @param lessonId - Lesson ID
+   * @returns Promise with lesson details
    */
   async getLesson(
     academySlug: string,
@@ -80,12 +51,17 @@ class LessonService {
 
   /**
    * Create a new lesson
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param sectionId - Section ID
+   * @param data - Lesson creation data
+   * @returns Promise with created lesson
    */
   async createLesson(
     academySlug: string,
     courseSlug: string,
     sectionId: number,
-    data: CreateLessonData
+    data: CreateLessonRequest
   ): Promise<Lesson> {
     const response = await apiClient.post(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}/lessons`,
@@ -96,13 +72,19 @@ class LessonService {
 
   /**
    * Update an existing lesson
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param sectionId - Section ID
+   * @param lessonId - Lesson ID
+   * @param data - Lesson update data
+   * @returns Promise with updated lesson
    */
   async updateLesson(
     academySlug: string,
     courseSlug: string,
     sectionId: number,
     lessonId: number,
-    data: UpdateLessonData
+    data: UpdateLessonRequest
   ): Promise<Lesson> {
     const response = await apiClient.patch(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}`,
@@ -113,6 +95,11 @@ class LessonService {
 
   /**
    * Delete a lesson
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param sectionId - Section ID
+   * @param lessonId - Lesson ID
+   * @returns Promise that resolves when lesson is deleted
    */
   async deleteLesson(
     academySlug: string,
@@ -127,6 +114,12 @@ class LessonService {
 
   /**
    * Reorder a lesson
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param sectionId - Section ID
+   * @param lessonId - Lesson ID
+   * @param position - New position for the lesson
+   * @returns Promise with updated lesson
    */
   async reorderLesson(
     academySlug: string,
@@ -144,13 +137,18 @@ class LessonService {
 
   /**
    * Get video URL for a lesson (requires enrollment)
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param sectionId - Section ID
+   * @param lessonId - Lesson ID
+   * @returns Promise with video URL and metadata
    */
   async getVideoUrl(
     academySlug: string,
     courseSlug: string,
     sectionId: number,
     lessonId: number
-  ): Promise<{ video_url: string; provider: string; expires_at: string }> {
+  ): Promise<VideoUrlResponse> {
     const response = await apiClient.get(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}/video_url`
     )
@@ -158,4 +156,9 @@ class LessonService {
   }
 }
 
-export const lessonService = new LessonService()
+// Export singleton instance
+const lessonService = new LessonService()
+export default lessonService
+
+// Also export as named export
+export { lessonService }

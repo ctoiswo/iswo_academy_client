@@ -1,63 +1,23 @@
 import apiClient from '@/lib/api-client'
-
-// TypeScript interfaces for Certificates
-export interface Certificate {
-  id: number
-  certificate_number: string
-  verification_code: string
-  issued_at: string
-  revoked_at: string | null
-  is_active: boolean
-  user: {
-    id: number
-    full_name: string
-    email: string
-  }
-  verification_url: string | null
-  created_at: string
-}
-
-export interface CertificateTemplate {
-  id: number
-  name: string
-  is_default: boolean
-  is_active: boolean
-  content: Record<string, any>
-  design: Record<string, any>
-}
-
-export interface LearningPathCertificateConfiguration {
-  certificate_enabled: boolean
-  certificate_template: CertificateTemplate | null
-  learning_path: {
-    id: number
-    title: string
-    description: string
-    estimated_duration_hours: number
-    courses_count: number
-  }
-  academy: {
-    id: number
-    name: string
-    slug: string
-  }
-  statistics: {
-    total_issued: number
-    active_certificates: number
-    revoked_certificates: number
-  }
-}
-
-export interface PaginationMeta {
-  current_page: number
-  per_page: number
-  total_pages: number
-  total_count: number
-}
+import type {
+  Certificate,
+  CertificateVerification,
+  CertificateDownloadData,
+  LearningPathCertificateConfiguration,
+  PaginationMeta,
+  MessageResponse
+} from '@/types'
 
 export interface CertificatesResponse {
-  data: Certificate[]
-  meta: PaginationMeta
+  certificates: Certificate[]
+  pagination: PaginationMeta
+}
+
+export interface CertificateFilters {
+  course_id?: number
+  user_id?: number
+  page?: number
+  per_page?: number
 }
 
 /**
@@ -65,6 +25,70 @@ export interface CertificatesResponse {
  * Handles all certificate-related API calls
  */
 class CertificateService {
+  /**
+   * Get all certificates (user's own or all if super admin)
+   * @param filters - Optional filters (course_id, user_id, pagination)
+   * @returns Promise with certificates and pagination
+   */
+  async getCertificates(filters?: CertificateFilters): Promise<CertificatesResponse> {
+    const response = await apiClient.get<CertificatesResponse>('/certificates', {
+      params: filters
+    })
+    return response.data
+  }
+
+  /**
+   * Get a single certificate
+   * @param certificateId - Certificate ID
+   * @returns Promise with certificate details
+   */
+  async getCertificate(certificateId: number): Promise<Certificate> {
+    const response = await apiClient.get<{ certificate: Certificate }>(`/certificates/${certificateId}`)
+    return response.data.certificate
+  }
+
+  /**
+   * Create a certificate for a completed course
+   * @param courseId - Course ID
+   * @returns Promise with created certificate
+   */
+  async createCertificate(courseId: number): Promise<Certificate> {
+    const response = await apiClient.post<{ certificate: Certificate }>('/certificates', {
+      course_id: courseId
+    })
+    return response.data.certificate
+  }
+
+  /**
+   * Download certificate (get template data for PDF generation)
+   * @param certificateId - Certificate ID
+   * @returns Promise with certificate download data
+   */
+  async downloadCertificate(certificateId: number): Promise<CertificateDownloadData> {
+    const response = await apiClient.get<CertificateDownloadData>(`/certificates/${certificateId}/download`)
+    return response.data
+  }
+
+  /**
+   * Verify a certificate by certificate number
+   * @param certificateNumber - Certificate number to verify
+   * @returns Promise with verification result
+   */
+  async verifyCertificate(certificateNumber: string): Promise<CertificateVerification> {
+    const response = await apiClient.get<CertificateVerification>(`/certificates/verify/${certificateNumber}`)
+    return response.data
+  }
+
+  /**
+   * Revoke a certificate
+   * @param certificateId - Certificate ID
+   * @returns Promise with success message
+   */
+  async revokeCertificate(certificateId: number): Promise<MessageResponse> {
+    const response = await apiClient.patch<MessageResponse>(`/certificates/${certificateId}/revoke`)
+    return response.data
+  }
+
   /**
    * Get certificate configuration for a learning path
    * @param academySlug - Academy slug
@@ -117,7 +141,7 @@ class CertificateService {
     learningPathSlug: string,
     page: number = 1,
     perPage: number = 25
-  ): Promise<CertificatesResponse> {
+  ): Promise<{ data: Certificate[]; meta: PaginationMeta }> {
     const response = await apiClient.get(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}/certificates`,
       {

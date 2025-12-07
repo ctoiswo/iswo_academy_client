@@ -1,40 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api-client'
-import type { SearchResult, SearchResponse, SearchFilters } from '@/types'
+import type { GlobalSearchResponse } from '@/types'
 
-// Re-export types for backward compatibility
-export type { SearchResult, SearchResponse, SearchFilters }
-
-// Extended search result with additional fields
-interface ExtendedSearchResult extends SearchResult {
-  // Academy fields
-  name?: string
-  course_count?: number
-  student_count?: number
-  is_public?: boolean
-  // Course fields
-  price?: string
-  is_free?: boolean
-  difficulty_level?: string
-  duration_minutes?: number
-  academy?: {
-    id: number
-    name: string
-    slug: string
-  }
-  creator?: {
-    id: number
-    name: string
-  }
-}
-
-export interface SearchResponse {
-  query: string
-  academies: SearchResult[]
-  courses: SearchResult[]
-  total_count: number
-}
-
+/**
+ * Hook for global search across academies and courses
+ * Uses the /api/v1/search endpoint
+ */
 export function useGlobalSearch(
   query: string,
   options?: {
@@ -45,7 +16,7 @@ export function useGlobalSearch(
 ) {
   const { type = 'all', limit = 5, enabled = true } = options || {}
 
-  return useQuery<SearchResponse>({
+  return useQuery<GlobalSearchResponse>({
     queryKey: ['search', query, type, limit],
     queryFn: async () => {
       if (!query || query.length < 2) {
@@ -57,7 +28,7 @@ export function useGlobalSearch(
         }
       }
 
-      const { data } = await apiClient.get<SearchResponse>('/search', {
+      const { data } = await apiClient.get<GlobalSearchResponse>('/search', {
         params: {
           q: query,
           type,

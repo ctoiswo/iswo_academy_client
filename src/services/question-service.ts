@@ -1,20 +1,22 @@
 import apiClient from '@/lib/api-client'
-import type { Question, Answer, QuestionType } from './assessment-service'
+import type {
+  Question,
+  CreateQuestionRequest,
+  UpdateQuestionRequest
+} from '@/types'
 
-export interface CreateQuestionData {
-  question_text: string
-  question_type: QuestionType
-  points: number
-  explanation?: string
-  answers: Array<{
-    answer_text: string
-    is_correct: boolean
-  }>
-}
-
-export interface UpdateQuestionData extends Partial<CreateQuestionData> {}
-
+/**
+ * Question Service
+ * Handles all question-related API calls for assessments
+ */
 class QuestionService {
+  /**
+   * Get all questions for an assessment
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param assessmentId - Assessment ID
+   * @returns Promise with questions array
+   */
   async getQuestions(
     academySlug: string,
     courseSlug: string,
@@ -26,6 +28,14 @@ class QuestionService {
     return response.data
   }
 
+  /**
+   * Get a single question by ID
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param assessmentId - Assessment ID
+   * @param questionId - Question ID
+   * @returns Promise with question details
+   */
   async getQuestion(
     academySlug: string,
     courseSlug: string,
@@ -38,11 +48,19 @@ class QuestionService {
     return response.data
   }
 
+  /**
+   * Create a new question for an assessment
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param assessmentId - Assessment ID
+   * @param data - Question creation data
+   * @returns Promise with created question
+   */
   async createQuestion(
     academySlug: string,
     courseSlug: string,
     assessmentId: number,
-    data: CreateQuestionData
+    data: CreateQuestionRequest
   ): Promise<Question> {
     const response = await apiClient.post(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/questions`,
@@ -51,12 +69,21 @@ class QuestionService {
     return response.data
   }
 
+  /**
+   * Update an existing question
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param assessmentId - Assessment ID
+   * @param questionId - Question ID
+   * @param data - Question update data
+   * @returns Promise with updated question
+   */
   async updateQuestion(
     academySlug: string,
     courseSlug: string,
     assessmentId: number,
     questionId: number,
-    data: UpdateQuestionData
+    data: UpdateQuestionRequest
   ): Promise<Question> {
     const response = await apiClient.patch(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/questions/${questionId}`,
@@ -65,6 +92,14 @@ class QuestionService {
     return response.data
   }
 
+  /**
+   * Delete a question
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param assessmentId - Assessment ID
+   * @param questionId - Question ID
+   * @returns Promise that resolves when question is deleted
+   */
   async deleteQuestion(
     academySlug: string,
     courseSlug: string,
@@ -76,6 +111,15 @@ class QuestionService {
     )
   }
 
+  /**
+   * Reorder a question within an assessment
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param assessmentId - Assessment ID
+   * @param questionId - Question ID
+   * @param position - New position for the question
+   * @returns Promise with updated question
+   */
   async reorderQuestion(
     academySlug: string,
     courseSlug: string,
@@ -91,5 +135,9 @@ class QuestionService {
   }
 }
 
-export const questionService = new QuestionService()
-export type { Question, Answer, QuestionType }
+// Export singleton instance
+const questionService = new QuestionService()
+export default questionService
+
+// Also export as named export
+export { questionService }

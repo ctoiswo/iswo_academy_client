@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  assessmentService,
-  type AssessmentType,
-  type CreateAssessmentData,
-  type UpdateAssessmentData,
-} from "@/services/assessment-service";
+import { assessmentService } from "@/services/assessment-service";
+import type {
+  AssessmentType,
+  CreateAssessmentRequest,
+  UpdateAssessmentRequest,
+} from "@/types";
 import { toast } from "sonner";
 
 // Query keys
@@ -84,7 +84,7 @@ export function useCreateAssessment(academySlug: string, courseSlug: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateAssessmentData) =>
+    mutationFn: (data: CreateAssessmentRequest) =>
       assessmentService.createAssessment(academySlug, courseSlug, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: assessmentKeys.lists() });
@@ -105,7 +105,7 @@ export function useUpdateAssessment(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateAssessmentData) =>
+    mutationFn: (data: UpdateAssessmentRequest) =>
       assessmentService.updateAssessment(academySlug, courseSlug, assessmentId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: assessmentKeys.lists() });

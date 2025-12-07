@@ -1,73 +1,77 @@
 /**
- * Course related types
+ * Course Entity Types
+ * Based on Rails Course model structure
  */
 
-import type { BaseFilters, DifficultyLevel } from '../common'
 import type { Creator } from './user'
 import type { AcademyCategory } from './category'
 
-// Enums matching DB integers
-export type CourseStatus = 0 | 1 | 2 // 0: draft, 1: published, 2: archived
-export type CourseDifficultyLevel = 0 | 1 | 2 // 0: beginner, 1: intermediate, 2: advanced
+export type CourseStatus = 'draft' | 'published' | 'archived'
+export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced'
 export type PricingType = 'free' | 'one_time' | 'subscription'
 
+/**
+ * Main Course interface
+ * Represents a course in the academy system
+ */
 export interface Course {
   id: number
+  academy_id: number
   title: string
   slug: string
-  description?: string | null
-  
+  description: string
+
   // Pricing
   is_free: boolean
-  price: number // decimal(10,2) in DB
-  currency: string // default 'COP'
-  pricing_type: string // default 'free'
-  sale_price?: number | null // decimal(10,2)
-  sale_ends_at?: string | null
-  subscription_price_monthly?: number | null // decimal(10,2)
-  subscription_price_annual?: number | null // decimal(10,2)
-  trial_period_days: number // default 0
-  
+  price: number
+  currency: string
+  pricing_type: PricingType
+  sale_price: number | null
+  sale_ends_at: string | null
+  subscription_price_monthly: number | null
+  subscription_price_annual: number | null
+
   // Course settings
-  difficulty_level: CourseDifficultyLevel // integer enum, default 0
-  status: CourseStatus // integer enum, default 0
-  duration_minutes: number // default 0
-  category?: string | null // varchar(50)
-  tags?: string | null // text field
-  prerequisites?: string | null
-  position?: number | null
-  
+  difficulty_level: DifficultyLevel
+  status: CourseStatus
+  duration_minutes: number
+  category: string | null
+  tags: string[] | null
+  prerequisites: string | null
+
   // Features
-  allow_comments: boolean // default true
-  certificate_enabled: boolean // default true
-  progress_tracking: boolean // default true
-  featured: boolean // default false
-  
-  // Metadata (SEO)
-  meta_title?: string | null
-  meta_description?: string | null
-  
+  allow_comments: boolean
+  certificate_enabled: boolean
+  progress_tracking: boolean
+  featured: boolean
+  trial_period_days: number
+
+  // Metadata
+  meta_title: string | null
+  meta_description: string | null
+  thumbnail_url?: string | null
+
   // Relations
-  academy_id: number
   creator_id: number
-  learning_path_id?: number | null
-  
-  // Computed/Stats (from serializer)
+  learning_path_id: number | null
+  position: number
+
+  // Computed/Stats
   enrollment_count?: number
   sections_count?: number
   lessons_count?: number
-  rating?: number
-  reviews_count?: number
-  thumbnail_url?: string // Active Storage attachment
-  
+
   // Relations data
-  creator?: Creator
+  creator?: {
+    id: number
+    name: string
+  }
   academy?: {
     id: number
     name: string
     slug: string
   }
-  
+
   // Progress (for enrolled users)
   progress?: {
     completion_percentage: number
@@ -75,23 +79,30 @@ export interface Course {
     total_lessons: number
     is_completed: boolean
   }
-  
+
   // Timestamps
   created_at: string
   updated_at: string
 }
 
-export interface CourseFilters extends BaseFilters {
-  category?: string
-  difficulty?: DifficultyLevel
-  is_free?: boolean
-  academy_id?: number
-  sort_by?: 'popular' | 'rating' | 'newest' | 'price'
+/**
+ * Featured course (extends base Course)
+ */
+export interface FeaturedCourse extends Course {
+  featured: true
 }
 
-export interface FeaturedCourseByCategory {
-  category: AcademyCategory
-  courses: Course[]
+/**
+ * Category with courses
+ */
+export interface CategoryWithCourses {
+  category: {
+    id: number
+    name: string
+    description: string
+    slug: string
+  }
+  courses: FeaturedCourse[]
 }
 
 export interface CourseEnrollment {

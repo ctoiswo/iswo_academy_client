@@ -2,12 +2,12 @@
  * Common types used across the application
  */
 
-// Pagination metadata
+// Pagination metadata (matches backend structure)
 export interface PaginationMeta {
-  total: number
-  page: number
+  current_page: number
+  total_pages: number
+  total_count: number
   per_page: number
-  total_pages?: number
 }
 
 // Generic paginated response
@@ -44,3 +44,13 @@ export interface BaseFilters {
   sort_by?: string
   sort_direction?: 'asc' | 'desc'
 }
+
+// API View modes (matches backend serializer views)
+export type ApiViewMode = 'minimal' | 'summary' | 'full'
+
+// Helper type to map view modes to their corresponding types
+// Usage: ViewResponse<AcademyCategoryMinimal, AcademyCategorySummary, AcademyCategoryFull, 'minimal'>
+export type ViewResponse<TMinimal, TSummary, TFull, TView extends ApiViewMode> = 
+  TView extends 'minimal' ? TMinimal :
+  TView extends 'summary' ? TSummary :
+  TFull

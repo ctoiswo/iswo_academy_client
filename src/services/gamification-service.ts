@@ -1,99 +1,13 @@
 import apiClient from '@/lib/api-client'
-
-// TypeScript interfaces for Gamification
-export interface Badge {
-  id: number
-  name: string
-  slug: string
-  description: string
-  icon_url: string
-  category: string
-  tier: 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond'
-  rarity: string
-  points_reward: number
-  is_secret: boolean
-  earned?: boolean
-  earned_count?: number
-  earn_rate?: number
-}
-
-export interface UserBadge {
-  id: number
-  badge: Badge
-  earned_at: string
-  viewed: boolean
-  trigger_context?: Record<string, any>
-  triggered_by?: {
-    type: string
-    id: number
-    name: string
-  }
-}
-
-export interface GamificationProfile {
-  id: number
-  user_id: number
-  points: {
-    total: number
-    available: number
-    spent: number
-  }
-  level: {
-    current: number
-    experience_points: number
-    progress_percentage: number
-    xp_for_next_level: number
-    xp_current_level: number
-  }
-  streaks: {
-    current: number
-    longest: number
-    last_activity: string
-  }
-  rankings: {
-    rank_in_academy: number
-    percentile: number
-  }
-  counts: {
-    badges: number
-    achievements: number
-  }
-  recent_badges?: Array<{
-    badge: Badge
-    earned_at: string
-  }>
-  recent_transactions?: Array<{
-    id: number
-    amount: number
-    transaction_type: string
-    source: string
-    balance_after: number
-    created_at: string
-  }>
-}
-
-export interface LeaderboardEntry {
-  id: number
-  user: {
-    id: number
-    username: string
-    full_name: string
-    avatar_url: string
-  }
-  total_points: number
-  level: number
-  rank: number
-  badges_count: number
-  achievements_count: number
-  current_streak: number
-}
-
-export interface BadgeFilters {
-  category?: string
-  tier?: string
-  page?: number
-  per_page?: number
-}
+import type {
+  Badge,
+  UserBadge,
+  GamificationProfile,
+  LeaderboardEntry,
+  LeaderboardType,
+  LeaderboardPeriod,
+  BadgeFilters
+} from '@/types'
 
 /**
  * Gamification Service
@@ -181,8 +95,8 @@ class GamificationService {
    * @returns Promise with leaderboard entries
    */
   async getLeaderboard(
-    type: 'points' | 'level' | 'streak' | 'achievements' = 'points',
-    period: 'all_time' | 'month' | 'week' = 'all_time'
+    type: LeaderboardType = 'points',
+    period: LeaderboardPeriod = 'all_time'
   ): Promise<LeaderboardEntry[]> {
     console.log('Fetching leaderboard:', type, period)
     const response = await apiClient.get('/gamification_profiles/leaderboard', {

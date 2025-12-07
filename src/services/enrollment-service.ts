@@ -1,51 +1,20 @@
-import { apiClient } from '@/lib/api-client'
+import apiClient from '@/lib/api-client'
+import type {
+  Enrollment,
+  EnrollmentFilters,
+  UpdateEnrollmentProgressRequest
+} from '@/types'
 
-export interface Course {
-  id: number
-  title: string
-  slug: string
-  description: string
-  price: number
-  difficulty_level: 'beginner' | 'intermediate' | 'advanced'
-  is_published: boolean
-  thumbnail_url?: string
-  duration_minutes: number
-  enrollment_count: number
-  academy_id: number
-  academy_name: string
-  academy_slug?: string
-  created_at?: string
-  updated_at?: string
-}
-
-export interface Enrollment {
-  id: number
-  user: {
-    id: number
-    name: string
-    email: string
-  }
-  course: Course
-  status: 'active' | 'completed' | 'suspended'
-  progress_percentage?: number
-  enrolled_at: string
-  completed_at?: string
-  created_at: string
-  updated_at: string
-  payment?: {
-    id: number
-    status: string
-    amount: number
-  }
-}
-
-export interface EnrollmentFilters {
-  status?: 'active' | 'completed' | 'suspended'
-  page?: number
-  per_page?: number
-}
-
+/**
+ * Enrollment Service
+ * Handles all enrollment-related API calls
+ */
 class EnrollmentService {
+  /**
+   * Get user enrollments with optional filters
+   * @param filters - Optional filters for status, pagination
+   * @returns Promise with enrollments data
+   */
   async getUserEnrollments(filters?: EnrollmentFilters) {
     const params = new URLSearchParams()
 
@@ -57,28 +26,56 @@ class EnrollmentService {
     return response.data
   }
 
-  async getEnrollment(enrollmentId: number) {
+  /**
+   * Get a single enrollment by ID
+   * @param enrollmentId - Enrollment ID
+   * @returns Promise with enrollment details
+   */
+  async getEnrollment(enrollmentId: number): Promise<Enrollment> {
     const response = await apiClient.get(`/enrollments/${enrollmentId}`)
-    return response.data.data as Enrollment
+    return response.data.data
   }
 
-  async updateEnrollmentProgress(enrollmentId: number, progressData: {
-    progress_percentage?: number
-    completed_lesson_ids?: number[]
-  }) {
+  /**
+   * Update enrollment progress
+   * @param enrollmentId - Enrollment ID
+   * @param progressData - Progress update data (percentage, completed lessons)
+   * @returns Promise with updated enrollment
+   */
+  async updateEnrollmentProgress(
+    enrollmentId: number,
+    progressData: UpdateEnrollmentProgressRequest
+  ): Promise<Enrollment> {
     const response = await apiClient.patch(`/enrollments/${enrollmentId}/progress`, progressData)
-    return response.data.data as Enrollment
+    return response.data.data
   }
 
-  async getCourseEnrollments(academySlug: string, courseSlug: string) {
+  /**
+   * Get all enrollments for a specific course
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @returns Promise with array of enrollments
+   */
+  async getCourseEnrollments(academySlug: string, courseSlug: string): Promise<Enrollment[]> {
     const response = await apiClient.get(`/academies/${academySlug}/courses/${courseSlug}/enrollments`)
-    return response.data.data as Enrollment[]
+    return response.data.data
   }
 
-  async deleteEnrollment(academySlug: string, courseSlug: string, enrollmentId: number) {
-    const response = await apiClient.delete(`/academies/${academySlug}/courses/${courseSlug}/enrollments/${enrollmentId}`)
-    return response.data
+  /**
+   * Delete an enrollment
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param enrollmentId - Enrollment ID
+   * @returns Promise that resolves when enrollment is deleted
+   */
+  async deleteEnrollment(academySlug: string, courseSlug: string, enrollmentId: number): Promise<void> {
+    await apiClient.delete(`/academies/${academySlug}/courses/${courseSlug}/enrollments/${enrollmentId}`)
   }
 }
 
-export const enrollmentService = new EnrollmentService()
+// Export singleton instance
+const enrollmentService = new EnrollmentService()
+export default enrollmentService
+
+// Also export as named export
+export { enrollmentService }

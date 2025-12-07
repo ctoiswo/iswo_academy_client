@@ -1,186 +1,133 @@
-import apiClient from "@/lib/api-client";
+import apiClient from '@/lib/api-client'
+import type {
+  AssessmentType,
+  AssessmentSummary,
+  AssessmentFull,
+  AssessmentStatistics,
+  AssessmentAttempt,
+  CreateAssessmentRequest,
+  UpdateAssessmentRequest
+} from '@/types'
 
-export type AssessmentType = "Quiz" | "Exam";
-
-export type QuestionType =
-  | "multiple_choice"
-  | "true_false"
-  | "multiple_select"
-  | "short_answer"
-  | "essay"
-  | "fill_in_blank"
-  | "matching"
-  | "ordering";
-
-export interface Answer {
-  id?: number;
-  answer_text: string;
-  is_correct: boolean;
-  position: number;
+export interface AssessmentFilters {
+  type?: AssessmentType
+  section_id?: number
+  status?: 'published' | 'draft'
 }
 
-export interface Question {
-  id?: number;
-  question_text: string;
-  question_type: QuestionType;
-  points: number;
-  position: number;
-  explanation?: string;
-  answers: Answer[];
-}
-
-export interface Assessment {
-  id: number;
-  type: AssessmentType;
-  title: string;
-  description: string | null;
-  section_id: number | null;
-  section: {
-    id: number;
-    title: string;
-  } | null;
-  passing_score: number;
-  attempts_allowed: number | null;
-  time_limit_minutes: number | null;
-  weight_percentage: number;
-  retake_waiting_hours: number;
-  question_pool_size: number | null;
-  published: boolean;
-  randomize_questions: boolean;
-  randomize_answers: boolean;
-  show_correct_answers: boolean;
-  require_all_sections_complete: boolean;
-  total_points: number;
-  questions_count: number;
-  attempts_count: number;
-  questions?: Question[];
-  created_at: string;
-  updated_at: string;
-}
-
-export interface AssessmentStatistics {
-  total_attempts: number;
-  completed_attempts: number;
-  average_score: number;
-  pass_rate: number;
-  completion_rate: number;
-  total_points: number;
-}
-
-export interface AssessmentAttempt {
-  id: number;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
-  attempt_number: number;
-  score: number | null;
-  max_score: number | null;
-  percentage: number | null;
-  passed: boolean | null;
-  status: 'completed' | 'in_progress';
-  time_spent_seconds: number | null;
-  started_at: string;
-  completed_at: string | null;
-  created_at: string;
-}
-
-export interface CreateAssessmentData {
-  type: AssessmentType;
-  title: string;
-  description?: string;
-  section_id?: number;
-  passing_score?: number;
-  attempts_allowed?: number;
-  time_limit_minutes?: number;
-  weight_percentage?: number;
-  retake_waiting_hours?: number;
-  question_pool_size?: number;
-  published?: boolean;
-  randomize_questions?: boolean;
-  randomize_answers?: boolean;
-  show_correct_answers?: boolean;
-  require_all_sections_complete?: boolean;
-}
-
-export interface UpdateAssessmentData extends Partial<CreateAssessmentData> {}
-
-export const assessmentService = {
-  // Get all assessments for a course
+/**
+ * Assessment Service
+ * Handles all assessment-related API calls with view mode support
+ */
+class AssessmentService {
+  /**
+   * Get all assessments for a course
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param params - Optional filters (type, section_id, status)
+   * @returns Promise with assessments array (summary view - without questions)
+   */
   async getAssessments(
     academySlug: string,
     courseSlug: string,
-    params?: {
-      type?: AssessmentType;
-      section_id?: number;
-      status?: "published" | "draft";
-    }
-  ): Promise<Assessment[]> {
-    const queryParams = new URLSearchParams();
-    if (params?.type) queryParams.append("type", params.type);
-    if (params?.section_id) queryParams.append("section_id", params.section_id.toString());
-    if (params?.status) queryParams.append("status", params.status);
+    params?: AssessmentFilters
+  ): Promise<AssessmentSummary[]> {
+    const queryParams = new URLSearchParams()
+    if (params?.type) queryParams.append('type', params.type)
+    if (params?.section_id) queryParams.append('section_id', params.section_id.toString())
+    if (params?.status) queryParams.append('status', params.status)
 
     const url = `/academies/${academySlug}/courses/${courseSlug}/assessments${
-      queryParams.toString() ? `?${queryParams.toString()}` : ""
-    }`;
+      queryParams.toString() ? `?${queryParams.toString()}` : ''
+    }`
 
-    const response = await apiClient.get<{ assessments: Assessment[] }>(url);
-    return response.data?.assessments || [];
-  },
+    const response = await apiClient.get<{ assessments: AssessmentSummary[] }>(url)
+    return response.data?.assessments || []
+  }
 
-  // Get a single assessment
+  /**
+   * Get a single assessment with full details
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param assessmentId - Assessment ID
+   * @returns Promise with assessment details (full view - includes questions)
+   */
   async getAssessment(
     academySlug: string,
     courseSlug: string,
     assessmentId: number
-  ): Promise<Assessment> {
-    const response = await apiClient.get<{ assessment: Assessment }>(
+  ): Promise<AssessmentFull> {
+    const response = await apiClient.get<{ assessment: AssessmentFull }>(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}`
-    );
-    return response.data.assessment;
-  },
+    )
+    return response.data.assessment
+  }
 
-  // Create a new assessment
+  /**
+   * Create a new assessment
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param data - Assessment data
+   * @returns Promise with created assessment (full view)
+   */
   async createAssessment(
     academySlug: string,
     courseSlug: string,
-    data: CreateAssessmentData
-  ): Promise<Assessment> {
-    const response = await apiClient.post<{ assessment: Assessment }>(
+    data: CreateAssessmentRequest
+  ): Promise<AssessmentFull> {
+    const response = await apiClient.post<{ assessment: AssessmentFull; message: string }>(
       `/academies/${academySlug}/courses/${courseSlug}/assessments`,
       { assessment: data }
-    );
-    return response.data.assessment;
-  },
+    )
+    return response.data.assessment
+  }
 
-  // Update an assessment
+  /**
+   * Update an assessment
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param assessmentId - Assessment ID
+   * @param data - Updated assessment data
+   * @returns Promise with updated assessment (full view)
+   */
   async updateAssessment(
     academySlug: string,
     courseSlug: string,
     assessmentId: number,
-    data: UpdateAssessmentData
-  ): Promise<Assessment> {
-    const response = await apiClient.patch<{ assessment: Assessment }>(
+    data: UpdateAssessmentRequest
+  ): Promise<AssessmentFull> {
+    const response = await apiClient.patch<{ assessment: AssessmentFull; message: string }>(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}`,
       { assessment: data }
-    );
-    return response.data.assessment;
-  },
+    )
+    return response.data.assessment
+  }
 
-  // Delete an assessment
+  /**
+   * Delete an assessment
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param assessmentId - Assessment ID
+   * @returns Promise with success message
+   */
   async deleteAssessment(
     academySlug: string,
     courseSlug: string,
     assessmentId: number
-  ): Promise<void> {
-    await apiClient.delete(
+  ): Promise<{ message: string }> {
+    const response = await apiClient.delete(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}`
-    );
-  },
+    )
+    return response.data
+  }
 
-  // Get assessment statistics
+  /**
+   * Get assessment statistics
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param assessmentId - Assessment ID
+   * @returns Promise with assessment statistics
+   */
   async getStatistics(
     academySlug: string,
     courseSlug: string,
@@ -188,21 +135,35 @@ export const assessmentService = {
   ): Promise<AssessmentStatistics> {
     const response = await apiClient.get<{ statistics: AssessmentStatistics }>(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/statistics`
-    );
-    return response.data.statistics;
-  },
+    )
+    return response.data.statistics
+  }
 
-  // Get assessment attempts
+  /**
+   * Get assessment attempts
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @param assessmentId - Assessment ID
+   * @param status - Optional filter by status ('completed' | 'in_progress')
+   * @returns Promise with attempts array
+   */
   async getAttempts(
     academySlug: string,
     courseSlug: string,
     assessmentId: number,
-    status?: "completed" | "in_progress"
+    status?: 'completed' | 'in_progress'
   ): Promise<AssessmentAttempt[]> {
     const url = `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/attempts${
-      status ? `?status=${status}` : ""
-    }`;
-    const response = await apiClient.get<{ attempts: AssessmentAttempt[] }>(url);
-    return response.data?.attempts || [];
-  },
-};
+      status ? `?status=${status}` : ''
+    }`
+    const response = await apiClient.get<{ attempts: AssessmentAttempt[] }>(url)
+    return response.data?.attempts || []
+  }
+}
+
+// Export singleton instance
+const assessmentService = new AssessmentService()
+export default assessmentService
+
+// Also export as named export
+export { assessmentService }

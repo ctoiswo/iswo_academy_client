@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
+import type { AcademySearchResult, CourseSearchResult } from '@/types'
 import {
   Search,
   GraduationCap,
@@ -9,18 +10,28 @@ import {
   X,
   Loader2,
 } from 'lucide-react'
+import { formatPrice, formatDifficulty } from '@/lib/formatters'
 import { useGlobalSearch } from '@/hooks/use-global-search'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 export function GlobalSearchBar() {
   const [query, setQuery] = useState('')
+  const [debouncedQuery, setDebouncedQuery] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
 
-  const { data, isLoading } = useGlobalSearch(query, {
-    enabled: query.length >= 2,
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query)
+    }, 300) // 300ms delay
+
+    return () => clearTimeout(timer)
+  }, [query])
+
+  const { data, isLoading } = useGlobalSearch(debouncedQuery, {
+    enabled: debouncedQuery.length >= 2,
   })
 
   // Close dropdown when clicking outside
@@ -46,20 +57,6 @@ export function GlobalSearchBar() {
       setIsOpen(false)
     }
   }, [query])
-
-  const formatPrice = (priceString: string) => {
-    const price = parseFloat(priceString)
-    return `$${(price / 1000).toFixed(0)}k`
-  }
-
-  const formatDifficulty = (level: string) => {
-    const levels = {
-      beginner: 'Principiante',
-      intermediate: 'Intermedio',
-      advanced: 'Avanzado',
-    }
-    return levels[level as keyof typeof levels] || level
-  }
 
   const handleClear = () => {
     setQuery('')
@@ -127,7 +124,7 @@ export function GlobalSearchBar() {
                     </h3>
                   </div>
                   <div className='space-y-2'>
-                    {data.academies.map((academy) => (
+                    {data.academies.map((academy: AcademySearchResult) => (
                       <Link
                         key={academy.id}
                         to='/academies/$slug'
@@ -150,7 +147,7 @@ export function GlobalSearchBar() {
                             <p className='text-muted-foreground line-clamp-1 text-sm'>
                               {academy.description}
                             </p>
-                            <div className='mt-1 flex items-center gap-3 text-xs'>
+                            <div className='mt-1 flex items-center justify-center gap-3 text-xs'>
                               <div className='flex items-center gap-1'>
                                 <BookOpen className='h-3 w-3' />
                                 <span>{academy.course_count} cursos</span>
@@ -178,7 +175,7 @@ export function GlobalSearchBar() {
                     </h3>
                   </div>
                   <div className='space-y-2'>
-                    {data.courses.map((course) => (
+                    {data.courses.map((course: CourseSearchResult) => (
                       <Link
                         key={course.id}
                         to='/courses/$courseSlug'
@@ -202,12 +199,12 @@ export function GlobalSearchBar() {
                               por {course.creator?.name} •{' '}
                               {course.academy?.name}
                             </p>
-                            <div className='mt-1 flex items-center gap-2'>
-                              <Badge variant='secondary' className='text-xs'>
-                                {formatDifficulty(
-                                  course.difficulty_level || ''
-                                )}
-                              </Badge>
+                            <div className='mt-1 flex items-center justify-center gap-2'>
+                              {course.difficulty_level && (
+                                <Badge variant='secondary' className='text-xs'>
+                                  {formatDifficulty(course.difficulty_level)}
+                                </Badge>
+                              )}
                               <span className='text-xs'>
                                 {course.is_free
                                   ? 'Gratis'

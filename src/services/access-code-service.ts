@@ -1,152 +1,153 @@
-import { apiClient } from '@/lib/api-client'
+import apiClient from '@/lib/api-client'
+import type {
+  AccessCode,
+  AccessCodeBase,
+  AccessCodePublic,
+  AccessCodeAdmin,
+  AccessCodeFilters,
+  CreateAccessCodeRequest,
+  UpdateAccessCodeRequest,
+  RedeemAccessCodeRequest,
+  AccessCodeRedemptionResponse,
+  AccessCodeValidationResponse
+} from '@/types'
 
-export interface AccessCode {
-  id: number
-  code: string
-  usage_limit: number
-  usage_count: number
-  remaining_uses: number
-  usage_percentage: number
-  expires_at: string
-  days_until_expiry: number
-  status: 'active' | 'inactive' | 'expired' | 'exhausted'
-  description?: string
-  expired: boolean
-  created_at: string
-  updated_at: string
-  course: {
-    id: number
-    title: string
-    slug: string
-  }
-  created_by: {
-    id: number
-    full_name: string
-    email: string
-  }
-  statistics: {
-    total_enrollments: number
-    active_enrollments: number
-  }
-}
-
-export interface CreateAccessCodeData {
-  usage_limit: number
-  expires_at: string
-  description?: string
-}
-
-export interface UpdateAccessCodeData {
-  usage_limit?: number
-  expires_at?: string
-  description?: string
-  status?: 'active' | 'inactive'
-}
-
-export interface AccessCodeFilters {
-  status?: 'active' | 'inactive' | 'expired' | 'exhausted'
-  page?: number
-  per_page?: number
-}
-
-export interface RedeemAccessCodeData {
-  code: string
-}
-
-export interface RedemptionResponse {
-  message: string
-  enrollment: {
-    id: number
-    status: string
-    enrolled_at: string
-    progress_percentage: number
-  }
-  course: {
-    id: number
-    title: string
-    slug: string
-    description: string
-    thumbnail_url?: string
-    difficulty_level: string
-    total_lessons: number
-    academy: {
-      name: string
-      slug: string
-    }
-  }
-  access_code: {
-    remaining_uses: number
-    days_until_expiry: number
-  }
-}
-
-export interface ValidationResponse {
-  valid: boolean
-  already_enrolled: boolean
-  message: string
-  course?: {
-    id: number
-    title: string
-    slug: string
-    description: string
-    thumbnail_url?: string
-    difficulty_level: string
-    total_lessons: number
-    academy: {
-      name: string
-      slug: string
-    }
-  }
-  access_code: {
-    remaining_uses: number
-    days_until_expiry: number
-    usage_percentage: number
-  }
-}
-
+/**
+ * Access Code Service
+ * Handles all access code-related API calls with view mode support
+ */
 class AccessCodeService {
-  async getAccessCodes(courseId: number | string) {
-    const response = await apiClient.get(`/courses/${courseId}/access_codes`)
+  /**
+   * Get all access codes for a course
+   * @param courseId - Course ID or slug
+   * @param filters - Optional filters (status, pagination)
+   * @param view - View mode: 'basic' | 'public' | 'admin' (default: 'admin')
+   * @returns Promise with access codes array typed according to view
+   */
+  async getAccessCodes<TView extends 'basic' | 'public' | 'admin' = 'admin'>(
+    courseId: number | string,
+    filters?: AccessCodeFilters,
+    view?: TView
+  ): Promise<
+    (TView extends 'basic' ? AccessCodeBase :
+     TView extends 'public' ? AccessCodePublic :
+     AccessCodeAdmin)[]
+  > {
+    const params = {
+      ...filters,
+      ...(view && { view })
+    }
+    const response = await apiClient.get(`/courses/${courseId}/access_codes`, { params })
     return response.data
   }
 
-  async getAccessCode(courseId: number | string, accessCodeId: number) {
-    const response = await apiClient.get(`/courses/${courseId}/access_codes/${accessCodeId}`)
-    return response.data.data as AccessCode
+  /**
+   * Get a single access code
+   * @param courseId - Course ID or slug
+   * @param accessCodeId - Access code ID
+   * @param view - View mode: 'basic' | 'public' | 'admin' (default: 'admin')
+   * @returns Promise with access code details typed according to view
+   */
+  async getAccessCode<TView extends 'basic' | 'public' | 'admin' = 'admin'>(
+    courseId: number | string,
+    accessCodeId: number,
+    view?: TView
+  ): Promise<
+    TView extends 'basic' ? AccessCodeBase :
+    TView extends 'public' ? AccessCodePublic :
+    AccessCodeAdmin
+  > {
+    const params = view ? { view } : {}
+    const response = await apiClient.get(`/courses/${courseId}/access_codes/${accessCodeId}`, { params })
+    return response.data.data
   }
 
-  async createAccessCode(courseId: number | string, data: CreateAccessCodeData) {
+  /**
+   * Create a new access code
+   * @param courseId - Course ID or slug
+   * @param data - Access code data
+   * @returns Promise with created access code
+   */
+  async createAccessCode(
+    courseId: number | string,
+    data: CreateAccessCodeRequest
+  ): Promise<AccessCode> {
     const response = await apiClient.post(`/courses/${courseId}/access_codes`, {
       access_code: data
     })
-    return response.data.data as AccessCode
+    return response.data.data
   }
 
-  async updateAccessCode(courseId: number | string, accessCodeId: number, data: UpdateAccessCodeData) {
+  /**
+   * Update an access code
+   * @param courseId - Course ID or slug
+   * @param accessCodeId - Access code ID
+   * @param data - Updated access code data
+   * @returns Promise with updated access code
+   */
+  async updateAccessCode(
+    courseId: number | string,
+    accessCodeId: number,
+    data: UpdateAccessCodeRequest
+  ): Promise<AccessCode> {
     const response = await apiClient.patch(`/courses/${courseId}/access_codes/${accessCodeId}`, {
       access_code: data
     })
-    return response.data.data as AccessCode
+    return response.data.data
   }
 
-  async deleteAccessCode(courseId: number | string, accessCodeId: number) {
-    await apiClient.delete(`/courses/${courseId}/access_codes/${accessCodeId}`)
+  /**
+   * Delete an access code
+   * @param courseId - Course ID or slug
+   * @param accessCodeId - Access code ID
+   * @returns Promise with success message
+   */
+  async deleteAccessCode(
+    courseId: number | string,
+    accessCodeId: number
+  ): Promise<{ message: string }> {
+    const response = await apiClient.delete(`/courses/${courseId}/access_codes/${accessCodeId}`)
+    return response.data
   }
 
-  async toggleAccessCodeStatus(courseId: number | string, accessCodeId: number) {
+  /**
+   * Toggle access code status (active/inactive)
+   * @param courseId - Course ID or slug
+   * @param accessCodeId - Access code ID
+   * @returns Promise with updated access code
+   */
+  async toggleAccessCodeStatus(
+    courseId: number | string,
+    accessCodeId: number
+  ): Promise<AccessCode> {
     const response = await apiClient.post(`/courses/${courseId}/access_codes/${accessCodeId}/toggle_status`)
-    return response.data.data as AccessCode
+    return response.data.data
   }
 
-  async redeemAccessCode(data: RedeemAccessCodeData) {
+  /**
+   * Redeem an access code (enroll in course)
+   * @param data - Redemption request with code
+   * @returns Promise with redemption response (enrollment + course info)
+   */
+  async redeemAccessCode(data: RedeemAccessCodeRequest): Promise<AccessCodeRedemptionResponse> {
     const response = await apiClient.post('/courses/redeem_access_code', data)
-    return response.data as RedemptionResponse
+    return response.data
   }
 
-  async validateAccessCode(code: string) {
+  /**
+   * Validate an access code before redeeming
+   * @param code - Access code to validate
+   * @returns Promise with validation response
+   */
+  async validateAccessCode(code: string): Promise<AccessCodeValidationResponse> {
     const response = await apiClient.get(`/courses/validate_access_code/${code}`)
-    return response.data as ValidationResponse
+    return response.data
   }
 }
 
-export const accessCodeService = new AccessCodeService()
+// Export singleton instance
+const accessCodeService = new AccessCodeService()
+export default accessCodeService
+
+// Also export as named export
+export { accessCodeService }
