@@ -8,7 +8,7 @@ import {
   useAcademyCategories,
   useFeaturedCourses,
 } from '@/hooks/use-featured-content'
-import { PublicHeader } from '@/components/layout/public-header'
+import { Header } from './components/header'
 import { AcademiesSection } from './components/academies-section'
 import { CategoriesFilter } from './components/categories-filter'
 import { CoursesSection } from './components/courses-section'
@@ -26,7 +26,7 @@ export function HomePage() {
 
   return (
     <div className='bg-background min-h-screen'>
-      <PublicHeader />
+      <Header />
 
       <HeroSection />
 

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { GuestGuard } from '@/components/route-guards'
-import { LandingPage } from '@/features/landing-page'
+import { LandingPage } from '@/pages/landing'
 
 function LandingRoute() {
   return (

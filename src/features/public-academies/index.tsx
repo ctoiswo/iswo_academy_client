@@ -7,7 +7,7 @@ import { useCategories } from '@/hooks/use-categories'
 import { useGeneralStatistics } from '@/hooks/use-statistics'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { PublicHeader } from '@/components/layout/public-header'
+import { PublicHeader } from '@/features/home/components/header'
 import {
   PageHeader,
   StatsSection,

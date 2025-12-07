@@ -12,9 +12,10 @@ import {
   Loader2,
   AlertCircle,
 } from 'lucide-react'
+import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
 import { useCourseBySlug } from '@/hooks/use-featured-content'
 import { useWishlist } from '@/hooks/use-wishlist'
-import { useAuthStore } from '@/stores/auth-store'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -25,8 +26,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { PublicHeader } from '@/components/layout/public-header'
-import { toast } from 'sonner'
+import { PublicHeader } from '@/features/home/components/header'
 
 export function PublicCoursePage() {
   const { courseSlug } = useParams({ strict: false })
@@ -34,7 +34,7 @@ export function PublicCoursePage() {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuthStore()
   const { isInWishlist, toggleWishlist } = useWishlist()
-  
+
   const {
     data: courseData,
     isLoading,
@@ -179,7 +179,12 @@ export function PublicCoursePage() {
       return
     }
 
-    const added = toggleWishlist('course', courseData.id, courseData.slug, courseData.title)
+    const added = toggleWishlist(
+      'course',
+      courseData.id,
+      courseData.slug,
+      courseData.title
+    )
     if (added) {
       toast.success(`${courseData.title} guardado en tu lista`)
     } else {
@@ -495,18 +500,20 @@ export function PublicCoursePage() {
                     </Button>
 
                     <div className='flex gap-2'>
-                      <Button 
-                        variant={isSaved ? 'default' : 'outline'} 
-                        size='sm' 
+                      <Button
+                        variant={isSaved ? 'default' : 'outline'}
+                        size='sm'
                         className='flex-1'
                         onClick={handleSaveClick}
                       >
-                        <Heart className={`mr-1 h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+                        <Heart
+                          className={`mr-1 h-4 w-4 ${isSaved ? 'fill-current' : ''}`}
+                        />
                         {isSaved ? 'Guardado' : 'Guardar'}
                       </Button>
-                      <Button 
-                        variant='outline' 
-                        size='sm' 
+                      <Button
+                        variant='outline'
+                        size='sm'
                         className='flex-1'
                         onClick={handleShareClick}
                       >

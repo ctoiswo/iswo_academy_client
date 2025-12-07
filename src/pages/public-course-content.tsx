@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
-import { PublicHeader } from '@/components/layout/public-header'
+import { PublicHeader } from '@/features/home/components/header'
 
 // Extended section type that includes lessons
 type SectionWithLessons = Section & {

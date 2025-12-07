@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { PublicHeader } from '@/components/layout/public-header'
+import { PublicHeader } from '@/features/home/components/header'
 
 export function CoursesPage() {
   const [searchQuery, setSearchQuery] = useState('')
