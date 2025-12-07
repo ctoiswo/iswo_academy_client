@@ -1,18 +1,20 @@
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { ArrowRight, Check, Play } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DemoDialog } from './DemoDialog'
 
 export function HeroSection() {
+  const { t } = useTranslation()
   return (
     <section id='hero' className='relative overflow-hidden py-20 lg:py-32'>
       {/* Background Image from Pexels */}
       <div className='absolute inset-0 z-0'>
         <img
           src='https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-          alt='Estudiantes aprendiendo'
+          alt={t('landing.hero.imageAlt')}
           className='h-full w-full object-cover opacity-10'
         />
         <div className='from-background/80 to-background/60 absolute inset-0 bg-gradient-to-br' />
@@ -26,7 +28,7 @@ export function HeroSection() {
             transition={{ duration: 0.6 }}
           >
             <Badge variant='outline' className='mb-6'>
-              🚀 Lanza tu Academia Hoy
+              {t('landing.hero.badge')}
             </Badge>
           </motion.div>
 
@@ -36,8 +38,11 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Crea tu Propia
-            <span className='text-primary'> Academia Online</span>
+            {t('landing.hero.title')}
+            <span className='text-primary'>
+              {' '}
+              {t('landing.hero.titleHighlight')}
+            </span>
           </motion.h1>
 
           <motion.p
@@ -46,9 +51,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            Construye, administra y escala tu plataforma educativa con nuestras
-            herramientas integrales de creación de academias. Empodera a
-            estudiantes de todo el mundo con tu experiencia.
+            {t('landing.hero.description')}
           </motion.p>
 
           <motion.div
@@ -60,7 +63,7 @@ export function HeroSection() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button size='lg' asChild>
                 <Link to='/sign-up'>
-                  Comenzar a Construir
+                  {t('landing.hero.startBuilding')}
                   <ArrowRight className='ml-2 h-4 w-4' />
                 </Link>
               </Button>
@@ -73,7 +76,7 @@ export function HeroSection() {
                 >
                   <Button variant='outline' size='lg'>
                     <Play className='mr-2 h-4 w-4' />
-                    Solicitar Demo
+                    {t('landing.hero.requestDemo')}
                   </Button>
                 </motion.div>
               }
@@ -89,15 +92,15 @@ export function HeroSection() {
           >
             <div className='flex items-center'>
               <Check className='mr-2 h-4 w-4 text-green-500' />
-              Gratis para comenzar
+              {t('landing.hero.freeToStart')}
             </div>
             <div className='flex items-center'>
               <Check className='mr-2 h-4 w-4 text-green-500' />
-              Sin tarifas de configuración
+              {t('landing.hero.noSetupFees')}
             </div>
             <div className='flex items-center'>
               <Check className='mr-2 h-4 w-4 text-green-500' />
-              Cancela cuando quieras
+              {t('landing.hero.cancelAnytime')}
             </div>
           </motion.div>
         </div>

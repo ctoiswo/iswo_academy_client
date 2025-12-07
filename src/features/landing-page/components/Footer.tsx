@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { GraduationCap } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { DemoDialog } from './DemoDialog'
 
@@ -9,13 +10,14 @@ interface FooterProps {
 }
 
 export function Footer({ onSectionClick }: FooterProps) {
+  const { t } = useTranslation()
   return (
     <footer className='bg-muted/50 relative overflow-hidden border-t'>
       {/* Background Image from Pexels */}
       <div className='absolute inset-0 z-0'>
         <img
           src='https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-          alt='Biblioteca moderna'
+          alt={t('landing.footer.imageAlt')}
           className='h-full w-full object-cover opacity-5'
         />
       </div>
@@ -37,8 +39,7 @@ export function Footer({ onSectionClick }: FooterProps) {
               <span className='font-bold'>ISWO Academy</span>
             </motion.div>
             <p className='text-muted-foreground text-sm'>
-              Empoderando a educadores para crear experiencias de aprendizaje en
-              línea increíbles.
+              {t('landing.footer.description')}
             </p>
             <div className='flex space-x-4'>
               <motion.div
@@ -46,7 +47,7 @@ export function Footer({ onSectionClick }: FooterProps) {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button size='sm' asChild>
-                  <Link to='/sign-up'>Comenzar</Link>
+                  <Link to='/sign-up'>{t('landing.footer.getStarted')}</Link>
                 </Button>
               </motion.div>
               <motion.div
@@ -54,7 +55,7 @@ export function Footer({ onSectionClick }: FooterProps) {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button size='sm' variant='outline' asChild>
-                  <Link to='/sign-in'>Iniciar Sesión</Link>
+                  <Link to='/sign-in'>{t('navigation.login')}</Link>
                 </Button>
               </motion.div>
             </div>
@@ -67,24 +68,24 @@ export function Footer({ onSectionClick }: FooterProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <h4 className='font-semibold'>Producto</h4>
+            <h4 className='font-semibold'>{t('landing.footer.product')}</h4>
             <div className='space-y-2 text-sm'>
               <button
                 onClick={() => onSectionClick('features')}
                 className='text-muted-foreground hover:text-primary block transition-colors'
               >
-                Características
+                {t('landing.footer.features')}
               </button>
               <button
                 onClick={() => onSectionClick('pricing')}
                 className='text-muted-foreground hover:text-primary block transition-colors'
               >
-                Precios
+                {t('landing.footer.pricing')}
               </button>
               <DemoDialog
                 trigger={
                   <button className='text-muted-foreground hover:text-primary block transition-colors'>
-                    Solicitar Demo
+                    {t('landing.footer.requestDemo')}
                   </button>
                 }
                 idPrefix='footer-'
@@ -99,25 +100,25 @@ export function Footer({ onSectionClick }: FooterProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h4 className='font-semibold'>Empresa</h4>
+            <h4 className='font-semibold'>{t('landing.footer.company')}</h4>
             <div className='space-y-2 text-sm'>
               <button
                 onClick={() => onSectionClick('testimonials')}
                 className='text-muted-foreground hover:text-primary block transition-colors'
               >
-                Testimonios
+                {t('landing.footer.testimonials')}
               </button>
               <a
                 href='#'
                 className='text-muted-foreground hover:text-primary block transition-colors'
               >
-                Acerca de Nosotros
+                {t('landing.footer.aboutUs')}
               </a>
               <a
                 href='#'
                 className='text-muted-foreground hover:text-primary block transition-colors'
               >
-                Blog
+                {t('landing.footer.blog')}
               </a>
             </div>
           </motion.div>
@@ -129,25 +130,25 @@ export function Footer({ onSectionClick }: FooterProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <h4 className='font-semibold'>Soporte</h4>
+            <h4 className='font-semibold'>{t('landing.footer.support')}</h4>
             <div className='space-y-2 text-sm'>
               <a
                 href='#'
                 className='text-muted-foreground hover:text-primary block transition-colors'
               >
-                Centro de Ayuda
+                {t('landing.footer.helpCenter')}
               </a>
               <a
                 href='#'
                 className='text-muted-foreground hover:text-primary block transition-colors'
               >
-                Contáctanos
+                {t('landing.footer.contactUs')}
               </a>
               <a
                 href='#'
                 className='text-muted-foreground hover:text-primary block transition-colors'
               >
-                Política de Privacidad
+                {t('landing.footer.privacy')}
               </a>
             </div>
           </motion.div>
@@ -161,17 +162,17 @@ export function Footer({ onSectionClick }: FooterProps) {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <p className='text-muted-foreground text-sm'>
-            © 2025 ISWO Academy. Todos los derechos reservados.
+            © 2025 ISWO Academy. {t('landing.footer.allRights')}.
           </p>
           <div className='flex items-center space-x-4'>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button size='sm' variant='ghost' asChild>
-                <Link to='/sign-in'>Iniciar Sesión</Link>
+                <Link to='/sign-in'>{t('navigation.login')}</Link>
               </Button>
             </motion.div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button size='sm' asChild>
-                <Link to='/sign-up'>Comenzar Gratis</Link>
+                <Link to='/sign-up'>{t('landing.footer.startFree')}</Link>
               </Button>
             </motion.div>
           </div>

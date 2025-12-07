@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { BookOpen, Users, Trophy, BarChart3, Zap, Shield } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import {
   Card,
   CardDescription,
@@ -7,52 +8,47 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-const features = [
-  {
-    icon: BookOpen,
-    title: 'Creación de Cursos',
-    description:
-      'Construye cursos integrales con lecciones, cuestionarios y contenido multimedia',
-    delay: 0.1,
-  },
-  {
-    icon: Users,
-    title: 'Gestión de Estudiantes',
-    description:
-      'Rastrea el progreso de los estudiantes, administra inscripciones e interactúa con tu comunidad',
-    delay: 0.2,
-  },
-  {
-    icon: Trophy,
-    title: 'Certificados y Badges',
-    description:
-      'Recompensa logros con certificados personalizados y insignias digitales',
-    delay: 0.3,
-  },
-  {
-    icon: BarChart3,
-    title: 'Análisis e Insights',
-    description:
-      'Obtén análisis detallados sobre el rendimiento de los estudiantes y la efectividad de los cursos',
-    delay: 0.4,
-  },
-  {
-    icon: Zap,
-    title: 'Integración Fácil',
-    description:
-      'Integra sin problemas con tus herramientas y flujos de trabajo existentes',
-    delay: 0.5,
-  },
-  {
-    icon: Shield,
-    title: 'Seguro y Confiable',
-    description:
-      'Seguridad de nivel empresarial con garantía de tiempo de actividad del 99.9%',
-    delay: 0.6,
-  },
-]
-
 export function FeaturesSection() {
+  const { t } = useTranslation()
+
+  const features = [
+    {
+      icon: BookOpen,
+      title: t('landing.features.courseCreation.title'),
+      description: t('landing.features.courseCreation.description'),
+      delay: 0.1,
+    },
+    {
+      icon: Users,
+      title: t('landing.features.studentManagement.title'),
+      description: t('landing.features.studentManagement.description'),
+      delay: 0.2,
+    },
+    {
+      icon: Trophy,
+      title: t('landing.features.certificates.title'),
+      description: t('landing.features.certificates.description'),
+      delay: 0.3,
+    },
+    {
+      icon: BarChart3,
+      title: t('landing.features.analytics.title'),
+      description: t('landing.features.analytics.description'),
+      delay: 0.4,
+    },
+    {
+      icon: Zap,
+      title: t('landing.features.integration.title'),
+      description: t('landing.features.integration.description'),
+      delay: 0.5,
+    },
+    {
+      icon: Shield,
+      title: t('landing.features.security.title'),
+      description: t('landing.features.security.description'),
+      delay: 0.6,
+    },
+  ]
   return (
     <section
       id='features'
@@ -62,7 +58,7 @@ export function FeaturesSection() {
       <div className='absolute inset-0 z-0'>
         <img
           src='https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-          alt='Libros y aprendizaje'
+          alt={t('landing.features.imageAlt')}
           className='h-full w-full object-cover opacity-5'
         />
       </div>
@@ -76,11 +72,10 @@ export function FeaturesSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className='text-3xl font-bold tracking-tight sm:text-4xl'>
-            Todo lo que necesitas para construir tu academia
+            {t('landing.features.title')}
           </h2>
           <p className='text-muted-foreground mt-4 text-lg'>
-            Herramientas poderosas y funciones diseñadas para ayudarte a crear
-            experiencias educativas atractivas
+            {t('landing.features.description')}
           </p>
         </motion.div>
 

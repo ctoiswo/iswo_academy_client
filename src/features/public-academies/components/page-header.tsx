@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 
 interface PageHeaderProps {
   totalAcademies: number
@@ -11,6 +12,7 @@ export function PageHeader({
   searchQuery,
   selectedCategory,
 }: PageHeaderProps) {
+  const { t } = useTranslation()
   const headerVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0 },
@@ -24,9 +26,9 @@ export function PageHeader({
       className='mb-12 text-center'
     >
       <h1 className='text-foreground mb-4 text-4xl font-bold lg:text-5xl'>
-        Explora Nuestras{' '}
+        {t('academies.pageTitle')}{' '}
         <span className='bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'>
-          Academias
+          {t('academies.pageTitleHighlight')}
         </span>
       </h1>
       <p className='text-muted-foreground mx-auto max-w-3xl text-xl leading-relaxed'>
@@ -34,20 +36,16 @@ export function PageHeader({
           <>
             {totalAcademies > 0 ? (
               <>
-                Encontramos{' '}
+                {t('academies.resultsFound')}{' '}
                 <span className='font-semibold'>{totalAcademies}</span>{' '}
-                academias que coinciden con tu búsqueda
+                {t('academies.resultsFoundSuffix')}
               </>
             ) : (
-              'No se encontraron academias que coincidan con tu búsqueda'
+              t('academies.noResults')
             )}
           </>
         ) : (
-          <>
-            Descubre las mejores academias online, creadas por expertos de la
-            industria. Aprende nuevas habilidades y avanza en tu carrera
-            profesional.
-          </>
+          t('academies.defaultDescription')
         )}
       </p>
     </motion.div>

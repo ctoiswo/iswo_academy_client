@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Star } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import {
   Card,
   CardContent,
@@ -7,34 +8,32 @@ import {
   CardHeader,
 } from '@/components/ui/card'
 
-const testimonials = [
-  {
-    quote:
-      '"ISWO Academy transformó la forma en que imparto mis cursos. La plataforma es intuitiva y a mis estudiantes les encantan las funciones interactivas."',
-    author: 'Sarah Johnson',
-    role: 'Experta en Marketing Digital',
-    initials: 'SJ',
-    delay: 0.1,
-  },
-  {
-    quote:
-      '"El panel de análisis me da perspectivas increíbles sobre el progreso de los estudiantes. Ahora puedo optimizar mis cursos para obtener mejores resultados."',
-    author: 'Michael Chen',
-    role: 'Instructor de Programación',
-    initials: 'MC',
-    delay: 0.2,
-  },
-  {
-    quote:
-      '"Configurar mi academia fue increíblemente fácil. En cuestión de horas, tenía mi primer curso en vivo y los estudiantes ya se estaban inscribiendo."',
-    author: 'Emily Rodriguez',
-    role: 'Profesora de Idiomas',
-    initials: 'ER',
-    delay: 0.3,
-  },
-]
-
 export function TestimonialsSection() {
+  const { t } = useTranslation()
+
+  const testimonials = [
+    {
+      quote: t('landing.testimonials.testimonial1.quote'),
+      author: t('landing.testimonials.testimonial1.author'),
+      role: t('landing.testimonials.testimonial1.role'),
+      initials: 'SJ',
+      delay: 0.1,
+    },
+    {
+      quote: t('landing.testimonials.testimonial2.quote'),
+      author: t('landing.testimonials.testimonial2.author'),
+      role: t('landing.testimonials.testimonial2.role'),
+      initials: 'MC',
+      delay: 0.2,
+    },
+    {
+      quote: t('landing.testimonials.testimonial3.quote'),
+      author: t('landing.testimonials.testimonial3.author'),
+      role: t('landing.testimonials.testimonial3.role'),
+      initials: 'ER',
+      delay: 0.3,
+    },
+  ]
   return (
     <section
       id='testimonials'
@@ -44,7 +43,7 @@ export function TestimonialsSection() {
       <div className='absolute inset-0 z-0'>
         <img
           src='https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-          alt='Personas colaborando'
+          alt={t('landing.testimonials.imageAlt')}
           className='h-full w-full object-cover opacity-5'
         />
       </div>
@@ -58,10 +57,10 @@ export function TestimonialsSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className='text-3xl font-bold tracking-tight sm:text-4xl'>
-            Con la confianza de educadores de todo el mundo
+            {t('landing.testimonials.title')}
           </h2>
           <p className='text-muted-foreground mt-4 text-lg'>
-            Mira lo que dicen nuestros creadores de academias
+            {t('landing.testimonials.description')}
           </p>
         </motion.div>
 

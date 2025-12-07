@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import {
   Card,
   CardContent,
@@ -7,20 +8,21 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { AuthLayout } from '../auth-layout'
+import { AnimatedAuthLayout } from '../components/animated-auth-layout'
 import { ForgotPasswordForm } from './components/forgot-password-form'
 
 export function ForgotPassword() {
+  const { t } = useTranslation()
+
   return (
-    <AuthLayout>
+    <AnimatedAuthLayout title={t('auth.forgotPassword.title')} subtitle={t('auth.forgotPassword.subtitle')}>
       <Card className='gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>
-            Recuperar contraseña
+            {t('auth.forgotPassword.title')}
           </CardTitle>
           <CardDescription>
-            Ingresa tu correo electrónico registrado y <br /> te enviaremos un
-            enlace para restablecer tu contraseña.
+            {t('auth.forgotPassword.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -28,25 +30,25 @@ export function ForgotPassword() {
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground mx-auto px-8 text-center text-sm text-balance'>
-            ¿Recuerdas tu contraseña?{' '}
+            {t('auth.forgotPassword.rememberPassword')}{' '}
             <Link
               to='/sign-in'
               className='hover:text-primary underline underline-offset-4'
             >
-              Iniciar sesión
+              {t('auth.forgotPassword.signIn')}
             </Link>
             {' • '}
-            ¿No tienes una cuenta?{' '}
+            {t('auth.forgotPassword.noAccount')}{' '}
             <Link
               to='/sign-up'
               className='hover:text-primary underline underline-offset-4'
             >
-              Registrarse
+              {t('auth.forgotPassword.signUp')}
             </Link>
             .
           </p>
         </CardFooter>
       </Card>
-    </AuthLayout>
+    </AnimatedAuthLayout>
   )
 }

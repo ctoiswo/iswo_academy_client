@@ -9,11 +9,13 @@ import {
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
-import { handleServerError } from '@/lib/handle-server-error'
 import { initializeAuthIntegration } from '@/lib/auth-integration'
+import { handleServerError } from '@/lib/handle-server-error'
 import { DirectionProvider } from './context/direction-provider'
 import { FontProvider } from './context/font-provider'
 import { ThemeProvider } from './context/theme-provider'
+// i18n
+import './i18n'
 // Generated Routes
 import { routeTree } from './routeTree.gen'
 // Styles

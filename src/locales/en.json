@@ -1,0 +1,557 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "actions": "Actions",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "courses": "Courses",
+    "explore": "Explore Courses",
+    "exploreAcademies": "Explore Academies",
+    "createAcademy": "Create Your Academy",
+    "features": "Features",
+    "pricing": "Pricing",
+    "testimonials": "Testimonials",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Log Out",
+    "login": "Log In",
+    "register": "Sign Up",
+    "backToHome": "Back to home"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign in",
+      "subtitle": "Enter your email and password to access your account.",
+      "welcome": "Welcome back!",
+      "description": "Continue your learning journey and discover new opportunities at ISWO Academy",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "********",
+      "forgotPassword": "Forgot your password?",
+      "button": "Sign in",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up here",
+      "orContinueWith": "Or continue with",
+      "terms": "By clicking sign in, you agree to our",
+      "termsLink": "Terms of Service",
+      "and": "and",
+      "privacyLink": "Privacy Policy",
+      "successMessage": "Welcome back, {{email}}!",
+      "github": "GitHub",
+      "facebook": "Facebook",
+      "validation": {
+        "emailRequired": "Please enter your email",
+        "emailInvalid": "Please enter a valid email address",
+        "passwordRequired": "Please enter your password",
+        "passwordMin": "Password must be at least 7 characters"
+      }
+    },
+    "signUp": {
+      "title": "Create account",
+      "subtitle": "Create your account to start your learning journey",
+      "welcome": "Join ISWO Academy!",
+      "description": "The platform where your knowledge comes to life",
+      "firstName": "First name",
+      "firstNamePlaceholder": "John",
+      "lastName": "Last name",
+      "lastNamePlaceholder": "Doe",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "********",
+      "passwordConfirmation": "Confirm password",
+      "button": "Create account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in here",
+      "orContinueWith": "Or continue with",
+      "terms": "By creating an account, you agree to our",
+      "termsLink": "Terms of Service",
+      "and": "and",
+      "privacyLink": "Privacy Policy"
+    },
+    "forgotPassword": {
+      "title": "Recover password",
+      "subtitle": "Enter your email and we'll send you instructions",
+      "description": "Enter your registered email address and we'll send you a link to reset your password.",
+      "email": "Email",
+      "emailPlaceholder": "name@example.com",
+      "button": "Send recovery email",
+      "sending": "Sending email...",
+      "backToLogin": "Back to sign in",
+      "rememberPassword": "Remember your password?",
+      "signIn": "Sign in",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "successMessage": "Password reset instructions have been sent to your email address.",
+      "validation": {
+        "emailRequired": "Please enter your email",
+        "emailInvalid": "Please enter a valid email address"
+      }
+    },
+    "signUpSuccess": {
+      "title": "Welcome to ISWO Academy!",
+      "subtitle": "Your account has been created successfully. Get ready for an extraordinary learning experience.",
+      "successTitle": "Registration Successful!",
+      "successDescription": "Your account has been created successfully.",
+      "confirmationSent": "We've sent a confirmation email to your inbox.",
+      "verifyEmail": "Verify your email",
+      "verifyEmailDescription": "Check your inbox and click the confirmation link.",
+      "whatAwaits": "What awaits you at ISWO Academy:",
+      "feature1": "Access to interactive courses and exclusive content",
+      "feature2": "Achievement and certification system",
+      "feature3": "Collaborative learning community",
+      "signInButton": "Sign In",
+      "registerAnotherButton": "Register Another Account",
+      "funFact": "Fun fact:",
+      "funFactText": "Verified users have access to premium content from day one.",
+      "checkEmail": "Please check your email and follow the instructions to reset your password. If you don't see the email, check your spam folder."
+    },
+    "confirmEmail": {
+      "title": "Email Confirmation",
+      "subtitle": "We're verifying your email address to activate your ISWO Academy account",
+      "loading": "Confirming your email...",
+      "successTitle": "Email confirmed!",
+      "errorTitle": "Confirmation error",
+      "success": "Your email has been confirmed successfully! You can now log in.",
+      "goToLogin": "Sign In",
+      "retry": "Try Again",
+      "errors": {
+        "noToken": "Confirmation token not found."
+      }
+    },
+    "resetPassword": {
+      "title": "New password",
+      "layoutTitle": "Create your new password",
+      "layoutSubtitle": "Secure your account with a strong password",
+      "subtitle": "Enter your new password below. Make sure it's strong and secure.",
+      "password": "New password",
+      "passwordPlaceholder": "Enter your new password",
+      "passwordConfirmation": "Confirm new password",
+      "passwordConfirmationPlaceholder": "Confirm your new password",
+      "button": "Reset password",
+      "resetting": "Resetting password...",
+      "rememberPassword": "Remember your password?",
+      "signIn": "Sign in",
+      "invalidLink": {
+        "title": "Invalid link",
+        "layoutTitle": "Invalid reset link",
+        "layoutSubtitle": "The link you used is invalid or has expired",
+        "description": "The password reset link is invalid or has expired. Please request a new password reset.",
+        "requestNew": "Request new reset"
+      },
+      "successMessage": "Your password has been successfully reset. You can now sign in with your new password.",
+      "validation": {
+        "passwordMin": "Password must be at least 8 characters",
+        "passwordUppercase": "Password must contain at least one uppercase letter",
+        "passwordLowercase": "Password must contain at least one lowercase letter",
+        "passwordNumber": "Password must contain at least one number",
+        "passwordConfirmationRequired": "Please confirm your password",
+        "passwordsMismatch": "Passwords do not match"
+      }
+    },
+    "layout": {
+      "features": {
+        "createAcademy": "Create your own online academy",
+        "qualityCourses": "Access quality courses",
+        "certifications": "Recognized certifications"
+      }
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Terms of Service",
+      "layoutTitle": "Terms of Service",
+      "layoutSubtitle": "Learn about the terms and conditions of using ISWO Academy",
+      "lastUpdated": "Last updated: December 6, 2025",
+      "intro": "Please read these terms carefully before using ISWO Academy. By using our services, you agree to be legally bound by these terms.",
+      "backButton": "Go back",
+      "viewPrivacy": "View Privacy Policy",
+      "sections": {
+        "acceptance": {
+          "title": "1. Acceptance of Terms",
+          "content": "By accessing and using ISWO Academy, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you should not use our services. We reserve the right to update these terms at any time, and your continued use of the service constitutes acceptance of such changes."
+        },
+        "userAccount": {
+          "title": "2. User Registration and Account",
+          "content": "To access certain features of the platform, you must create an account. You are responsible for maintaining the confidentiality of your password and all activities that occur under your account. You must provide accurate and up-to-date information during registration. ISWO Academy reserves the right to suspend or terminate accounts that violate these terms."
+        },
+        "serviceUse": {
+          "title": "3. Use of Service",
+          "content": "We grant you a limited, non-exclusive, and non-transferable license to access and use ISWO Academy for personal educational purposes. You may not: (a) copy, modify, or distribute content without authorization, (b) use the service for illegal activities, (c) attempt to access restricted areas of the platform, (d) interfere with the operation of the service, or (e) use bots or automated systems without express permission."
+        },
+        "intellectualProperty": {
+          "title": "4. Intellectual Property",
+          "content": "All content on ISWO Academy, including text, graphics, logos, videos, and software, is protected by intellectual property rights. Instructors retain rights to the content they create but grant ISWO Academy a license to distribute it. Students may view content for personal and educational use but cannot redistribute it commercially."
+        },
+        "payments": {
+          "title": "5. Payments and Subscriptions",
+          "content": "Some courses and features require payment. Prices are subject to change with prior notice. Subscriptions automatically renew until you cancel them. You can cancel at any time from your account dashboard. Refunds will be processed according to our refund policy, generally within 14 days of purchase if you have not consumed more than 20% of the course."
+        },
+        "liability": {
+          "title": "6. Limitation of Liability",
+          "content": "ISWO Academy is provided \"as is\" without warranties of any kind. We do not guarantee that the service will be error-free or uninterrupted. We are not responsible for indirect, incidental, or consequential damages arising from the use of the platform. Our total liability is limited to the amount you have paid for the service in the last 12 months."
+        }
+      },
+      "contact": {
+        "title": "Contact Information",
+        "subtitle": "Have questions about these terms?",
+        "description": "If you have any questions about these Terms of Service, you can contact us through:",
+        "email": "Email:",
+        "support": "Support:"
+      },
+      "cta": {
+        "title": "Ready to get started?",
+        "subtitle": "Join thousands of students at ISWO Academy",
+        "signIn": "Sign In",
+        "signUp": "Sign Up"
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "layoutTitle": "Privacy Policy",
+      "layoutSubtitle": "Your privacy is our priority. Learn how we protect your data",
+      "lastUpdated": "Last updated: December 6, 2025",
+      "intro": "At ISWO Academy, we value your privacy and are committed to protecting your personal information. This policy explains how we collect, use, and protect your data.",
+      "sections": {
+        "dataCollection": {
+          "title": "1. Information We Collect",
+          "content": "We collect information you provide directly, such as your name, email address, profile photo, and learning preferences when you create an account. We also automatically collect information about your use of the platform, including courses visited, learning progress, study time, and device data (IP address, browser type, operating system). We use cookies and similar technologies to improve your experience."
+        },
+        "dataUsage": {
+          "title": "2. How We Use Your Information",
+          "content": "We use your information to: provide and improve our educational services, personalize your learning experience, process payments and subscriptions, send you updates about your courses, communicate with you about your account, analyze platform usage to improve it, comply with legal obligations, and protect the security of our users. We do not sell your personal information to third parties."
+        },
+        "dataSharing": {
+          "title": "3. Sharing Your Information",
+          "content": "We share your information only in limited circumstances: with instructors of courses you're enrolled in (name, progress, and activity), with service providers that help us operate the platform (payment processors, email services, hosting), when required by law or to protect our rights, and with your explicit consent for other specific purposes. All our providers are contractually obligated to protect your information."
+        },
+        "dataSecurity": {
+          "title": "4. Data Security",
+          "content": "We implement technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. This includes data encryption in transit (SSL/TLS), password encryption, firewalls, continuous security monitoring, and restricted access to personal information only for authorized employees. However, no method of internet transmission is 100% secure."
+        },
+        "userRights": {
+          "title": "5. Your Rights and Choices",
+          "content": "You have the right to: access your personal information, correct inaccurate data, request deletion of your account and associated data, export your data in a portable format, object to the processing of your information, withdraw your consent at any time, and opt out of marketing communications. You can exercise these rights from your account settings or by contacting us directly."
+        },
+        "internationalTransfers": {
+          "title": "6. International Transfers",
+          "content": "ISWO Academy operates globally and may transfer your information to servers located in different countries. By using our services, you consent to these transfers. We ensure that any international transfer complies with applicable data protection laws, including the use of approved standard contractual clauses and adequate safeguards to protect your information."
+        }
+      },
+      "cookies": {
+        "title": "Cookie Usage",
+        "subtitle": "Information about the cookies we use",
+        "description": "We use cookies and similar technologies to improve your experience. Cookies are small text files stored on your device.",
+        "essential": "Essential cookies: Necessary for basic platform functionality",
+        "performance": "Performance cookies: Help us understand how you use the site",
+        "functionality": "Functionality cookies: Remember your preferences",
+        "marketing": "Marketing cookies: Personalize ads (require your consent)",
+        "manage": "You can manage your cookie preferences at any time from your browser settings."
+      },
+      "contact": {
+        "title": "Contact and Questions",
+        "subtitle": "Have questions about how we handle your information?",
+        "description": "If you have questions about this Privacy Policy or wish to exercise your rights, contact us:",
+        "privacy": "Privacy Officer:",
+        "support": "General Support:",
+        "response": "We will respond to your request within 30 business days."
+      },
+      "cta": {
+        "title": "Your privacy is our priority",
+        "subtitle": "Learn with confidence at ISWO Academy",
+        "signIn": "Sign In",
+        "signUp": "Sign Up"
+      }
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "myLearning": "My Learning",
+    "stats": "Stats",
+    "recentActivity": "Recent Activity",
+    "continueWhere": "Continue where you left off"
+  },
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "personalInfo": "Personal Information",
+    "accountSettings": "Account Settings"
+  },
+  "gamification": {
+    "points": "Points",
+    "badges": "Badges",
+    "achievements": "Achievements",
+    "leaderboard": "Leaderboard",
+    "level": "Level"
+  },
+  "errors": {
+    "generic": "An unexpected error occurred",
+    "networkError": "Connection error. Please check your internet connection.",
+    "unauthorized": "You don't have permission to perform this action",
+    "notFound": "Resource not found",
+    "validationError": "Please check the entered data"
+  },
+  "footer": {
+    "allRightsReserved": "All rights reserved",
+    "madeWith": "Made with",
+    "by": "by"
+  },
+  "home": {
+    "hero": {
+      "title": "Discover your next",
+      "titleHighlight": "learning opportunity",
+      "description": "Explore thousands of courses created by experts in specialized academies. Learn new skills and grow your professional career.",
+      "imageAlt": "Students learning"
+    },
+    "categories": {
+      "all": "All categories",
+      "loading": "Loading categories..."
+    },
+    "academies": {
+      "title": "Featured Academies",
+      "description": "Discover the best specialized academies in different areas",
+      "loading": "Loading academies...",
+      "error": "Error loading featured academies.",
+      "retry": "Retry",
+      "notFound": "No featured academies found.",
+      "viewAll": "View All Academies"
+    },
+    "courses": {
+      "title": "Popular Courses by Category",
+      "description": "Explore the most outstanding courses organized by areas of knowledge",
+      "loading": "Loading courses...",
+      "exploreAll": "Explore All Academies"
+    },
+    "cta": {
+      "title": "Do you have knowledge to share?",
+      "description": "Join thousands of instructors who are already creating their own online academies. Share your experience and generate income teaching what you are most passionate about.",
+      "button": "Create My Academy"
+    }
+  },
+  "landing": {
+    "hero": {
+      "badge": "🚀 Launch Your Academy Today",
+      "title": "Create Your Own",
+      "titleHighlight": "Online Academy",
+      "description": "Build, manage, and scale your educational platform with our comprehensive academy creation tools. Empower students worldwide with your expertise.",
+      "imageAlt": "Students learning",
+      "startBuilding": "Start Building",
+      "requestDemo": "Request Demo",
+      "freeToStart": "Free to start",
+      "noSetupFees": "No setup fees",
+      "cancelAnytime": "Cancel anytime"
+    },
+    "features": {
+      "title": "Everything you need to build your academy",
+      "description": "Powerful tools and features designed to help you create engaging educational experiences",
+      "imageAlt": "Books and learning",
+      "courseCreation": {
+        "title": "Course Creation",
+        "description": "Build comprehensive courses with lessons, quizzes, and multimedia content"
+      },
+      "studentManagement": {
+        "title": "Student Management",
+        "description": "Track student progress, manage enrollments, and engage with your community"
+      },
+      "certificates": {
+        "title": "Certificates & Badges",
+        "description": "Reward achievements with custom certificates and digital badges"
+      },
+      "analytics": {
+        "title": "Analytics & Insights",
+        "description": "Get detailed analytics on student performance and course effectiveness"
+      },
+      "integration": {
+        "title": "Easy Integration",
+        "description": "Seamlessly integrate with your existing tools and workflows"
+      },
+      "security": {
+        "title": "Secure & Reliable",
+        "description": "Enterprise-grade security with 99.9% uptime guarantee"
+      }
+    },
+    "pricing": {
+      "title": "Simple, transparent pricing",
+      "description": "Choose the plan that fits your academy's needs",
+      "imageAlt": "Modern office",
+      "popular": "Popular",
+      "starter": {
+        "name": "Starter",
+        "description": "Perfect for getting started",
+        "price": "Free",
+        "features": {
+          "courses": "Up to 3 courses",
+          "students": "Up to 50 students",
+          "analytics": "Basic analytics",
+          "support": "Email support"
+        },
+        "button": "Get Started Free"
+      },
+      "professional": {
+        "name": "Professional",
+        "description": "Most popular choice",
+        "price": "$29",
+        "priceUnit": "/month",
+        "features": {
+          "courses": "Unlimited courses",
+          "students": "Up to 500 students",
+          "analytics": "Advanced analytics",
+          "certificates": "Custom certificates",
+          "support": "Priority support"
+        },
+        "button": "Start Free Trial"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "For large organizations",
+        "price": "$99",
+        "priceUnit": "/month",
+        "features": {
+          "unlimited": "Everything unlimited",
+          "whiteLabel": "White-label solution",
+          "api": "API access",
+          "integrations": "Custom integrations",
+          "support": "24/7 phone support"
+        },
+        "button": "Contact Sales",
+        "dialog": {
+          "title": "Enterprise Sales",
+          "description": "Let's talk about how ISWO Academy Enterprise can meet your organization's needs.",
+          "solutionsTitle": "Enterprise Solutions",
+          "solutionsDescription": "Custom pricing, white-label solutions, and dedicated support for large organizations.",
+          "enterpriseSales": "Enterprise Sales",
+          "salesTeam": "Sales Team",
+          "startFreeTrial": "Start Free Trial",
+          "startFreeNote": "Or start with our free plan and upgrade later"
+        }
+      }
+    },
+    "testimonials": {
+      "title": "Trusted by educators worldwide",
+      "description": "See what our academy creators have to say",
+      "imageAlt": "People collaborating",
+      "testimonial1": {
+        "quote": "\"ISWO Academy transformed the way I deliver my courses. The platform is intuitive and my students love the interactive features.\"",
+        "author": "Sarah Johnson",
+        "role": "Digital Marketing Expert"
+      },
+      "testimonial2": {
+        "quote": "\"The analytics dashboard gives me incredible insights into student progress. I can now optimize my courses for better outcomes.\"",
+        "author": "Michael Chen",
+        "role": "Programming Instructor"
+      },
+      "testimonial3": {
+        "quote": "\"Setting up my academy was incredibly easy. Within hours, I had my first course live and students were already enrolling.\"",
+        "author": "Emily Rodriguez",
+        "role": "Language Teacher"
+      }
+    },
+    "cta": {
+      "title": "Ready to build your academy?",
+      "description": "Join thousands of educators already creating amazing learning experiences",
+      "imageAlt": "Team working together",
+      "startFreeAcademy": "Start Your Free Academy",
+      "signIn": "Sign In",
+      "needHelp": "Need help getting started? Contact our team",
+      "contactTeam": {
+        "title": "Contact Our Team",
+        "description": "Have questions? Our team is here to help you get started with your academy.",
+        "emailSupport": "Email Support",
+        "phoneSupport": "Phone Support",
+        "businessHours": "Business Hours",
+        "hoursText": "Mon-Fri, 9AM-6PM EST",
+        "startNow": "Start Now"
+      }
+    },
+    "footer": {
+      "description": "Empowering educators to create amazing online learning experiences.",
+      "imageAlt": "Modern library",
+      "getStarted": "Get Started",
+      "product": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "requestDemo": "Request Demo",
+      "company": "Company",
+      "testimonials": "Testimonials",
+      "aboutUs": "About Us",
+      "blog": "Blog",
+      "support": "Support",
+      "helpCenter": "Help Center",
+      "contactUs": "Contact Us",
+      "privacy": "Privacy Policy",
+      "allRights": "All rights reserved",
+      "startFree": "Start Free"
+    }
+  },
+  "academies": {
+    "pageTitle": "Explore Our",
+    "pageTitleHighlight": "Academies",
+    "defaultDescription": "Discover the best online academies, created by industry experts. Learn new skills and advance your professional career.",
+    "resultsFound": "We found",
+    "resultsFoundSuffix": "academies matching your search",
+    "noResults": "No academies found matching your search",
+    "stats": {
+      "academiesAvailable": "Academies Available",
+      "activeStudents": "Active Students",
+      "mainCategories": "Main Categories",
+      "categoriesFound": "Categories Found"
+    },
+    "search": {
+      "placeholder": "Search academies by name or description...",
+      "category": "Category",
+      "allCategories": "All categories",
+      "sortBy": "Sort by",
+      "popular": "Most popular",
+      "rating": "Best rating",
+      "students": "Most students",
+      "newest": "Most recent",
+      "all": "All",
+      "activeFilters": "Active filters:",
+      "searchLabel": "Search:",
+      "orderLabel": "Order:",
+      "clearAll": "Clear all",
+      "clearSearch": "Clear search",
+      "viewAllCategories": "View all categories"
+    },
+    "grid": {
+      "noAcademies": "No academies found",
+      "noResultsWithSearch": "No academies matching",
+      "inThisCategory": "in this category",
+      "noAvailable": "No academies available in this category",
+      "results": "Results",
+      "academyFound": "academy found",
+      "academiesFound": "academies found"
+    },
+    "cta": {
+      "title": "Can't find what you're looking for?",
+      "description": "Create your own academy and share your knowledge with thousands of students.",
+      "button": "Create My Academy"
+    },
+    "loading": "Loading academies...",
+    "error": "Error",
+    "tryAgain": "Try again",
+    "noAvailable": "No academies available"
+  }
+}

@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
-import { IconFacebook, IconGithub } from '@/assets/brand-icons'
+import { IconGmail, IconGithub } from '@/assets/brand-icons'
 import { useAuthStore, type LoginCredentials } from '@/stores/auth-store'
 import { isApiError } from '@/lib/api-client'
 import {
@@ -15,6 +15,7 @@ import {
   shouldLogout,
 } from '@/lib/error-handler'
 import { cn } from '@/lib/utils'
+import { useTranslation } from '@/hooks/use-translation'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -27,17 +28,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 
-const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Por favor ingresa tu correo electrónico')
-    .email('Por favor ingresa una dirección de correo electrónico válida'),
-  password: z
-    .string()
-    .min(1, 'Por favor ingresa tu contraseña')
-    .min(7, 'La contraseña debe tener al menos 7 caracteres'),
-})
-
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
   redirectTo?: string
 }
@@ -47,9 +37,21 @@ export function UserAuthForm({
   redirectTo,
   ...props
 }: UserAuthFormProps) {
+  const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const { login, logout, error, setError } = useAuthStore()
+
+  const formSchema = z.object({
+    email: z
+      .string()
+      .min(1, t('auth.signIn.validation.emailRequired'))
+      .email(t('auth.signIn.validation.emailInvalid')),
+    password: z
+      .string()
+      .min(1, t('auth.signIn.validation.passwordRequired'))
+      .min(7, t('auth.signIn.validation.passwordMin')),
+  })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,6 +60,17 @@ export function UserAuthForm({
       password: '',
     },
   })
+
+  function handleOAuthLogin(provider: 'github' | 'google_oauth2') {
+    // OAuth routes are at the root level, not under /api/v1
+    const baseUrl =
+      import.meta.env.VITE_API_URL?.replace('/api/v1', '') ||
+      'http://localhost:3001'
+    const oauthUrl = `${baseUrl}/auth/${provider}`
+
+    // Redirect to OAuth provider
+    window.location.href = oauthUrl
+  }
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
@@ -72,7 +85,7 @@ export function UserAuthForm({
       const result = await login(credentials)
 
       // Show success message
-      toast.success(`¡Bienvenido de vuelta, ${data.email}!`)
+      toast.success(t('auth.signIn.successMessage', { email: data.email }))
 
       // Redirect based on login result
       if (result.shouldRedirect && result.redirectPath) {
@@ -130,11 +143,13 @@ export function UserAuthForm({
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='text-black'>Correo electrónico</FormLabel>
+              <FormLabel className='text-black'>
+                {t('auth.signIn.email')}
+              </FormLabel>
               <FormControl>
                 <Input
                   className='text-black'
-                  placeholder='nombre@ejemplo.com'
+                  placeholder={t('auth.signIn.emailPlaceholder')}
                   {...field}
                 />
               </FormControl>
@@ -147,27 +162,29 @@ export function UserAuthForm({
           name='password'
           render={({ field }) => (
             <FormItem className='relative'>
-              <FormLabel className='text-black'>Contraseña</FormLabel>
+              <FormLabel className='text-black'>
+                {t('auth.signIn.password')}
+              </FormLabel>
               <FormControl>
                 <PasswordInput
                   className='text-black'
-                  placeholder='********'
+                  placeholder={t('auth.signIn.passwordPlaceholder')}
                   {...field}
                 />
               </FormControl>
               <FormMessage />
               <Link
                 to='/forgot-password'
-                className='text-muted-foreground absolute -top-0.5 end-0 text-sm font-medium hover:opacity-75'
+                className='text-muted-foreground absolute end-0 -top-0.5 text-sm font-medium hover:opacity-75'
               >
-                ¿Olvidaste tu contraseña?
+                {t('auth.signIn.forgotPassword')}
               </Link>
             </FormItem>
           )}
         />
         <Button className='mt-2' disabled={isLoading}>
           {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
-          Iniciar sesión
+          {t('auth.signIn.button')}
         </Button>
 
         <div className='relative my-2'>
@@ -175,7 +192,9 @@ export function UserAuthForm({
             <span className='w-full border-t' />
           </div>
           <div className='relative flex justify-center text-xs uppercase'>
-            <span className='px-2 text-black'>O continúa con</span>
+            <span className='px-2 text-black'>
+              {t('auth.signIn.orContinueWith')}
+            </span>
           </div>
         </div>
 
@@ -184,17 +203,17 @@ export function UserAuthForm({
             variant='default'
             type='button'
             disabled={isLoading}
-            className='bg-background text-white'
+            onClick={() => handleOAuthLogin('github')}
           >
-            <IconGithub className='h-4 w-4' /> GitHub
+            <IconGithub className='h-4 w-4' /> {t('auth.signIn.github')}
           </Button>
           <Button
             variant='default'
             type='button'
             disabled={isLoading}
-            className='bg-background text-white'
+            onClick={() => handleOAuthLogin('google_oauth2')}
           >
-            <IconFacebook className='h-4 w-4' /> Facebook
+            <IconGmail className='h-4 w-4' /> Google
           </Button>
         </div>
       </form>

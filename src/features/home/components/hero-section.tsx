@@ -3,15 +3,17 @@
  * Displays the main hero banner with search functionality
  */
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { GlobalSearchBar } from '@/components/search/global-search-bar'
 
 export function HeroSection() {
+  const { t } = useTranslation()
   return (
     <section className='relative py-20 lg:py-32'>
       <div className='absolute inset-0 z-0'>
         <img
           src='https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-          alt='Estudiantes aprendiendo'
+          alt={t('home.hero.imageAlt')}
           className='h-full w-full object-cover opacity-10'
         />
         <div className='from-background/80 to-background/60 absolute inset-0 bg-gradient-to-br' />
@@ -25,8 +27,11 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            Descubre tu próxima
-            <span className='text-primary'> oportunidad de aprendizaje</span>
+            {t('home.hero.title')}
+            <span className='text-primary'>
+              {' '}
+              {t('home.hero.titleHighlight')}
+            </span>
           </motion.h1>
 
           <motion.p
@@ -35,9 +40,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Explora miles de cursos creados por expertos en academias
-            especializadas. Aprende nuevas habilidades y haz crecer tu carrera
-            profesional.
+            {t('home.hero.description')}
           </motion.p>
 
           <motion.div

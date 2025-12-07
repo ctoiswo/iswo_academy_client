@@ -1,6 +1,7 @@
 import type { AcademyCategory } from '@/types'
 import { motion } from 'framer-motion'
 import { Search, BookOpen } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -37,6 +38,8 @@ export function SearchFilters({
   searchQuery,
   navigate,
 }: SearchFiltersProps) {
+  const { t } = useTranslation()
+
   const searchVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
@@ -60,7 +63,7 @@ export function SearchFilters({
         <div className='relative flex-1'>
           <Search className='text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform' />
           <Input
-            placeholder='Buscar academias por nombre o descripción...'
+            placeholder={t('academies.search.placeholder')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
@@ -72,10 +75,12 @@ export function SearchFilters({
         <div className='flex gap-3'>
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className='h-12 w-48'>
-              <SelectValue placeholder='Categoría' />
+              <SelectValue placeholder={t('academies.search.category')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='all'>Todas las categorías</SelectItem>
+              <SelectItem value='all'>
+                {t('academies.search.allCategories')}
+              </SelectItem>
               {categoryButtons.map((category) => (
                 <SelectItem key={category.id} value={category.id}>
                   {category.name} ({category.count})
@@ -89,13 +94,21 @@ export function SearchFilters({
             onValueChange={(value) => setSortBy(value as any)}
           >
             <SelectTrigger className='h-12 w-40'>
-              <SelectValue placeholder='Ordenar por' />
+              <SelectValue placeholder={t('academies.search.sortBy')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='popular'>Más popular</SelectItem>
-              <SelectItem value='rating'>Mejor calificación</SelectItem>
-              <SelectItem value='students'>Más estudiantes</SelectItem>
-              <SelectItem value='newest'>Más reciente</SelectItem>
+              <SelectItem value='popular'>
+                {t('academies.search.popular')}
+              </SelectItem>
+              <SelectItem value='rating'>
+                {t('academies.search.rating')}
+              </SelectItem>
+              <SelectItem value='students'>
+                {t('academies.search.students')}
+              </SelectItem>
+              <SelectItem value='newest'>
+                {t('academies.search.newest')}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -110,7 +123,7 @@ export function SearchFilters({
           className='rounded-full'
         >
           <BookOpen className='mr-2 h-4 w-4' />
-          Todas
+          {t('academies.search.all')}
         </Button>
         {categoryButtons.map((category) => (
           <Button
@@ -133,11 +146,11 @@ export function SearchFilters({
       {(searchQuery || selectedCategory !== 'all' || sortBy !== 'popular') && (
         <div className='bg-muted/50 mt-4 flex flex-wrap items-center gap-2 rounded-lg p-3'>
           <span className='text-muted-foreground text-sm font-medium'>
-            Filtros activos:
+            {t('academies.search.activeFilters')}
           </span>
           {searchQuery && (
             <Badge variant='secondary' className='gap-1'>
-              Búsqueda: "{searchQuery}"
+              {t('academies.search.searchLabel')} "{searchQuery}"
               <button
                 onClick={() => {
                   setSearchInput('')
@@ -162,14 +175,14 @@ export function SearchFilters({
           )}
           {sortBy !== 'popular' && (
             <Badge variant='secondary' className='gap-1'>
-              Orden:{' '}
+              {t('academies.search.orderLabel')}{' '}
               {sortBy === 'rating'
-                ? 'Mejor calificación'
+                ? t('academies.search.rating')
                 : sortBy === 'students'
-                  ? 'Más estudiantes'
+                  ? t('academies.search.students')
                   : sortBy === 'newest'
-                    ? 'Más reciente'
-                    : 'Más popular'}
+                    ? t('academies.search.newest')
+                    : t('academies.search.popular')}
               <button
                 onClick={() => setSortBy('popular')}
                 className='hover:bg-muted-foreground/20 ml-1 rounded-full p-0.5'
@@ -190,7 +203,7 @@ export function SearchFilters({
             }}
             className='ml-auto h-6 text-xs'
           >
-            Limpiar todos
+            {t('academies.search.clearAll')}
           </Button>
         </div>
       )}

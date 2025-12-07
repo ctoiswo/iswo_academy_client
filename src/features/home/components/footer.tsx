@@ -4,9 +4,11 @@
  */
 import { Link } from '@tanstack/react-router'
 import { GraduationCap } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 
 export function Footer() {
+  const { t } = useTranslation()
   return (
     <footer className='bg-muted/50 border-t'>
       <div className='container py-8'>
@@ -16,14 +18,14 @@ export function Footer() {
             <span className='font-bold'>ISWO Academy</span>
           </div>
           <p className='text-muted-foreground text-sm'>
-            © 2025 ISWO Academy. Todos los derechos reservados.
+            © 2025 ISWO Academy. {t('footer.allRightsReserved')}.
           </p>
           <div className='flex items-center space-x-4'>
             <Button size='sm' variant='ghost' asChild>
-              <Link to='/sign-in'>Iniciar Sesión</Link>
+              <Link to='/sign-in'>{t('navigation.login')}</Link>
             </Button>
             <Button size='sm' asChild>
-              <Link to='/sign-up'>Registrarse</Link>
+              <Link to='/sign-up'>{t('navigation.register')}</Link>
             </Button>
           </div>
         </div>

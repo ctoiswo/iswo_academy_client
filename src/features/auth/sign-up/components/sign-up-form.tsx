@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
+import { motion } from 'framer-motion'
 import { toast } from 'sonner'
-import { IconFacebook, IconGithub } from '@/assets/brand-icons'
+import { IconGmail, IconGithub } from '@/assets/brand-icons'
 import { useAuthStore } from '@/stores/auth-store'
 import { isApiError } from '@/lib/api-client'
 import {
@@ -13,7 +14,7 @@ import {
   isValidationError,
 } from '@/lib/error-handler'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
+import { CustomButton } from '@/components/ui/custom-button'
 import {
   Form,
   FormControl,
@@ -78,21 +79,47 @@ export function SignUpForm({
     },
   })
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  }
+
+  function handleOAuthLogin(provider: 'github' | 'google_oauth2') {
+    // OAuth routes are at the root level, not under /api/v1
+    const baseUrl =
+      import.meta.env.VITE_API_URL?.replace('/api/v1', '') ||
+      'http://localhost:3001'
+    const oauthUrl = `${baseUrl}/auth/${provider}`
+
+    // Redirect to OAuth provider
+    window.location.href = oauthUrl
+  }
+
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
 
     try {
       await register(data)
+      navigate({ to: '/sign-up-success' })
 
-      // Show success toast
       toast.success('¡Cuenta creada exitosamente!', {
         description:
           'Por favor revisa tu correo electrónico para confirmar tu cuenta.',
       })
 
-      // Reset form and redirect to success page
       form.reset()
-      navigate({ to: '/sign-up-success' })
     } catch (error: unknown) {
       console.error('Registration error:', error)
 
@@ -129,120 +156,202 @@ export function SignUpForm({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('grid gap-3', className)}
-        {...props}
+      <motion.div
+        variants={containerVariants}
+        initial='hidden'
+        animate='visible'
+        className='w-full'
       >
-        <div className='grid grid-cols-2 gap-3'>
-          <FormField
-            control={form.control}
-            name='first_name'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nombre</FormLabel>
-                <FormControl>
-                  <Input placeholder='Juan' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='last_name'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Apellido</FormLabel>
-                <FormControl>
-                  <Input placeholder='Pérez' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Correo electrónico</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder='nombre@ejemplo.com'
-                  type='email'
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name='password'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Contraseña</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder='********' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name='password_confirmation'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirmar contraseña</FormLabel>
-              <FormControl>
-                <PasswordInput placeholder='********' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button className='mt-2' disabled={isLoading} type='submit'>
-          {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
-        </Button>
-
-        <div className='relative my-2'>
-          <div className='absolute inset-0 flex items-center'>
-            <span className='w-full border-t' />
-          </div>
-          <div className='relative flex justify-center text-xs uppercase'>
-            <span className='bg-background text-muted-foreground px-2'>
-              O continúa con
-            </span>
-          </div>
-        </div>
-
-        <div className='grid grid-cols-2 gap-2'>
-          <Button
-            variant='outline'
-            className='w-full'
-            type='button'
-            disabled={isLoading}
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className={cn('grid gap-4', className)}
+          {...props}
+        >
+          <motion.div
+            className='grid grid-cols-2 gap-3'
+            variants={itemVariants}
           >
-            <IconGithub className='h-4 w-4' /> GitHub
-          </Button>
-          <Button
-            variant='outline'
-            className='w-full'
-            type='button'
-            disabled={isLoading}
+            <FormField
+              control={form.control}
+              name='first_name'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-sm font-medium text-gray-700'>
+                    Nombre
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Input
+                        placeholder='Juan'
+                        className='text-black transition-all duration-200 focus:ring-2 focus:ring-blue-500/20'
+                        {...field}
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='last_name'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-sm font-medium text-gray-700'>
+                    Apellido
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Input
+                        placeholder='Pérez'
+                        className='text-black transition-all duration-200 focus:ring-2 focus:ring-blue-500/20'
+                        {...field}
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <FormField
+              control={form.control}
+              name='email'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-sm font-medium text-gray-700'>
+                    Correo electrónico
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Input
+                        placeholder='nombre@ejemplo.com'
+                        type='email'
+                        className='text-black transition-all duration-200 focus:ring-2 focus:ring-blue-500/20'
+                        {...field}
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <FormField
+              control={form.control}
+              name='password'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-sm font-medium text-gray-700'>
+                    Contraseña
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <PasswordInput
+                        placeholder='********'
+                        className='text-black transition-all duration-200 focus:ring-2 focus:ring-blue-500/20'
+                        {...field}
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <FormField
+              control={form.control}
+              name='password_confirmation'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-sm font-medium text-gray-700'>
+                    Confirmar contraseña
+                  </FormLabel>
+                  <FormControl>
+                    <motion.div
+                      whileFocus={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <PasswordInput
+                        placeholder='********'
+                        className='text-black transition-all duration-200 focus:ring-2 focus:ring-blue-500/20'
+                        {...field}
+                      />
+                    </motion.div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <CustomButton
+              className='mt-3 w-full'
+              variant='primary'
+              isLoading={isLoading}
+              disabled={isLoading}
+              type='submit'
+            >
+              {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
+            </CustomButton>
+          </motion.div>
+
+          <motion.div className='relative my-3' variants={itemVariants}>
+            <div className='absolute inset-0 flex items-center'>
+              <span className='w-full border-t border-gray-200' />
+            </div>
+            <div className='relative flex justify-center text-xs uppercase'>
+              <span className='bg-white px-3 font-medium text-gray-500'>
+                O continúa con
+              </span>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className='grid grid-cols-2 gap-3'
+            variants={itemVariants}
           >
-            <IconFacebook className='h-4 w-4' /> Facebook
-          </Button>
-        </div>
-      </form>
+            <CustomButton
+              variant='outline'
+              className='w-full'
+              type='button'
+              disabled={isLoading}
+              onClick={() => handleOAuthLogin('github')}
+            >
+              <IconGithub className='mr-2 h-4 w-4' /> GitHub
+            </CustomButton>
+
+            <CustomButton
+              variant='outline'
+              className='w-full'
+              type='button'
+              disabled={isLoading}
+              onClick={() => handleOAuthLogin('google_oauth2')}
+            >
+              <IconGmail className='mr-2 h-4 w-4' /> Google
+            </CustomButton>
+          </motion.div>
+        </form>
+      </motion.div>
     </Form>
   )
 }

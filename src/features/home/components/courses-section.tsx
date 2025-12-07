@@ -5,6 +5,7 @@
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { ArrowRight, Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { CourseCard } from './course-card'
 
@@ -21,6 +22,8 @@ interface CoursesSectionProps {
 }
 
 export function CoursesSection({ data, isLoading }: CoursesSectionProps) {
+  const { t } = useTranslation()
+
   return (
     <section className='bg-muted/50 py-20'>
       <div className='container'>
@@ -32,11 +35,10 @@ export function CoursesSection({ data, isLoading }: CoursesSectionProps) {
           transition={{ duration: 0.6 }}
         >
           <h2 className='text-3xl font-bold tracking-tight sm:text-4xl'>
-            Cursos Populares por Categoría
+            {t('home.courses.title')}
           </h2>
           <p className='text-muted-foreground mt-4 text-lg'>
-            Explora los cursos más destacados organizados por áreas de
-            conocimiento
+            {t('home.courses.description')}
           </p>
         </motion.div>
 
@@ -44,7 +46,7 @@ export function CoursesSection({ data, isLoading }: CoursesSectionProps) {
           <div className='flex items-center justify-center py-12'>
             <Loader2 className='h-8 w-8 animate-spin' />
             <span className='text-muted-foreground ml-2'>
-              Cargando categorías...
+              {t('home.courses.loading')}
             </span>
           </div>
         ) : (
@@ -93,7 +95,7 @@ export function CoursesSection({ data, isLoading }: CoursesSectionProps) {
         >
           <Button size='lg' variant='outline' asChild>
             <Link to='/academies'>
-              Explorar Todas las Academias
+              {t('home.courses.exploreAll')}
               <ArrowRight className='ml-2 h-4 w-4' />
             </Link>
           </Button>

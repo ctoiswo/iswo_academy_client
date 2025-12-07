@@ -30,14 +30,6 @@ import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
-import { Route as authSignUpSuccessRouteImport } from './routes/(auth)/sign-up-success'
-import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
-import { Route as authSignIn2RouteImport } from './routes/(auth)/sign-in-2'
-import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
-import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-password'
-import { Route as authOtpRouteImport } from './routes/(auth)/otp'
-import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
-import { Route as authConfirmRouteImport } from './routes/(auth)/confirm'
 import { Route as AuthenticatedSuperAdminRouteRouteImport } from './routes/_authenticated/super-admin/route'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
@@ -48,6 +40,13 @@ import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
+import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/index'
+import { Route as authSignUpSuccessIndexRouteImport } from './routes/(auth)/sign-up-success/index'
+import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
+import { Route as authResetPasswordIndexRouteImport } from './routes/(auth)/reset-password/index'
+import { Route as authOtpIndexRouteImport } from './routes/(auth)/otp/index'
+import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
+import { Route as authConfirmIndexRouteImport } from './routes/(auth)/confirm/index'
 import { Route as PublicCoursesCourseSlugRouteImport } from './routes/public/courses/$courseSlug'
 import { Route as PublicAcademyAcademySlugRouteImport } from './routes/public/academy/$academySlug'
 import { Route as PublicAcademiesAcademySlugRouteImport } from './routes/public/academies/$academySlug'
@@ -60,6 +59,7 @@ import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_a
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedAdminLearningPathsRouteImport } from './routes/_authenticated/admin/learning-paths'
+import { Route as authAuthCallbackRouteImport } from './routes/(auth)/auth/callback'
 import { Route as AuthenticatedSuperAdminGamificationIndexRouteImport } from './routes/_authenticated/super-admin/gamification/index'
 import { Route as AuthenticatedMyCoursesCourseSlugIndexRouteImport } from './routes/_authenticated/my-courses/$courseSlug/index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin/courses/index'
@@ -202,46 +202,6 @@ const errors401Route = errors401RouteImport.update({
   path: '/401',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authSignUpSuccessRoute = authSignUpSuccessRouteImport.update({
-  id: '/(auth)/sign-up-success',
-  path: '/sign-up-success',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authSignUpRoute = authSignUpRouteImport.update({
-  id: '/(auth)/sign-up',
-  path: '/sign-up',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authSignIn2Route = authSignIn2RouteImport.update({
-  id: '/(auth)/sign-in-2',
-  path: '/sign-in-2',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authSignInRoute = authSignInRouteImport.update({
-  id: '/(auth)/sign-in',
-  path: '/sign-in',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authResetPasswordRoute = authResetPasswordRouteImport.update({
-  id: '/(auth)/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authOtpRoute = authOtpRouteImport.update({
-  id: '/(auth)/otp',
-  path: '/otp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
-  id: '/(auth)/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authConfirmRoute = authConfirmRouteImport.update({
-  id: '/(auth)/confirm',
-  path: '/confirm',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedSuperAdminRouteRoute =
   AuthenticatedSuperAdminRouteRouteImport.update({
     id: '/super-admin',
@@ -295,6 +255,41 @@ const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
   id: '/apps/',
   path: '/apps/',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const authSignUpIndexRoute = authSignUpIndexRouteImport.update({
+  id: '/(auth)/sign-up/',
+  path: '/sign-up/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authSignUpSuccessIndexRoute = authSignUpSuccessIndexRouteImport.update({
+  id: '/(auth)/sign-up-success/',
+  path: '/sign-up-success/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authSignInIndexRoute = authSignInIndexRouteImport.update({
+  id: '/(auth)/sign-in/',
+  path: '/sign-in/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authResetPasswordIndexRoute = authResetPasswordIndexRouteImport.update({
+  id: '/(auth)/reset-password/',
+  path: '/reset-password/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authOtpIndexRoute = authOtpIndexRouteImport.update({
+  id: '/(auth)/otp/',
+  path: '/otp/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authForgotPasswordIndexRoute = authForgotPasswordIndexRouteImport.update({
+  id: '/(auth)/forgot-password/',
+  path: '/forgot-password/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authConfirmIndexRoute = authConfirmIndexRouteImport.update({
+  id: '/(auth)/confirm/',
+  path: '/confirm/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PublicCoursesCourseSlugRoute = PublicCoursesCourseSlugRouteImport.update({
   id: '/$courseSlug',
@@ -367,6 +362,11 @@ const AuthenticatedAdminLearningPathsRoute =
     path: '/learning-paths',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const authAuthCallbackRoute = authAuthCallbackRouteImport.update({
+  id: '/(auth)/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedSuperAdminGamificationIndexRoute =
   AuthenticatedSuperAdminGamificationIndexRouteImport.update({
     id: '/gamification/',
@@ -632,14 +632,6 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/super-admin': typeof AuthenticatedSuperAdminRouteRouteWithChildren
-  '/confirm': typeof authConfirmRoute
-  '/forgot-password': typeof authForgotPasswordRoute
-  '/otp': typeof authOtpRoute
-  '/reset-password': typeof authResetPasswordRoute
-  '/sign-in': typeof authSignInRoute
-  '/sign-in-2': typeof authSignIn2Route
-  '/sign-up': typeof authSignUpRoute
-  '/sign-up-success': typeof authSignUpSuccessRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
@@ -660,6 +652,7 @@ export interface FileRoutesByFullPath {
   '/landing': typeof LandingIndexRoute
   '/privacy': typeof PrivacyIndexRoute
   '/terms': typeof TermsIndexRoute
+  '/auth/callback': typeof authAuthCallbackRoute
   '/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
@@ -672,6 +665,13 @@ export interface FileRoutesByFullPath {
   '/public/academies/$academySlug': typeof PublicAcademiesAcademySlugRoute
   '/public/academy/$academySlug': typeof PublicAcademyAcademySlugRouteWithChildren
   '/public/courses/$courseSlug': typeof PublicCoursesCourseSlugRoute
+  '/confirm': typeof authConfirmIndexRoute
+  '/forgot-password': typeof authForgotPasswordIndexRoute
+  '/otp': typeof authOtpIndexRoute
+  '/reset-password': typeof authResetPasswordIndexRoute
+  '/sign-in': typeof authSignInIndexRoute
+  '/sign-up-success': typeof authSignUpSuccessIndexRoute
+  '/sign-up': typeof authSignUpIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
@@ -717,14 +717,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/super-admin': typeof AuthenticatedSuperAdminRouteRouteWithChildren
-  '/confirm': typeof authConfirmRoute
-  '/forgot-password': typeof authForgotPasswordRoute
-  '/otp': typeof authOtpRoute
-  '/reset-password': typeof authResetPasswordRoute
-  '/sign-in': typeof authSignInRoute
-  '/sign-in-2': typeof authSignIn2Route
-  '/sign-up': typeof authSignUpRoute
-  '/sign-up-success': typeof authSignUpSuccessRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
@@ -745,6 +737,7 @@ export interface FileRoutesByTo {
   '/landing': typeof LandingIndexRoute
   '/privacy': typeof PrivacyIndexRoute
   '/terms': typeof TermsIndexRoute
+  '/auth/callback': typeof authAuthCallbackRoute
   '/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
@@ -757,6 +750,13 @@ export interface FileRoutesByTo {
   '/public/academies/$academySlug': typeof PublicAcademiesAcademySlugRoute
   '/public/academy/$academySlug': typeof PublicAcademyAcademySlugRouteWithChildren
   '/public/courses/$courseSlug': typeof PublicCoursesCourseSlugRoute
+  '/confirm': typeof authConfirmIndexRoute
+  '/forgot-password': typeof authForgotPasswordIndexRoute
+  '/otp': typeof authOtpIndexRoute
+  '/reset-password': typeof authResetPasswordIndexRoute
+  '/sign-in': typeof authSignInIndexRoute
+  '/sign-up-success': typeof authSignUpSuccessIndexRoute
+  '/sign-up': typeof authSignUpIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
@@ -803,14 +803,6 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/_authenticated/super-admin': typeof AuthenticatedSuperAdminRouteRouteWithChildren
-  '/(auth)/confirm': typeof authConfirmRoute
-  '/(auth)/forgot-password': typeof authForgotPasswordRoute
-  '/(auth)/otp': typeof authOtpRoute
-  '/(auth)/reset-password': typeof authResetPasswordRoute
-  '/(auth)/sign-in': typeof authSignInRoute
-  '/(auth)/sign-in-2': typeof authSignIn2Route
-  '/(auth)/sign-up': typeof authSignUpRoute
-  '/(auth)/sign-up-success': typeof authSignUpSuccessRoute
   '/(errors)/401': typeof errors401Route
   '/(errors)/403': typeof errors403Route
   '/(errors)/404': typeof errors404Route
@@ -831,6 +823,7 @@ export interface FileRoutesById {
   '/landing/': typeof LandingIndexRoute
   '/privacy/': typeof PrivacyIndexRoute
   '/terms/': typeof TermsIndexRoute
+  '/(auth)/auth/callback': typeof authAuthCallbackRoute
   '/_authenticated/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
@@ -843,6 +836,13 @@ export interface FileRoutesById {
   '/public/academies/$academySlug': typeof PublicAcademiesAcademySlugRoute
   '/public/academy/$academySlug': typeof PublicAcademyAcademySlugRouteWithChildren
   '/public/courses/$courseSlug': typeof PublicCoursesCourseSlugRoute
+  '/(auth)/confirm/': typeof authConfirmIndexRoute
+  '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
+  '/(auth)/otp/': typeof authOtpIndexRoute
+  '/(auth)/reset-password/': typeof authResetPasswordIndexRoute
+  '/(auth)/sign-in/': typeof authSignInIndexRoute
+  '/(auth)/sign-up-success/': typeof authSignUpSuccessIndexRoute
+  '/(auth)/sign-up/': typeof authSignUpIndexRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
@@ -893,14 +893,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/settings'
     | '/super-admin'
-    | '/confirm'
-    | '/forgot-password'
-    | '/otp'
-    | '/reset-password'
-    | '/sign-in'
-    | '/sign-in-2'
-    | '/sign-up'
-    | '/sign-up-success'
     | '/401'
     | '/403'
     | '/404'
@@ -921,6 +913,7 @@ export interface FileRouteTypes {
     | '/landing'
     | '/privacy'
     | '/terms'
+    | '/auth/callback'
     | '/admin/learning-paths'
     | '/errors/$error'
     | '/settings/account'
@@ -933,6 +926,13 @@ export interface FileRouteTypes {
     | '/public/academies/$academySlug'
     | '/public/academy/$academySlug'
     | '/public/courses/$courseSlug'
+    | '/confirm'
+    | '/forgot-password'
+    | '/otp'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up-success'
+    | '/sign-up'
     | '/apps'
     | '/chats'
     | '/help-center'
@@ -978,14 +978,6 @@ export interface FileRouteTypes {
   to:
     | '/admin'
     | '/super-admin'
-    | '/confirm'
-    | '/forgot-password'
-    | '/otp'
-    | '/reset-password'
-    | '/sign-in'
-    | '/sign-in-2'
-    | '/sign-up'
-    | '/sign-up-success'
     | '/401'
     | '/403'
     | '/404'
@@ -1006,6 +998,7 @@ export interface FileRouteTypes {
     | '/landing'
     | '/privacy'
     | '/terms'
+    | '/auth/callback'
     | '/admin/learning-paths'
     | '/errors/$error'
     | '/settings/account'
@@ -1018,6 +1011,13 @@ export interface FileRouteTypes {
     | '/public/academies/$academySlug'
     | '/public/academy/$academySlug'
     | '/public/courses/$courseSlug'
+    | '/confirm'
+    | '/forgot-password'
+    | '/otp'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up-success'
+    | '/sign-up'
     | '/apps'
     | '/chats'
     | '/help-center'
@@ -1063,14 +1063,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/settings'
     | '/_authenticated/super-admin'
-    | '/(auth)/confirm'
-    | '/(auth)/forgot-password'
-    | '/(auth)/otp'
-    | '/(auth)/reset-password'
-    | '/(auth)/sign-in'
-    | '/(auth)/sign-in-2'
-    | '/(auth)/sign-up'
-    | '/(auth)/sign-up-success'
     | '/(errors)/401'
     | '/(errors)/403'
     | '/(errors)/404'
@@ -1091,6 +1083,7 @@ export interface FileRouteTypes {
     | '/landing/'
     | '/privacy/'
     | '/terms/'
+    | '/(auth)/auth/callback'
     | '/_authenticated/admin/learning-paths'
     | '/_authenticated/errors/$error'
     | '/_authenticated/settings/account'
@@ -1103,6 +1096,13 @@ export interface FileRouteTypes {
     | '/public/academies/$academySlug'
     | '/public/academy/$academySlug'
     | '/public/courses/$courseSlug'
+    | '/(auth)/confirm/'
+    | '/(auth)/forgot-password/'
+    | '/(auth)/otp/'
+    | '/(auth)/reset-password/'
+    | '/(auth)/sign-in/'
+    | '/(auth)/sign-up-success/'
+    | '/(auth)/sign-up/'
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
     | '/_authenticated/help-center/'
@@ -1150,14 +1150,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  authConfirmRoute: typeof authConfirmRoute
-  authForgotPasswordRoute: typeof authForgotPasswordRoute
-  authOtpRoute: typeof authOtpRoute
-  authResetPasswordRoute: typeof authResetPasswordRoute
-  authSignInRoute: typeof authSignInRoute
-  authSignIn2Route: typeof authSignIn2Route
-  authSignUpRoute: typeof authSignUpRoute
-  authSignUpSuccessRoute: typeof authSignUpSuccessRoute
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
   errors404Route: typeof errors404Route
@@ -1173,9 +1165,17 @@ export interface RootRouteChildren {
   LandingIndexRoute: typeof LandingIndexRoute
   PrivacyIndexRoute: typeof PrivacyIndexRoute
   TermsIndexRoute: typeof TermsIndexRoute
+  authAuthCallbackRoute: typeof authAuthCallbackRoute
   AcademyAcademySlugCoursesRoute: typeof AcademyAcademySlugCoursesRouteWithChildren
   PublicAcademiesAcademySlugRoute: typeof PublicAcademiesAcademySlugRoute
   PublicAcademyAcademySlugRoute: typeof PublicAcademyAcademySlugRouteWithChildren
+  authConfirmIndexRoute: typeof authConfirmIndexRoute
+  authForgotPasswordIndexRoute: typeof authForgotPasswordIndexRoute
+  authOtpIndexRoute: typeof authOtpIndexRoute
+  authResetPasswordIndexRoute: typeof authResetPasswordIndexRoute
+  authSignInIndexRoute: typeof authSignInIndexRoute
+  authSignUpSuccessIndexRoute: typeof authSignUpSuccessIndexRoute
+  authSignUpIndexRoute: typeof authSignUpIndexRoute
   AcademiesSlugIndexRoute: typeof AcademiesSlugIndexRoute
 }
 
@@ -1328,62 +1328,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof errors401RouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(auth)/sign-up-success': {
-      id: '/(auth)/sign-up-success'
-      path: '/sign-up-success'
-      fullPath: '/sign-up-success'
-      preLoaderRoute: typeof authSignUpSuccessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/sign-up': {
-      id: '/(auth)/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof authSignUpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/sign-in-2': {
-      id: '/(auth)/sign-in-2'
-      path: '/sign-in-2'
-      fullPath: '/sign-in-2'
-      preLoaderRoute: typeof authSignIn2RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/sign-in': {
-      id: '/(auth)/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof authSignInRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/reset-password': {
-      id: '/(auth)/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof authResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/otp': {
-      id: '/(auth)/otp'
-      path: '/otp'
-      fullPath: '/otp'
-      preLoaderRoute: typeof authOtpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/forgot-password': {
-      id: '/(auth)/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof authForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/confirm': {
-      id: '/(auth)/confirm'
-      path: '/confirm'
-      fullPath: '/confirm'
-      preLoaderRoute: typeof authConfirmRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated/super-admin': {
       id: '/_authenticated/super-admin'
       path: '/super-admin'
@@ -1453,6 +1397,55 @@ declare module '@tanstack/react-router' {
       fullPath: '/apps'
       preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/(auth)/sign-up/': {
+      id: '/(auth)/sign-up/'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof authSignUpIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/sign-up-success/': {
+      id: '/(auth)/sign-up-success/'
+      path: '/sign-up-success'
+      fullPath: '/sign-up-success'
+      preLoaderRoute: typeof authSignUpSuccessIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/sign-in/': {
+      id: '/(auth)/sign-in/'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/reset-password/': {
+      id: '/(auth)/reset-password/'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof authResetPasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/otp/': {
+      id: '/(auth)/otp/'
+      path: '/otp'
+      fullPath: '/otp'
+      preLoaderRoute: typeof authOtpIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/forgot-password/': {
+      id: '/(auth)/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/confirm/': {
+      id: '/(auth)/confirm/'
+      path: '/confirm'
+      fullPath: '/confirm'
+      preLoaderRoute: typeof authConfirmIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/public/courses/$courseSlug': {
       id: '/public/courses/$courseSlug'
@@ -1537,6 +1530,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/learning-paths'
       preLoaderRoute: typeof AuthenticatedAdminLearningPathsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/(auth)/auth/callback': {
+      id: '/(auth)/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof authAuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/super-admin/gamification/': {
       id: '/_authenticated/super-admin/gamification/'
@@ -2091,14 +2091,6 @@ const PublicAcademyAcademySlugRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  authConfirmRoute: authConfirmRoute,
-  authForgotPasswordRoute: authForgotPasswordRoute,
-  authOtpRoute: authOtpRoute,
-  authResetPasswordRoute: authResetPasswordRoute,
-  authSignInRoute: authSignInRoute,
-  authSignIn2Route: authSignIn2Route,
-  authSignUpRoute: authSignUpRoute,
-  authSignUpSuccessRoute: authSignUpSuccessRoute,
   errors401Route: errors401Route,
   errors403Route: errors403Route,
   errors404Route: errors404Route,
@@ -2114,9 +2106,17 @@ const rootRouteChildren: RootRouteChildren = {
   LandingIndexRoute: LandingIndexRoute,
   PrivacyIndexRoute: PrivacyIndexRoute,
   TermsIndexRoute: TermsIndexRoute,
+  authAuthCallbackRoute: authAuthCallbackRoute,
   AcademyAcademySlugCoursesRoute: AcademyAcademySlugCoursesRouteWithChildren,
   PublicAcademiesAcademySlugRoute: PublicAcademiesAcademySlugRoute,
   PublicAcademyAcademySlugRoute: PublicAcademyAcademySlugRouteWithChildren,
+  authConfirmIndexRoute: authConfirmIndexRoute,
+  authForgotPasswordIndexRoute: authForgotPasswordIndexRoute,
+  authOtpIndexRoute: authOtpIndexRoute,
+  authResetPasswordIndexRoute: authResetPasswordIndexRoute,
+  authSignInIndexRoute: authSignInIndexRoute,
+  authSignUpSuccessIndexRoute: authSignUpSuccessIndexRoute,
+  authSignUpIndexRoute: authSignUpIndexRoute,
   AcademiesSlugIndexRoute: AcademiesSlugIndexRoute,
 }
 export const routeTree = rootRouteImport

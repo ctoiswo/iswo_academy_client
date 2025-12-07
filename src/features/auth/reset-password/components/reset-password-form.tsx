@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { authApi } from '@/services'
 import { ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { isApiError } from '@/lib/api-client'
 import {
@@ -24,28 +25,26 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-const formSchema = z
-  .object({
-    password: z
-      .string()
-      .min(8, 'La contraseña debe tener al menos 8 caracteres')
-      .regex(
-        /[A-Z]/,
-        'La contraseña debe contener al menos una letra mayúscula'
-      )
-      .regex(
-        /[a-z]/,
-        'La contraseña debe contener al menos una letra minúscula'
-      )
-      .regex(/[0-9]/, 'La contraseña debe contener al menos un número'),
-    password_confirmation: z
-      .string()
-      .min(1, 'Por favor confirma tu contraseña'),
-  })
-  .refine((data) => data.password === data.password_confirmation, {
-    message: 'Las contraseñas no coinciden',
-    path: ['password_confirmation'],
-  })
+const getFormSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      password: z
+        .string()
+        .min(8, t('auth.resetPassword.validation.passwordMin'))
+        .regex(/[A-Z]/, t('auth.resetPassword.validation.passwordUppercase'))
+        .regex(/[a-z]/, t('auth.resetPassword.validation.passwordLowercase'))
+        .regex(/[0-9]/, t('auth.resetPassword.validation.passwordNumber')),
+      password_confirmation: z
+        .string()
+        .min(
+          1,
+          t('auth.resetPassword.validation.passwordConfirmationRequired')
+        ),
+    })
+    .refine((data) => data.password === data.password_confirmation, {
+      message: t('auth.resetPassword.validation.passwordsMismatch'),
+      path: ['password_confirmation'],
+    })
 
 interface ResetPasswordFormProps extends React.HTMLAttributes<HTMLFormElement> {
   token: string
@@ -56,11 +55,14 @@ export function ResetPasswordForm({
   className,
   ...props
 }: ResetPasswordFormProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
     useState(false)
+
+  const formSchema = getFormSchema(t)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -132,12 +134,12 @@ export function ResetPasswordForm({
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nueva Contraseña</FormLabel>
+              <FormLabel>{t('auth.resetPassword.password')}</FormLabel>
               <FormControl>
                 <div className='relative'>
                   <Input
                     type={showPassword ? 'text' : 'password'}
-                    placeholder='Ingresa tu nueva contraseña'
+                    placeholder={t('auth.resetPassword.passwordPlaceholder')}
                     disabled={isLoading}
                     {...field}
                   />
@@ -145,7 +147,7 @@ export function ResetPasswordForm({
                     type='button'
                     variant='ghost'
                     size='sm'
-                    className='absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent'
+                    className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
                     onClick={() => setShowPassword(!showPassword)}
                     disabled={isLoading}
                   >
@@ -167,12 +169,16 @@ export function ResetPasswordForm({
           name='password_confirmation'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirmar Nueva Contraseña</FormLabel>
+              <FormLabel>
+                {t('auth.resetPassword.passwordConfirmation')}
+              </FormLabel>
               <FormControl>
                 <div className='relative'>
                   <Input
                     type={showPasswordConfirmation ? 'text' : 'password'}
-                    placeholder='Confirma tu nueva contraseña'
+                    placeholder={t(
+                      'auth.resetPassword.passwordConfirmationPlaceholder'
+                    )}
                     disabled={isLoading}
                     {...field}
                   />
@@ -180,7 +186,7 @@ export function ResetPasswordForm({
                     type='button'
                     variant='ghost'
                     size='sm'
-                    className='absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent'
+                    className='absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent'
                     onClick={() =>
                       setShowPasswordConfirmation(!showPasswordConfirmation)
                     }
@@ -202,12 +208,12 @@ export function ResetPasswordForm({
         <Button className='mt-2' disabled={isLoading} type='submit'>
           {isLoading ? (
             <>
-              Restableciendo contraseña...
+              {t('auth.resetPassword.resetting')}
               <Loader2 className='ml-2 h-4 w-4 animate-spin' />
             </>
           ) : (
             <>
-              Restablecer contraseña
+              {t('auth.resetPassword.button')}
               <ArrowRight className='ml-2 h-4 w-4' />
             </>
           )}

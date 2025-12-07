@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSearch, useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useAcademies } from '@/hooks/use-academies'
 import { useCategories } from '@/hooks/use-categories'
 import { useGeneralStatistics } from '@/hooks/use-statistics'
@@ -16,6 +17,7 @@ import {
 } from './components'
 
 export function PublicAcademiesPage() {
+  const { t } = useTranslation()
   const searchParams = useSearch({ strict: false }) as { category?: string }
   const navigate = useNavigate()
 
@@ -75,7 +77,9 @@ export function PublicAcademiesPage() {
         <div className='container mx-auto px-4 py-8'>
           <div className='flex min-h-[400px] flex-col items-center justify-center'>
             <Loader2 className='text-muted-foreground h-8 w-8 animate-spin' />
-            <p className='text-muted-foreground mt-4'>Cargando academias...</p>
+            <p className='text-muted-foreground mt-4'>
+              {t('academies.loading')}
+            </p>
           </div>
         </div>
       </div>
@@ -89,7 +93,9 @@ export function PublicAcademiesPage() {
         <div className='container mx-auto px-4 py-8'>
           <Card className='mx-auto max-w-md'>
             <CardHeader>
-              <CardTitle className='text-red-600'>Error</CardTitle>
+              <CardTitle className='text-red-600'>
+                {t('academies.error')}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className='text-muted-foreground'>
@@ -99,7 +105,7 @@ export function PublicAcademiesPage() {
                 onClick={() => window.location.reload()}
                 className='mt-4 w-full'
               >
-                Intentar de nuevo
+                {t('academies.tryAgain')}
               </Button>
             </CardContent>
           </Card>

@@ -1,20 +1,21 @@
 import { useMemo } from 'react'
-import { cn } from '@/lib/utils'
+import type { AuthUser, AcademyMembership } from '@/stores/auth-store'
 import { getCookie } from '@/lib/cookies'
+import { cn } from '@/lib/utils'
 import { LayoutProvider } from '@/context/layout-provider'
 import { SearchProvider } from '@/context/search-provider'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { SkipToMain } from '@/components/skip-to-main'
+import { ConfigDrawer } from '@/components/config-drawer'
+import type { DashboardType } from '@/components/dashboard-router'
+import { PointsDisplay } from '@/components/gamification/points-display'
+import { LanguageToggle } from '@/components/language-toggle'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { TopNav } from '@/components/layout/top-nav'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
+import { SkipToMain } from '@/components/skip-to-main'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { ConfigDrawer } from '@/components/config-drawer'
-import { PointsDisplay } from '@/components/gamification/points-display'
-import type { DashboardType } from '@/components/dashboard-router'
-import type { AuthUser, AcademyMembership } from '@/stores/auth-store'
 
 export type DashboardLayoutVariant = 'full' | 'sidebar' | 'compact'
 
@@ -57,10 +58,10 @@ export function DashboardLayout({
   topNavLinks = [],
   showSearch = true,
   showConfigDrawer = true,
-  className
+  className,
 }: DashboardLayoutProps) {
   const defaultOpen = getCookie('sidebar_state') !== 'false'
-  
+
   // Render different layouts based on variant
   switch (variant) {
     case 'full':
@@ -76,7 +77,7 @@ export function DashboardLayout({
           {children}
         </FullLayout>
       )
-      
+
     case 'compact':
       return (
         <CompactLayout
@@ -90,7 +91,7 @@ export function DashboardLayout({
           {children}
         </CompactLayout>
       )
-      
+
     case 'sidebar':
     default:
       return (
@@ -121,39 +122,38 @@ function FullLayout({
   topNavLinks,
   showSearch,
   showConfigDrawer,
-  className
+  className,
 }: Omit<DashboardLayoutProps, 'variant' | 'sidebar' | 'dashboardType'>) {
   if (!user) return null
   return (
     <SearchProvider>
       <LayoutProvider>
-        <div className={cn('min-h-screen bg-background', className)}>
+        <div className={cn('bg-background min-h-screen', className)}>
           <SkipToMain />
-          
+
           {/* Header */}
-          <Header className="border-b">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center space-x-4">
-                <h1 className="text-xl font-semibold">
+          <Header className='border-b'>
+            <div className='flex w-full items-center justify-between'>
+              <div className='flex items-center space-x-4'>
+                <h1 className='text-xl font-semibold'>
                   {academy ? academy.name : 'ISWO Academy'}
                 </h1>
                 {topNavLinks.length > 0 && <TopNav links={topNavLinks} />}
               </div>
-              
-              <div className="flex items-center space-x-4">
+
+              <div className='flex items-center space-x-4'>
                 {showSearch && <Search />}
                 <PointsDisplay compact />
                 <ThemeSwitch />
+                <LanguageToggle />
                 {showConfigDrawer && <ConfigDrawer />}
                 <ProfileDropdown />
               </div>
             </div>
           </Header>
-          
+
           {/* Main Content */}
-          <Main className="container mx-auto px-4 py-6">
-            {children}
-          </Main>
+          <Main className='container mx-auto px-4 py-6'>{children}</Main>
         </div>
       </LayoutProvider>
     </SearchProvider>
@@ -169,46 +169,45 @@ function CompactLayout({
   academy,
   topNavLinks,
   showSearch,
-  className
+  className,
 }: Omit<DashboardLayoutProps, 'variant' | 'sidebar' | 'dashboardType'>) {
   if (!user) return null
   return (
     <SearchProvider>
       <LayoutProvider>
-        <div className={cn('min-h-screen bg-background min-w-full', className)}>
+        <div className={cn('bg-background min-h-screen min-w-full', className)}>
           <SkipToMain />
-          
+
           {/* Compact Header */}
-          <Header className="border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center space-x-2">
-                <h1 className="text-lg font-medium">
+          <Header className='bg-card/50 supports-[backdrop-filter]:bg-card/50 border-b backdrop-blur'>
+            <div className='flex w-full items-center justify-between'>
+              <div className='flex items-center space-x-2'>
+                <h1 className='text-lg font-medium'>
                   {academy ? academy.name : 'My Learning'}
                 </h1>
               </div>
-              
-              <div className="flex items-center space-x-2">
+
+              <div className='flex items-center space-x-2'>
                 {showSearch && <Search />}
                 <PointsDisplay compact />
                 <ThemeSwitch />
+                <LanguageToggle />
                 <ProfileDropdown />
               </div>
             </div>
           </Header>
-          
+
           {/* Navigation Tabs */}
           {topNavLinks.length > 0 && (
-            <div className="border-b bg-muted/30">
-              <div className="container mx-auto px-4">
+            <div className='bg-muted/30 border-b'>
+              <div className='container mx-auto px-4'>
                 <TopNav links={topNavLinks} />
               </div>
             </div>
           )}
-          
+
           {/* Main Content */}
-          <Main className="container mx-auto px-4 py-4">
-            {children}
-          </Main>
+          <Main className='container mx-auto px-4 py-4'>{children}</Main>
         </div>
       </LayoutProvider>
     </SearchProvider>
@@ -228,59 +227,58 @@ function SidebarLayout({
   showSearch,
   showConfigDrawer,
   defaultOpen,
-  className
+  className,
 }: DashboardLayoutProps & { defaultOpen: boolean }) {
   if (!user) return null
   return (
     <SearchProvider>
       <LayoutProvider>
         <SidebarProvider defaultOpen={defaultOpen}>
-          <div className={cn('min-h-screen bg-background', className)}>
+          <div className={cn('bg-background min-h-screen', className)}>
             <SkipToMain />
-            
+
             {/* Sidebar */}
             {SidebarComponent && (
-              <SidebarComponent 
-                user={user} 
-                academy={academy} 
+              <SidebarComponent
+                user={user}
+                academy={academy}
                 dashboardType={dashboardType}
               />
             )}
-            
+
             {/* Main Content Area */}
             <SidebarInset
               className={cn(
                 // Set content container for container queries
                 '@container/content',
-                
+
                 // If layout is fixed, set height to prevent overflow
                 'has-[[data-layout=fixed]]:h-svh',
-                
+
                 // If sidebar is inset, adjust height calculation
                 'peer-data-[variant=inset]:has-[[data-layout=fixed]]:h-[calc(100svh-(var(--spacing)*4))]'
               )}
             >
               {/* Header */}
               <Header>
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center space-x-4">
+                <div className='flex w-full items-center justify-between'>
+                  <div className='flex items-center space-x-4'>
                     {topNavLinks.length > 0 && <TopNav links={topNavLinks} />}
                   </div>
-                  
-                  <div className="flex items-center space-x-4">
+
+                  <div className='flex items-center space-x-4'>
                     {showSearch && <Search />}
                     <PointsDisplay compact />
                     <ThemeSwitch />
+                    <LanguageToggle />
                     {showConfigDrawer && <ConfigDrawer />}
                     <ProfileDropdown />
                   </div>
                 </div>
               </Header>
-              
+
               {/* Main Content */}
-              <Main className="container mx-auto px-4 py-4">
-                {children}
-              </Main>
+              <Main className='container mx-auto px-4 py-4'>{children}</Main>
             </SidebarInset>
           </div>
         </SidebarProvider>
@@ -294,35 +292,38 @@ function SidebarLayout({
  */
 export function useDashboardLayout(dashboardType: DashboardType) {
   const layoutConfig = useMemo(() => {
-    const configs: Record<DashboardType, {
-      variant: DashboardLayoutVariant
-      showSearch: boolean
-      showConfigDrawer: boolean
-    }> = {
+    const configs: Record<
+      DashboardType,
+      {
+        variant: DashboardLayoutVariant
+        showSearch: boolean
+        showConfigDrawer: boolean
+      }
+    > = {
       'super-admin': {
         variant: 'full',
         showSearch: true,
-        showConfigDrawer: true
+        showConfigDrawer: true,
       },
       'academy-admin': {
         variant: 'sidebar',
         showSearch: true,
-        showConfigDrawer: true
+        showConfigDrawer: true,
       },
-      'teacher': {
+      teacher: {
         variant: 'sidebar',
         showSearch: true,
-        showConfigDrawer: false
+        showConfigDrawer: false,
       },
-      'student': {
+      student: {
         variant: 'compact',
         showSearch: true,
-        showConfigDrawer: false
-      }
+        showConfigDrawer: false,
+      },
     }
-    
+
     return configs[dashboardType]
   }, [dashboardType])
-  
+
   return layoutConfig
 }

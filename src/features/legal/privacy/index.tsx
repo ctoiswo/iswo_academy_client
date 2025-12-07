@@ -1,14 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
-import {
-  ArrowLeft,
-  Lock,
-  Eye,
-  Database,
-  Shield,
-  Bell,
-  Globe,
-} from 'lucide-react'
+import { Lock, Eye, Database, Shield, Bell, Globe, Cookie } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -17,254 +10,232 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { AnimatedAuthLayout } from '@/features/auth/components/animated-auth-layout'
 
 export function PrivacyPolicy() {
-  const handleGoBack = () => {
-    window.history.back()
-  }
-
-  const fadeInUp = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5 },
-  }
+  const { t } = useTranslation()
 
   const sections = [
     {
       icon: Database,
-      title: '1. Información que Recopilamos',
-      content: `Recopilamos información que nos proporcionas directamente, como tu nombre, dirección de correo electrónico, foto de perfil y preferencias de aprendizaje cuando creas una cuenta. También recopilamos automáticamente información sobre tu uso de la plataforma, incluyendo cursos visitados, progreso de aprendizaje, tiempo de estudio, y datos de tu dispositivo (dirección IP, tipo de navegador, sistema operativo). Utilizamos cookies y tecnologías similares para mejorar tu experiencia.`,
+      titleKey: 'legal.privacy.sections.dataCollection.title',
+      contentKey: 'legal.privacy.sections.dataCollection.content',
     },
     {
       icon: Eye,
-      title: '2. Cómo Utilizamos tu Información',
-      content: `Utilizamos tu información para: proporcionar y mejorar nuestros servicios educativos, personalizar tu experiencia de aprendizaje, procesar pagos y suscripciones, enviarte actualizaciones sobre tus cursos, comunicarnos contigo sobre tu cuenta, analizar el uso de la plataforma para mejorarla, cumplir con obligaciones legales y proteger la seguridad de nuestros usuarios. No vendemos tu información personal a terceros.`,
+      titleKey: 'legal.privacy.sections.dataUsage.title',
+      contentKey: 'legal.privacy.sections.dataUsage.content',
     },
     {
       icon: Shield,
-      title: '3. Compartir tu Información',
-      content: `Compartimos tu información solo en circunstancias limitadas: con instructores de los cursos en los que estás inscrito (nombre, progreso y actividad), con proveedores de servicios que nos ayudan a operar la plataforma (procesadores de pago, servicios de email, hosting), cuando lo requiera la ley o para proteger nuestros derechos, y con tu consentimiento explícito para otros fines específicos. Todos nuestros proveedores están obligados contractualmente a proteger tu información.`,
+      titleKey: 'legal.privacy.sections.dataSharing.title',
+      contentKey: 'legal.privacy.sections.dataSharing.content',
     },
     {
       icon: Lock,
-      title: '4. Seguridad de los Datos',
-      content: `Implementamos medidas de seguridad técnicas y organizativas para proteger tu información personal contra acceso no autorizado, alteración, divulgación o destrucción. Esto incluye encriptación de datos en tránsito (SSL/TLS), encriptación de contraseñas, firewalls, monitoreo de seguridad continuo, y acceso restringido a información personal solo para empleados autorizados. Sin embargo, ningún método de transmisión por internet es 100% seguro.`,
+      titleKey: 'legal.privacy.sections.dataSecurity.title',
+      contentKey: 'legal.privacy.sections.dataSecurity.content',
     },
     {
       icon: Bell,
-      title: '5. Tus Derechos y Opciones',
-      content: `Tienes derecho a: acceder a tu información personal, corregir datos inexactos, solicitar la eliminación de tu cuenta y datos asociados, exportar tus datos en un formato portable, oponerte al procesamiento de tu información, retirar tu consentimiento en cualquier momento, y optar por no recibir comunicaciones de marketing. Puedes ejercer estos derechos desde la configuración de tu cuenta o contactándonos directamente.`,
+      titleKey: 'legal.privacy.sections.userRights.title',
+      contentKey: 'legal.privacy.sections.userRights.content',
     },
     {
       icon: Globe,
-      title: '6. Transferencias Internacionales',
-      content: `ISWO Academy opera globalmente y puede transferir tu información a servidores ubicados en diferentes países. Al usar nuestros servicios, consientes estas transferencias. Nos aseguramos de que cualquier transferencia internacional cumpla con las leyes de protección de datos aplicables, incluyendo el uso de cláusulas contractuales estándar aprobadas y garantías adecuadas para proteger tu información.`,
+      titleKey: 'legal.privacy.sections.internationalTransfers.title',
+      contentKey: 'legal.privacy.sections.internationalTransfers.content',
     },
   ]
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    visible: { opacity: 1, y: 0, scale: 1 },
+  }
+
   return (
-    <div className='min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50'>
-      {/* Header */}
-      <motion.div
-        className='border-b bg-white/80 backdrop-blur-sm'
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className='container mx-auto px-4 py-6'>
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center space-x-4'>
-              <Button variant='ghost' size='sm' onClick={handleGoBack}>
-                <ArrowLeft className='mr-2 h-4 w-4' />
-                Volver
-              </Button>
-            </div>
-            <a
-              href='/terms'
-              className='text-sm text-blue-600 hover:text-blue-800'
-            >
-              Ver Términos de Servicio
-            </a>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Hero Section */}
-      <div className='container mx-auto px-4 py-12 md:py-16'>
-        <motion.div className='mx-auto max-w-3xl text-center' {...fadeInUp}>
-          <div className='bg-primary/10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full'>
-            <Lock className='text-primary h-10 w-10' />
-          </div>
-          <h1 className='mb-4 text-4xl font-bold tracking-tight md:text-5xl'>
-            Política de Privacidad
-          </h1>
-          <p className='text-muted-foreground text-lg'>
-            Última actualización: 6 de diciembre de 2025
-          </p>
-          <p className='text-muted-foreground mt-4 text-base'>
-            En ISWO Academy, valoramos tu privacidad y nos comprometemos a
-            proteger tu información personal. Esta política explica cómo
-            recopilamos, usamos y protegemos tus datos.
-          </p>
+    <AnimatedAuthLayout
+      title={t('legal.privacy.layoutTitle')}
+      subtitle={t('legal.privacy.layoutSubtitle')}
+      singleColumn={true}
+    >
+      <div className='mx-auto w-full max-w-4xl space-y-6'>
+        {/* Header Card */}
+        <motion.div
+          variants={cardVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.5 }}
+        >
+          <Card>
+            <CardHeader className='text-center'>
+              <div className='bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'>
+                <Lock className='text-primary h-8 w-8' />
+              </div>
+              <CardTitle className='text-3xl font-bold'>
+                {t('legal.privacy.title')}
+              </CardTitle>
+              <CardDescription className='text-base'>
+                {t('legal.privacy.lastUpdated')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className='text-muted-foreground text-center leading-relaxed'>
+                {t('legal.privacy.intro')}
+              </p>
+            </CardContent>
+          </Card>
         </motion.div>
-      </div>
 
-      {/* Content Sections */}
-      <div className='container mx-auto px-4 pb-16'>
-        <div className='mx-auto max-w-4xl space-y-6'>
-          {sections.map((section, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card className='border-l-4 border-l-purple-500'>
-                <CardHeader>
-                  <div className='flex items-start space-x-4'>
-                    <div className='bg-primary/10 rounded-lg p-2'>
-                      <section.icon className='text-primary h-6 w-6' />
-                    </div>
-                    <div className='flex-1'>
-                      <CardTitle className='text-xl font-semibold'>
-                        {section.title}
-                      </CardTitle>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className='text-muted-foreground leading-relaxed'>
-                    {section.content}
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-
-          {/* Cookies Information */}
+        {/* Content Sections */}
+        {sections.map((section, index) => (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
+            key={index}
+            variants={cardVariants}
+            initial='hidden'
+            animate='visible'
+            transition={{ duration: 0.5, delay: (index + 1) * 0.1 }}
           >
-            <Card className='border-l-4 border-l-amber-500'>
+            <Card className='border-l-primary border-l-4'>
               <CardHeader>
-                <CardTitle className='text-xl font-semibold'>
-                  Uso de Cookies
-                </CardTitle>
-                <CardDescription>
-                  Información sobre las cookies que utilizamos
-                </CardDescription>
+                <div className='flex items-start space-x-4'>
+                  <div className='bg-primary/10 rounded-lg p-2'>
+                    <section.icon className='text-primary h-6 w-6' />
+                  </div>
+                  <div className='flex-1'>
+                    <CardTitle className='text-xl font-semibold'>
+                      {t(section.titleKey)}
+                    </CardTitle>
+                  </div>
+                </div>
               </CardHeader>
-              <CardContent className='space-y-3'>
-                <p className='text-muted-foreground text-sm leading-relaxed'>
-                  Utilizamos cookies y tecnologías similares para mejorar tu
-                  experiencia. Las cookies son pequeños archivos de texto que se
-                  almacenan en tu dispositivo.
+              <CardContent>
+                <p className='text-muted-foreground leading-relaxed'>
+                  {t(section.contentKey)}
                 </p>
-                <div className='space-y-2 text-sm text-gray-700'>
-                  <p>
-                    <strong>Cookies esenciales:</strong> Necesarias para el
-                    funcionamiento básico de la plataforma
-                  </p>
-                  <p>
-                    <strong>Cookies de rendimiento:</strong> Nos ayudan a
-                    entender cómo usas el sitio
-                  </p>
-                  <p>
-                    <strong>Cookies de funcionalidad:</strong> Recuerdan tus
-                    preferencias
-                  </p>
-                  <p>
-                    <strong>Cookies de marketing:</strong> Personalizan anuncios
-                    (requieren tu consentimiento)
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+
+        {/* Cookies Information */}
+        <motion.div
+          variants={cardVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.5, delay: 0.7 }}
+        >
+          <Card className='border-l-4 border-l-amber-500'>
+            <CardHeader>
+              <div className='flex items-start space-x-4'>
+                <div className='rounded-lg bg-amber-500/10 p-2'>
+                  <Cookie className='h-6 w-6 text-amber-600' />
+                </div>
+                <div className='flex-1'>
+                  <CardTitle className='text-xl font-semibold'>
+                    {t('legal.privacy.cookies.title')}
+                  </CardTitle>
+                  <CardDescription>
+                    {t('legal.privacy.cookies.subtitle')}
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className='space-y-3'>
+              <p className='text-muted-foreground text-sm leading-relaxed'>
+                {t('legal.privacy.cookies.description')}
+              </p>
+              <div className='text-muted-foreground space-y-2 text-sm'>
+                <p>{t('legal.privacy.cookies.essential')}</p>
+                <p>{t('legal.privacy.cookies.performance')}</p>
+                <p>{t('legal.privacy.cookies.functionality')}</p>
+                <p>{t('legal.privacy.cookies.marketing')}</p>
+              </div>
+              <p className='text-muted-foreground text-sm'>
+                {t('legal.privacy.cookies.manage')}
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Contact Information */}
+        <motion.div
+          variants={cardVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.5, delay: 0.8 }}
+        >
+          <Card className='bg-primary/5'>
+            <CardHeader>
+              <CardTitle className='text-xl font-semibold'>
+                {t('legal.privacy.contact.title')}
+              </CardTitle>
+              <CardDescription>
+                {t('legal.privacy.contact.subtitle')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className='space-y-3'>
+              <p className='text-muted-foreground text-sm'>
+                {t('legal.privacy.contact.description')}
+              </p>
+              <ul className='text-muted-foreground space-y-2 text-sm'>
+                <li>
+                  <strong>{t('legal.privacy.contact.privacy')}</strong>{' '}
+                  <a
+                    href='mailto:privacy@iswoacademy.com'
+                    className='text-primary hover:underline'
+                  >
+                    privacy@iswoacademy.com
+                  </a>
+                </li>
+                <li>
+                  <strong>{t('legal.privacy.contact.support')}</strong>{' '}
+                  <a
+                    href='mailto:support@iswoacademy.com'
+                    className='text-primary hover:underline'
+                  >
+                    support@iswoacademy.com
+                  </a>
+                </li>
+              </ul>
+              <p className='text-muted-foreground text-sm'>
+                {t('legal.privacy.contact.response')}
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* CTA Footer */}
+        <motion.div
+          variants={cardVariants}
+          initial='hidden'
+          animate='visible'
+          transition={{ duration: 0.5, delay: 0.9 }}
+        >
+          <Card className='border-primary/20 from-primary/5 to-primary/10 bg-gradient-to-r'>
+            <CardContent className='py-6'>
+              <div className='flex flex-col items-center justify-between space-y-4 text-center md:flex-row md:space-y-0 md:text-left'>
+                <div>
+                  <h3 className='text-lg font-semibold'>
+                    {t('legal.privacy.cta.title')}
+                  </h3>
+                  <p className='text-muted-foreground text-sm'>
+                    {t('legal.privacy.cta.subtitle')}
                   </p>
                 </div>
-                <p className='text-sm text-gray-700'>
-                  Puedes gestionar tus preferencias de cookies en cualquier
-                  momento desde la configuración de tu navegador.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Contact Information */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.7 }}
-          >
-            <Card className='bg-purple-50/50'>
-              <CardHeader>
-                <CardTitle className='text-xl font-semibold'>
-                  Contacto y Preguntas
-                </CardTitle>
-                <CardDescription>
-                  ¿Tienes preguntas sobre cómo manejamos tu información?
-                </CardDescription>
-              </CardHeader>
-              <CardContent className='space-y-3'>
-                <p className='text-sm text-gray-700'>
-                  Si tienes preguntas sobre esta Política de Privacidad o deseas
-                  ejercer tus derechos, contáctanos:
-                </p>
-                <ul className='space-y-2 text-sm text-gray-700'>
-                  <li>
-                    <strong>Oficial de Privacidad:</strong>{' '}
-                    <a
-                      href='mailto:privacy@iswoacademy.com'
-                      className='text-blue-600 hover:text-blue-800'
-                    >
-                      privacy@iswoacademy.com
-                    </a>
-                  </li>
-                  <li>
-                    <strong>Soporte General:</strong>{' '}
-                    <a
-                      href='mailto:support@iswoacademy.com'
-                      className='text-blue-600 hover:text-blue-800'
-                    >
-                      support@iswoacademy.com
-                    </a>
-                  </li>
-                </ul>
-                <p className='text-sm text-gray-700'>
-                  Responderemos a tu solicitud dentro de 30 días hábiles.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
+                <div className='flex space-x-4'>
+                  <Button variant='outline' asChild>
+                    <Link to='/sign-in'>{t('legal.privacy.cta.signIn')}</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link to='/sign-up'>{t('legal.privacy.cta.signUp')}</Link>
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
-
-      {/* Footer CTA */}
-      <motion.div
-        className='border-t bg-white/80 backdrop-blur-sm'
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.8 }}
-      >
-        <div className='container mx-auto px-4 py-8'>
-          <div className='mx-auto flex max-w-3xl flex-col items-center justify-between space-y-4 text-center md:flex-row md:space-y-0 md:text-left'>
-            <div>
-              <h3 className='text-lg font-semibold'>
-                Tu privacidad es nuestra prioridad
-              </h3>
-              <p className='text-muted-foreground text-sm'>
-                Aprende con confianza en ISWO Academy
-              </p>
-            </div>
-            <div className='flex space-x-4'>
-              <Button variant='outline' asChild>
-                <Link to='/sign-in'>Iniciar Sesión</Link>
-              </Button>
-              <Button asChild>
-                <Link to='/sign-up'>Registrarse</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </div>
+    </AnimatedAuthLayout>
   )
 }

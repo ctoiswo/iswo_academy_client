@@ -15,7 +15,7 @@ function SignInRoute() {
   )
 }
 
-export const Route = createFileRoute('/(auth)/sign-in')({
+export const Route = createFileRoute('/(auth)/sign-in/')({
   component: SignInRoute,
   validateSearch: searchSchema,
 })

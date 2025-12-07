@@ -10,6 +10,6 @@ function ForgotPasswordRoute() {
   )
 }
 
-export const Route = createFileRoute('/(auth)/forgot-password')({
+export const Route = createFileRoute('/(auth)/forgot-password/')({
   component: ForgotPasswordRoute,
 })

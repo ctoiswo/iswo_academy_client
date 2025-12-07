@@ -183,11 +183,27 @@ class APIClient {
 
   /**
    * Interceptor de Request
-   * Añade el token de autenticación a todas las peticiones
+   * Añade el token de autenticación y locale a todas las peticiones
    */
   private setupRequestInterceptor() {
     this.client.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
+        // Añadir locale header a todas las peticiones
+        const locale = localStorage.getItem('iswo-locale-storage')
+        if (locale) {
+          try {
+            const localeData = JSON.parse(locale)
+            if (localeData.state?.locale) {
+              config.headers['X-Locale'] = localeData.state.locale
+            }
+          } catch (e) {
+            // Si falla el parse, usar español por defecto
+            config.headers['X-Locale'] = 'es'
+          }
+        } else {
+          config.headers['X-Locale'] = 'es'
+        }
+
         // No añadir token a endpoints públicos
         const publicEndpoints = ['/auth/login', '/auth/register', '/auth/forgot-password']
         const isPublicEndpoint = publicEndpoints.some(endpoint => 

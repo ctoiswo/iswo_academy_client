@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react'
+import { getErrorMessage } from '@/lib/error-handler'
+import { useTranslation } from '@/hooks/use-translation'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -12,25 +14,23 @@ import {
 } from '@/components/ui/card'
 import { AnimatedAuthLayout } from '../components/animated-auth-layout'
 
-type ConfirmationStatus =
-  | 'loading'
-  | 'success'
-  | 'error'
-  | 'already_confirmed'
-  | 'expired'
+type ConfirmationStatus = 'loading' | 'success' | 'error'
 
 export function ConfirmEmail() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
-  const { token } = useSearch({ from: '/(auth)/confirm' })
+  const { token } = useSearch({ from: '/(auth)/confirm/' })
   const [status, setStatus] = useState<ConfirmationStatus>('loading')
   const [message, setMessage] = useState('')
+  const [errorCode, setErrorCode] = useState<string | null>(null)
   const hasConfirmed = useRef(false)
 
   useEffect(() => {
     const confirmEmail = async () => {
       if (!token) {
         setStatus('error')
-        setMessage('Token de confirmación no encontrado.')
+        setMessage(t('auth.confirmEmail.errors.noToken'))
+        setErrorCode('MISSING_CONFIRMATION_TOKEN')
         return
       }
 
@@ -48,6 +48,7 @@ export function ConfirmEmail() {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
+              'X-Locale': localStorage.getItem('locale') || 'es',
             },
           }
         )
@@ -56,86 +57,52 @@ export function ConfirmEmail() {
 
         if (response.ok) {
           setStatus('success')
-          setMessage(
-            '¡Tu email ha sido confirmado exitosamente! Ahora puedes iniciar sesión.'
-          )
+          setMessage(data.message || t('auth.confirmEmail.success'))
         } else {
-          // Manejar diferentes tipos de errores
-          switch (data.error?.code) {
-            case 'INVALID_CONFIRMATION_TOKEN':
-              setStatus('error')
-              setMessage('Token de confirmación inválido.')
-              break
-            case 'ALREADY_CONFIRMED':
-              setStatus('already_confirmed')
-              setMessage(
-                'Tu cuenta ya ha sido confirmada. Puedes iniciar sesión.'
-              )
-              break
-            case 'EXPIRED_CONFIRMATION_TOKEN':
-              setStatus('expired')
-              setMessage(
-                'El token de confirmación ha expirado. Solicita uno nuevo.'
-              )
-              break
-            default:
-              setStatus('error')
-              setMessage(
-                data.message || 'Ocurrió un error al confirmar tu email.'
-              )
-          }
+          // El backend ya envía user_message traducido
+          const errorMessage = getErrorMessage(data.error)
+          setStatus('error')
+          setMessage(errorMessage)
+          setErrorCode(data.error?.code || null)
         }
       } catch (error) {
         console.error('Error confirming email:', error)
         setStatus('error')
-        setMessage('Error de conexión. Por favor, intenta nuevamente.')
+        setMessage(getErrorMessage(error))
+        setErrorCode('NETWORK_ERROR')
       }
     }
 
     confirmEmail()
-  }, [token])
+  }, [token, t])
 
   const getStatusIcon = () => {
-    switch (status) {
-      case 'loading':
-        return <Loader2 className='h-16 w-16 animate-spin text-blue-500' />
-      case 'success':
-      case 'already_confirmed':
-        return <CheckCircle className='h-16 w-16 text-green-500' />
-      case 'error':
-      case 'expired':
-        return <XCircle className='h-16 w-16 text-red-500' />
-      default:
-        return null
+    if (status === 'loading') {
+      return <Loader2 className='h-16 w-16 animate-spin text-blue-500' />
     }
+    if (status === 'success') {
+      return <CheckCircle className='h-16 w-16 text-green-500' />
+    }
+    return <XCircle className='h-16 w-16 text-red-500' />
   }
 
   const getStatusTitle = () => {
-    switch (status) {
-      case 'loading':
-        return 'Confirmando tu email...'
-      case 'success':
-        return '¡Email confirmado!'
-      case 'already_confirmed':
-        return 'Email ya confirmado'
-      case 'error':
-        return 'Error de confirmación'
-      case 'expired':
-        return 'Token expirado'
-      default:
-        return ''
-    }
+    if (status === 'loading') return t('auth.confirmEmail.loading')
+    if (status === 'success') return t('auth.confirmEmail.successTitle')
+    return t('auth.confirmEmail.errorTitle')
   }
 
   const handleGoToLogin = () => {
     navigate({ to: '/sign-in' })
   }
 
-  const handleRequestNewToken = () => {
-    // Aquí podrías implementar la lógica para solicitar un nuevo token
-    // Por ahora, redirigimos al registro
-    navigate({ to: '/sign-up' })
+  const handleRetry = () => {
+    window.location.reload()
   }
+
+  // Determinar si mostrar botón de "Solicitar nuevo token"
+  const isExpiredError = errorCode === 'EXPIRED_CONFIRMATION_TOKEN'
+  const canRetry = status === 'error' && !isExpiredError
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
@@ -167,8 +134,8 @@ export function ConfirmEmail() {
 
   return (
     <AnimatedAuthLayout
-      title='Confirmación de Email'
-      subtitle='Estamos verificando tu correo electrónico para activar tu cuenta en ISWO Academy'
+      title={t('auth.confirmEmail.title')}
+      subtitle={t('auth.confirmEmail.subtitle')}
       showBackButton={false}
     >
       <motion.div
@@ -197,7 +164,7 @@ export function ConfirmEmail() {
 
           <motion.div variants={contentVariants} transition={{ delay: 0.2 }}>
             <CardContent className='space-y-3 px-6 pb-6'>
-              {status === 'success' || status === 'already_confirmed' ? (
+              {status === 'success' ? (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -208,30 +175,7 @@ export function ConfirmEmail() {
                     className='w-full'
                     size='lg'
                   >
-                    Iniciar Sesión
-                  </Button>
-                </motion.div>
-              ) : status === 'expired' ? (
-                <motion.div
-                  className='space-y-3'
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <Button
-                    onClick={handleRequestNewToken}
-                    className='w-full'
-                    size='lg'
-                  >
-                    Solicitar Nuevo Token
-                  </Button>
-                  <Button
-                    onClick={handleGoToLogin}
-                    variant='outline'
-                    className='w-full'
-                    size='lg'
-                  >
-                    Ir a Iniciar Sesión
+                    {t('auth.confirmEmail.goToLogin')}
                   </Button>
                 </motion.div>
               ) : status === 'error' ? (
@@ -241,20 +185,18 @@ export function ConfirmEmail() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  <Button
-                    onClick={() => window.location.reload()}
-                    className='w-full'
-                    size='lg'
-                  >
-                    Intentar Nuevamente
-                  </Button>
+                  {canRetry && (
+                    <Button onClick={handleRetry} className='w-full' size='lg'>
+                      {t('auth.confirmEmail.retry')}
+                    </Button>
+                  )}
                   <Button
                     onClick={handleGoToLogin}
                     variant='outline'
                     className='w-full'
                     size='lg'
                   >
-                    Ir a Iniciar Sesión
+                    {t('auth.confirmEmail.goToLogin')}
                   </Button>
                 </motion.div>
               ) : null}

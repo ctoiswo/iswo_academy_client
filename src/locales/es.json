@@ -1,0 +1,557 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "actions": "Acciones",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "close": "Cerrar",
+    "open": "Abrir",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "dashboard": "Dashboard",
+    "courses": "Cursos",
+    "explore": "Explorar Cursos",
+    "exploreAcademies": "Explorar Academias",
+    "createAcademy": "Crea tu Academia",
+    "features": "Características",
+    "pricing": "Precios",
+    "testimonials": "Testimonios",
+    "settings": "Configuración",
+    "profile": "Perfil",
+    "logout": "Cerrar Sesión",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "backToHome": "Volver al inicio"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Iniciar sesión",
+      "subtitle": "Ingresa tu correo electrónico y contraseña para acceder a tu cuenta.",
+      "welcome": "¡Bienvenido de vuelta!",
+      "description": "Continúa tu viaje de aprendizaje y descubre nuevas oportunidades en ISWO Academy",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "nombre@ejemplo.com",
+      "password": "Contraseña",
+      "passwordPlaceholder": "********",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "button": "Iniciar sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUp": "Regístrate aquí",
+      "orContinueWith": "O continúa con",
+      "terms": "Al hacer clic en iniciar sesión, aceptas nuestros",
+      "termsLink": "Términos de Servicio",
+      "and": "y",
+      "privacyLink": "Política de Privacidad",
+      "successMessage": "¡Bienvenido de vuelta, {{email}}!",
+      "github": "GitHub",
+      "facebook": "Facebook",
+      "validation": {
+        "emailRequired": "Por favor ingresa tu correo electrónico",
+        "emailInvalid": "Por favor ingresa una dirección de correo electrónico válida",
+        "passwordRequired": "Por favor ingresa tu contraseña",
+        "passwordMin": "La contraseña debe tener al menos 7 caracteres"
+      }
+    },
+    "signUp": {
+      "title": "Crear cuenta",
+      "subtitle": "Crea tu cuenta para comenzar tu viaje de aprendizaje",
+      "welcome": "¡Únete a ISWO Academy!",
+      "description": "La plataforma donde tu conocimiento cobra vida",
+      "firstName": "Nombre",
+      "firstNamePlaceholder": "Juan",
+      "lastName": "Apellido",
+      "lastNamePlaceholder": "Pérez",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "nombre@ejemplo.com",
+      "password": "Contraseña",
+      "passwordPlaceholder": "********",
+      "passwordConfirmation": "Confirmar contraseña",
+      "button": "Crear cuenta",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signIn": "Inicia sesión aquí",
+      "orContinueWith": "O continúa con",
+      "terms": "Al crear una cuenta, aceptas nuestros",
+      "termsLink": "Términos de Servicio",
+      "and": "y",
+      "privacyLink": "Política de Privacidad"
+    },
+    "forgotPassword": {
+      "title": "Recuperar contraseña",
+      "subtitle": "Ingresa tu correo electrónico y te enviaremos instrucciones",
+      "description": "Ingresa tu correo electrónico registrado y te enviaremos un enlace para restablecer tu contraseña.",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "nombre@ejemplo.com",
+      "button": "Enviar correo de recuperación",
+      "sending": "Enviando correo...",
+      "backToLogin": "Volver al inicio de sesión",
+      "rememberPassword": "¿Recuerdas tu contraseña?",
+      "signIn": "Iniciar sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUp": "Registrarse",
+      "successMessage": "Las instrucciones para restablecer la contraseña han sido enviadas a tu dirección de correo electrónico.",
+      "validation": {
+        "emailRequired": "Por favor ingresa tu correo electrónico",
+        "emailInvalid": "Por favor ingresa una dirección de correo electrónico válida"
+      }
+    },
+    "signUpSuccess": {
+      "title": "¡Bienvenido a ISWO Academy!",
+      "subtitle": "Tu cuenta ha sido creada exitosamente. Prepárate para una experiencia de aprendizaje extraordinaria.",
+      "successTitle": "¡Registro Exitoso!",
+      "successDescription": "Tu cuenta ha sido creada exitosamente.",
+      "confirmationSent": "Hemos enviado un correo de confirmación a tu bandeja de entrada.",
+      "verifyEmail": "Verifica tu correo",
+      "verifyEmailDescription": "Revisa tu bandeja de entrada y haz clic en el enlace de confirmación.",
+      "whatAwaits": "Lo que te espera en ISWO Academy:",
+      "feature1": "Acceso a cursos interactivos y contenido exclusivo",
+      "feature2": "Sistema de logros y certificaciones",
+      "feature3": "Comunidad de aprendizaje colaborativo",
+      "signInButton": "Iniciar Sesión",
+      "registerAnotherButton": "Registrar Otra Cuenta",
+      "funFact": "Dato curioso:",
+      "funFactText": "Los usuarios verificados tienen acceso a contenido premium desde el primer día.",
+      "checkEmail": "Por favor revisa tu correo electrónico y sigue las instrucciones para restablecer tu contraseña. Si no ves el correo, revisa tu carpeta de spam."
+    },
+    "confirmEmail": {
+      "title": "Confirmación de Email",
+      "subtitle": "Estamos verificando tu correo electrónico para activar tu cuenta en ISWO Academy",
+      "loading": "Confirmando tu email...",
+      "successTitle": "¡Email confirmado!",
+      "errorTitle": "Error de confirmación",
+      "success": "¡Tu email ha sido confirmado exitosamente! Ahora puedes iniciar sesión.",
+      "goToLogin": "Iniciar Sesión",
+      "retry": "Intentar Nuevamente",
+      "errors": {
+        "noToken": "Token de confirmación no encontrado."
+      }
+    },
+    "resetPassword": {
+      "title": "Nueva contraseña",
+      "layoutTitle": "Crea tu nueva contraseña",
+      "layoutSubtitle": "Protege tu cuenta con una contraseña segura",
+      "subtitle": "Ingresa tu nueva contraseña a continuación. Asegúrate de que sea fuerte y segura.",
+      "password": "Nueva contraseña",
+      "passwordPlaceholder": "Ingresa tu nueva contraseña",
+      "passwordConfirmation": "Confirmar nueva contraseña",
+      "passwordConfirmationPlaceholder": "Confirma tu nueva contraseña",
+      "button": "Restablecer contraseña",
+      "resetting": "Restableciendo contraseña...",
+      "rememberPassword": "¿Recuerdas tu contraseña?",
+      "signIn": "Iniciar sesión",
+      "invalidLink": {
+        "title": "Enlace inválido",
+        "layoutTitle": "Enlace de restablecimiento inválido",
+        "layoutSubtitle": "El enlace que usaste no es válido o ha expirado",
+        "description": "El enlace de restablecimiento de contraseña es inválido o ha expirado. Por favor solicita un nuevo restablecimiento de contraseña.",
+        "requestNew": "Solicitar nuevo restablecimiento"
+      },
+      "successMessage": "Tu contraseña ha sido restablecida exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.",
+      "validation": {
+        "passwordMin": "La contraseña debe tener al menos 8 caracteres",
+        "passwordUppercase": "La contraseña debe contener al menos una letra mayúscula",
+        "passwordLowercase": "La contraseña debe contener al menos una letra minúscula",
+        "passwordNumber": "La contraseña debe contener al menos un número",
+        "passwordConfirmationRequired": "Por favor confirma tu contraseña",
+        "passwordsMismatch": "Las contraseñas no coinciden"
+      }
+    },
+    "layout": {
+      "features": {
+        "createAcademy": "Crea tu propia academia online",
+        "qualityCourses": "Accede a cursos de calidad",
+        "certifications": "Certificaciones reconocidas"
+      }
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Términos de Servicio",
+      "layoutTitle": "Términos de Servicio",
+      "layoutSubtitle": "Conoce los términos y condiciones de uso de ISWO Academy",
+      "lastUpdated": "Última actualización: 6 de diciembre de 2025",
+      "intro": "Por favor, lee estos términos cuidadosamente antes de usar ISWO Academy. Al utilizar nuestros servicios, aceptas estar legalmente vinculado por estos términos.",
+      "backButton": "Volver",
+      "viewPrivacy": "Ver Política de Privacidad",
+      "sections": {
+        "acceptance": {
+          "title": "1. Aceptación de los Términos",
+          "content": "Al acceder y utilizar ISWO Academy, aceptas estar sujeto a estos Términos de Servicio. Si no estás de acuerdo con alguna parte de estos términos, no debes utilizar nuestros servicios. Nos reservamos el derecho de actualizar estos términos en cualquier momento, y tu uso continuado del servicio constituye la aceptación de dichos cambios."
+        },
+        "userAccount": {
+          "title": "2. Registro y Cuenta de Usuario",
+          "content": "Para acceder a ciertas funciones de la plataforma, debes crear una cuenta. Eres responsable de mantener la confidencialidad de tu contraseña y de todas las actividades que ocurran bajo tu cuenta. Debes proporcionar información precisa y actualizada durante el registro. ISWO Academy se reserva el derecho de suspender o terminar cuentas que violen estos términos."
+        },
+        "serviceUse": {
+          "title": "3. Uso del Servicio",
+          "content": "Te otorgamos una licencia limitada, no exclusiva e intransferible para acceder y usar ISWO Academy para fines educativos personales. No puedes: (a) copiar, modificar o distribuir el contenido sin autorización, (b) usar el servicio para actividades ilegales, (c) intentar acceder a áreas restringidas de la plataforma, (d) interferir con el funcionamiento del servicio, o (e) usar bots o sistemas automatizados sin permiso expreso."
+        },
+        "intellectualProperty": {
+          "title": "4. Propiedad Intelectual",
+          "content": "Todo el contenido de ISWO Academy, incluyendo textos, gráficos, logos, videos y software, está protegido por derechos de propiedad intelectual. Los instructores mantienen los derechos sobre el contenido que crean, pero otorgan a ISWO Academy una licencia para distribuirlo. Los estudiantes pueden ver el contenido para su uso personal y educativo, pero no pueden redistribuirlo comercialmente."
+        },
+        "payments": {
+          "title": "5. Pagos y Suscripciones",
+          "content": "Algunos cursos y funcionalidades requieren pago. Los precios están sujetos a cambios con previo aviso. Las suscripciones se renuevan automáticamente hasta que las canceles. Puedes cancelar en cualquier momento desde tu panel de cuenta. Los reembolsos se procesarán según nuestra política de reembolsos, generalmente dentro de 14 días de la compra si no has consumido más del 20% del curso."
+        },
+        "liability": {
+          "title": "6. Limitación de Responsabilidad",
+          "content": "ISWO Academy se proporciona \"tal cual\" sin garantías de ningún tipo. No garantizamos que el servicio esté libre de errores o sea ininterrumpido. No somos responsables de daños indirectos, incidentales o consecuentes que surjan del uso de la plataforma. Nuestra responsabilidad total está limitada al monto que hayas pagado por el servicio en los últimos 12 meses."
+        }
+      },
+      "contact": {
+        "title": "Información de Contacto",
+        "subtitle": "¿Tienes preguntas sobre estos términos?",
+        "description": "Si tienes alguna pregunta sobre estos Términos de Servicio, puedes contactarnos a través de:",
+        "email": "Email:",
+        "support": "Soporte:"
+      },
+      "cta": {
+        "title": "¿Listo para comenzar?",
+        "subtitle": "Únete a miles de estudiantes en ISWO Academy",
+        "signIn": "Iniciar Sesión",
+        "signUp": "Registrarse"
+      }
+    },
+    "privacy": {
+      "title": "Política de Privacidad",
+      "layoutTitle": "Política de Privacidad",
+      "layoutSubtitle": "Tu privacidad es nuestra prioridad. Conoce cómo protegemos tus datos",
+      "lastUpdated": "Última actualización: 6 de diciembre de 2025",
+      "intro": "En ISWO Academy, valoramos tu privacidad y nos comprometemos a proteger tu información personal. Esta política explica cómo recopilamos, usamos y protegemos tus datos.",
+      "sections": {
+        "dataCollection": {
+          "title": "1. Información que Recopilamos",
+          "content": "Recopilamos información que nos proporcionas directamente, como tu nombre, dirección de correo electrónico, foto de perfil y preferencias de aprendizaje cuando creas una cuenta. También recopilamos automáticamente información sobre tu uso de la plataforma, incluyendo cursos visitados, progreso de aprendizaje, tiempo de estudio, y datos de tu dispositivo (dirección IP, tipo de navegador, sistema operativo). Utilizamos cookies y tecnologías similares para mejorar tu experiencia."
+        },
+        "dataUsage": {
+          "title": "2. Cómo Utilizamos tu Información",
+          "content": "Utilizamos tu información para: proporcionar y mejorar nuestros servicios educativos, personalizar tu experiencia de aprendizaje, procesar pagos y suscripciones, enviarte actualizaciones sobre tus cursos, comunicarnos contigo sobre tu cuenta, analizar el uso de la plataforma para mejorarla, cumplir con obligaciones legales y proteger la seguridad de nuestros usuarios. No vendemos tu información personal a terceros."
+        },
+        "dataSharing": {
+          "title": "3. Compartir tu Información",
+          "content": "Compartimos tu información solo en circunstancias limitadas: con instructores de los cursos en los que estás inscrito (nombre, progreso y actividad), con proveedores de servicios que nos ayudan a operar la plataforma (procesadores de pago, servicios de email, hosting), cuando lo requiera la ley o para proteger nuestros derechos, y con tu consentimiento explícito para otros fines específicos. Todos nuestros proveedores están obligados contractualmente a proteger tu información."
+        },
+        "dataSecurity": {
+          "title": "4. Seguridad de los Datos",
+          "content": "Implementamos medidas de seguridad técnicas y organizativas para proteger tu información personal contra acceso no autorizado, alteración, divulgación o destrucción. Esto incluye encriptación de datos en tránsito (SSL/TLS), encriptación de contraseñas, firewalls, monitoreo de seguridad continuo, y acceso restringido a información personal solo para empleados autorizados. Sin embargo, ningún método de transmisión por internet es 100% seguro."
+        },
+        "userRights": {
+          "title": "5. Tus Derechos y Opciones",
+          "content": "Tienes derecho a: acceder a tu información personal, corregir datos inexactos, solicitar la eliminación de tu cuenta y datos asociados, exportar tus datos en un formato portable, oponerte al procesamiento de tu información, retirar tu consentimiento en cualquier momento, y optar por no recibir comunicaciones de marketing. Puedes ejercer estos derechos desde la configuración de tu cuenta o contactándonos directamente."
+        },
+        "internationalTransfers": {
+          "title": "6. Transferencias Internacionales",
+          "content": "ISWO Academy opera globalmente y puede transferir tu información a servidores ubicados en diferentes países. Al usar nuestros servicios, consientes estas transferencias. Nos aseguramos de que cualquier transferencia internacional cumpla con las leyes de protección de datos aplicables, incluyendo el uso de cláusulas contractuales estándar aprobadas y garantías adecuadas para proteger tu información."
+        }
+      },
+      "cookies": {
+        "title": "Uso de Cookies",
+        "subtitle": "Información sobre las cookies que utilizamos",
+        "description": "Utilizamos cookies y tecnologías similares para mejorar tu experiencia. Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo.",
+        "essential": "Cookies esenciales: Necesarias para el funcionamiento básico de la plataforma",
+        "performance": "Cookies de rendimiento: Nos ayudan a entender cómo usas el sitio",
+        "functionality": "Cookies de funcionalidad: Recuerdan tus preferencias",
+        "marketing": "Cookies de marketing: Personalizan anuncios (requieren tu consentimiento)",
+        "manage": "Puedes gestionar tus preferencias de cookies en cualquier momento desde la configuración de tu navegador."
+      },
+      "contact": {
+        "title": "Contacto y Preguntas",
+        "subtitle": "¿Tienes preguntas sobre cómo manejamos tu información?",
+        "description": "Si tienes preguntas sobre esta Política de Privacidad o deseas ejercer tus derechos, contáctanos:",
+        "privacy": "Oficial de Privacidad:",
+        "support": "Soporte General:",
+        "response": "Responderemos a tu solicitud dentro de 30 días hábiles."
+      },
+      "cta": {
+        "title": "Tu privacidad es nuestra prioridad",
+        "subtitle": "Aprende con confianza en ISWO Academy",
+        "signIn": "Iniciar Sesión",
+        "signUp": "Registrarse"
+      }
+    }
+  },
+  "dashboard": {
+    "welcome": "Bienvenido",
+    "myLearning": "Mi Aprendizaje",
+    "stats": "Estadísticas",
+    "recentActivity": "Actividad Reciente",
+    "continueWhere": "Continúa donde lo dejaste"
+  },
+  "profile": {
+    "title": "Perfil",
+    "editProfile": "Editar Perfil",
+    "changePassword": "Cambiar Contraseña",
+    "personalInfo": "Información Personal",
+    "accountSettings": "Configuración de Cuenta"
+  },
+  "gamification": {
+    "points": "Puntos",
+    "badges": "Insignias",
+    "achievements": "Logros",
+    "leaderboard": "Tabla de Clasificación",
+    "level": "Nivel"
+  },
+  "errors": {
+    "generic": "Ocurrió un error inesperado",
+    "networkError": "Error de conexión. Por favor verifica tu conexión a internet.",
+    "unauthorized": "No tienes permiso para realizar esta acción",
+    "notFound": "Recurso no encontrado",
+    "validationError": "Por favor verifica los datos ingresados"
+  },
+  "footer": {
+    "allRightsReserved": "Todos los derechos reservados",
+    "madeWith": "Hecho con",
+    "by": "por"
+  },
+  "home": {
+    "hero": {
+      "title": "Descubre tu próxima",
+      "titleHighlight": "oportunidad de aprendizaje",
+      "description": "Explora miles de cursos creados por expertos en academias especializadas. Aprende nuevas habilidades y haz crecer tu carrera profesional.",
+      "imageAlt": "Estudiantes aprendiendo"
+    },
+    "categories": {
+      "all": "Todas las categorías",
+      "loading": "Cargando categorías..."
+    },
+    "academies": {
+      "title": "Academias Destacadas",
+      "description": "Descubre las mejores academias especializadas en diferentes áreas",
+      "loading": "Cargando academias...",
+      "error": "Error al cargar las academias destacadas.",
+      "retry": "Reintentar",
+      "notFound": "No se encontraron academias destacadas.",
+      "viewAll": "Ver Todas las Academias"
+    },
+    "courses": {
+      "title": "Cursos Populares por Categoría",
+      "description": "Explora los cursos más destacados organizados por áreas de conocimiento",
+      "loading": "Cargando cursos...",
+      "exploreAll": "Explorar Todas las Academias"
+    },
+    "cta": {
+      "title": "¿Tienes conocimiento que compartir?",
+      "description": "Únete a miles de instructores que ya están creando sus propias academias en línea. Comparte tu experiencia y genera ingresos enseñando lo que más te apasiona.",
+      "button": "Crear mi Academia"
+    }
+  },
+  "landing": {
+    "hero": {
+      "badge": "🚀 Lanza tu Academia Hoy",
+      "title": "Crea tu Propia",
+      "titleHighlight": "Academia Online",
+      "description": "Construye, administra y escala tu plataforma educativa con nuestras herramientas integrales de creación de academias. Empodera a estudiantes de todo el mundo con tu experiencia.",
+      "imageAlt": "Estudiantes aprendiendo",
+      "startBuilding": "Comenzar a Construir",
+      "requestDemo": "Solicitar Demo",
+      "freeToStart": "Gratis para comenzar",
+      "noSetupFees": "Sin tarifas de configuración",
+      "cancelAnytime": "Cancela cuando quieras"
+    },
+    "features": {
+      "title": "Todo lo que necesitas para construir tu academia",
+      "description": "Herramientas poderosas y funciones diseñadas para ayudarte a crear experiencias educativas atractivas",
+      "imageAlt": "Libros y aprendizaje",
+      "courseCreation": {
+        "title": "Creación de Cursos",
+        "description": "Construye cursos integrales con lecciones, cuestionarios y contenido multimedia"
+      },
+      "studentManagement": {
+        "title": "Gestión de Estudiantes",
+        "description": "Rastrea el progreso de los estudiantes, administra inscripciones e interactúa con tu comunidad"
+      },
+      "certificates": {
+        "title": "Certificados y Badges",
+        "description": "Recompensa logros con certificados personalizados y insignias digitales"
+      },
+      "analytics": {
+        "title": "Análisis e Insights",
+        "description": "Obtén análisis detallados sobre el rendimiento de los estudiantes y la efectividad de los cursos"
+      },
+      "integration": {
+        "title": "Integración Fácil",
+        "description": "Integra sin problemas con tus herramientas y flujos de trabajo existentes"
+      },
+      "security": {
+        "title": "Seguro y Confiable",
+        "description": "Seguridad de nivel empresarial con garantía de tiempo de actividad del 99.9%"
+      }
+    },
+    "pricing": {
+      "title": "Precios simples y transparentes",
+      "description": "Elige el plan que se adapte a las necesidades de tu academia",
+      "imageAlt": "Oficina moderna",
+      "popular": "Popular",
+      "starter": {
+        "name": "Inicial",
+        "description": "Perfecto para comenzar",
+        "price": "Gratis",
+        "features": {
+          "courses": "Hasta 3 cursos",
+          "students": "Máximo 50 estudiantes",
+          "analytics": "Análisis básicos",
+          "support": "Soporte por email"
+        },
+        "button": "Comenzar Gratis"
+      },
+      "professional": {
+        "name": "Profesional",
+        "description": "La opción más popular",
+        "price": "$29",
+        "priceUnit": "/mes",
+        "features": {
+          "courses": "Cursos ilimitados",
+          "students": "Máximo 500 estudiantes",
+          "analytics": "Análisis avanzados",
+          "certificates": "Certificados personalizados",
+          "support": "Soporte prioritario"
+        },
+        "button": "Iniciar Prueba Gratuita"
+      },
+      "enterprise": {
+        "name": "Empresarial",
+        "description": "Para organizaciones grandes",
+        "price": "$99",
+        "priceUnit": "/mes",
+        "features": {
+          "unlimited": "Todo ilimitado",
+          "whiteLabel": "Solución de marca blanca",
+          "api": "Acceso a API",
+          "integrations": "Integraciones personalizadas",
+          "support": "Soporte telefónico 24/7"
+        },
+        "button": "Contactar Ventas",
+        "dialog": {
+          "title": "Ventas Empresariales",
+          "description": "Hablemos sobre cómo ISWO Academy Enterprise puede satisfacer las necesidades de tu organización.",
+          "solutionsTitle": "Soluciones Empresariales",
+          "solutionsDescription": "Precios personalizados, soluciones de marca blanca y soporte dedicado para organizaciones grandes.",
+          "enterpriseSales": "Ventas Empresariales",
+          "salesTeam": "Equipo de Ventas",
+          "startFreeTrial": "Comenzar con Prueba Gratuita",
+          "startFreeNote": "O comienza con nuestro plan gratuito y actualiza después"
+        }
+      }
+    },
+    "testimonials": {
+      "title": "Con la confianza de educadores de todo el mundo",
+      "description": "Mira lo que dicen nuestros creadores de academias",
+      "imageAlt": "Personas colaborando",
+      "testimonial1": {
+        "quote": "\"ISWO Academy transformó la forma en que imparto mis cursos. La plataforma es intuitiva y a mis estudiantes les encantan las funciones interactivas.\"",
+        "author": "Sarah Johnson",
+        "role": "Experta en Marketing Digital"
+      },
+      "testimonial2": {
+        "quote": "\"El panel de análisis me da perspectivas increíbles sobre el progreso de los estudiantes. Ahora puedo optimizar mis cursos para obtener mejores resultados.\"",
+        "author": "Michael Chen",
+        "role": "Instructor de Programación"
+      },
+      "testimonial3": {
+        "quote": "\"Configurar mi academia fue increíblemente fácil. En cuestión de horas, tenía mi primer curso en vivo y los estudiantes ya se estaban inscribiendo.\"",
+        "author": "Emily Rodriguez",
+        "role": "Profesora de Idiomas"
+      }
+    },
+    "cta": {
+      "title": "¿Listo para construir tu academia?",
+      "description": "Únete a miles de educadores que ya están creando experiencias de aprendizaje increíbles",
+      "imageAlt": "Equipo trabajando juntos",
+      "startFreeAcademy": "Inicia tu Academia Gratuita",
+      "signIn": "Iniciar Sesión",
+      "needHelp": "¿Necesitas ayuda para comenzar? Contacta a nuestro equipo",
+      "contactTeam": {
+        "title": "Contacta a Nuestro Equipo",
+        "description": "¿Tienes preguntas? Nuestro equipo está aquí para ayudarte a comenzar con tu academia.",
+        "emailSupport": "Soporte por Email",
+        "phoneSupport": "Soporte Telefónico",
+        "businessHours": "Horario de Atención",
+        "hoursText": "Lun-Vie, 9AM-6PM EST",
+        "startNow": "Comenzar Ahora"
+      }
+    },
+    "footer": {
+      "description": "Empoderando a educadores para crear experiencias de aprendizaje en línea increíbles.",
+      "imageAlt": "Biblioteca moderna",
+      "getStarted": "Comenzar",
+      "product": "Producto",
+      "features": "Características",
+      "pricing": "Precios",
+      "requestDemo": "Solicitar Demo",
+      "company": "Empresa",
+      "testimonials": "Testimonios",
+      "aboutUs": "Acerca de Nosotros",
+      "blog": "Blog",
+      "support": "Soporte",
+      "helpCenter": "Centro de Ayuda",
+      "contactUs": "Contáctanos",
+      "privacy": "Política de Privacidad",
+      "allRights": "Todos los derechos reservados",
+      "startFree": "Comenzar Gratis"
+    }
+  },
+  "academies": {
+    "pageTitle": "Explora Nuestras",
+    "pageTitleHighlight": "Academias",
+    "defaultDescription": "Descubre las mejores academias online, creadas por expertos de la industria. Aprende nuevas habilidades y avanza en tu carrera profesional.",
+    "resultsFound": "Encontramos",
+    "resultsFoundSuffix": "academias que coinciden con tu búsqueda",
+    "noResults": "No se encontraron academias que coincidan con tu búsqueda",
+    "stats": {
+      "academiesAvailable": "Academias Disponibles",
+      "activeStudents": "Estudiantes Activos",
+      "mainCategories": "Categorías Principales",
+      "categoriesFound": "Categorías Encontradas"
+    },
+    "search": {
+      "placeholder": "Buscar academias por nombre o descripción...",
+      "category": "Categoría",
+      "allCategories": "Todas las categorías",
+      "sortBy": "Ordenar por",
+      "popular": "Más popular",
+      "rating": "Mejor calificación",
+      "students": "Más estudiantes",
+      "newest": "Más reciente",
+      "all": "Todas",
+      "activeFilters": "Filtros activos:",
+      "searchLabel": "Búsqueda:",
+      "orderLabel": "Orden:",
+      "clearAll": "Limpiar todos",
+      "clearSearch": "Limpiar búsqueda",
+      "viewAllCategories": "Ver todas las categorías"
+    },
+    "grid": {
+      "noAcademies": "No se encontraron academias",
+      "noResultsWithSearch": "No hay academias que coincidan con",
+      "inThisCategory": "en esta categoría",
+      "noAvailable": "No hay academias disponibles en esta categoría",
+      "results": "Resultados",
+      "academyFound": "academia encontrada",
+      "academiesFound": "academias encontradas"
+    },
+    "cta": {
+      "title": "¿No encuentras lo que buscas?",
+      "description": "Crea tu propia academia y comparte tu conocimiento con miles de estudiantes.",
+      "button": "Crear Mi Academia"
+    },
+    "loading": "Cargando academias...",
+    "error": "Error",
+    "tryAgain": "Intentar de nuevo",
+    "noAvailable": "No hay academias disponibles"
+  }
+}

@@ -2,6 +2,7 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { ArrowLeft, LogOut, Settings, LayoutDashboard } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
+import { useTranslation } from '@/hooks/use-translation'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { LanguageToggle } from '@/components/language-toggle'
 import { LargeLogo } from '@/components/large-logo'
 import { ThemeSwitch } from '@/components/theme-switch'
 
@@ -23,9 +25,11 @@ interface PublicHeaderProps {
 
 export function PublicHeader({
   showBackButton = false,
-  backButtonText = 'Volver al inicio',
+  backButtonText,
   backButtonHref = '/',
 }: PublicHeaderProps) {
+  const { t } = useTranslation()
+
   return (
     <header className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 border-b backdrop-blur'>
       <div className='container flex h-16 items-center justify-between'>
@@ -34,7 +38,7 @@ export function PublicHeader({
             <Button variant='ghost' size='sm' asChild>
               <Link to={backButtonHref}>
                 <ArrowLeft className='mr-2 h-4 w-4' />
-                {backButtonText}
+                {backButtonText || t('navigation.backToHome')}
               </Link>
             </Button>
           )}
@@ -55,19 +59,20 @@ export function PublicHeader({
             to='/academies'
             className='hover:text-primary text-sm font-medium transition-colors'
           >
-            Explorar Academias
+            {t('navigation.exploreAcademies')}
           </Link>
           <Link
             to='/landing'
             className='text-primary hover:text-primary/80 text-sm font-medium transition-colors'
           >
-            Crea tu Academia
+            {t('navigation.createAcademy')}
           </Link>
         </nav>
 
         <div className='flex items-center space-x-4'>
-          <ThemeSwitch />
           <UserMenu />
+          <ThemeSwitch />
+          <LanguageToggle />
         </div>
       </div>
     </header>
@@ -78,6 +83,7 @@ export function PublicHeader({
  * UserMenu component - Shows login/register buttons or user avatar
  */
 function UserMenu() {
+  const { t } = useTranslation()
   const { isAuthenticated, user, logout, academyData, currentAcademy } =
     useAuthStore()
   const navigate = useNavigate()
@@ -143,18 +149,18 @@ function UserMenu() {
             className='cursor-pointer'
           >
             <LayoutDashboard className='mr-2 h-4 w-4' />
-            Dashboard
+            {t('navigation.dashboard')}
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to='/settings' className='cursor-pointer'>
               <Settings className='mr-2 h-4 w-4' />
-              Configuración
+              {t('navigation.settings')}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogout} className='cursor-pointer'>
             <LogOut className='mr-2 h-4 w-4' />
-            Cerrar Sesión
+            {t('navigation.logout')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -165,10 +171,10 @@ function UserMenu() {
   return (
     <>
       <Button variant='ghost' asChild>
-        <Link to='/sign-in'>Iniciar Sesión</Link>
+        <Link to='/sign-in'>{t('navigation.login')}</Link>
       </Button>
       <Button asChild>
-        <Link to='/sign-up'>Registrarse</Link>
+        <Link to='/sign-up'>{t('navigation.register')}</Link>
       </Button>
     </>
   )

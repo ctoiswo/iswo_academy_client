@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 
 interface StatsSectionProps {
   totalAcademies: number
@@ -15,6 +16,7 @@ export function StatsSection({
   searchQuery,
   selectedCategory,
 }: StatsSectionProps) {
+  const { t } = useTranslation()
   const statsVariants = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: { opacity: 1, scale: 1 },
@@ -32,7 +34,7 @@ export function StatsSection({
           {totalAcademies}+
         </div>
         <div className='text-muted-foreground font-medium'>
-          Academias Disponibles
+          {t('academies.stats.academiesAvailable')}
         </div>
       </div>
       <div className='bg-card rounded-2xl border p-6 text-center shadow-sm'>
@@ -40,7 +42,7 @@ export function StatsSection({
           {totalStudents}
         </div>
         <div className='text-muted-foreground font-medium'>
-          Estudiantes Activos
+          {t('academies.stats.activeStudents')}
         </div>
       </div>
       <div className='bg-card rounded-2xl border p-6 text-center shadow-sm'>
@@ -49,8 +51,8 @@ export function StatsSection({
         </div>
         <div className='text-muted-foreground font-medium'>
           {searchQuery || selectedCategory !== 'all'
-            ? 'Categorías Encontradas'
-            : 'Categorías Principales'}
+            ? t('academies.stats.categoriesFound')
+            : t('academies.stats.mainCategories')}
         </div>
       </div>
     </motion.div>

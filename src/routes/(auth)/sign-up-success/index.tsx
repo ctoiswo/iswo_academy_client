@@ -10,6 +10,6 @@ function SignUpSuccessRoute() {
   )
 }
 
-export const Route = createFileRoute('/(auth)/sign-up-success')({
+export const Route = createFileRoute('/(auth)/sign-up-success/')({
   component: SignUpSuccessRoute,
 })

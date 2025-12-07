@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import type { AcademyCategory } from '@/types'
 import { motion } from 'framer-motion'
 import { BookOpen, Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { groupAcademiesByCategory } from '@/lib/helpers/academy'
 import { CategoryCarousel } from '@/components/category-carousel'
 import { AcademyGrid } from './academy-grid'
@@ -31,6 +32,8 @@ export function CategoryCarouselList({
   allCategories,
   searchQuery,
 }: CategoryCarouselListProps) {
+  const { t } = useTranslation()
+
   // Group academies by category only when no filters are active
   const academiesByCategory = useMemo(() => {
     if (!academies.length) return []
@@ -40,8 +43,8 @@ export function CategoryCarouselList({
       const categoryName =
         selectedCategory !== 'all'
           ? allCategories.find((c) => c.slug === selectedCategory)?.name ||
-            'Resultados'
-          : 'Resultados'
+            t('academies.grid.results')
+          : t('academies.grid.results')
 
       return {
         filtered: true,
@@ -108,7 +111,7 @@ export function CategoryCarouselList({
         >
           <BookOpen className='text-muted-foreground mx-auto mb-4 h-16 w-16' />
           <h3 className='mb-2 text-xl font-semibold'>
-            No hay academias disponibles
+            {t('academies.noAvailable')}
           </h3>
         </motion.div>
       )}

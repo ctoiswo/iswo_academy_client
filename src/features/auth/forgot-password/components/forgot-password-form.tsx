@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { authApi } from '@/services'
 import { ArrowRight, Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { isApiError } from '@/lib/api-client'
 import {
@@ -23,19 +24,23 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Por favor ingresa tu correo electrónico')
-    .email('Por favor ingresa una dirección de correo electrónico válida'),
-})
+const getFormSchema = (t: (key: string) => string) =>
+  z.object({
+    email: z
+      .string()
+      .min(1, t('auth.forgotPassword.validation.emailRequired'))
+      .email(t('auth.forgotPassword.validation.emailInvalid')),
+  })
 
 export function ForgotPasswordForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLFormElement>) {
+  const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+
+  const formSchema = getFormSchema(t)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -72,13 +77,10 @@ export function ForgotPasswordForm({
     return (
       <div className='space-y-4 text-center'>
         <div className='text-sm text-green-600'>
-          ✓ Las instrucciones para restablecer la contraseña han sido enviadas a
-          tu dirección de correo electrónico.
+          ✓ {t('auth.forgotPassword.successMessage')}
         </div>
         <p className='text-muted-foreground text-sm'>
-          Por favor revisa tu correo electrónico y sigue las instrucciones para
-          restablecer tu contraseña. Si no ves el correo, revisa tu carpeta de
-          spam.
+          {t('auth.signUpSuccess.checkEmail')}
         </p>
       </div>
     )
@@ -96,10 +98,10 @@ export function ForgotPasswordForm({
           name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Correo electrónico</FormLabel>
+              <FormLabel>{t('auth.forgotPassword.email')}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder='nombre@ejemplo.com'
+                  placeholder={t('auth.forgotPassword.emailPlaceholder')}
                   type='email'
                   disabled={isLoading}
                   {...field}
@@ -112,12 +114,12 @@ export function ForgotPasswordForm({
         <Button className='mt-2' disabled={isLoading} type='submit'>
           {isLoading ? (
             <>
-              Enviando correo...
+              {t('auth.forgotPassword.sending')}
               <Loader2 className='ml-2 h-4 w-4 animate-spin' />
             </>
           ) : (
             <>
-              Enviar correo de recuperación
+              {t('auth.forgotPassword.button')}
               <ArrowRight className='ml-2 h-4 w-4' />
             </>
           )}

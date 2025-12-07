@@ -1,4 +1,5 @@
 import { Link, useSearch } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import {
   Card,
   CardContent,
@@ -7,67 +8,72 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { AuthLayout } from '../auth-layout'
+import { AnimatedAuthLayout } from '../components/animated-auth-layout'
 import { ResetPasswordForm } from './components/reset-password-form'
 
 export function ResetPassword() {
-  const search = useSearch({ from: '/(auth)/reset-password' })
+  const { t } = useTranslation()
+  const search = useSearch({ from: '/(auth)/reset-password/' })
   const token = search.token as string
 
   if (!token) {
     return (
-      <AuthLayout>
+      <AnimatedAuthLayout
+        title={t('auth.resetPassword.invalidLink.layoutTitle')}
+        subtitle={t('auth.resetPassword.invalidLink.layoutSubtitle')}
+      >
         <Card className='gap-4'>
           <CardHeader>
-            <CardTitle className='text-lg tracking-tight text-destructive'>
-              Enlace de Restablecimiento Inválido
+            <CardTitle className='text-destructive text-lg tracking-tight'>
+              {t('auth.resetPassword.invalidLink.title')}
             </CardTitle>
             <CardDescription>
-              El enlace de restablecimiento de contraseña es inválido o falta. Por favor solicita un nuevo restablecimiento de contraseña.
+              {t('auth.resetPassword.invalidLink.description')}
             </CardDescription>
           </CardHeader>
           <CardFooter>
-            <div className="w-full text-center">
+            <div className='w-full text-center'>
               <Link
                 to='/forgot-password'
                 className='hover:text-primary underline underline-offset-4'
               >
-                Solicitar nuevo restablecimiento
+                {t('auth.resetPassword.invalidLink.requestNew')}
               </Link>
             </div>
           </CardFooter>
         </Card>
-      </AuthLayout>
+      </AnimatedAuthLayout>
     )
   }
 
   return (
-    <AuthLayout>
+    <AnimatedAuthLayout
+      title={t('auth.resetPassword.layoutTitle')}
+      subtitle={t('auth.resetPassword.layoutSubtitle')}
+    >
       <Card className='gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>
-            Restablecer tu Contraseña
+            {t('auth.resetPassword.title')}
           </CardTitle>
-          <CardDescription>
-            Ingresa tu nueva contraseña a continuación. Asegúrate de que sea fuerte y segura.
-          </CardDescription>
+          <CardDescription>{t('auth.resetPassword.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
           <ResetPasswordForm token={token} />
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground mx-auto px-8 text-center text-sm text-balance'>
-            ¿Recuerdas tu contraseña?{' '}
+            {t('auth.resetPassword.rememberPassword')}{' '}
             <Link
               to='/sign-in'
               className='hover:text-primary underline underline-offset-4'
             >
-              Iniciar sesión
+              {t('auth.resetPassword.signIn')}
             </Link>
             .
           </p>
         </CardFooter>
       </Card>
-    </AuthLayout>
+    </AnimatedAuthLayout>
   )
 }

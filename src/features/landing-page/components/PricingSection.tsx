@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { Check, ArrowRight, Mail, Phone, Building } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,67 +20,68 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-const plans = [
-  {
-    name: 'Inicial',
-    description: 'Perfecto para comenzar',
-    price: 'Gratis',
-    features: [
-      'Hasta 3 cursos',
-      'Máximo 50 estudiantes',
-      'Análisis básicos',
-      'Soporte por email',
-    ],
-    buttonText: 'Comenzar Gratis',
-    buttonVariant: 'outline' as const,
-    buttonLink: '/sign-up',
-    delay: 0.1,
-  },
-  {
-    name: 'Profesional',
-    description: 'La opción más popular',
-    price: '$29',
-    priceUnit: '/mes',
-    features: [
-      'Cursos ilimitados',
-      'Máximo 500 estudiantes',
-      'Análisis avanzados',
-      'Certificados personalizados',
-      'Soporte prioritario',
-    ],
-    buttonText: 'Iniciar Prueba Gratuita',
-    buttonVariant: 'default' as const,
-    buttonLink: '/sign-up',
-    isPopular: true,
-    delay: 0.2,
-  },
-  {
-    name: 'Empresarial',
-    description: 'Para organizaciones grandes',
-    price: '$99',
-    priceUnit: '/mes',
-    features: [
-      'Todo ilimitado',
-      'Solución de marca blanca',
-      'Acceso a API',
-      'Integraciones personalizadas',
-      'Soporte telefónico 24/7',
-    ],
-    buttonText: 'Contactar Ventas',
-    buttonVariant: 'outline' as const,
-    isDialog: true,
-    delay: 0.3,
-  },
-]
-
 export function PricingSection() {
+  const { t } = useTranslation()
+
+  const plans = [
+    {
+      name: t('landing.pricing.starter.name'),
+      description: t('landing.pricing.starter.description'),
+      price: t('landing.pricing.starter.price'),
+      features: [
+        t('landing.pricing.starter.features.courses'),
+        t('landing.pricing.starter.features.students'),
+        t('landing.pricing.starter.features.analytics'),
+        t('landing.pricing.starter.features.support'),
+      ],
+      buttonText: t('landing.pricing.starter.button'),
+      buttonVariant: 'outline' as const,
+      buttonLink: '/sign-up',
+      delay: 0.1,
+    },
+    {
+      name: t('landing.pricing.professional.name'),
+      description: t('landing.pricing.professional.description'),
+      price: t('landing.pricing.professional.price'),
+      priceUnit: t('landing.pricing.professional.priceUnit'),
+      features: [
+        t('landing.pricing.professional.features.courses'),
+        t('landing.pricing.professional.features.students'),
+        t('landing.pricing.professional.features.analytics'),
+        t('landing.pricing.professional.features.certificates'),
+        t('landing.pricing.professional.features.support'),
+      ],
+      buttonText: t('landing.pricing.professional.button'),
+      buttonVariant: 'default' as const,
+      buttonLink: '/sign-up',
+      isPopular: true,
+      delay: 0.2,
+    },
+    {
+      name: t('landing.pricing.enterprise.name'),
+      description: t('landing.pricing.enterprise.description'),
+      price: t('landing.pricing.enterprise.price'),
+      priceUnit: t('landing.pricing.enterprise.priceUnit'),
+      features: [
+        t('landing.pricing.enterprise.features.unlimited'),
+        t('landing.pricing.enterprise.features.whiteLabel'),
+        t('landing.pricing.enterprise.features.api'),
+        t('landing.pricing.enterprise.features.integrations'),
+        t('landing.pricing.enterprise.features.support'),
+      ],
+      buttonText: t('landing.pricing.enterprise.button'),
+      buttonVariant: 'outline' as const,
+      isDialog: true,
+      delay: 0.3,
+    },
+  ]
   return (
     <section id='pricing' className='relative overflow-hidden py-20'>
       {/* Background Image from Pexels */}
       <div className='absolute inset-0 z-0'>
         <img
           src='https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-          alt='Oficina moderna'
+          alt={t('landing.pricing.imageAlt')}
           className='h-full w-full object-cover opacity-5'
         />
       </div>
@@ -93,10 +95,10 @@ export function PricingSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className='text-3xl font-bold tracking-tight sm:text-4xl'>
-            Precios simples y transparentes
+            {t('landing.pricing.title')}
           </h2>
           <p className='text-muted-foreground mt-4 text-lg'>
-            Elige el plan que se adapte a las necesidades de tu academia
+            {t('landing.pricing.description')}
           </p>
         </motion.div>
 
@@ -137,7 +139,7 @@ export function PricingSection() {
                           repeatType: 'reverse',
                         }}
                       >
-                        <Badge>Popular</Badge>
+                        <Badge>{t('landing.pricing.popular')}</Badge>
                       </motion.div>
                     )}
                   </div>
@@ -176,21 +178,25 @@ export function PricingSection() {
                       </DialogTrigger>
                       <DialogContent className='sm:max-w-[425px]'>
                         <DialogHeader>
-                          <DialogTitle>Ventas Empresariales</DialogTitle>
+                          <DialogTitle>
+                            {t('landing.pricing.enterprise.dialog.title')}
+                          </DialogTitle>
                           <DialogDescription>
-                            Hablemos sobre cómo ISWO Academy Enterprise puede
-                            satisfacer las necesidades de tu organización.
+                            {t('landing.pricing.enterprise.dialog.description')}
                           </DialogDescription>
                         </DialogHeader>
                         <div className='space-y-4'>
                           <div className='py-4 text-center'>
                             <Building className='text-primary mx-auto mb-4 h-12 w-12' />
                             <h3 className='mb-2 text-lg font-semibold'>
-                              Soluciones Empresariales
+                              {t(
+                                'landing.pricing.enterprise.dialog.solutionsTitle'
+                              )}
                             </h3>
                             <p className='text-muted-foreground mb-4'>
-                              Precios personalizados, soluciones de marca blanca
-                              y soporte dedicado para organizaciones grandes.
+                              {t(
+                                'landing.pricing.enterprise.dialog.solutionsDescription'
+                              )}
                             </p>
                           </div>
                           <div className='space-y-3'>
@@ -198,7 +204,9 @@ export function PricingSection() {
                               <Mail className='text-primary h-5 w-5' />
                               <div>
                                 <p className='font-medium'>
-                                  Ventas Empresariales
+                                  {t(
+                                    'landing.pricing.enterprise.dialog.enterpriseSales'
+                                  )}
                                 </p>
                                 <p className='text-muted-foreground text-sm'>
                                   enterprise@iswoacademy.com
@@ -208,7 +216,11 @@ export function PricingSection() {
                             <div className='bg-muted/50 flex items-center space-x-3 rounded-lg p-3'>
                               <Phone className='text-primary h-5 w-5' />
                               <div>
-                                <p className='font-medium'>Equipo de Ventas</p>
+                                <p className='font-medium'>
+                                  {t(
+                                    'landing.pricing.enterprise.dialog.salesTeam'
+                                  )}
+                                </p>
                                 <p className='text-muted-foreground text-sm'>
                                   +1 (555) 123-4568
                                 </p>
@@ -218,13 +230,16 @@ export function PricingSection() {
                           <div className='space-y-2 pt-4'>
                             <Button asChild className='w-full'>
                               <Link to='/sign-up'>
-                                Comenzar con Prueba Gratuita
+                                {t(
+                                  'landing.pricing.enterprise.dialog.startFreeTrial'
+                                )}
                                 <ArrowRight className='ml-2 h-4 w-4' />
                               </Link>
                             </Button>
                             <p className='text-muted-foreground text-center text-xs'>
-                              O comienza con nuestro plan gratuito y actualiza
-                              después
+                              {t(
+                                'landing.pricing.enterprise.dialog.startFreeNote'
+                              )}
                             </p>
                           </div>
                         </div>

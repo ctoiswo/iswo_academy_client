@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { BookOpen } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { PublicAcademyCard } from '@/components/public-academy-card'
 
@@ -24,6 +25,8 @@ export function AcademyGrid({
   navigate,
   searchQuery,
 }: AcademyGridProps) {
+  const { t } = useTranslation()
+
   if (academies.length === 0) {
     return (
       <motion.div
@@ -34,12 +37,12 @@ export function AcademyGrid({
       >
         <BookOpen className='text-muted-foreground mx-auto mb-4 h-16 w-16' />
         <h3 className='mb-2 text-xl font-semibold'>
-          No se encontraron academias
+          {t('academies.grid.noAcademies')}
         </h3>
         <p className='text-muted-foreground mx-auto mb-6 max-w-md'>
           {searchQuery
-            ? `No hay academias que coincidan con "${searchQuery}"${selectedCategory !== 'all' ? ' en esta categoría' : ''}`
-            : 'No hay academias disponibles en esta categoría'}
+            ? `${t('academies.grid.noResultsWithSearch')} "${searchQuery}"${selectedCategory !== 'all' ? ` ${t('academies.grid.inThisCategory')}` : ''}`
+            : t('academies.grid.noAvailable')}
         </p>
         <div className='flex justify-center gap-2'>
           <Button
@@ -51,7 +54,7 @@ export function AcademyGrid({
             size='sm'
             disabled={!searchQuery}
           >
-            Limpiar búsqueda
+            {t('academies.search.clearSearch')}
           </Button>
           <Button
             onClick={() => {
@@ -62,7 +65,7 @@ export function AcademyGrid({
             size='sm'
             disabled={selectedCategory === 'all'}
           >
-            Ver todas las categorías
+            {t('academies.search.viewAllCategories')}
           </Button>
         </div>
       </motion.div>
@@ -83,8 +86,8 @@ export function AcademyGrid({
           <p className='text-muted-foreground text-sm'>
             {academies.length}{' '}
             {academies.length === 1
-              ? 'academia encontrada'
-              : 'academias encontradas'}
+              ? t('academies.grid.academyFound')
+              : t('academies.grid.academiesFound')}
           </p>
         </div>
         <Button
@@ -96,7 +99,7 @@ export function AcademyGrid({
             navigate({ to: '/academies' })
           }}
         >
-          Ver todas las categorías
+          {t('academies.search.viewAllCategories')}
         </Button>
       </div>
 

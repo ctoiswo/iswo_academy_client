@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { Mail, Phone, Building } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -13,13 +14,14 @@ import {
 } from '@/components/ui/dialog'
 
 export function CTASection() {
+  const { t } = useTranslation()
   return (
     <section id='cta' className='relative overflow-hidden py-20'>
       {/* Background Image from Pexels */}
       <div className='absolute inset-0 z-0'>
         <img
           src='https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-          alt='Equipo trabajando juntos'
+          alt={t('landing.cta.imageAlt')}
           className='h-full w-full object-cover opacity-10'
         />
         <div className='from-background/80 to-background/60 absolute inset-0 bg-gradient-to-br' />
@@ -34,11 +36,10 @@ export function CTASection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className='text-3xl font-bold tracking-tight sm:text-4xl'>
-            ¿Listo para construir tu academia?
+            {t('landing.cta.title')}
           </h2>
           <p className='text-muted-foreground mt-4 text-lg'>
-            Únete a miles de educadores que ya están creando experiencias de
-            aprendizaje increíbles
+            {t('landing.cta.description')}
           </p>
 
           <motion.div
@@ -54,7 +55,7 @@ export function CTASection() {
             >
               <Button size='lg' asChild>
                 <Link to='/sign-up'>
-                  Inicia tu Academia Gratuita
+                  {t('landing.cta.startFreeAcademy')}
                   <ArrowRight className='ml-2 h-4 w-4' />
                 </Link>
               </Button>
@@ -64,7 +65,7 @@ export function CTASection() {
               whileTap={{ scale: 0.95 }}
             >
               <Button variant='outline' size='lg' asChild>
-                <Link to='/sign-in'>Iniciar Sesión</Link>
+                <Link to='/sign-in'>{t('landing.cta.signIn')}</Link>
               </Button>
             </motion.div>
           </motion.div>
@@ -79,22 +80,25 @@ export function CTASection() {
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant='link' className='text-muted-foreground'>
-                  ¿Necesitas ayuda para comenzar? Contacta a nuestro equipo
+                  {t('landing.cta.needHelp')}
                 </Button>
               </DialogTrigger>
               <DialogContent className='sm:max-w-[425px]'>
                 <DialogHeader>
-                  <DialogTitle>Contacta a Nuestro Equipo</DialogTitle>
+                  <DialogTitle>
+                    {t('landing.cta.contactTeam.title')}
+                  </DialogTitle>
                   <DialogDescription>
-                    ¿Tienes preguntas? Nuestro equipo está aquí para ayudarte a
-                    comenzar con tu academia.
+                    {t('landing.cta.contactTeam.description')}
                   </DialogDescription>
                 </DialogHeader>
                 <div className='space-y-4'>
                   <div className='bg-muted/50 flex items-center space-x-3 rounded-lg p-3'>
                     <Mail className='text-primary h-5 w-5' />
                     <div>
-                      <p className='font-medium'>Soporte por Email</p>
+                      <p className='font-medium'>
+                        {t('landing.cta.contactTeam.emailSupport')}
+                      </p>
                       <p className='text-muted-foreground text-sm'>
                         support@iswoacademy.com
                       </p>
@@ -103,7 +107,9 @@ export function CTASection() {
                   <div className='bg-muted/50 flex items-center space-x-3 rounded-lg p-3'>
                     <Phone className='text-primary h-5 w-5' />
                     <div>
-                      <p className='font-medium'>Soporte Telefónico</p>
+                      <p className='font-medium'>
+                        {t('landing.cta.contactTeam.phoneSupport')}
+                      </p>
                       <p className='text-muted-foreground text-sm'>
                         +1 (555) 123-4567
                       </p>
@@ -112,16 +118,18 @@ export function CTASection() {
                   <div className='bg-muted/50 flex items-center space-x-3 rounded-lg p-3'>
                     <Building className='text-primary h-5 w-5' />
                     <div>
-                      <p className='font-medium'>Horario de Atención</p>
+                      <p className='font-medium'>
+                        {t('landing.cta.contactTeam.businessHours')}
+                      </p>
                       <p className='text-muted-foreground text-sm'>
-                        Lun-Vie, 9AM-6PM EST
+                        {t('landing.cta.contactTeam.hoursText')}
                       </p>
                     </div>
                   </div>
                   <div className='pt-4'>
                     <Button asChild className='w-full'>
                       <Link to='/sign-up'>
-                        Comenzar Ahora
+                        {t('landing.cta.contactTeam.startNow')}
                         <ArrowRight className='ml-2 h-4 w-4' />
                       </Link>
                     </Button>

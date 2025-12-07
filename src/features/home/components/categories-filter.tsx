@@ -4,6 +4,7 @@
  */
 import { motion } from 'framer-motion'
 import { Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 interface CategoryMinimal {
   id: number
@@ -24,8 +25,10 @@ export function CategoriesFilter({
   onCategoryChange,
   isLoading = false,
 }: CategoriesFilterProps) {
+  const { t } = useTranslation()
+
   const allCategories = [
-    { id: null, name: 'Todas las categorías', slug: 'all' },
+    { id: null, name: t('home.categories.all'), slug: 'all' },
     ...categories.map((cat) => ({
       id: cat.id,
       name: cat.name,
@@ -40,7 +43,7 @@ export function CategoriesFilter({
           <div className='flex items-center justify-center py-4'>
             <Loader2 className='h-6 w-6 animate-spin' />
             <span className='text-muted-foreground ml-2'>
-              Cargando categorías...
+              {t('home.categories.loading')}
             </span>
           </div>
         </div>

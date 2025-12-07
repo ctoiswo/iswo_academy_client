@@ -5,6 +5,7 @@
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 import { ArrowRight, Loader2, AlertCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { AcademyCard } from './academy-card'
@@ -29,6 +30,8 @@ export function AcademiesSection({
   isError,
   onRetry,
 }: AcademiesSectionProps) {
+  const { t } = useTranslation()
+
   return (
     <section className='py-20'>
       <div className='container'>
@@ -40,10 +43,10 @@ export function AcademiesSection({
           transition={{ duration: 0.6 }}
         >
           <h2 className='text-3xl font-bold tracking-tight sm:text-4xl'>
-            Academias Destacadas
+            {t('home.academies.title')}
           </h2>
           <p className='text-muted-foreground mt-4 text-lg'>
-            Descubre las mejores academias especializadas en diferentes áreas
+            {t('home.academies.description')}
           </p>
         </motion.div>
 
@@ -51,7 +54,7 @@ export function AcademiesSection({
           <div className='col-span-full flex items-center justify-center py-12'>
             <Loader2 className='h-8 w-8 animate-spin' />
             <span className='text-muted-foreground ml-2'>
-              Cargando academias...
+              {t('home.academies.loading')}
             </span>
           </div>
         ) : isError ? (
@@ -59,9 +62,9 @@ export function AcademiesSection({
             <Alert variant='destructive'>
               <AlertCircle className='h-4 w-4' />
               <AlertDescription>
-                Error al cargar las academias destacadas.{' '}
+                {t('home.academies.error')}{' '}
                 <Button variant='outline' size='sm' onClick={onRetry}>
-                  Reintentar
+                  {t('home.academies.retry')}
                 </Button>
               </AlertDescription>
             </Alert>
@@ -104,7 +107,7 @@ export function AcademiesSection({
         ) : (
           <div className='col-span-full py-12 text-center'>
             <p className='text-muted-foreground'>
-              No se encontraron academias destacadas.
+              {t('home.academies.notFound')}
             </p>
           </div>
         )}
@@ -118,7 +121,7 @@ export function AcademiesSection({
         >
           <Button size='lg' variant='outline' asChild>
             <Link to='/academies'>
-              Ver Todas las Academias
+              {t('home.academies.viewAll')}
               <ArrowRight className='ml-2 h-4 w-4' />
             </Link>
           </Button>

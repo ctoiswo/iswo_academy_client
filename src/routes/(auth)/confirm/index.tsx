@@ -15,7 +15,7 @@ function ConfirmEmailRoute() {
   )
 }
 
-export const Route = createFileRoute('/(auth)/confirm')({
+export const Route = createFileRoute('/(auth)/confirm/')({
   component: ConfirmEmailRoute,
   validateSearch: searchSchema,
 })

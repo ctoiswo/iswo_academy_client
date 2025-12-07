@@ -66,7 +66,9 @@ class AuthService {
    * Login user
    */
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>('/auth/login', credentials)
+    const response = await apiClient.post<AuthResponse>('/auth/login', {
+      auth: credentials
+    })
 
     // Store tokens automatically
     tokenManager.setTokens({
@@ -83,7 +85,9 @@ class AuthService {
    * Note: Registration does NOT return tokens - user must confirm email first
    */
   async register(userData: RegisterData): Promise<RegisterResponse> {
-    const response = await apiClient.post<RegisterResponse>('/auth/register', userData)
+    const response = await apiClient.post<RegisterResponse>('/auth/register', {
+      auth: userData
+    })
 
     // Do NOT store tokens - registration requires email confirmation
     // Tokens will only be provided after successful login with confirmed account
@@ -123,7 +127,7 @@ class AuthService {
    * Request password reset email
    */
   async forgotPassword(email: string): Promise<{ message: string }> {
-    const response = await apiClient.post<{ message: string }>('/auth/forgot-password', { email })
+    const response = await apiClient.post<{ message: string }>('/auth/forgot_password', { email })
     return response.data
   }
 
@@ -135,7 +139,7 @@ class AuthService {
     password: string,
     passwordConfirmation: string
   ): Promise<{ message: string }> {
-    const response = await apiClient.post<{ message: string }>('/auth/reset-password', {
+    const response = await apiClient.post<{ message: string }>('/auth/reset_password', {
       token,
       password,
       password_confirmation: passwordConfirmation,

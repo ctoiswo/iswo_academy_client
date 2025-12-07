@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { AnimatedAuthLayout } from '../components/animated-auth-layout'
-import { AnimatedSignUpForm } from './components/animated-sign-up-form'
+import { SignUpForm } from './components/sign-up-form'
 
 export function SignUp() {
   const cardVariants = {
@@ -57,7 +57,7 @@ export function SignUp() {
 
           <motion.div variants={contentVariants}>
             <CardContent>
-              <AnimatedSignUpForm />
+              <SignUpForm />
             </CardContent>
           </motion.div>
 

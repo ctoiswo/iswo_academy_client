@@ -10,6 +10,6 @@ function OtpRoute() {
   )
 }
 
-export const Route = createFileRoute('/(auth)/otp')({
+export const Route = createFileRoute('/(auth)/otp/')({
   component: OtpRoute,
 })
