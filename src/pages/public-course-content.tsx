@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
-import { PublicHeader } from '@/features/home/components/header'
+import { Header } from '@/features/home/components/header'
 
 // Extended section type that includes lessons
 type SectionWithLessons = Section & {
@@ -47,7 +47,7 @@ export function PublicCourseContentPage() {
   if (isLoading) {
     return (
       <div className='bg-background min-h-screen'>
-        <PublicHeader />
+        <Header />
         <div className='container mx-auto px-4 py-8'>
           <div className='space-y-6'>
             <Skeleton className='h-8 w-64' />
@@ -61,7 +61,7 @@ export function PublicCourseContentPage() {
   if (courseError || !course) {
     return (
       <div className='bg-background min-h-screen'>
-        <PublicHeader />
+        <Header />
         <div className='container mx-auto px-4 py-8'>
           <Card>
             <CardContent className='py-12 text-center'>
@@ -93,7 +93,7 @@ export function PublicCourseContentPage() {
 
   return (
     <div className='bg-background min-h-screen'>
-      <PublicHeader />
+      <Header />
       <div className='container mx-auto px-4 py-8'>
         <div className='space-y-6'>
           {/* Course Header */}

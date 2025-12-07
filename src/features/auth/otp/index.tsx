@@ -7,12 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { AuthLayout } from '../auth-layout'
+import { AnimatedAuthLayout } from '../components/animated-auth-layout'
 import { OtpForm } from './components/otp-form'
 
 export function Otp() {
   return (
-    <AuthLayout>
+    <AnimatedAuthLayout>
       <Card className='gap-4'>
         <CardHeader>
           <CardTitle className='text-base tracking-tight'>
@@ -39,6 +39,6 @@ export function Otp() {
           </p>
         </CardFooter>
       </Card>
-    </AuthLayout>
+    </AnimatedAuthLayout>
   )
 }

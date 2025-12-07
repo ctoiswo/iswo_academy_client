@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { PublicHeader } from '@/features/home/components/header'
+import { Header } from '@/features/home/components/header'
 
 export function CoursesPage() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -131,7 +131,7 @@ export function CoursesPage() {
   if (categoriesQuery.isLoading && coursesQuery.isLoading) {
     return (
       <div className='bg-background min-h-screen'>
-        <PublicHeader />
+        <Header />
         <div className='container mx-auto px-4 py-8'>
           <div className='flex min-h-[400px] flex-col items-center justify-center'>
             <Loader2 className='text-muted-foreground h-8 w-8 animate-spin' />
@@ -144,7 +144,7 @@ export function CoursesPage() {
 
   return (
     <div className='bg-background min-h-screen'>
-      <PublicHeader />
+      <Header />
 
       <motion.div
         variants={pageVariants}
