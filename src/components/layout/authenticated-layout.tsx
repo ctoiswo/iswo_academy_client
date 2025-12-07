@@ -6,7 +6,7 @@ import { SearchProvider } from '@/context/search-provider'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import { SkipToMain } from '@/components/skip-to-main'
-import { BadgeNotificationProvider } from '@/components/gamification/badge-notification-provider'
+import { NotificationProvider } from '@/components/notifications'
 
 type AuthenticatedLayoutProps = {
   children?: React.ReactNode
@@ -17,7 +17,7 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
   return (
     <SearchProvider>
       <LayoutProvider>
-        <BadgeNotificationProvider enabled={true}>
+        <NotificationProvider enabled={true}>
           <SidebarProvider defaultOpen={defaultOpen}>
             <SkipToMain />
             <AppSidebar />
@@ -38,7 +38,7 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
               {children ?? <Outlet />}
             </SidebarInset>
           </SidebarProvider>
-        </BadgeNotificationProvider>
+        </NotificationProvider>
       </LayoutProvider>
     </SearchProvider>
   )
