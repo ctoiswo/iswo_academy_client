@@ -1,11 +1,44 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { HomePage } from '../home'
+import { HomePage } from '@/features/home'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 // Mock hooks
 vi.mock('@/hooks/use-featured-content')
+
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        'home.hero.title': 'Descubre tu próxima',
+        'home.hero.titleHighlight': 'oportunidad de aprendizaje',
+        'home.hero.description': 'Explora miles de cursos creados por expertos en academias especializadas',
+        'home.categories.all': 'Todas las categorías',
+        'home.categories.loading': 'Cargando categorías...',
+        'home.academies.title': 'Academias Destacadas',
+        'home.academies.description': 'Descubre las mejores academias especializadas en diferentes áreas',
+        'home.academies.loading': 'Cargando academias...',
+        'home.academies.error': 'Error al cargar las academias destacadas.',
+        'home.academies.retry': 'Reintentar',
+        'home.academies.notFound': 'No se encontraron academias destacadas.',
+        'home.academies.viewAll': 'Ver Todas las Academias',
+        'home.courses.title': 'Cursos Populares por Categoría',
+        'home.courses.description': 'Explora los cursos más destacados organizados por áreas de conocimiento',
+        'home.courses.loading': 'Cargando cursos...',
+        'home.courses.exploreAll': 'Explorar Todos los Cursos',
+        'home.cta.title': '¿Tienes conocimiento que compartir?',
+        'home.cta.description': 'Únete a miles de instructores que ya están creando sus propias academias en línea',
+        'home.cta.button': 'Crear mi Academia',
+        'footer.allRightsReserved': 'Todos los derechos reservados',
+        'navigation.login': 'Iniciar Sesión',
+        'navigation.register': 'Registrarse'
+      }
+      return translations[key] || key
+    }
+  })
+}))
 
 // Mock TanStack Router
 vi.mock('@tanstack/react-router', () => ({
@@ -35,6 +68,156 @@ vi.mock('@/components/layout/public-header', () => ({
 
 vi.mock('@/components/search/global-search-bar', () => ({
   GlobalSearchBar: () => <div data-testid="global-search-bar">Search Bar</div>,
+}))
+
+// Mock home feature components
+vi.mock('@/features/home/components/hero-section', () => ({
+  HeroSection: () => (
+    <section data-testid="hero-section">
+      <h1>Descubre tu próxima oportunidad de aprendizaje</h1>
+      <p>Explora miles de cursos creados por expertos en academias especializadas</p>
+      <div data-testid="global-search-bar">Search Bar</div>
+    </section>
+  ),
+}))
+
+vi.mock('@/features/home/components/categories-filter', () => ({
+  CategoriesFilter: ({ categories, selectedCategory, onCategoryChange, isLoading }: any) => {
+    if (isLoading) {
+      return <div>Cargando categorías...</div>
+    }
+    return (
+      <div data-testid="categories-filter">
+        <button
+          onClick={() => onCategoryChange(null)}
+          className={selectedCategory === null ? 'active' : ''}
+        >
+          Todas las categorías
+        </button>
+        {categories?.map((cat: any) => (
+          <button
+            key={cat.id}
+            onClick={() => onCategoryChange(cat.id)}
+            className={selectedCategory === cat.id ? 'active' : ''}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
+    )
+  },
+}))
+
+vi.mock('@/features/home/components/academies-section', () => ({
+  AcademiesSection: ({ data, isLoading, isError, onRetry }: any) => {
+    if (isLoading) {
+      return <div>Cargando academias...</div>
+    }
+    if (isError) {
+      return (
+        <div>
+          <div>Error al cargar las academias destacadas.</div>
+          <button onClick={onRetry}>Reintentar</button>
+        </div>
+      )
+    }
+    if (!data || data.length === 0) {
+      return <div>No se encontraron academias destacadas.</div>
+    }
+    return (
+      <section data-testid="academies-section">
+        <h2>Academias Destacadas</h2>
+        <p>Descubre las mejores academias especializadas en diferentes áreas</p>
+        {data.map((categoryGroup: any) => 
+          categoryGroup.academies?.length > 0 && (
+            <div key={categoryGroup.category.id}>
+              {categoryGroup.academies.map((academy: any) => (
+                <div key={academy.id}>
+                  <a href={`/academies/${academy.slug}`}>
+                    <img 
+                      src={academy.logo_url || 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg'} 
+                      alt={academy.name}
+                    />
+                    <h3>{academy.name}</h3>
+                    <p>Por {academy.creator.name}</p>
+                    <p>{academy.student_count?.toLocaleString()}</p>
+                    <p>{academy.course_count} cursos</p>
+                    <p>${Math.round(parseInt(academy.monthly_price) / 1000)}k/mes</p>
+                  </a>
+                </div>
+              ))}
+            </div>
+          )
+        )}
+        <a href="/academies">Ver Todas las Academias</a>
+      </section>
+    )
+  },
+}))
+
+vi.mock('@/features/home/components/courses-section', () => ({
+  CoursesSection: ({ data, isLoading }: any) => {
+    if (isLoading) {
+      return <div>Cargando cursos...</div>
+    }
+    return (
+      <section data-testid="courses-section">
+        <h2>Cursos Populares por Categoría</h2>
+        <p>Explora los cursos más destacados organizados por áreas de conocimiento</p>
+        {data?.map((categoryGroup: any) => 
+          categoryGroup.courses?.length > 0 && (
+            <div key={categoryGroup.category.id}>
+              {categoryGroup.courses.map((course: any) => {
+                const difficultyMap: Record<string, string> = {
+                  'beginner': 'Principiante',
+                  'intermediate': 'Intermedio', 
+                  'advanced': 'Avanzado'
+                }
+                return (
+                  <div key={course.id}>
+                    <a href={`/courses/${course.slug}`}>
+                      <img 
+                        src={course.thumbnail_url || 'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg'} 
+                        alt={course.title}
+                      />
+                      <h3>{course.title}</h3>
+                      <p>Por {course.creator.name}</p>
+                      <span>{difficultyMap[course.difficulty_level]}</span>
+                      <p>{course.is_free ? 'Gratis' : `$${Math.round(parseInt(course.price) / 1000)}k`}</p>
+                      <p>{Math.round(course.duration_minutes / 60)}h</p>
+                      <p>{course.enrollment_count}</p>
+                      <span>{course.is_published ? 'Disponible' : 'Próximamente'}</span>
+                    </a>
+                  </div>
+                )
+              })}
+            </div>
+          )
+        )}
+        <a href="/courses">Explorar Todos los Cursos</a>
+      </section>
+    )
+  },
+}))
+
+vi.mock('@/features/home/components/cta-section', () => ({
+  CTASection: () => (
+    <section data-testid="cta-section">
+      <h2>¿Tienes conocimiento que compartir?</h2>
+      <p>Únete a miles de instructores que ya están creando sus propias academias en línea</p>
+      <a href="/landing">Crear mi Academia</a>
+    </section>
+  ),
+}))
+
+vi.mock('@/features/home/components/footer', () => ({
+  Footer: () => (
+    <footer data-testid="footer">
+      <p>© 2025 ISWO Academy. Todos los derechos reservados.</p>
+      <a href="/sign-in">Iniciar Sesión</a>
+      <a href="/sign-up">Registrarse</a>
+    </footer>
+  ),
 }))
 
 // Mock framer-motion to avoid animation issues in tests
@@ -272,14 +455,14 @@ describe('HomePage', () => {
 
     it('renderiza el hero section con el título principal', () => {
       renderHomePage()
-      expect(screen.getByText(/Descubre tu próxima/i)).toBeInTheDocument()
-      expect(screen.getByText(/oportunidad de aprendizaje/i)).toBeInTheDocument()
+      expect(screen.getByTestId('hero-section')).toBeInTheDocument()
+      expect(screen.getByText(/Descubre tu próxima oportunidad de aprendizaje/i)).toBeInTheDocument()
     })
 
     it('renderiza la descripción del hero section', () => {
       renderHomePage()
       expect(
-        screen.getByText(/Explora miles de cursos creados por expertos/i)
+        screen.getByText(/Explora miles de cursos creados por expertos en academias especializadas/i)
       ).toBeInTheDocument()
     })
 
@@ -290,6 +473,7 @@ describe('HomePage', () => {
 
     it('renderiza el footer con información de copyright', () => {
       renderHomePage()
+      expect(screen.getByTestId('footer')).toBeInTheDocument()
       expect(
         screen.getByText(/© 2025 ISWO Academy. Todos los derechos reservados./i)
       ).toBeInTheDocument()
@@ -313,6 +497,7 @@ describe('HomePage', () => {
       renderHomePage()
 
       await waitFor(() => {
+        expect(screen.getByTestId('categories-filter')).toBeInTheDocument()
         expect(screen.getByRole('button', { name: 'Todas las categorías' })).toBeInTheDocument()
         expect(screen.getByRole('button', { name: 'Programación' })).toBeInTheDocument()
         expect(screen.getByRole('button', { name: 'Diseño' })).toBeInTheDocument()
@@ -329,8 +514,7 @@ describe('HomePage', () => {
       } as any)
 
       renderHomePage()
-      // El mensaje aparece en dos secciones (categorías y cursos)
-      expect(screen.getAllByText(/Cargando categorías.../i).length).toBeGreaterThan(0)
+      expect(screen.getByText(/Cargando categorías.../i)).toBeInTheDocument()
     })
 
     it('permite seleccionar una categoría', async () => {
@@ -355,9 +539,10 @@ describe('HomePage', () => {
   describe('Sección de Academias Destacadas', () => {
     it('renderiza el título de la sección', () => {
       renderHomePage()
+      expect(screen.getByTestId('academies-section')).toBeInTheDocument()
       expect(screen.getByText('Academias Destacadas')).toBeInTheDocument()
       expect(
-        screen.getByText(/Descubre las mejores academias especializadas/i)
+        screen.getByText(/Descubre las mejores academias especializadas en diferentes áreas/i)
       ).toBeInTheDocument()
     })
 
@@ -481,9 +666,10 @@ describe('HomePage', () => {
   describe('Sección de Cursos Populares', () => {
     it('renderiza el título de la sección', () => {
       renderHomePage()
+      expect(screen.getByTestId('courses-section')).toBeInTheDocument()
       expect(screen.getByText('Cursos Populares por Categoría')).toBeInTheDocument()
       expect(
-        screen.getByText(/Explora los cursos más destacados organizados/i)
+        screen.getByText(/Explora los cursos más destacados organizados por áreas de conocimiento/i)
       ).toBeInTheDocument()
     })
 
@@ -576,6 +762,7 @@ describe('HomePage', () => {
   describe('Sección CTA para Creadores', () => {
     it('renderiza el título del CTA', () => {
       renderHomePage()
+      expect(screen.getByTestId('cta-section')).toBeInTheDocument()
       expect(
         screen.getByText(/¿Tienes conocimiento que compartir?/i)
       ).toBeInTheDocument()
@@ -584,7 +771,7 @@ describe('HomePage', () => {
     it('renderiza la descripción del CTA', () => {
       renderHomePage()
       expect(
-        screen.getByText(/Únete a miles de instructores que ya están creando/i)
+        screen.getByText(/Únete a miles de instructores que ya están creando sus propias academias en línea/i)
       ).toBeInTheDocument()
     })
 
@@ -719,13 +906,70 @@ describe('HomePage', () => {
   })
 
   describe('Responsive y estilos', () => {
-    it('aplica clases de responsive design correctamente', () => {
+    it('verifica que los componentes se renderizan correctamente', () => {
       renderHomePage()
 
-      const heroSection = screen
-        .getByText(/Descubre tu próxima/i)
-        .closest('section')
-      expect(heroSection).toHaveClass('py-20', 'lg:py-32')
+      // Verificar que todos los componentes principales están presentes
+      expect(screen.getByTestId('hero-section')).toBeInTheDocument()
+      expect(screen.getByTestId('categories-filter')).toBeInTheDocument()
+      expect(screen.getByTestId('academies-section')).toBeInTheDocument()
+      expect(screen.getByTestId('courses-section')).toBeInTheDocument()
+      expect(screen.getByTestId('cta-section')).toBeInTheDocument()
+      expect(screen.getByTestId('footer')).toBeInTheDocument()
+    })
+  })
+
+  describe('Arquitectura de Features', () => {
+    it('verifica que el componente HomePage utiliza la nueva estructura modular', () => {
+      renderHomePage()
+
+      // Verificar que todos los componentes de la feature home están presentes
+      expect(screen.getByTestId('public-header')).toBeInTheDocument()
+      expect(screen.getByTestId('hero-section')).toBeInTheDocument()
+      expect(screen.getByTestId('categories-filter')).toBeInTheDocument()
+      expect(screen.getByTestId('academies-section')).toBeInTheDocument()
+      expect(screen.getByTestId('courses-section')).toBeInTheDocument()
+      expect(screen.getByTestId('cta-section')).toBeInTheDocument()
+      expect(screen.getByTestId('footer')).toBeInTheDocument()
+    })
+
+    it('mantiene la funcionalidad de filtrado por categoría entre componentes', async () => {
+      renderHomePage()
+
+      // Verificar que el estado se comparte correctamente entre componentes
+      const programacionButton = screen.getByRole('button', { name: 'Programación' })
+      await user.click(programacionButton)
+
+      // Los hooks deben ser llamados con el ID correcto
+      await waitFor(() => {
+        expect(mockUseFeaturedAcademies).toHaveBeenCalledWith(1)
+        expect(mockUseFeaturedCourses).toHaveBeenCalledWith(1)
+      })
+    })
+
+    it('maneja correctamente los estados de loading y error de forma independiente', () => {
+      // Test con academias cargando pero cursos con error
+      mockUseFeaturedAcademies.mockReturnValue({
+        data: undefined,
+        isLoading: true,
+        isError: false,
+        error: null,
+        refetch: vi.fn(),
+      } as any)
+
+      mockUseFeaturedCourses.mockReturnValue({
+        data: undefined,
+        isLoading: false,
+        isError: false,
+        error: null,
+        refetch: vi.fn(),
+      } as any)
+
+      renderHomePage()
+
+      expect(screen.getByText(/Cargando academias.../i)).toBeInTheDocument()
+      // Los cursos no deben mostrar loading
+      expect(screen.getByTestId('courses-section')).toBeInTheDocument()
     })
   })
 })

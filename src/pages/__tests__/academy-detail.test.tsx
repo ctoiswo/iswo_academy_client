@@ -1,358 +1,419 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { AcademyDetailPage } from '../academy-detail'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {
+  render,
+  screen,
+  fireEvent
+} from '@testing-library/react'
+import { vi, beforeEach, describe, it, expect } from 'vitest'
+import { AcademyDetailPage } from '../../features/academy-detail/index'
+import type { FeaturedAcademy } from '@/services/academy-service'
 
-// Mock hooks
-vi.mock('@/hooks/use-academy.ts')
+// Mock framer-motion
+vi.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  },
+}))
 
 // Mock TanStack Router
-const mockParams = vi.fn()
+const mockUseParams = vi.fn()
+const mockUseRouter = vi.fn()
+
 vi.mock('@tanstack/react-router', () => ({
-  useParams: () => mockParams(),
-  useNavigate: () => vi.fn(),
-  Link: ({ children, to, ...props }: any) => (
-    <a href={to} {...props}>
+  useParams: () => mockUseParams(),
+  useRouter: () => mockUseRouter(),
+  Link: ({ children, ...props }: any) => <a {...props}>{children}</a>,
+}))
+
+// Mock useAcademy hook
+const mockUseAcademy = vi.fn()
+vi.mock('@/hooks/use-academy', () => ({
+  useAcademy: () => mockUseAcademy(),
+}))
+
+// Mock Header component
+vi.mock('@/features/home/components/header', () => ({
+  Header: () => <header data-testid="public-header">Header</header>,
+}))
+
+// Mock UI components
+vi.mock('@/components/ui/button', () => ({
+  Button: ({ children, onClick, ...props }: any) => (
+    <button onClick={onClick} {...props}>
       {children}
-    </a>
+    </button>
   ),
 }))
 
-// Mock components
-vi.mock('@/components/layout/public-header.tsx', () => ({
-  PublicHeader: () => <header data-testid="public-header">Header</header>,
+vi.mock('@/components/ui/card', () => ({
+  Card: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  CardContent: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  CardHeader: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  CardTitle: ({ children, ...props }: any) => <h3 {...props}>{children}</h3>,
 }))
 
-vi.mock('@/components/course-card.tsx', () => ({
+vi.mock('@/components/ui/tabs', () => ({
+  Tabs: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  TabsContent: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  TabsList: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  TabsTrigger: ({ children, ...props }: any) => (
+    <button {...props}>{children}</button>
+  ),
+}))
+
+vi.mock('@/components/ui/badge', () => ({
+  Badge: ({ children, ...props }: any) => <span {...props}>{children}</span>,
+}))
+
+vi.mock('@/components/ui/avatar', () => ({
+  Avatar: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  AvatarFallback: ({ children, ...props }: any) => (
+    <div {...props}>{children}</div>
+  ),
+  AvatarImage: ({ src, ...props }: any) => <img src={src} {...props} />,
+}))
+
+vi.mock('@/components/ui/separator', () => ({
+  Separator: (props: any) => <hr {...props} />,
+}))
+
+// Mock CourseCard component
+vi.mock('@/components/course-card', () => ({
   CourseCard: ({ course }: any) => (
-    <div data-testid={`course-${course.id}`}>
-      <h3>{course.title}</h3>
+    <div data-testid="course-card">
+      <h4>{course.title}</h4>
       <p>{course.description}</p>
     </div>
   ),
 }))
 
-import { useAcademy } from '@/hooks/use-academy.ts'
-
-const mockUseAcademy = vi.mocked(useAcademy)
+// Mock Lucide React icons
+vi.mock('lucide-react', () => {
+  const MockIcon = ({ ...props }) => <span {...props} />
+  return {
+    ArrowLeft: MockIcon,
+    Star: MockIcon,
+    Users: MockIcon,
+    BookOpen: MockIcon,
+    Clock: MockIcon,
+    Share2: MockIcon,
+    Heart: MockIcon,
+    ShoppingCart: MockIcon,
+    CheckCircle: MockIcon,
+  }
+})
 
 describe('AcademyDetailPage', () => {
-  let queryClient: QueryClient
-
-  const mockAcademy = {
+  const mockAcademy: FeaturedAcademy = {
     id: 1,
-    name: 'Academia de JavaScript Avanzado',
-    slug: 'javascript-avanzado',
-    description: 'Aprende JavaScript moderno desde cero hasta nivel avanzado',
+    name: 'React Avanzado',
+    description: 'Aprende React desde cero hasta nivel avanzado',
+    slug: 'react-avanzado',
     banner_url: 'https://example.com/banner.jpg',
     logo_url: 'https://example.com/logo.jpg',
-    monthly_price: 49.99,
-    rating: 4.8,
-    reviews_count: 150,
+    monthly_price: '29.99',
+    subscription_required: true,
     enrolled_users_count: 1250,
-    courses_count: 12,
-    total_duration_hours: 45,
-    total_lessons: 120,
-    category: {
+    courses_count: 8,
+    academy_category: {
       id: 1,
-      name: 'Programación',
-      slug: 'programacion',
+      name: 'Desarrollo Web',
+      slug: 'desarrollo-web',
     },
     creator: {
       id: 1,
       name: 'Juan Pérez',
-      avatar_url: 'https://example.com/avatar.jpg',
-      bio: 'Desarrollador senior con 10 años de experiencia',
+      email: 'juan@example.com',
     },
     courses: [
       {
         id: 1,
-        title: 'Curso de JavaScript Básico',
-        description: 'Fundamentos de JavaScript',
-        slug: 'javascript-basico',
-        duration_hours: 10,
-        lessons_count: 25,
+        academy_id: 1,
+        title: 'Introducción a React',
+        slug: 'intro-react',
+        description: 'Conceptos básicos de React',
+        is_free: false,
+        price: 29.99,
+        currency: 'USD',
+        pricing_type: 'subscription' as const,
+        sale_price: null,
+        sale_ends_at: null,
+        subscription_price_monthly: null,
+        subscription_price_annual: null,
+        difficulty_level: 'beginner' as const,
+        status: 'published' as const,
+        duration_minutes: 360,
+        category: null,
+        tags: null,
+        prerequisites: null,
+        allow_comments: true,
+        certificate_enabled: true,
+        progress_tracking: true,
+        featured: true,
+        trial_period_days: 0,
+        meta_title: null,
+        meta_description: null,
+        thumbnail_url: 'https://example.com/course1.jpg',
+        creator_id: 1,
+        learning_path_id: null,
+        position: 1,
+        lessons_count: 30,
+        created_at: '2024-01-01',
+        updated_at: '2024-01-01',
       },
       {
         id: 2,
-        title: 'Curso de JavaScript Avanzado',
-        description: 'Conceptos avanzados de JavaScript',
-        slug: 'javascript-avanzado',
-        duration_hours: 15,
-        lessons_count: 35,
+        academy_id: 1,
+        title: 'React Hooks Avanzados',
+        slug: 'react-hooks-avanzados',
+        description: 'Hooks personalizados y avanzados',
+        is_free: false,
+        price: 39.99,
+        currency: 'USD',
+        pricing_type: 'subscription' as const,
+        sale_price: null,
+        sale_ends_at: null,
+        subscription_price_monthly: null,
+        subscription_price_annual: null,
+        difficulty_level: 'advanced' as const,
+        status: 'published' as const,
+        duration_minutes: 480,
+        category: null,
+        tags: null,
+        prerequisites: null,
+        allow_comments: true,
+        certificate_enabled: true,
+        progress_tracking: true,
+        featured: true,
+        trial_period_days: 0,
+        meta_title: null,
+        meta_description: null,
+        thumbnail_url: 'https://example.com/course2.jpg',
+        creator_id: 1,
+        learning_path_id: null,
+        position: 2,
+        lessons_count: 40,
+        created_at: '2024-01-01',
+        updated_at: '2024-01-01',
       },
     ],
   }
 
-  beforeEach(() => {
-    queryClient = new QueryClient({
-      defaultOptions: {
-        queries: { retry: false },
-      },
-    })
-
-    mockParams.mockReturnValue({ slug: 'javascript-avanzado' })
-    mockUseAcademy.mockReturnValue({
-      academy: mockAcademy,
-      loading: false,
-      error: null,
-    } as any)
-  })
-
-  afterEach(() => {
-    vi.clearAllMocks()
-  })
-
-  const renderWithProvider = (component: React.ReactElement) => {
-    return render(
-      <QueryClientProvider client={queryClient}>
-        {component}
-      </QueryClientProvider>
-    )
+  const mockRouter = {
+    history: {
+      back: vi.fn(),
+    },
   }
 
-  it('renderiza la página correctamente con todos los elementos', async () => {
-    renderWithProvider(<AcademyDetailPage />)
-
-    // Header
-    expect(screen.getByTestId('public-header')).toBeInTheDocument()
-
-    // Hero section
-    expect(screen.getByText(mockAcademy.name)).toBeInTheDocument()
-    expect(screen.getByText(mockAcademy.category.name)).toBeInTheDocument()
-
-    // Stats en el hero - usar queries más específicas
-    expect(screen.getByText(/estudiantes/)).toBeInTheDocument()
-    expect(screen.getByText('12 cursos')).toBeInTheDocument()
-    expect(screen.getByText(/45h de contenido/)).toBeInTheDocument()
-
-    // Verificar que hay botones de suscripción
-    const subscribeButtons = screen.getAllByRole('button', { name: /Suscribirse/i })
-    expect(subscribeButtons.length).toBeGreaterThan(0)
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseParams.mockReturnValue({ slug: 'react-avanzado' })
+    mockUseRouter.mockReturnValue(mockRouter)
   })
 
-  it('muestra loader durante la carga', () => {
-    mockUseAcademy.mockReturnValue({
-      academy: null,
-      loading: true,
-      error: null,
-    } as any)
+  describe('Loading State', () => {
+    it('should show loading spinner when academy is loading', () => {
+      mockUseAcademy.mockReturnValue({
+        academy: null,
+        loading: true,
+        error: null,
+      })
 
-    renderWithProvider(<AcademyDetailPage />)
+      render(<AcademyDetailPage />)
 
-    expect(screen.getByText(/Cargando academia/i)).toBeInTheDocument()
-  })
-
-  it('muestra error cuando no se encuentra la academia', () => {
-    mockUseAcademy.mockReturnValue({
-      academy: null,
-      loading: false,
-      error: 'Academia no encontrada',
-    } as any)
-
-    renderWithProvider(<AcademyDetailPage />)
-
-    expect(screen.getAllByText('Academia no encontrada').length).toBeGreaterThan(0)
-    expect(screen.getByRole('link', { name: /Volver a Academias/i })).toBeInTheDocument()
-  })
-
-  it('muestra mensaje por defecto cuando academy es null sin error', () => {
-    mockUseAcademy.mockReturnValue({
-      academy: null,
-      loading: false,
-      error: null,
-    } as any)
-
-    renderWithProvider(<AcademyDetailPage />)
-
-    expect(screen.getByText(/La academia que buscas no existe o no está disponible/i)).toBeInTheDocument()
-  })
-
-  it('renderiza la información del instructor correctamente', () => {
-    renderWithProvider(<AcademyDetailPage />)
-
-    expect(screen.getByText('Instructor')).toBeInTheDocument()
-    expect(screen.getByText(mockAcademy.creator.name)).toBeInTheDocument()
-    expect(screen.getByText('Creador de la Academia')).toBeInTheDocument()
-    expect(screen.getByText(mockAcademy.creator.bio)).toBeInTheDocument()
-  })
-
-  it('renderiza las estadísticas en la sidebar', () => {
-    renderWithProvider(<AcademyDetailPage />)
-
-    expect(screen.getByText('Estadísticas')).toBeInTheDocument()
-    
-    // Verificar valores de estadísticas
-    const statsSection = screen.getByText('Estadísticas').closest('div')
-    expect(statsSection).toBeInTheDocument()
-    
-    expect(screen.getByText('1,250')).toBeInTheDocument() // Estudiantes
-    expect(screen.getByText('120')).toBeInTheDocument() // Lecciones
-    expect(screen.getByText('45h')).toBeInTheDocument() // Duración
-  })
-
-  it('renderiza la tarjeta de suscripción con beneficios', () => {
-    renderWithProvider(<AcademyDetailPage />)
-
-    expect(screen.getByText('Acceso Completo')).toBeInTheDocument()
-    expect(screen.getByText('$49.99')).toBeInTheDocument()
-    
-    // Beneficios
-    expect(screen.getByText('Acceso a todos los cursos')).toBeInTheDocument()
-    expect(screen.getByText('Nuevos cursos cada mes')).toBeInTheDocument()
-    expect(screen.getByText('Certificados al completar')).toBeInTheDocument()
-    expect(screen.getByText('Soporte del instructor')).toBeInTheDocument()
-
-    expect(screen.getByRole('button', { name: /Suscribirse Ahora/i })).toBeInTheDocument()
-  })
-
-  it('renderiza los cursos de la academia', () => {
-    renderWithProvider(<AcademyDetailPage />)
-
-    expect(screen.getByText(/Cursos \(12\)/)).toBeInTheDocument()
-    expect(screen.getByTestId('course-1')).toBeInTheDocument()
-    expect(screen.getByTestId('course-2')).toBeInTheDocument()
-    expect(screen.getByText('Curso de JavaScript Básico')).toBeInTheDocument()
-    expect(screen.getByText('Curso de JavaScript Avanzado')).toBeInTheDocument()
-  })
-
-  it('muestra mensaje cuando no hay cursos disponibles', () => {
-    const academyWithoutCourses = { ...mockAcademy, courses: [], courses_count: 0 }
-    mockUseAcademy.mockReturnValue({
-      academy: academyWithoutCourses,
-      loading: false,
-      error: null,
-    } as any)
-
-    renderWithProvider(<AcademyDetailPage />)
-
-    expect(screen.getByText('Próximamente')).toBeInTheDocument()
-    expect(screen.getByText(/Esta academia está preparando contenido increíble/i)).toBeInTheDocument()
-  })
-
-  it('renderiza las pestañas de cursos y reseñas', async () => {
-    const user = userEvent.setup()
-    renderWithProvider(<AcademyDetailPage />)
-
-    // Verificar que la pestaña de cursos está activa por defecto
-    expect(screen.getByText(/Cursos \(12\)/)).toBeInTheDocument()
-    
-    // Click en la pestaña de reseñas
-    const reviewsTab = screen.getByText(/Reseñas \(150\)/)
-    await user.click(reviewsTab)
-
-    // Verificar que se muestra el mensaje de reseñas próximamente
-    await waitFor(() => {
-      expect(screen.getByText('Reseñas próximamente')).toBeInTheDocument()
-      expect(screen.getByText(/Las reseñas de estudiantes estarán disponibles pronto/i)).toBeInTheDocument()
+      expect(screen.getByText('Cargando academia...')).toBeInTheDocument()
+      expect(screen.getByTestId('public-header')).toBeInTheDocument()
     })
   })
 
-  it('renderiza el rating con estrellas correctamente', () => {
-    renderWithProvider(<AcademyDetailPage />)
+  describe('Error State', () => {
+    it('should show error card when academy is not found', () => {
+      mockUseAcademy.mockReturnValue({
+        academy: null,
+        loading: false,
+        error: 'Academia no encontrada',
+      })
 
-    // En el hero y en las estadísticas hay rating
-    const ratings = screen.getAllByText('4.8')
-    expect(ratings.length).toBeGreaterThan(0)
-    expect(screen.getByText('(150 reseñas)')).toBeInTheDocument()
+      render(<AcademyDetailPage />)
+
+      expect(screen.getByRole('heading', { name: 'Academia no encontrada' })).toBeInTheDocument()
+      expect(screen.getByText('Volver a Academias')).toBeInTheDocument()
+    })
+
+    it('should show default error message when no specific error', () => {
+      mockUseAcademy.mockReturnValue({
+        academy: null,
+        loading: false,
+        error: null,
+      })
+
+      render(<AcademyDetailPage />)
+
+      expect(
+        screen.getByText(
+          'La academia que buscas no existe o no está disponible.'
+        )
+      ).toBeInTheDocument()
+    })
   })
 
-  it('renderiza los botones de acción en el hero', () => {
-    renderWithProvider(<AcademyDetailPage />)
+  describe('Success State', () => {
+    beforeEach(() => {
+      mockUseAcademy.mockReturnValue({
+        academy: mockAcademy,
+        loading: false,
+        error: null,
+      })
+    })
 
-    // Botón de suscripción principal
-    const subscribeButtons = screen.getAllByRole('button', { name: /Suscribirse/i })
-    expect(subscribeButtons.length).toBeGreaterThan(0)
+    it('should render academy details correctly', () => {
+      render(<AcademyDetailPage />)
 
-    // Los botones de Heart y Share2 están presentes (aunque sin texto visible)
-    const allButtons = screen.getAllByRole('button')
-    expect(allButtons.length).toBeGreaterThan(3)
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('React Avanzado')
+      expect(screen.getByText('Desarrollo Web')).toBeInTheDocument()
+      expect(screen.getAllByText('4.8')[0]).toBeInTheDocument()
+      expect(screen.getByText('(156 reseñas)')).toBeInTheDocument()
+    })
+
+    it('should display academy statistics', () => {
+      render(<AcademyDetailPage />)
+
+      expect(screen.getByText('1,250 estudiantes')).toBeInTheDocument()
+      expect(screen.getAllByText('8')[0]).toBeInTheDocument()
+      expect(screen.getByText('24h de contenido')).toBeInTheDocument()
+    })
+
+    it('should show instructor information', () => {
+      render(<AcademyDetailPage />)
+
+      expect(screen.getByText('Juan Pérez')).toBeInTheDocument()
+      expect(screen.getByText('Creador de la Academia')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'Desarrollador Full Stack con 10 años de experiencia'
+        )
+      ).toBeInTheDocument()
+    })
+
+    it('should display subscription pricing', () => {
+      render(<AcademyDetailPage />)
+
+      expect(screen.getByText('$29.99')).toBeInTheDocument()
+      expect(screen.getByText('/mes')).toBeInTheDocument()
+      expect(screen.getByText('Suscribirse $29.99/mes')).toBeInTheDocument()
+    })
+
+    it('should render courses list', () => {
+      render(<AcademyDetailPage />)
+
+      expect(screen.getByText('Introducción a React')).toBeInTheDocument()
+      expect(screen.getByText('React Hooks Avanzados')).toBeInTheDocument()
+      expect(screen.getByText('Conceptos básicos de React')).toBeInTheDocument()
+      expect(
+        screen.getByText('Hooks personalizados y avanzados')
+      ).toBeInTheDocument()
+    })
+
+    it('should show subscription benefits', () => {
+      render(<AcademyDetailPage />)
+
+      expect(screen.getByText('Acceso a todos los cursos')).toBeInTheDocument()
+      expect(screen.getByText('Nuevos cursos cada mes')).toBeInTheDocument()
+      expect(
+        screen.getByText('Certificados al completar')
+      ).toBeInTheDocument()
+      expect(screen.getByText('Soporte del instructor')).toBeInTheDocument()
+    })
+
+    it('should handle back button click', () => {
+      render(<AcademyDetailPage />)
+
+      const backButton = screen.getByText('Volver')
+      fireEvent.click(backButton)
+
+      expect(mockRouter.history.back).toHaveBeenCalled()
+    })
   })
 
-  it('renderiza el botón de volver a academias', () => {
-    renderWithProvider(<AcademyDetailPage />)
+  describe('Academy without courses', () => {
+    it('should show empty state when academy has no courses', () => {
+      const academyWithoutCourses = {
+        ...mockAcademy,
+        courses: [],
+        courses_count: 0,
+      }
 
-    const backLink = screen.getByRole('link', { name: /Volver/i })
-    expect(backLink).toBeInTheDocument()
-    expect(backLink).toHaveAttribute('href', '/academies')
+      mockUseAcademy.mockReturnValue({
+        academy: academyWithoutCourses,
+        loading: false,
+        error: null,
+      })
+
+      render(<AcademyDetailPage />)
+
+      expect(screen.getByText('Próximamente')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'Esta academia está preparando contenido increíble. ¡Mantente atento!'
+        )
+      ).toBeInTheDocument()
+    })
   })
 
-  it('renderiza el banner y logo de la academia cuando están disponibles', () => {
-    renderWithProvider(<AcademyDetailPage />)
+  describe('Academy without optional data', () => {
+    it('should handle academy without optional fields', () => {
+      const minimalAcademy = {
+        ...mockAcademy,
+        banner_url: null,
+        logo_url: null,
+        total_duration_hours: null,
+        total_lessons: null,
+        monthly_price: 0,
+        creator: {
+          ...mockAcademy.creator,
+          avatar_url: null,
+          bio: null,
+        },
+      }
 
-    const bannerImage = screen.getByAltText(`${mockAcademy.name} banner`)
-    expect(bannerImage).toBeInTheDocument()
-    expect(bannerImage).toHaveAttribute('src', mockAcademy.banner_url)
+      mockUseAcademy.mockReturnValue({
+        academy: minimalAcademy,
+        loading: false,
+        error: null,
+      })
 
-    const logoImage = screen.getByAltText(`${mockAcademy.name} logo`)
-    expect(logoImage).toBeInTheDocument()
-    expect(logoImage).toHaveAttribute('src', mockAcademy.logo_url)
+      render(<AcademyDetailPage />)
+
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('React Avanzado')
+      expect(screen.getByText('Suscribirse $0/mes')).toBeInTheDocument()
+      expect(screen.getByText('Juan Pérez')).toBeInTheDocument()
+    })
   })
 
-  it('muestra ícono por defecto cuando no hay logo', () => {
-    const academyWithoutLogo = { ...mockAcademy, logo_url: null }
-    mockUseAcademy.mockReturnValue({
-      academy: academyWithoutLogo,
-      loading: false,
-      error: null,
-    } as any)
+  describe('Tabs functionality', () => {
+    beforeEach(() => {
+      mockUseAcademy.mockReturnValue({
+        academy: mockAcademy,
+        loading: false,
+        error: null,
+      })
+    })
 
-    renderWithProvider(<AcademyDetailPage />)
+    it('should show courses tab by default', () => {
+      render(<AcademyDetailPage />)
 
-    // No debe haber imagen de logo pero sí el contenedor
-    expect(screen.queryByAltText(`${mockAcademy.name} logo`)).not.toBeInTheDocument()
-  })
+      expect(screen.getByText('Cursos (8)')).toBeInTheDocument()
+      expect(screen.getByText('Reseñas (156)')).toBeInTheDocument()
+    })
 
-  it('renderiza el avatar del instructor correctamente', () => {
-    renderWithProvider(<AcademyDetailPage />)
+    it('should display reviews placeholder content', () => {
+      render(<AcademyDetailPage />)
 
-    // Verificar que el nombre del instructor está presente
-    expect(screen.getByText(mockAcademy.creator.name)).toBeInTheDocument()
-    expect(screen.getByText('Creador de la Academia')).toBeInTheDocument()
-  })
-
-  it('muestra la sección "Acerca de esta Academia"', () => {
-    renderWithProvider(<AcademyDetailPage />)
-
-    expect(screen.getByText('Acerca de esta Academia')).toBeInTheDocument()
-  })
-
-  it('formatea correctamente los números grandes', () => {
-    const academyWithLargeNumbers = {
-      ...mockAcademy,
-      enrolled_users_count: 15000,
-    }
-    mockUseAcademy.mockReturnValue({
-      academy: academyWithLargeNumbers,
-      loading: false,
-      error: null,
-    } as any)
-
-    renderWithProvider(<AcademyDetailPage />)
-
-    // Debe formatear con separadores de miles
-    expect(screen.getByText('15,000')).toBeInTheDocument()
-  })
-
-  it('llama al hook useAcademy con el slug correcto', () => {
-    renderWithProvider(<AcademyDetailPage />)
-
-    expect(mockUseAcademy).toHaveBeenCalledWith('javascript-avanzado')
-  })
-
-  it('renderiza todos los beneficios de la suscripción', () => {
-    renderWithProvider(<AcademyDetailPage />)
-
-    const benefits = [
-      'Acceso a todos los cursos',
-      'Nuevos cursos cada mes',
-      'Certificados al completar',
-      'Soporte del instructor',
-    ]
-
-    benefits.forEach(benefit => {
-      expect(screen.getByText(benefit)).toBeInTheDocument()
+      expect(screen.getByText('Reseñas próximamente')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'Las reseñas de estudiantes estarán disponibles pronto.'
+        )
+      ).toBeInTheDocument()
     })
   })
 })

@@ -1,436 +1,335 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { useAuthStore } from '@/stores/auth-store'
-import { AcademySelectionPage } from '../academy-selection'
-import type { AuthUser } from '@/stores/auth-store'
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+} from '@testing-library/react'
+import { vi, beforeEach, describe, it, expect } from 'vitest'
+import { AcademySelectionPage } from '../../features/academy-selection/index'
+import type { AcademyMembership, AcademyData } from '../../features/academy-selection/types'
 
-// Mock the auth store
-vi.mock('@/stores/auth-store', () => ({
-  useAuthStore: vi.fn()
+// Mock framer-motion
+vi.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    header: ({ children, ...props }: any) => <header {...props}>{children}</header>,
+    p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
+    footer: ({ children, ...props }: any) => <footer {...props}>{children}</footer>,
+  },
 }))
 
-// Mock the router
+// Mock TanStack Router
 const mockNavigate = vi.fn()
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router')
+
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => mockNavigate,
+}))
+
+// Mock auth store
+const mockUseAuthStore = vi.fn()
+vi.mock('@/stores/auth-store', () => ({
+  useAuthStore: () => mockUseAuthStore(),
+}))
+
+// Mock UI components
+vi.mock('@/components/ui/card', () => ({
+  Card: ({ children, onClick, ...props }: any) => (
+    <div onClick={onClick} {...props}>{children}</div>
+  ),
+  CardContent: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  CardHeader: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  CardTitle: ({ children, ...props }: any) => <h3 {...props}>{children}</h3>,
+}))
+
+vi.mock('@/components/ui/badge', () => ({
+  Badge: ({ children, ...props }: any) => <span {...props}>{children}</span>,
+}))
+
+vi.mock('@/components/ui/button', () => ({
+  Button: ({ children, onClick, ...props }: any) => (
+    <button onClick={onClick} {...props}>{children}</button>
+  ),
+}))
+
+// Mock Lucide React icons
+vi.mock('lucide-react', () => {
+  const MockIcon = ({ ...props }) => <span {...props} />
   return {
-    ...actual,
-    useNavigate: () => mockNavigate
+    Building: MockIcon,
+    Users: MockIcon,
+    GraduationCap: MockIcon,
+    ArrowRight: MockIcon,
+    Plus: MockIcon,
+    Shield: MockIcon,
+    BookOpen: MockIcon,
+    Clock: MockIcon,
+    Sparkles: MockIcon,
   }
 })
 
-const mockUseAuthStore = vi.mocked(useAuthStore)
-
-// Mock data
-const mockUser: AuthUser = {
-  id: 1,
-  first_name: 'John',
-  last_name: 'Doe',
-  email: 'john@example.com',
-  full_name: 'John Doe',
-  initials: 'JD',
-  confirmed: true,
-  is_super_admin: false,
-  avatar_url: null,
-  onboarding_completed_at: null,
-  created_at: '2024-01-01T00:00:00Z',
-  last_login_at: '2024-01-01T12:00:00Z'
-}
-
-// Mock data is hardcoded in the component for now
-
 describe('AcademySelectionPage', () => {
-  const user = userEvent.setup()
+  const mockUser = {
+    id: 1,
+    first_name: 'Juan',
+    last_name: 'Pérez',
+    email: 'juan@example.com',
+  }
+
+  const mockAcademies: AcademyMembership[] = [
+    {
+      id: 1,
+      name: 'Academia de Desarrollo Web',
+      slug: 'desarrollo-web',
+      description: 'Aprende desarrollo web desde cero',
+      logo_url: 'https://example.com/logo1.jpg',
+      user_role: 'student',
+      user_role_display: 'Estudiante',
+      created_at: '2024-01-01',
+      last_accessed: '2024-01-15',
+      last_accessed_at: '2024-01-15',
+    },
+    {
+      id: 2,
+      name: 'Academia de Ciencias',
+      slug: 'ciencias',
+      description: 'Explora el mundo de las ciencias',
+      logo_url: null,
+      user_role: 'admin',
+      user_role_display: 'Administrador',
+      created_at: '2024-01-01',
+      last_accessed: null,
+      last_accessed_at: null,
+    },
+    {
+      id: 3,
+      name: 'Academia de Arte',
+      slug: 'arte',
+      description: 'Desarrolla tu creatividad artística',
+      logo_url: 'https://example.com/logo3.jpg',
+      user_role: 'teacher',
+      user_role_display: 'Profesor',
+      created_at: '2024-01-01',
+      last_accessed: '2024-01-10',
+      last_accessed_at: '2024-01-10',
+    },
+  ]
+
+  const mockAcademyData: AcademyData = {
+    count: 3,
+    academies: mockAcademies,
+  }
+
+  const mockSelectAcademy = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
-    mockNavigate.mockClear()
-  })
-
-  afterEach(() => {
-    vi.resetAllMocks()
   })
 
   describe('Loading State', () => {
-    it('should show loading state when user is not available', () => {
+    it('should show loading spinner when user data is not available', () => {
       mockUseAuthStore.mockReturnValue({
         user: null,
-        isAuthenticated: true,
-        isLoading: true,
-        tokens: null,
-        error: null,
-        login: vi.fn(),
-        register: vi.fn(),
-        logout: vi.fn(),
-        refreshTokens: vi.fn(),
-        setUser: vi.fn(),
-        setTokens: vi.fn(),
-        setLoading: vi.fn(),
-        setError: vi.fn(),
-        reset: vi.fn(),
-        initialize: vi.fn(),
-        auth: {
-          user: null,
-          setUser: vi.fn(),
-          accessToken: '',
-          setAccessToken: vi.fn(),
-          refreshToken: '',
-          setRefreshToken: vi.fn(),
-          resetAccessToken: vi.fn(),
-          reset: vi.fn()
-        }
+        academyData: null,
+        selectAcademy: mockSelectAcademy,
       })
 
       render(<AcademySelectionPage />)
 
-      expect(screen.getByText('Loading your academies...')).toBeInTheDocument()
-      expect(screen.getByRole('status', { hidden: true })).toBeInTheDocument() // Loading spinner
+      expect(screen.getByText('Cargando tus academias...')).toBeInTheDocument()
+      expect(screen.getByRole('status')).toBeInTheDocument()
     })
-  })
 
-  describe('Header Section', () => {
-    beforeEach(() => {
+    it('should show loading spinner when academy data is not available', () => {
       mockUseAuthStore.mockReturnValue({
         user: mockUser,
-        isAuthenticated: true,
-        isLoading: false,
-        tokens: null,
-        error: null,
-        login: vi.fn(),
-        register: vi.fn(),
-        logout: vi.fn(),
-        refreshTokens: vi.fn(),
-        setUser: vi.fn(),
-        setTokens: vi.fn(),
-        setLoading: vi.fn(),
-        setError: vi.fn(),
-        reset: vi.fn(),
-        initialize: vi.fn(),
-        auth: {
-          user: mockUser,
-          setUser: vi.fn(),
-          accessToken: 'token',
-          setAccessToken: vi.fn(),
-          refreshToken: 'refresh',
-          setRefreshToken: vi.fn(),
-          resetAccessToken: vi.fn(),
-          reset: vi.fn()
-        }
+        academyData: null,
+        selectAcademy: mockSelectAcademy,
       })
-    })
 
-    it('should display the correct header with user name', () => {
       render(<AcademySelectionPage />)
 
-      expect(screen.getByText('Select Your Academy')).toBeInTheDocument()
-      expect(screen.getByText(/Welcome back, John!/)).toBeInTheDocument()
-      expect(screen.getByText(/Choose which academy you'd like to access today/)).toBeInTheDocument()
-    })
-
-    it('should display academy count information', () => {
-      render(<AcademySelectionPage />)
-
-      expect(screen.getByText('You have access to 2 academies')).toBeInTheDocument()
-    })
-
-    it('should handle singular academy text correctly', () => {
-      // This test will be implemented when the component is connected to real data
-      // Currently the component uses hardcoded data with 2 academies
-      render(<AcademySelectionPage />)
-      expect(screen.getByText('You have access to 2 academies')).toBeInTheDocument()
-    })
-  })
-
-  describe('Academy Cards', () => {
-    beforeEach(() => {
-      mockUseAuthStore.mockReturnValue({
-        user: mockUser,
-        isAuthenticated: true,
-        isLoading: false,
-        tokens: null,
-        error: null,
-        login: vi.fn(),
-        register: vi.fn(),
-        logout: vi.fn(),
-        refreshTokens: vi.fn(),
-        setUser: vi.fn(),
-        setTokens: vi.fn(),
-        setLoading: vi.fn(),
-        setError: vi.fn(),
-        reset: vi.fn(),
-        initialize: vi.fn(),
-        auth: {
-          user: mockUser,
-          setUser: vi.fn(),
-          accessToken: 'token',
-          setAccessToken: vi.fn(),
-          refreshToken: 'refresh',
-          setRefreshToken: vi.fn(),
-          resetAccessToken: vi.fn(),
-          reset: vi.fn()
-        }
-      })
-    })
-
-    it('should render academy cards with correct information', () => {
-      render(<AcademySelectionPage />)
-
-      // Check first academy (hardcoded in component)
-      expect(screen.getByText('Technology Academy')).toBeInTheDocument()
-      expect(screen.getByText('Administrator')).toBeInTheDocument()
-      expect(screen.getByText(/Learn cutting-edge technology skills/)).toBeInTheDocument()
-
-      // Check second academy (hardcoded in component)
-      expect(screen.getByText('Cooking Academy')).toBeInTheDocument()
-      expect(screen.getByText('Student')).toBeInTheDocument()
-      expect(screen.getByText(/Master culinary arts and techniques/)).toBeInTheDocument()
-    })
-
-    it('should display default icon when no logo is provided', () => {
-      render(<AcademySelectionPage />)
-
-      // Both academies have no logo in the hardcoded data, should show Building icons
-      const buildingIcons = screen.getAllByTestId('building-icon')
-      expect(buildingIcons.length).toBeGreaterThan(0)
-    })
-
-    it('should navigate to academy dashboard when card is clicked', async () => {
-      render(<AcademySelectionPage />)
-
-      const technologyAcademyCard = screen.getByText('Technology Academy').closest('.academy-card')
-      expect(technologyAcademyCard).toBeInTheDocument()
-
-      await user.click(technologyAcademyCard!)
-
-      await waitFor(() => {
-        expect(mockNavigate).toHaveBeenCalledWith({ to: '/academy/1/dashboard' })
-      })
-    })
-
-    it('should show hover effects on academy cards', () => {
-      render(<AcademySelectionPage />)
-
-      const academyCard = screen.getByText('Technology Academy').closest('.academy-card')
-      expect(academyCard).toHaveClass('hover:shadow-lg', 'hover:scale-[1.02]', 'hover:border-primary/20')
+      expect(screen.getByText('Cargando tus academias...')).toBeInTheDocument()
     })
   })
 
   describe('Empty State', () => {
-    it('should have empty state component defined', () => {
-      // The EmptyState component is defined in the file but not currently testable
-      // since the component uses hardcoded data. This will be tested when 
-      // the component is connected to real data from the auth store.
-      expect(true).toBe(true)
+    it('should show empty state when user has no academies', () => {
+      mockUseAuthStore.mockReturnValue({
+        user: mockUser,
+        academyData: { count: 0, academies: [] },
+        selectAcademy: mockSelectAcademy,
+      })
+
+      render(<AcademySelectionPage />)
+
+      expect(screen.getByText('No tienes academias')).toBeInTheDocument()
+      expect(screen.getByText('Aún no perteneces a ninguna academia. Crea tu propia academia o solicita una invitación a un administrador.')).toBeInTheDocument()
+      expect(screen.getByText('Crear Academia')).toBeInTheDocument()
+      expect(screen.getByText('Solicitar Invitación')).toBeInTheDocument()
     })
   })
 
-  describe('Footer Section', () => {
+  describe('Academy List', () => {
     beforeEach(() => {
       mockUseAuthStore.mockReturnValue({
         user: mockUser,
-        isAuthenticated: true,
-        isLoading: false,
-        tokens: null,
-        error: null,
-        login: vi.fn(),
-        register: vi.fn(),
-        logout: vi.fn(),
-        refreshTokens: vi.fn(),
-        setUser: vi.fn(),
-        setTokens: vi.fn(),
-        setLoading: vi.fn(),
-        setError: vi.fn(),
-        reset: vi.fn(),
-        initialize: vi.fn(),
-        auth: {
-          user: mockUser,
-          setUser: vi.fn(),
-          accessToken: 'token',
-          setAccessToken: vi.fn(),
-          refreshToken: 'refresh',
-          setRefreshToken: vi.fn(),
-          resetAccessToken: vi.fn(),
-          reset: vi.fn()
-        }
+        academyData: mockAcademyData,
+        selectAcademy: mockSelectAcademy,
       })
     })
 
-    it('should display help text and link', () => {
+    it('should render page header with user name', () => {
       render(<AcademySelectionPage />)
 
-      expect(screen.getByText(/Need help\? Contact your academy administrator or/)).toBeInTheDocument()
-      expect(screen.getByText('visit our help center')).toBeInTheDocument()
+      expect(screen.getByText('Selecciona tu Academia')).toBeInTheDocument()
+      expect(screen.getByText(/¡Bienvenido de nuevo,/)).toBeInTheDocument()
+      expect(screen.getByText('Juan')).toBeInTheDocument()
     })
 
-    it('should have clickable help center link', async () => {
+    it('should display academy count', () => {
       render(<AcademySelectionPage />)
 
-      const helpLink = screen.getByText('visit our help center')
-      expect(helpLink).toBeInTheDocument()
+      expect(screen.getByText(/Tienes acceso a/)).toBeInTheDocument()
+      expect(screen.getByText('3')).toBeInTheDocument()
+      expect(screen.getByText(/academias/)).toBeInTheDocument()
+    })
 
-      await user.click(helpLink)
-      // Link functionality to be implemented later
+    it('should render all academies', () => {
+      render(<AcademySelectionPage />)
+
+      expect(screen.getByText('Academia de Desarrollo Web')).toBeInTheDocument()
+      expect(screen.getByText('Academia de Ciencias')).toBeInTheDocument()
+      expect(screen.getByText('Academia de Arte')).toBeInTheDocument()
+    })
+
+    it('should display academy descriptions', () => {
+      render(<AcademySelectionPage />)
+
+      expect(screen.getByText('Aprende desarrollo web desde cero')).toBeInTheDocument()
+      expect(screen.getByText('Explora el mundo de las ciencias')).toBeInTheDocument()
+      expect(screen.getByText('Desarrolla tu creatividad artística')).toBeInTheDocument()
+    })
+
+    it('should display correct role badges', () => {
+      render(<AcademySelectionPage />)
+
+      expect(screen.getByText('Estudiante')).toBeInTheDocument()
+      expect(screen.getByText('Administrador')).toBeInTheDocument()
+      expect(screen.getByText('Profesor')).toBeInTheDocument()
+    })
+
+    it('should show last accessed dates correctly', () => {
+      render(<AcademySelectionPage />)
+
+      expect(screen.getAllByText(/Último acceso:/)).toHaveLength(2)
+      expect(screen.getByText('Nueva academia')).toBeInTheDocument()
+    })
+
+    it('should display building icon for academies without logo', () => {
+      render(<AcademySelectionPage />)
+
+      expect(screen.getByTestId('building-icon')).toBeInTheDocument()
+    })
+
+    it('should render page footer', () => {
+      render(<AcademySelectionPage />)
+
+      expect(screen.getByText('¿Necesitas ayuda? Contacta al administrador de tu academia o')).toBeInTheDocument()
+      expect(screen.getByText('visita nuestro centro de ayuda')).toBeInTheDocument()
     })
   })
 
-  describe('Responsive Design', () => {
+  describe('Academy Selection', () => {
     beforeEach(() => {
       mockUseAuthStore.mockReturnValue({
         user: mockUser,
-        isAuthenticated: true,
-        isLoading: false,
-        tokens: null,
-        error: null,
-        login: vi.fn(),
-        register: vi.fn(),
-        logout: vi.fn(),
-        refreshTokens: vi.fn(),
-        setUser: vi.fn(),
-        setTokens: vi.fn(),
-        setLoading: vi.fn(),
-        setError: vi.fn(),
-        reset: vi.fn(),
-        initialize: vi.fn(),
-        auth: {
-          user: mockUser,
-          setUser: vi.fn(),
-          accessToken: 'token',
-          setAccessToken: vi.fn(),
-          refreshToken: 'refresh',
-          setRefreshToken: vi.fn(),
-          resetAccessToken: vi.fn(),
-          reset: vi.fn()
-        }
+        academyData: mockAcademyData,
+        selectAcademy: mockSelectAcademy,
       })
     })
 
-    it('should have responsive grid classes', () => {
+    it('should call selectAcademy and navigate when academy is clicked', async () => {
       render(<AcademySelectionPage />)
 
-      // Find the grid container that contains the academy cards
-      const gridContainer = document.querySelector('.grid.gap-6.md\\:grid-cols-2.lg\\:grid-cols-3')
-      expect(gridContainer).toBeInTheDocument()
-    })
-
-    it('should have responsive container classes', () => {
-      render(<AcademySelectionPage />)
-
-      const container = screen.getByText('Select Your Academy').closest('.container')
-      expect(container).toHaveClass('container', 'mx-auto', 'px-4', 'py-8', 'max-w-6xl')
-    })
-  })
-
-  describe('Accessibility', () => {
-    beforeEach(() => {
-      mockUseAuthStore.mockReturnValue({
-        user: mockUser,
-        isAuthenticated: true,
-        isLoading: false,
-        tokens: null,
-        error: null,
-        login: vi.fn(),
-        register: vi.fn(),
-        logout: vi.fn(),
-        refreshTokens: vi.fn(),
-        setUser: vi.fn(),
-        setTokens: vi.fn(),
-        setLoading: vi.fn(),
-        setError: vi.fn(),
-        reset: vi.fn(),
-        initialize: vi.fn(),
-        auth: {
-          user: mockUser,
-          setUser: vi.fn(),
-          accessToken: 'token',
-          setAccessToken: vi.fn(),
-          refreshToken: 'refresh',
-          setRefreshToken: vi.fn(),
-          resetAccessToken: vi.fn(),
-          reset: vi.fn()
-        }
-      })
-    })
-
-    it('should have proper heading hierarchy', () => {
-      render(<AcademySelectionPage />)
-
-      const mainHeading = screen.getByRole('heading', { level: 1 })
-      expect(mainHeading).toHaveTextContent('Select Your Academy')
-
-      const emptyStateHeading = screen.queryByRole('heading', { level: 3 })
-      // Should not be present when academies exist
-      expect(emptyStateHeading).not.toBeInTheDocument()
-    })
-
-    it('should have proper alt text for images when logos are present', () => {
-      render(<AcademySelectionPage />)
-
-      // Since the hardcoded data doesn't have logos, we test that the component
-      // would handle alt text properly by checking the structure
-      const buildingIcons = screen.getAllByTestId('building-icon')
-      expect(buildingIcons.length).toBeGreaterThan(0)
-    })
-
-    it('should have keyboard navigation support', () => {
-      render(<AcademySelectionPage />)
-
-      const academyCard = screen.getByText('Technology Academy').closest('.academy-card')
-      
-      // Card should be focusable and clickable
-      expect(academyCard).toHaveClass('cursor-pointer')
-      
-      // Note: Keyboard navigation will be fully tested when the component
-      // is enhanced with proper keyboard event handlers
-    })
-  })
-
-  describe('Error Handling', () => {
-    beforeEach(() => {
-      mockUseAuthStore.mockReturnValue({
-        user: mockUser,
-        isAuthenticated: true,
-        isLoading: false,
-        tokens: null,
-        error: null,
-        login: vi.fn(),
-        register: vi.fn(),
-        logout: vi.fn(),
-        refreshTokens: vi.fn(),
-        setUser: vi.fn(),
-        setTokens: vi.fn(),
-        setLoading: vi.fn(),
-        setError: vi.fn(),
-        reset: vi.fn(),
-        initialize: vi.fn(),
-        auth: {
-          user: mockUser,
-          setUser: vi.fn(),
-          accessToken: 'token',
-          setAccessToken: vi.fn(),
-          refreshToken: 'refresh',
-          setRefreshToken: vi.fn(),
-          resetAccessToken: vi.fn(),
-          reset: vi.fn()
-        }
-      })
-    })
-
-    it('should handle navigation errors gracefully', () => {
-      render(<AcademySelectionPage />)
-
-      // Error handling is implemented in the component but requires
-      // async navigation to test properly. The try-catch structure is in place.
-      const academyCard = screen.getByText('Technology Academy').closest('.academy-card')
+      const academyCard = screen.getByText('Academia de Desarrollo Web').closest('.academy-card')
       expect(academyCard).toBeInTheDocument()
+
+      fireEvent.click(academyCard!)
+
+      await waitFor(() => {
+        expect(mockSelectAcademy).toHaveBeenCalledWith(1)
+        expect(mockNavigate).toHaveBeenCalledWith({ to: '/academy/desarrollo-web/dashboard' })
+      })
     })
 
-    it('should handle missing academy data gracefully', () => {
+    it('should handle academy selection for different academies', async () => {
       render(<AcademySelectionPage />)
 
-      // Should not crash when academy has missing description
-      const academyWithoutDescription = screen.getByText('Technology Academy')
-      expect(academyWithoutDescription).toBeInTheDocument()
+      const academyCard = screen.getByText('Academia de Ciencias').closest('.academy-card')
+      fireEvent.click(academyCard!)
+
+      await waitFor(() => {
+        expect(mockSelectAcademy).toHaveBeenCalledWith(2)
+        expect(mockNavigate).toHaveBeenCalledWith({ to: '/academy/ciencias/dashboard' })
+      })
+    })
+
+    it('should handle errors during academy selection gracefully', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const errorMessage = 'Selection failed'
+      mockSelectAcademy.mockImplementation(() => {
+        throw new Error(errorMessage)
+      })
+
+      render(<AcademySelectionPage />)
+
+      const academyCard = screen.getByText('Academia de Arte').closest('.academy-card')
+      fireEvent.click(academyCard!)
+
+      await waitFor(() => {
+        expect(consoleSpy).toHaveBeenCalledWith('Failed to select academy:', expect.any(Error))
+      })
+
+      consoleSpy.mockRestore()
+    })
+  })
+
+  describe('Singular vs Plural Text', () => {
+    it('should show singular text for one academy', () => {
+      mockUseAuthStore.mockReturnValue({
+        user: mockUser,
+        academyData: { count: 1, academies: [mockAcademies[0]] },
+        selectAcademy: mockSelectAcademy,
+      })
+
+      render(<AcademySelectionPage />)
+
+      expect(screen.getByText('1')).toBeInTheDocument()
+      // Find the container element that has the count text
+      const countContainer = screen.getByText(/Tienes acceso a/).closest('p')
+      expect(countContainer).toHaveTextContent('Tienes acceso a 1 academia')
+    })
+  })
+
+  describe('Role-based styling', () => {
+    beforeEach(() => {
+      mockUseAuthStore.mockReturnValue({
+        user: mockUser,
+        academyData: mockAcademyData,
+        selectAcademy: mockSelectAcademy,
+      })
+    })
+
+    it('should apply correct CSS classes for different roles', () => {
+      render(<AcademySelectionPage />)
+
+      const adminBadge = screen.getByText('Administrador').parentElement
+      const teacherBadge = screen.getByText('Profesor').parentElement
+      const studentBadge = screen.getByText('Estudiante').parentElement
+
+      expect(adminBadge).toHaveClass('bg-red-100', 'text-red-700', 'border-red-200')
+      expect(teacherBadge).toHaveClass('bg-blue-100', 'text-blue-700', 'border-blue-200')
+      expect(studentBadge).toHaveClass('bg-green-100', 'text-green-700', 'border-green-200')
     })
   })
 })
