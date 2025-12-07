@@ -7,7 +7,7 @@ import {
 import { vi, beforeEach, describe, it, expect } from 'vitest'
 import { toast } from 'sonner'
 import { PublicAcademyPage } from '../../features/public-academy/index'
-import type { FeaturedAcademy } from '@/services/academy-service'
+import type { AcademySummary } from '@/types'
 
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
@@ -139,7 +139,7 @@ vi.mock('./components/courses-section', () => ({
 }))
 
 describe('PublicAcademyPage', () => {
-  const mockAcademy: FeaturedAcademy = {
+  const mockAcademy: AcademySummary = {
     id: 1,
     name: 'React Avanzado',
     description: 'Aprende React desde cero hasta nivel avanzado',
@@ -154,12 +154,21 @@ describe('PublicAcademyPage', () => {
       id: 1,
       name: 'Desarrollo Web',
       slug: 'desarrollo-web',
+      description: null,
+      academies_count: 5,
+      academies: [],
+      created_at: '2023-01-01T00:00:00Z',
+      updated_at: '2023-01-01T00:00:00Z',
     },
     creator: {
       id: 1,
       name: 'Juan Pérez',
       email: 'juan@example.com',
     },
+    academy_configuration: {
+      enable_gamification: true,
+    },
+    badges_count: 5,
     courses: [
       {
         id: 1,

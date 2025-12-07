@@ -8,7 +8,7 @@ import {
   EmptyState,
   PageFooter
 } from './components'
-import type { AcademyMembership } from './types'
+import type { AcademyMembership } from '@/types'
 
 export function AcademySelectionPage() {
   const navigate = useNavigate()
@@ -60,4 +60,4 @@ export function AcademySelectionPage() {
   )
 }
 
-export type { AcademyMembership, AcademyData } from './types'
+export type { AcademyMembership, AcademyData } from '@/types'

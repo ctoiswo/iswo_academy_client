@@ -6,7 +6,7 @@ import {
 } from '@testing-library/react'
 import { vi, beforeEach, describe, it, expect } from 'vitest'
 import { AcademySelectionPage } from '../../features/academy-selection/index'
-import type { AcademyMembership, AcademyData } from '../../features/academy-selection/types'
+import type { AcademyMembership, AcademyData } from '@/types'
 
 // Mock framer-motion
 vi.mock('framer-motion', () => ({

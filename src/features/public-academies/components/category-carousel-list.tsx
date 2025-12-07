@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { AcademyCategory } from '@/types'
+import type { CategoryWithCount } from '@/types'
 import { motion } from 'framer-motion'
 import { BookOpen, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -16,7 +16,7 @@ interface CategoryCarouselListProps {
   setSearchInput: (value: string) => void
   setSearchQuery: (value: string) => void
   navigate: any
-  allCategories: AcademyCategory[]
+  allCategories: CategoryWithCount[]
   searchQuery: string
 }
 

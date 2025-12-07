@@ -1,0 +1,5 @@
+export { CourseHeader } from './course-header'
+export { CourseHero } from './course-hero'
+export { CourseContent } from './course-content'
+export { CourseSidebar } from './course-sidebar'
+export { CourseInstructor } from './course-instructor'

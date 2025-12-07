@@ -9,16 +9,10 @@ import { useTranslation } from 'react-i18next'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { AcademyCard } from './academy-card'
+import type { FeaturedAcademiesByCategory } from '@/services/academy-service'
 
 interface AcademiesSectionProps {
-  data: Array<{
-    category: {
-      id: number
-      name: string
-      description?: string
-    }
-    academies: Array<any>
-  }>
+  data: FeaturedAcademiesByCategory[]
   isLoading: boolean
   isError: boolean
   onRetry: () => void

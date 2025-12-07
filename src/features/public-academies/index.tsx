@@ -7,7 +7,7 @@ import { useCategories } from '@/hooks/use-categories'
 import { useGeneralStatistics } from '@/hooks/use-statistics'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { PublicHeader } from '@/features/home/components/header'
+import { Header } from '@/features/home/components/header'
 import {
   PageHeader,
   StatsSection,
@@ -73,7 +73,7 @@ export function PublicAcademiesPage() {
   if (isInitialLoading) {
     return (
       <div className='bg-background min-h-screen'>
-        <PublicHeader />
+        <Header />
         <div className='container mx-auto px-4 py-8'>
           <div className='flex min-h-[400px] flex-col items-center justify-center'>
             <Loader2 className='text-muted-foreground h-8 w-8 animate-spin' />
@@ -89,7 +89,7 @@ export function PublicAcademiesPage() {
   if (error) {
     return (
       <div className='bg-background min-h-screen'>
-        <PublicHeader />
+        <Header />
         <div className='container mx-auto px-4 py-8'>
           <Card className='mx-auto max-w-md'>
             <CardHeader>
@@ -124,7 +124,7 @@ export function PublicAcademiesPage() {
 
   return (
     <div className='bg-background min-h-screen'>
-      <PublicHeader />
+      <Header />
 
       <div className='container mx-auto px-4 py-8'>
         <PageHeader

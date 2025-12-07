@@ -9,17 +9,17 @@ export interface User {
   email: string
   first_name?: string | null
   last_name?: string | null
-  
+
   // Computed fields (from serializer)
   name?: string
   full_name?: string
-  
+
   // Authentication fields (usually not sent to frontend)
   // password_digest, password_reset_token, confirmation_token omitted
-  
+
   // Profile
   avatar_url?: string | null
-  
+
   // Timestamps
   confirmed_at?: string | null
   confirmation_sent_at?: string | null
@@ -27,16 +27,16 @@ export interface User {
   last_login_at?: string | null
   onboarding_completed_at?: string | null
   tokens_valid_after?: string | null
-  
+
   // Admin flag
   is_super_admin?: boolean
-  
+
   // Push notifications
   push_tokens?: string[] // jsonb array
-  
+
   // Role (from membership/context)
   role?: UserRole
-  
+
   created_at: string
   updated_at: string
 }
@@ -93,6 +93,7 @@ export interface AcademyMembership {
   user_role_display: string
   created_at: string
   last_accessed: string | null
+  last_accessed_at?: string | null
 }
 
 // Academy data structure returned in auth responses

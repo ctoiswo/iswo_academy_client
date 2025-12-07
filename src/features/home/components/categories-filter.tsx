@@ -5,15 +5,10 @@
 import { motion } from 'framer-motion'
 import { Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-
-interface CategoryMinimal {
-  id: number
-  name: string
-  slug: string
-}
+import type { AcademyCategoryMinimal } from '@/types/entities/category'
 
 interface CategoriesFilterProps {
-  categories: CategoryMinimal[]
+  categories: AcademyCategoryMinimal[]
   selectedCategory: number | null
   onCategoryChange: (categoryId: number | null) => void
   isLoading?: boolean

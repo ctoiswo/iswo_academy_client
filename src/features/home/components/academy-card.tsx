@@ -3,7 +3,7 @@
  * Displays a single academy card with link
  */
 import { Link } from '@tanstack/react-router'
-import type { Academy } from '@/types'
+import type { AcademyFull, AcademySummary } from '@/types/entities/academy'
 import { motion } from 'framer-motion'
 import { BookOpen, Users } from 'lucide-react'
 import { formatPrice } from '@/lib/formatters'
@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/card'
 
 interface AcademyCardProps {
-  academy: Academy
+  academy: AcademyFull | AcademySummary
   index?: number
 }
 

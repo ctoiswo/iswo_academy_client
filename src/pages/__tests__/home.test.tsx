@@ -37,7 +37,11 @@ vi.mock('react-i18next', () => ({
       }
       return translations[key] || key
     }
-  })
+  }),
+  initReactI18next: {
+    type: '3rdParty',
+    init: vi.fn()
+  }
 }))
 
 // Mock TanStack Router

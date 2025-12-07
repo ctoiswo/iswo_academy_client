@@ -1,4 +1,4 @@
-import type { AcademyCategory } from '@/types'
+import type { CategoryWithCount } from '@/types'
 import { motion } from 'framer-motion'
 import { Search, BookOpen } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +21,7 @@ interface SearchFiltersProps {
   setSelectedCategory: (value: string) => void
   sortBy: 'popular' | 'rating' | 'students' | 'newest'
   setSortBy: (value: 'popular' | 'rating' | 'students' | 'newest') => void
-  categories: AcademyCategory[]
+  categories: CategoryWithCount[]
   searchQuery: string
   navigate: any
 }
