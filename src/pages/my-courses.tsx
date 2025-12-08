@@ -4,6 +4,8 @@ import { BookOpen, Filter, Grid, List, Search, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useUserEnrollments } from '@/hooks/use-enrollments'
 import { useWishlist } from '@/hooks/use-wishlist'
+import { useAuthStore } from '@/stores/auth-store'
+import type { Enrollment, EnrollmentFilters } from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -476,7 +478,7 @@ export default function MyCoursesPage() {
                         onClick={() =>
                           handleContinueCourse(
                             enrollment.course.slug,
-                            enrollment.course.academy_slug!
+                            enrollment.course.academy?.slug || ''
                           )
                         }
                         className='w-full'

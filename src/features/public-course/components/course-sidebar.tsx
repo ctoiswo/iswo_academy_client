@@ -9,7 +9,6 @@ import {
   Globe,
   Infinity,
   Download,
-  Users,
   TrendingUp,
   Shield,
   Smartphone,
@@ -61,7 +60,7 @@ export function CourseSidebar({
             {/* Preview Image */}
             <div className='from-primary/20 to-primary/5 relative aspect-video w-full overflow-hidden bg-gradient-to-br'>
               <img
-                src={course.promotional_image_url || course.thumbnail_url}
+                src={(course.promotional_image_url || course.thumbnail_url) ?? ''}
                 alt={course.title}
                 className='h-full w-full object-cover'
               />
@@ -87,7 +86,7 @@ export function CourseSidebar({
                     ? 'Pago único - Acceso de por vida'
                     : 'Acceso completo ilimitado'}
                 </p>
-                {!course.is_free && course.enrollment_count > 100 && (
+                {!course.is_free && (course.enrollment_count ?? 0) > 100 && (
                   <Badge variant='secondary' className='mt-2'>
                     <TrendingUp className='mr-1 h-3 w-3' />
                     {course.enrollment_count} estudiantes inscritos
@@ -267,9 +266,6 @@ export function CourseSidebar({
                 </div>
                 <div className='text-muted-foreground text-xs'>Secciones</div>
               </div>
-              <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground'>Duración:</span>
-                <span>{Math.round(course.duration_minutes / 60)} horas</span>
               <div>
                 <div className='text-primary mb-1 text-2xl font-bold'>
                   {totalLessons}
@@ -278,11 +274,9 @@ export function CourseSidebar({
               </div>
               <div>
                 <div className='text-primary mb-1 text-2xl font-bold'>
-                  <Users className='mx-auto h-6 w-6' />
+                  {Math.round(course.duration_minutes / 60)}h
                 </div>
-                <div className='text-muted-foreground text-xs'>
-                  {course.enrollment_count}
-                </div>
+                <div className='text-muted-foreground text-xs'>Duración</div>
               </div>
             </div>
           </CardContent>

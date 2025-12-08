@@ -55,7 +55,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
     }
 
     console.log('✅ [useNotifications] Adding notification:', newNotification)
-    
+
     // Agregar notificación al estado
     setNotifications(prev => [newNotification, ...prev])
     setUnreadCount(prev => prev + 1)
@@ -71,9 +71,8 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
       } else {
         toast.info(`${emoji} ${message}`, { duration })
       }
-    },
-    [showToasts]
-  )
+    }
+  }, [showToasts])
 
   // Obtener emoji por categoría
   const getCategoryEmoji = (category: string, type?: string) => {
@@ -242,7 +241,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
               setIsConnected(false)
             },
 
-            received(data) {
+            received(data: any) {
               console.log('📡 [NotificationsChannel] Received data:', data)
 
               if (data.type === 'notification_created' || data.type === 'new_notification') {

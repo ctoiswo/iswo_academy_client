@@ -505,13 +505,13 @@ export function CourseForm({
         return
       }
       updateMutation.mutate(
-        { courseSlug: course.slug || String(course.id), data: formData },
+        { courseSlug: course.slug || String(course.id), data: formData as any },
         {
           onSuccess: () => onSuccess(),
         }
       )
     } else {
-      createMutation.mutate(formData, {
+      createMutation.mutate(formData as any, {
         onSuccess: () => onSuccess(),
       })
     }

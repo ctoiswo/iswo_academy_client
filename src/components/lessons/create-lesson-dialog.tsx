@@ -116,11 +116,6 @@ export function CreateLessonDialog({
 
     if (!formData.title.trim()) return
 
-    const dataToSubmit: CreateLessonRequest = {
-      title: formData.title.trim(),
-      lesson_type: formData.lesson_type,
-      is_free: formData.is_free,
-    }
     // Validar video si es tipo video
     if (formData.lesson_type === 'video') {
       if (videoType === 'file' && !videoFile) {

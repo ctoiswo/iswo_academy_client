@@ -274,7 +274,7 @@ class APIClient {
 
             try {
               const newTokens = await tokenManager.refreshAccessToken()
-              
+
               // Procesar todas las peticiones en cola
               this.failedRequestsQueue.forEach(({ resolve }) => {
                 resolve(newTokens.access_token)
@@ -290,10 +290,10 @@ class APIClient {
                 reject(new Error('Session expired. Please login again.'))
               })
               this.failedRequestsQueue = []
-              
+
               // Limpiar tokens y redirigir al login
               tokenManager.clearTokens()
-              
+
               // Notificar al auth store para que actualice el estado y redirija
               if (this.authStore) {
                 const state = this.authStore.getState()
@@ -301,12 +301,12 @@ class APIClient {
                   state.reset()
                 }
               }
-              
+
               // Redirigir al login si estamos en el navegador
               if (typeof window !== 'undefined') {
                 window.location.href = '/sign-in'
               }
-              
+
               return Promise.reject(new Error('Session expired. Please login again.'))
             } finally {
               this.isRefreshing = false
@@ -345,65 +345,6 @@ class APIClient {
           return Promise.reject(apiError)
         }
 
-        const originalRequest = error.config as InternalAxiosRequestConfig & {
-          _retry?: boolean
-        }
-
-        // Si el error no es 401 o ya intentamos refrescar, rechazar
-        if (error.response?.status !== 401 || originalRequest._retry) {
-          return Promise.reject(error)
-        }
-
-        // Si no hay refresh token disponible, no intentar refrescar
-        // Esto evita bucles infinitos cuando el usuario no está autenticado
-        if (!tokenManager.getRefreshToken()) {
-          return Promise.reject(error)
-        }
-
-        // Marcar que ya intentamos refrescar este request
-        originalRequest._retry = true
-
-        // Si no estamos refrescando, iniciar el proceso
-        if (!this.isRefreshing) {
-          this.isRefreshing = true
-
-          try {
-            const newTokens = await tokenManager.refreshAccessToken()
-
-            // Procesar todas las peticiones en cola
-            this.failedRequestsQueue.forEach(({ resolve }) => {
-              resolve(newTokens.access_token)
-            })
-            this.failedRequestsQueue = []
-
-            // Reintentar la petición original con el nuevo token
-            originalRequest.headers.Authorization = `Bearer ${newTokens.access_token}`
-            return this.client(originalRequest)
-          } catch (refreshError) {
-            // Si falla el refresh, rechazar todas las peticiones en cola
-            this.failedRequestsQueue.forEach(({ reject }) => {
-              reject(new Error('Failed to refresh token'))
-            })
-            this.failedRequestsQueue = []
-
-            return Promise.reject(refreshError)
-          } finally {
-            this.isRefreshing = false
-          }
-        }
-
-        // Si ya estamos refrescando, añadir esta petición a la cola
-        return new Promise((resolve, reject) => {
-          this.failedRequestsQueue.push({
-            resolve: (token: string) => {
-              originalRequest.headers.Authorization = `Bearer ${token}`
-              resolve(this.client(originalRequest))
-            },
-            reject: (error: Error) => {
-              reject(error)
-            },
-          })
-        })
         // TERCERO: Si no tiene formato especial, rechazar el error tal cual
         return Promise.reject(error)
       }
