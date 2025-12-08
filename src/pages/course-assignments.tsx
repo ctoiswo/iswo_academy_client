@@ -24,6 +24,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { AssignmentCard } from '@/components/assignments/assignment-card'
 import { CreateAssignmentDialog } from '@/components/assignments/create-assignment-dialog'
+import { toast } from 'sonner'
 
 export default function CourseAssignmentsPage() {
   const params = useParams({ strict: false }) as {
@@ -68,17 +69,17 @@ export default function CourseAssignmentsPage() {
 
   const handleEditAssignment = (assignment: Assignment) => {
     // TODO: Implementar diálogo de edición
-    console.log('Edit assignment:', assignment)
+    toast.info(`Edición de tareas no implementada aún (Asignación ID: ${assignment.id})`)
   }
 
   const handleViewStats = (assignment: Assignment) => {
     // TODO: Implementar diálogo de estadísticas
-    console.log('View stats:', assignment)
+    toast.info(`Estadísticas no implementadas aún (Asignación ID: ${assignment.id})`)
   }
 
   const handleViewSubmissions = (assignment: Assignment) => {
     // TODO: Implementar vista de entregas
-    console.log('View submissions:', assignment)
+    toast.info(`Vista de entregas no implementada aún (Asignación ID: ${assignment.id})`)
   }
 
   if (loadingCourse) {

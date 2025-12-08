@@ -1,5 +1,4 @@
 import { Command } from 'lucide-react'
-import { useLocation } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { useLayout } from '@/context/layout-provider'
 import { useSidebarData } from '@/hooks/use-sidebar-data'
@@ -14,12 +13,10 @@ import { AcademySwitcher } from '@/components/academy-switcher'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
 import { TeamSwitcher } from './team-switcher'
-import { CourseStatsHeader } from './course-stats-header'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
   const { user, academyData } = useAuthStore()
-  const location = useLocation()
   
   // Usar el hook centralizado para obtener el sidebar apropiado
   const navGroups = useSidebarData()

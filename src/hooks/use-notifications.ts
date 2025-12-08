@@ -46,7 +46,6 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
 
   // Manejar nueva notificación recibida
   const handleNewNotification = useCallback((data: any) => {
-    console.log('🔔 New notification via WebSocket:', data)
 
     const newNotification = data.notification
     if (!newNotification) return
@@ -122,12 +121,11 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
         break
 
       case 'error':
-        console.error('NotificationsChannel error:', data.message)
+        // console.error('NotificationsChannel error:', data.message)
         setConnectionError(data.message)
         break
 
       default:
-        console.log('Unknown WebSocket message:', data)
     }
   }, [])
 
@@ -150,8 +148,8 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
         setNotifications(data.data || [])
         setUnreadCount(data.meta?.count || 0)
       }
-    } catch (error) {
-      console.error('Failed to load notifications:', error)
+    } catch (_error) {
+      // console.error('Failed to load notifications:', error)
       setConnectionError('Failed to load notifications')
     }
   }, [isAuthenticated, tokens, currentAcademy])
@@ -173,8 +171,8 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
       if (response.ok) {
         // El WebSocket nos notificará del cambio
       }
-    } catch (error) {
-      console.error('Failed to mark notification as read:', error)
+    } catch (_error) {
+      // console.error('Failed to mark notification as read:', error)
     }
   }, [tokens, currentAcademy])
 
@@ -197,7 +195,6 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
         const wsUrl = import.meta.env.VITE_CABLE_URL ||
           (import.meta.env.VITE_API_URL?.replace(/^http/, 'ws').replace('/api/v1', '') + '/cable')
 
-        console.log('Connecting to Notifications WebSocket:', wsUrl)
 
         consumerRef.current = createConsumer(`${wsUrl}?token=${tokens.access_token}`)
 
@@ -205,7 +202,6 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
           { channel: 'NotificationsChannel' },
           {
             connected() {
-              console.log('✅ Connected to NotificationsChannel')
               setIsConnected(true)
               setConnectionError(null)
 
@@ -214,12 +210,10 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
             },
 
             disconnected() {
-              console.log('❌ Disconnected from NotificationsChannel')
               setIsConnected(false)
             },
 
             received(data) {
-              console.log('📨 Received notification data:', data)
 
               if (data.type === 'new_notification') {
                 handleNewNotification(data)
@@ -229,8 +223,8 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
             }
           }
         )
-      } catch (error) {
-        console.error('WebSocket connection failed:', error)
+      } catch (_error) {
+        // console.error('WebSocket connection failed:', error)
         setConnectionError('Connection failed')
       }
     }

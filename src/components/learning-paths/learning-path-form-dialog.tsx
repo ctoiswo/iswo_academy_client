@@ -100,8 +100,8 @@ export function LearningPathFormDialog({
       }
       reset()
       onOpenChange(false)
-    } catch (error) {
-      console.error('Error saving learning path:', error)
+    } catch (_error) {
+      // console.error('Error saving learning path:', error)
     }
   }
 

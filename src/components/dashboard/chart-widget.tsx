@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -194,7 +193,7 @@ export function ChartWidget({
                 fill="#8884d8"
                 dataKey={yAxisKey}
               >
-                {data.map((entry, index) => (
+                {data.map((_entry, index) => (
                   <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                 ))}
               </Pie>

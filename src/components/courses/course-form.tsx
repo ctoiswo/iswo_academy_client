@@ -97,7 +97,6 @@ export function CourseForm({
 
     if (isEditing) {
       if (!course?.slug && !course?.id) {
-        console.error('Course slug or ID is required for update')
         return
       }
       const courseId = Number(course.slug || course.id)

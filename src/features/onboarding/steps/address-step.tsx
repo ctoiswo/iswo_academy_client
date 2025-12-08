@@ -93,8 +93,8 @@ export function AddressStep({ onNext, onBack, onSkip }: AddressStepProps) {
             address_type: primaryAddress.address_type,
           })
         }
-      } catch (error) {
-        console.error('Error loading addresses:', error)
+      } catch (_error) {
+        // console.error('Error loading addresses:', error)
       } finally {
         setIsFetchingData(false)
       }
@@ -133,9 +133,9 @@ export function AddressStep({ onNext, onBack, onSkip }: AddressStepProps) {
 
       toast.success('Dirección guardada')
       onNext()
-    } catch (error) {
+    } catch (_error) {
       toast.error('Error al guardar la dirección')
-      console.error(error)
+      // console.error(error)
     } finally {
       setIsLoading(false)
     }

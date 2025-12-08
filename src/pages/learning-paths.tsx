@@ -50,9 +50,6 @@ export default function LearningPathsPage() {
     ? learningPathsData 
     : (learningPathsData?.data || [])
   
-  console.log('Learning paths data:', learningPathsData)
-  console.log('Processed learning paths:', learningPaths)
-  
   // Filter learning paths
   const filteredLearningPaths = learningPaths.filter(path => {
     const matchesSearch = path.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

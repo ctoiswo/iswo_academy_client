@@ -71,8 +71,8 @@ export default function SuperAdminAcademies() {
         setAcademies(result.data)
         setPagination(result.meta)
         setCurrentPage(page)
-      } catch (error) {
-        console.error('Error loading academies:', error)
+      } catch (_error) {
+        // console.error('Error loading academies:', error)
       } finally {
         setLoading(false)
       }

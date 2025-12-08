@@ -18,7 +18,6 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
   const consumerRef = useRef<any>(null)
 
   const handleBadgeEarned = useCallback((data: any) => {
-    console.log('Badge earned via WebSocket:', data)
 
     if (data.type === 'badge_earned' && data.data) {
       const newBadge = data.data as UserBadge
@@ -65,8 +64,8 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
           'X-Academy-Slug': currentAcademy.slug
         }
       })
-    } catch (error) {
-      console.error('Failed to mark badge as viewed:', error)
+    } catch (_error) {
+      // console.error('Failed to mark badge as viewed:', error)
     }
   }, [tokens, currentAcademy])
 
@@ -94,7 +93,6 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
   // Load unviewed badges on mount/connection
   const loadUnviewedBadges = useCallback(async () => {
     if (!isAuthenticated || !tokens?.access_token || !currentAcademy) {
-      console.log('Skipping badge load:', { isAuthenticated, hasToken: !!tokens?.access_token, hasAcademy: !!currentAcademy })
       return
     }
 
@@ -115,22 +113,20 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
         const unviewedBadges = data.data || []
 
         if (unviewedBadges.length > 0) {
-          console.log(`Found ${unviewedBadges.length} unviewed badges for academy ${currentAcademy.name}`)
           setNewBadges(unviewedBadges)
           setCurrentBadge(unviewedBadges[0])
         }
       } else {
-        console.error('Failed to load badges:', response.status, response.statusText)
+        // console.error('Failed to load badges:', response.status, response.statusText)
       }
-    } catch (error) {
-      console.error('Failed to load unviewed badges:', error)
+    } catch (_error) {
+      // console.error('Failed to load unviewed badges:', error)
     }
   }, [isAuthenticated, tokens, currentAcademy])
 
   // Connect to WebSocket when authenticated and academy is selected
   useEffect(() => {
     if (!isAuthenticated || !user || !tokens?.access_token || !enabled || !currentAcademy) {
-      console.log('Badge notifications disabled:', { isAuthenticated, hasUser: !!user, hasToken: !!tokens?.access_token, enabled, hasAcademy: !!currentAcademy })
       return
     }
 
@@ -138,8 +134,6 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
     // Cable endpoint is at /cable (not under /api/v1)
     const wsUrl = import.meta.env.VITE_CABLE_URL ||
       (import.meta.env.VITE_API_URL?.replace(/^http/, 'ws').replace('/api/v1', '') + '/cable')
-
-    console.log('Connecting to WebSocket:', wsUrl)
 
     // Create ActionCable consumer with authentication
     consumerRef.current = createConsumer(`${wsUrl}?token=${tokens.access_token}`)
@@ -149,13 +143,11 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
       { channel: 'GamificationChannel' },
       {
         connected() {
-          console.log('Connected to GamificationChannel')
           setIsConnected(true)
           // Load any unviewed badges when connected
           loadUnviewedBadges()
         },
         disconnected() {
-          console.log('Disconnected from GamificationChannel')
           setIsConnected(false)
         },
         received(data: any) {
@@ -166,7 +158,6 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
 
     // Cleanup on unmount
     return () => {
-      console.log('Cleaning up WebSocket connection')
       if (subscriptionRef.current) {
         subscriptionRef.current.unsubscribe()
       }

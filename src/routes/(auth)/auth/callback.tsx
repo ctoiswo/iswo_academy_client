@@ -39,8 +39,8 @@ function OAuthCallbackPage() {
 
           toast.success('Sesión iniciada correctamente')
           navigate({ to: '/academies', replace: true })
-        } catch (err) {
-          console.error('Error loading user data:', err)
+        } catch (_err) {
+          // console.error('Error loading user data:', err)
           toast.error('Error al cargar datos del usuario')
           navigate({ to: '/sign-in', replace: true })
         }

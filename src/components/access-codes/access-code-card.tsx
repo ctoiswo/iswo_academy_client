@@ -67,7 +67,7 @@ export function AccessCodeCard({
     try {
       await navigator.clipboard.writeText(accessCode.code)
       toast.success('Código copiado al portapapeles')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Error al copiar el código')
     }
   }

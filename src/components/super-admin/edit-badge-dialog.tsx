@@ -152,7 +152,7 @@ export function EditBadgeDialog({
       onSuccess()
       onOpenChange(false)
     } catch (error: any) {
-      console.error('Error updating badge:', error)
+      // console.error('Error updating badge:', error)
       toast.error(
         error.response?.data?.message || 'No se pudo actualizar el badge'
       )

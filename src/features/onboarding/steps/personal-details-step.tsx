@@ -99,8 +99,8 @@ export function PersonalDetailsStep({
             setSelectedDate(new Date(userDetail.birth_date))
           }
         }
-      } catch (error) {
-        console.error('Error loading user details:', error)
+      } catch (_error) {
+        // console.error('Error loading user details:', error)
       } finally {
         setIsFetchingData(false)
       }
@@ -135,9 +135,9 @@ export function PersonalDetailsStep({
 
       toast.success('Detalles personales guardados')
       onNext()
-    } catch (error) {
+    } catch (_error) {
       toast.error('Error al guardar los detalles')
-      console.error(error)
+      // console.error(error)
     } finally {
       setIsLoading(false)
     }

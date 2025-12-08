@@ -36,7 +36,7 @@ export default function MyCoursesPage() {
   const [isWishlistView, setIsWishlistView] = useState(false)
 
   const { data: enrollmentsData, isLoading, error } = useUserEnrollments(filters)
-  const { wishlist, isLoading: wishlistLoading, getCourses } = useWishlist()
+  const { isLoading: wishlistLoading, getCourses } = useWishlist()
 
   // Update filter based on URL search params
   useEffect(() => {

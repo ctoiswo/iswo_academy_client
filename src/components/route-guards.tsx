@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
-import { validateRouteAccess } from '@/lib/permissions'
-import type { AcademyRole, Permission } from '@/lib/permissions'
+import { validateRouteAccess, type AcademyRole, type Permission } from '@/lib/permissions'
 import { Skeleton } from '@/components/ui/skeleton'
 
 interface RouteGuardProps {
@@ -256,7 +255,6 @@ export function AcademyGuard({
       )
 
       if (!academyMembership) {
-        console.warn('Academy not found or access denied:', academyIdentifier)
         router.navigate({ to: '/academy-selection' })
         return
       }
@@ -271,7 +269,6 @@ export function AcademyGuard({
       )
 
       if (!validation.hasAccess) {
-        console.warn('Academy access denied:', validation.reason)
 
         if (validation.reason === 'Not a member of this academy') {
           // User doesn't have access to this academy - redirect to academy selection

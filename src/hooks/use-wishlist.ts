@@ -40,8 +40,8 @@ export function useWishlist() {
       if (stored) {
         setWishlist(JSON.parse(stored))
       }
-    } catch (error) {
-      console.error('Error loading wishlist:', error)
+    } catch (_error) {
+      // console.error('Error loading wishlist:', error)
     } finally {
       setIsLoading(false)
     }
@@ -53,8 +53,8 @@ export function useWishlist() {
       try {
         const storageKey = getStorageKey()
         localStorage.setItem(storageKey, JSON.stringify(items))
-      } catch (error) {
-        console.error('Error saving wishlist:', error)
+      } catch (_error) {
+        // console.error('Error saving wishlist:', error)
       }
     },
     [getStorageKey]

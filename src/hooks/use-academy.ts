@@ -20,13 +20,11 @@ export function useAcademy(slug: string) {
 
         // Decode the slug to handle special characters (ñ, á, etc.)
         const decodedSlug = decodeURIComponent(slug)
-        console.log('🔄 Fetching academy with slug:', { original: slug, decoded: decodedSlug })
         
         const academyData = await academyService.getAcademyBySlug(decodedSlug)
-        console.log('✅ Academy data received:', academyData)
         setAcademy(academyData)
-      } catch (err) {
-        console.error('❌ Error fetching academy:', err)
+      } catch (_err) {
+        // console.error('❌ Error fetching academy:', err)
         setError(err instanceof Error ? err.message : 'Error al cargar la academia')
         setAcademy(null)
       } finally {
@@ -44,7 +42,7 @@ export function useAcademy(slug: string) {
           setLoading(true)
           const academyData = await academyService.getAcademyBySlug(slug)
           setAcademy(academyData)
-        } catch (err) {
+        } catch (_err) {
           setError(err instanceof Error ? err.message : 'Error al cargar la academia')
         } finally {
           setLoading(false)
@@ -82,7 +80,7 @@ export function useAcademy(slug: string) {
 
 //         const coursesData = await academyService.getAcademyCourses(academySlug, options)
 //         setCourses(coursesData)
-//       } catch (err) {
+//       } catch (_err) {
 //         setError(err instanceof Error ? err.message : 'Error al cargar los cursos')
 //         setCourses([])
 //       } finally {

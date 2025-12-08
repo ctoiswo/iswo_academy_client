@@ -33,11 +33,11 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
       } catch (err: any) {
         const errorMessage = err?.message || 'Failed to load dashboard data'
         setError(errorMessage)
-        console.error('Dashboard loading error:', err)
+        // console.error('Dashboard loading error:', err)
         
         // Fallback to mock data in development if API fails
         if (import.meta.env.DEV) {
-          console.warn('API failed, using mock data for development')
+          // console.warn('API failed, using mock data for development')
           const mockStats: GlobalStats = {
             totalAcademies: 12,
             totalUsers: 1247,

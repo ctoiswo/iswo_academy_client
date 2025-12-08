@@ -1,4 +1,4 @@
-import { useParams } from '@tanstack/react-router'
+import { useParams, Link } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { useLearningPaths } from '@/hooks/use-learning-paths'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Route as RouteIcon, Clock, BookOpen, TrendingUp } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { LearningPathFormDialog } from '@/components/learning-paths'
 

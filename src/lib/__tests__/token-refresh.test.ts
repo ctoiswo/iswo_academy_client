@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import axios from 'axios'
-import type { AxiosError, AxiosResponse } from 'axios'
+import axios, { type AxiosError, type AxiosResponse } from 'axios'
 
 // Mock axios and dependencies
 vi.mock('axios', () => {
@@ -103,7 +102,7 @@ describe('Token Refresh Mechanism', () => {
       vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Refresh failed'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 
@@ -129,7 +128,7 @@ describe('Token Refresh Mechanism', () => {
       vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Network error'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 
@@ -149,7 +148,7 @@ describe('Token Refresh Mechanism', () => {
         }
       })
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 
@@ -168,7 +167,7 @@ describe('Token Refresh Mechanism', () => {
         }
       })
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 
@@ -247,7 +246,7 @@ describe('Token Refresh Mechanism', () => {
       vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Refresh failed'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 
@@ -310,7 +309,7 @@ describe('Token Refresh Mechanism', () => {
       vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Network error'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 

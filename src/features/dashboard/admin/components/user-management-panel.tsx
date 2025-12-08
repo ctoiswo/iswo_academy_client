@@ -132,25 +132,24 @@ export function UserManagementPanel({ academy, loading = false }: UserManagement
 
   const handleInviteUser = () => {
     // TODO: Implement user invitation
-    console.log('Invite new user')
   }
 
   const handleEditUser = (userId: number) => {
     // TODO: Implement user editing
-    console.log('Edit user:', userId)
+    // console.log('Edit user:', userId)
   }
 
   const handleViewUser = (userId: number) => {
     // TODO: Implement user viewing
-    console.log('View user:', userId)
+    // console.log('View user:', userId)
   }
 
   const handleDeleteUser = async (userId: number) => {
     if (window.confirm('Are you sure you want to remove this user from the academy? This action cannot be undone.')) {
       try {
         await removeUserMutation.mutateAsync({ academyIdentifier, userId })
-      } catch (error) {
-        console.error('Failed to remove user:', error)
+      } catch (_error) {
+        // console.error('Failed to remove user:', error)
         // TODO: Show error toast
       }
     }

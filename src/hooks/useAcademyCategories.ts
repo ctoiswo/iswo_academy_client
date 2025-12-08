@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import academyCategoriesService, { 
+import academyCategoriesService, {
   type AcademyCategory,
   type AcademyCategoryMinimal,
   type AcademyCategorySummary
@@ -22,9 +22,9 @@ export function useAcademyCategories<T extends ViewMode = 'minimal'>(
 ) {
   // Default to 'minimal' view for list displays
   const view = options?.view || ('minimal' as T)
-  
+
   return useQuery({
-    queryKey: ['academy', 'categories', options],
+    queryKey: ['academy', 'categories', options, view],
     queryFn: () => academyCategoriesService.getCategories({ ...options, view }),
     staleTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes

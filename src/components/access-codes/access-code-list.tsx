@@ -68,14 +68,12 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
   }
 
   // Handle different response structures
-  console.log('AccessCodesData received:', accessCodesData)
   const allAccessCodes = Array.isArray(accessCodesData)
     ? accessCodesData
     : accessCodesData?.data || []
-  console.log('Processed accessCodes:', allAccessCodes)
 
   // Apply client-side filtering
-  const accessCodes = allAccessCodes.filter((code: any) => {
+  const accessCodes = allAccessCodes.filter((code: { status: string }) => {
     if (statusFilter === 'all') return true
     return code.status === statusFilter
   })
@@ -148,7 +146,7 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
             </div>
           ) : (
             <div className='space-y-4'>
-              {accessCodes.map((accessCode: any) => (
+              {accessCodes.map((accessCode: { id: number }) => (
                 <AccessCodeCard
                   key={accessCode.id}
                   accessCode={accessCode}

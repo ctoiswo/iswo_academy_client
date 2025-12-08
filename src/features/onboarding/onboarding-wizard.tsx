@@ -100,9 +100,9 @@ export function OnboardingWizard() {
       await refreshUser()
       toast.success('¡Bienvenido! Tu perfil está completo')
       navigate({ to: '/dashboard' })
-    } catch (error) {
+    } catch (_error) {
       toast.error('Error al completar el onboarding')
-      console.error(error)
+      // console.error(error)
     } finally {
       setIsSubmitting(false)
     }

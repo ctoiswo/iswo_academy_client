@@ -65,8 +65,8 @@ export function ConfirmEmail() {
           setMessage(errorMessage)
           setErrorCode(data.error?.code || null)
         }
-      } catch (error) {
-        console.error('Error confirming email:', error)
+      } catch (_error) {
+        // console.error('Error confirming email:', error)
         setStatus('error')
         setMessage(getErrorMessage(error))
         setErrorCode('NETWORK_ERROR')

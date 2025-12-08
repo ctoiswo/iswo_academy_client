@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
-import { Mail, Phone, Building } from 'lucide-react'
+import { ArrowRight, Mail, Phone, Building } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import {

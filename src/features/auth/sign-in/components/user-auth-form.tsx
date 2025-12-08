@@ -96,7 +96,7 @@ export function UserAuthForm({
         navigate({ to: targetPath, replace: true })
       }
     } catch (error: unknown) {
-      console.error('Login error:', error)
+      // console.error('Login error:', error)
 
       // Usar el error handler centralizado
       const errorMessage = getErrorMessage(error)

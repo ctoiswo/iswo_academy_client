@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import axios from 'axios'
-import type { AxiosError } from 'axios'
+import axios, { type AxiosError } from 'axios'
 
 // Mock axios before importing the module
 vi.mock('axios', () => {
@@ -69,7 +68,7 @@ describe('API Client', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     setAuthStore(mockAuthStore)
-    
+
     // Reset the mocked methods
     vi.mocked(apiClient.post).mockReset()
     vi.mocked(apiClient.get).mockReset()
@@ -613,12 +612,12 @@ describe('API Client', () => {
     beforeEach(async () => {
       // Import tokenManager after mocks are set up
       const { tokenManager } = await import('../api-client')
-      ;(global as any).tokenManager = tokenManager
+        ; (global as any).tokenManager = tokenManager
     })
 
     it('should provide token management utilities', async () => {
       const { tokenManager } = await import('../api-client')
-      
+
       expect(typeof tokenManager.initialize).toBe('function')
       expect(typeof tokenManager.refreshTokens).toBe('function')
       expect(typeof tokenManager.hasValidTokens).toBe('function')
@@ -628,39 +627,39 @@ describe('API Client', () => {
 
     it('should initialize token refresh scheduling', async () => {
       const { tokenManager } = await import('../api-client')
-      
+
       expect(() => tokenManager.initialize()).not.toThrow()
     })
 
     it('should handle token refresh manually', async () => {
       const { tokenManager } = await import('../api-client')
-      
+
       // This test is covered in the dedicated token-refresh.test.ts file
       expect(typeof tokenManager.refreshTokens).toBe('function')
     })
 
     it('should handle token refresh failure', async () => {
       const { tokenManager } = await import('../api-client')
-      
+
       // This test is covered in the dedicated token-refresh.test.ts file
       expect(typeof tokenManager.refreshTokens).toBe('function')
     })
 
     it('should check token validity', async () => {
       const { tokenManager } = await import('../api-client')
-      
+
       expect(typeof tokenManager.hasValidTokens).toBe('function')
     })
 
     it('should get token information', async () => {
       const { tokenManager } = await import('../api-client')
-      
+
       expect(typeof tokenManager.getTokenInfo).toBe('function')
     })
 
     it('should clear tokens and timers', async () => {
       const { tokenManager } = await import('../api-client')
-      
+
       expect(() => tokenManager.clearTokens()).not.toThrow()
     })
   })

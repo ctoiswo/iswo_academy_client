@@ -21,6 +21,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { Progress } from '@/components/ui/progress'
+import { toast } from 'sonner'
 
 type TabType = 'lessons' | 'assignments'
 
@@ -173,7 +174,7 @@ export default function StudentCourseContentPage() {
                             key={lesson.id}
                             onClick={() => {
                               // TODO: Navigate to lesson viewer
-                              console.log('Open lesson:', lesson.id)
+                              toast.info(`Navegación a lección no implementada aún (Lección ID: ${lesson.id})`)
                             }}
                             className='flex w-full items-center gap-4 rounded-lg border p-4 transition-colors hover:bg-gray-50'
                           >

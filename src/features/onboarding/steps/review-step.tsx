@@ -62,8 +62,8 @@ export function ReviewStep({
         setUserDetail(detail)
         setAddresses(addrs)
         setSocialNetworks(socials)
-      } catch (error) {
-        console.error('Error loading profile data:', error)
+      } catch (_error) {
+        // console.error('Error loading profile data:', error)
       } finally {
         setIsLoading(false)
       }

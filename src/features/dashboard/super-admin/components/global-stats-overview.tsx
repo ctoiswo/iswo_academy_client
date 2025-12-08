@@ -1,5 +1,4 @@
-import { StatsWidget } from '@/components/dashboard'
-import { DashboardCard } from '@/components/dashboard'
+import { StatsWidget, DashboardCard } from '@/components/dashboard'
 import { Building2, Users, BookOpen, DollarSign } from 'lucide-react'
 import type { GlobalStats } from '../index'
 

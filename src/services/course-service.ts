@@ -25,9 +25,7 @@ class CourseService {
       academy_slug: academySlug,
       ...filters
     }
-    console.log('Fetching courses for academy:', academySlug, 'with filters:', filters)
     const response = await apiClient.get('/courses', { params })
-    console.log('Courses response:', response.data)
 
     // Handle both array response and object with data property
     return Array.isArray(response.data) ? response.data : (response.data?.data || [])
@@ -39,9 +37,7 @@ class CourseService {
    * @returns Promise with paginated courses
    */
   async getAllCourses(filters?: CourseFilters): Promise<Course[]> {
-    console.log('Fetching all courses with filters:', filters)
     const response = await apiClient.get('/courses', { params: filters })
-    console.log('All courses response:', response.data)
     return Array.isArray(response.data) ? response.data : (response.data?.data || [])
   }
 
@@ -52,9 +48,7 @@ class CourseService {
    */
   async getFeaturedCourses(categoryId?: number): Promise<CategoryWithCourses[]> {
     const params = categoryId ? { academy_category_id: categoryId } : {}
-    console.log(`Fetching featured courses for category: ${categoryId}`, params)
     const response = await apiClient.get('/courses/featured', { params })
-    console.log(`Featured courses response for category ${categoryId}:`, response.data)
     return response.data
   }
 
@@ -66,9 +60,7 @@ class CourseService {
    * @returns Promise with course details
    */
   async getCourseBySlug(slugOrId: string | number): Promise<Course> {
-    console.log('CourseService.getCourseBySlug called with:', slugOrId)
     const response = await apiClient.get(`/courses/${slugOrId}`)
-    console.log('CourseService.getCourseBySlug response:', response.data)
     return response.data
   }
 
@@ -78,9 +70,7 @@ class CourseService {
    * @returns Promise with course details
    */
   async getPublicCourseBySlug(slug: string): Promise<Course> {
-    console.log('CourseService.getPublicCourseBySlug called with:', slug)
     const response = await apiClient.get(`/courses/${slug}`)
-    console.log('CourseService.getPublicCourseBySlug response:', response.data)
     return response.data
   }
 
@@ -107,11 +97,9 @@ class CourseService {
    * @returns Promise with updated course
    */
   async updateCourse(academySlug: string | number, courseSlug: string | number, data: UpdateCourseRequest): Promise<Course> {
-    console.log('Updating course:', courseSlug, 'for academy:', academySlug, 'with data:', data)
     const response = await apiClient.put(`/academies/${academySlug}/courses/${courseSlug}`, {
       course: data
     })
-    console.log('Update course response:', response.data)
     return response.data
   }
 
@@ -123,9 +111,8 @@ class CourseService {
    * @returns Promise with deletion confirmation
    */
   async deleteCourse(academySlug: string | number, courseSlug: string | number): Promise<void> {
-    console.log('Deleting course:', courseSlug, 'for academy:', academySlug)
     const response = await apiClient.delete(`/academies/${academySlug}/courses/${courseSlug}`)
-    console.log('Delete course response:', response.data)
+    return response.data
   }
 
   /**
@@ -135,9 +122,7 @@ class CourseService {
    * @returns Promise with paginated courses
    */
   async getCoursesByAcademy(academySlug: string, filters?: CourseFilters): Promise<Course[]> {
-    console.log('Fetching courses by academy slug:', academySlug, 'with filters:', filters)
     const response = await apiClient.get(`/academies/${academySlug}/courses`, { params: filters })
-    console.log('Courses by academy response:', response.data)
     return Array.isArray(response.data) ? response.data : (response.data?.data || [])
   }
 }

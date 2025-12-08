@@ -108,8 +108,8 @@ export default function SuperAdminCategories() {
         setCategories(result.data)
         setPagination(result.meta)
         setCurrentPage(page)
-      } catch (error) {
-        console.error('Error loading categories:', error)
+      } catch (_error) {
+        // console.error('Error loading categories:', error)
         toast.error('No se pudieron cargar las categorías')
       } finally {
         setLoading(false)

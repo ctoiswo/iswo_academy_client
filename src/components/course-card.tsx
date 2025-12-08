@@ -11,7 +11,7 @@ import {
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Course } from '@/services/academy'
+import { type Course } from '@/services/academy'
 
 interface CourseCardProps {
   course: Course

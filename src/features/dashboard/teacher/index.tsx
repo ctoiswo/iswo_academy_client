@@ -17,6 +17,7 @@ import {
   ClipboardCheck,
   DollarSign
 } from 'lucide-react'
+import { toast } from 'sonner'
 
 function TeacherSidebar({ user, academy, dashboardType }: any) {
   const { currentPath } = useRoleNavigation(academy)
@@ -220,64 +221,63 @@ const mockAssignments: Assignment[] = [
 ]
 
 export function TeacherDashboard({ user, academy }: DashboardProps) {
-  const [loading, setLoading] = useState(false)
+  const [loading, _setLoading] = useState(false)
 
   if (!user) return null
 
   const handleCreateCourse = () => {
-    console.log('Create new course')
   }
 
   const handleEditCourse = (courseId: number) => {
-    console.log('Edit course:', courseId)
+    toast.info(`Edit course feature coming soon! (Course ID: ${courseId})`)
   }
 
   const handleViewCourse = (courseId: number) => {
-    console.log('View course:', courseId)
+    toast.info(`View course feature coming soon! (Course ID: ${courseId})`)
   }
 
   const handleManageCourse = (courseId: number) => {
-    console.log('Manage course:', courseId)
+    toast.info(`Manage course feature coming soon! (Course ID: ${courseId})`)
   }
 
   const handleViewStudent = (studentId: number) => {
-    console.log('View student:', studentId)
+    toast.info(`View student feature coming soon! (Student ID: ${studentId})`)
   }
 
   const handleMessageStudent = (studentId: number) => {
-    console.log('Message student:', studentId)
+    toast.info(`Message student feature coming soon! (Student ID: ${studentId})`)
   }
 
   const handleViewProgress = (studentId: number, courseId: number) => {
-    console.log('View progress:', studentId, courseId)
+    toast.info(`View progress feature coming soon! (Student ID: ${studentId}, Course ID: ${courseId})`)
   }
 
   const handleCreateLesson = (courseId: number) => {
-    console.log('Create lesson for course:', courseId)
+    toast.info(`Create lesson feature coming soon! (Course ID: ${courseId})`)
   }
 
   const handleCreateAssignment = (courseId: number) => {
-    console.log('Create assignment for course:', courseId)
+    toast.info(`Create assignment feature coming soon! (Course ID: ${courseId})`)
   }
 
   const handleEditLesson = (lessonId: number) => {
-    console.log('Edit lesson:', lessonId)
+    toast.info(`Edit lesson feature coming soon! (Lesson ID: ${lessonId})`)
   }
 
   const handleEditAssignment = (assignmentId: number) => {
-    console.log('Edit assignment:', assignmentId)
+    toast.info(`Edit assignment feature coming soon! (Assignment ID: ${assignmentId})`)
   }
 
   const handleViewLesson = (lessonId: number) => {
-    console.log('View lesson:', lessonId)
+    toast.info(`View lesson feature coming soon! (Lesson ID: ${lessonId})`)
   }
 
   const handleDeleteLesson = (lessonId: number) => {
-    console.log('Delete lesson:', lessonId)
+    toast.info(`Delete lesson feature coming soon! (Lesson ID: ${lessonId})`)
   }
 
   const handleDeleteAssignment = (assignmentId: number) => {
-    console.log('Delete assignment:', assignmentId)
+    toast.info(`Delete assignment feature coming soon! (Assignment ID: ${assignmentId})`)
   }
 
   return (

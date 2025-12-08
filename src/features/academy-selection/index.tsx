@@ -25,8 +25,8 @@ export function AcademySelectionPage() {
       // Navigate to authenticated dashboard
       const dashboardPath = `/academy/${academy.slug}/dashboard`
       navigate({ to: dashboardPath })
-    } catch (error) {
-      console.error('Failed to select academy:', error)
+    } catch (_error) {
+      // console.error('Failed to select academy:', error)
       // TODO: Add proper error handling with toast notifications
     } finally {
       setIsSelecting(false)

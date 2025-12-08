@@ -180,7 +180,7 @@ export function CreateBadgeDialog({
       })
       setErrors({})
     } catch (error: any) {
-      console.error('Error creating badge:', error)
+      // console.error('Error creating badge:', error)
       toast.error(
         error.response?.data?.message || 'No se pudo crear el badge'
       )

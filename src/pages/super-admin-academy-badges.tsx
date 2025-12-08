@@ -143,8 +143,8 @@ export default function SuperAdminAcademyBadges() {
         totalPoints: data.reduce((sum, b) => sum + b.points_reward, 0),
       }
       setStats(stats)
-    } catch (error) {
-      console.error('Error fetching badges:', error)
+    } catch (_error) {
+      // console.error('Error fetching badges:', error)
       toast.error('No se pudieron cargar los badges')
     } finally {
       if (isInitialLoad) {
@@ -180,7 +180,7 @@ export default function SuperAdminAcademyBadges() {
         active: newStatus ? prev.active + 1 : prev.active - 1,
       }))
     } catch (error: any) {
-      console.error('Error toggling badge status:', error)
+      // console.error('Error toggling badge status:', error)
       
       // Revertir cambio optimista
       setBadges((prev) =>
@@ -215,7 +215,7 @@ export default function SuperAdminAcademyBadges() {
       
       setBadgeToDelete(null)
     } catch (error: any) {
-      console.error('Error deleting badge:', error)
+      // console.error('Error deleting badge:', error)
       toast.error(
         error.response?.data?.message || 'No se pudo eliminar el badge'
       )

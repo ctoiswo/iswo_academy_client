@@ -121,7 +121,7 @@ export function SignUpForm({
 
       form.reset()
     } catch (error: unknown) {
-      console.error('Registration error:', error)
+      // console.error('Registration error:', error)
 
       // Usar error handler centralizado
       const errorMessage = getErrorMessage(error)

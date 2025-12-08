@@ -102,8 +102,8 @@ export function SocialNetworksStep({
           )
           setExistingIds(new Set(networks.map((n) => n.id)))
         }
-      } catch (error) {
-        console.error('Error loading social networks:', error)
+      } catch (_error) {
+        // console.error('Error loading social networks:', error)
       } finally {
         setIsFetchingData(false)
       }
@@ -129,7 +129,7 @@ export function SocialNetworksStep({
       try {
         await profileService.deleteSocialNetwork(network.id)
         toast.success('Red social eliminada')
-      } catch (error) {
+      } catch (_error) {
         toast.error('Error al eliminar la red social')
         return
       }
@@ -176,9 +176,9 @@ export function SocialNetworksStep({
         toast.success('Redes sociales guardadas')
       }
       onNext()
-    } catch (error) {
+    } catch (_error) {
       toast.error('Error al guardar las redes sociales')
-      console.error(error)
+      // console.error(error)
     } finally {
       setIsLoading(false)
     }

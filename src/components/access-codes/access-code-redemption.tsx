@@ -42,7 +42,7 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
       const result = await validateCode.mutateAsync(code.trim().toUpperCase())
       setValidation(result)
       setRedemptionResult(null)
-    } catch (error) {
+    } catch (_error) {
       setValidation(null)
     }
   }
@@ -54,7 +54,7 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
       const result = await redeemCode.mutateAsync({ code: code.trim().toUpperCase() })
       setRedemptionResult(result)
       onSuccess?.(result)
-    } catch (error) {
+    } catch (_error) {
       // Error is handled by the hook
     }
   }

@@ -31,7 +31,7 @@ export function getGuestSidebar(showOnboarding: boolean): SidebarData['navGroups
       url: '/onboarding',
       icon: Sparkles,
       badge: '¡Nuevo!',
-    } as any)
+    })
   }
 
   return [

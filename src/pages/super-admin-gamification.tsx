@@ -77,8 +77,8 @@ export default function SuperAdminGamification() {
       setAcademies(academiesData.data)
       setPagination(academiesData.meta)
       setCurrentPage(page)
-    } catch (error) {
-      console.error('Error fetching gamification data:', error)
+    } catch (_error) {
+      // console.error('Error fetching gamification data:', error)
     } finally {
       setLoading(false)
     }
@@ -115,7 +115,7 @@ export default function SuperAdminGamification() {
           : 'Gamificación desactivada correctamente'
       )
     } catch (error: any) {
-      console.error('Error toggling gamification:', error)
+      // console.error('Error toggling gamification:', error)
       
       // Revertir el cambio optimista en caso de error
       setAcademies(prevAcademies =>

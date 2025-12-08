@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from '@tanstack/react-router'
-import { Loader2 } from 'lucide-react'
-import { AlertCircle } from 'lucide-react'
+import { Loader2, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { useAcademy } from '@/hooks/use-academy'
@@ -65,14 +64,14 @@ export function PublicAcademyPage() {
           text: backendAcademy.description || '',
           url: url,
         })
-      } catch (err) {
+      } catch (_err) {
         // User cancelled
       }
     } else {
       try {
         await navigator.clipboard.writeText(url)
         toast.success('Enlace copiado al portapapeles')
-      } catch (err) {
+      } catch (_err) {
         toast.error('No se pudo copiar el enlace')
       }
     }

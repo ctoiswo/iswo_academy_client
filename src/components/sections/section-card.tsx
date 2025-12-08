@@ -10,8 +10,8 @@ import {
   useSensors,
   type DragEndEvent,
 } from '@dnd-kit/core'
-import { useSortable } from '@dnd-kit/sortable'
 import {
+  useSortable,
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,

@@ -20,9 +20,9 @@ export function BadgeNotificationProvider({
     enabled,
   })
 
-  // Log connection status for debugging
+  // Monitor connection status
   useEffect(() => {
-    console.log('Badge notifications WebSocket:', isConnected ? 'connected' : 'disconnected')
+    // Connection monitoring can be added here if needed
   }, [isConnected])
 
   return (

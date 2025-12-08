@@ -26,7 +26,7 @@ class ProfileService {
     try {
       const response = await apiClient.get<UserDetailResponse>('/user_details/me')
       return response.data.user_detail
-    } catch (error) {
+    } catch (_error) {
       // If 404, user doesn't have details yet
       return null
     }
@@ -64,7 +64,7 @@ class ProfileService {
     try {
       const response = await apiClient.get<UserAddressesResponse>('/user_addresses')
       return response.data.user_addresses
-    } catch (error) {
+    } catch (_error) {
       return []
     }
   }
@@ -111,7 +111,7 @@ class ProfileService {
     try {
       const response = await apiClient.get<SocialNetworksResponse>('/social_networks')
       return response.data.social_networks
-    } catch (error) {
+    } catch (_error) {
       return []
     }
   }

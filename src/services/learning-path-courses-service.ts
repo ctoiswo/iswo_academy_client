@@ -14,7 +14,6 @@ class LearningPathCoursesService {
    * @returns Promise that resolves when course is added
    */
   async addCourse(academySlug: string, learningPathSlug: string, courseId: number): Promise<void> {
-    console.log('Adding course:', courseId, 'to learning path:', learningPathSlug)
     const data: AddCourseToPathRequest = { course_id: courseId }
     await apiClient.post(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}/courses`,
@@ -30,7 +29,6 @@ class LearningPathCoursesService {
    * @returns Promise that resolves when course is removed
    */
   async removeCourse(academySlug: string, learningPathSlug: string, courseId: number): Promise<void> {
-    console.log('Removing course:', courseId, 'from learning path:', learningPathSlug)
     await apiClient.delete(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}/courses/${courseId}`
     )
@@ -48,7 +46,6 @@ class LearningPathCoursesService {
     learningPathSlug: string,
     orderedIds: number[]
   ): Promise<void> {
-    console.log('Reordering courses for learning path:', learningPathSlug, 'with order:', orderedIds)
     const data: ReorderCoursesRequest = { ordered_ids: orderedIds }
     await apiClient.patch(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}/courses/reorder`,

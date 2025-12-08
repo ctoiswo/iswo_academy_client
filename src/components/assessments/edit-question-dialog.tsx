@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
-import type { Question } from '@/services/question-service'
-import type { UpdateQuestionData } from '@/services/question-service'
+import type { Question, UpdateQuestionData } from '@/services/question-service'
 import { Plus, X } from 'lucide-react'
 import { useUpdateQuestion } from '@/hooks/use-questions'
 import { Button } from '@/components/ui/button'

@@ -1,9 +1,8 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { useAuthStore } from '../auth-store'
+import { useAuthStore, type AuthUser, type AuthTokens, type LoginCredentials, type RegisterData, type AcademyMembership, type AcademyData } from '../auth-store'
 import { tokenStorage } from '@/lib/token-storage'
 import { tokenManager } from '@/lib/api-client'
 import { authApi } from '@/services'
-import type { AuthUser, AuthTokens, LoginCredentials, RegisterData, AcademyMembership, AcademyData } from '../auth-store'
 
 // Mock dependencies
 vi.mock('@/lib/token-storage', () => ({
@@ -131,7 +130,7 @@ describe('AuthStore', () => {
   describe('Initial State', () => {
     it('should have correct initial state', () => {
       const state = useAuthStore.getState()
-      
+
       expect(state.user).toBeNull()
       expect(state.tokens).toBeNull()
       expect(state.isAuthenticated).toBe(false)
@@ -143,7 +142,7 @@ describe('AuthStore', () => {
 
     it('should provide legacy auth object for backward compatibility', () => {
       const state = useAuthStore.getState()
-      
+
       expect(state.auth).toBeDefined()
       expect(state.auth.user).toBeNull()
       expect(state.auth.accessToken).toBe('')
@@ -172,7 +171,7 @@ describe('AuthStore', () => {
       await login(mockLoginCredentials)
 
       const state = useAuthStore.getState()
-      
+
       expect(authApi.login).toHaveBeenCalledWith(mockLoginCredentials)
       expect(tokenStorage.setTokens).toHaveBeenCalledWith(mockTokens)
       expect(state.user).toEqual(mockUser)
@@ -187,11 +186,11 @@ describe('AuthStore', () => {
       vi.mocked(authApi.login).mockRejectedValue(mockError)
 
       const { login } = useAuthStore.getState()
-      
+
       await expect(login(mockLoginCredentials)).rejects.toThrow('Invalid credentials')
 
       const state = useAuthStore.getState()
-      
+
       expect(state.user).toBeNull()
       expect(state.tokens).toBeNull()
       expect(state.isAuthenticated).toBe(false)
@@ -204,7 +203,7 @@ describe('AuthStore', () => {
       const loginPromise = new Promise((resolve) => {
         resolveLogin = resolve
       })
-      
+
       vi.mocked(authApi.login).mockReturnValue(loginPromise)
 
       const { login } = useAuthStore.getState()
@@ -252,7 +251,7 @@ describe('AuthStore', () => {
       vi.mocked(authApi.register).mockRejectedValue(mockError)
 
       const { register } = useAuthStore.getState()
-      
+
       await expect(register(mockRegisterData)).rejects.toThrow('Email already exists')
 
       const state = useAuthStore.getState()
@@ -346,7 +345,7 @@ describe('AuthStore', () => {
       // Clear tokens first to ensure clean state
       const { reset } = useAuthStore.getState()
       reset()
-      
+
       vi.mocked(tokenManager.refreshTokens).mockResolvedValue(false)
 
       const { refreshTokens } = useAuthStore.getState()
@@ -458,7 +457,7 @@ describe('AuthStore', () => {
 
     it('should reset state completely', () => {
       const { setUser, setTokens, setError, setLoading, reset } = useAuthStore.getState()
-      
+
       // Set some state
       setUser(mockUser)
       setTokens(mockTokens)
@@ -619,7 +618,7 @@ describe('AuthStore', () => {
         throw new Error('Storage error')
       })
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
       const mockRefreshStore = useAuthStore.getState()
       const resetSpy = vi.spyOn(mockRefreshStore, 'reset')
 
@@ -647,7 +646,7 @@ describe('AuthStore', () => {
       setTokens(mockTokens)
 
       const { auth } = useAuthStore.getState()
-      
+
       expect(auth.user).toEqual(mockUser)
       expect(auth.accessToken).toBe(mockTokens.access_token)
       expect(auth.refreshToken).toBe(mockTokens.refresh_token)
@@ -865,7 +864,7 @@ describe('AuthStore', () => {
         const { academyApi } = await import('@/lib/api-client')
         vi.mocked(academyApi.getUserAcademies).mockRejectedValue(new Error('Network error'))
 
-        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
 
         const { refreshAcademies } = useAuthStore.getState()
         await refreshAcademies()

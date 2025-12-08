@@ -44,7 +44,7 @@ export function NotificationProvider({
     if (!showToasts) return
 
     if (notificationsConnected && badgeConnected) {
-      console.log('✅ All notification channels connected')
+      toast.success('✅ Conectado a notificaciones')
     } else if (notificationsError) {
       toast.error(`❌ Error de notificaciones: ${notificationsError}`)
     }

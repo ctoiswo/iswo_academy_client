@@ -86,9 +86,7 @@ class LearningPathService {
    * @returns Promise with success message
    */
   async deleteLearningPath(academySlug: string, learningPathSlug: string): Promise<void> {
-    console.log('Deleting learning path:', learningPathSlug, 'from academy:', academySlug)
     const response = await apiClient.delete(`/academies/${academySlug}/learning_paths/${learningPathSlug}`)
-    console.log('Deleted learning path response:', response.data)
   }
 
   /**
@@ -99,9 +97,7 @@ class LearningPathService {
    */
   async getLearningPathsByAcademy(academySlug: string, filters?: LearningPathFilters): Promise<LearningPathsResponse> {
     const params = filters || {}
-    console.log('Fetching learning paths for academy slug:', academySlug, 'with filters:', filters)
     const response = await apiClient.get(`/academies/${academySlug}/learning_paths`, { params })
-    console.log('Academy learning paths response:', response.data)
     return response.data
   }
 

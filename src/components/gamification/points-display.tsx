@@ -39,8 +39,7 @@ export function PointsDisplay({
         const data = await gamificationService.getGamificationProfile()
         setProfile(data)
         setError(null)
-      } catch (err) {
-        console.error('Error fetching gamification profile:', err)
+      } catch (_err) {
         // Silently fail - gamification might not be enabled
         setError(null)
       } finally {

@@ -66,8 +66,8 @@ export class TokenManager {
           const tokenData = JSON.parse(storedData)
           return tokenData.refresh_token || null
         }
-      } catch (error) {
-        console.error('[TokenManager] Error reading refresh token from localStorage:', error)
+      } catch (_error) {
+        // console.error('[TokenManager] Error reading refresh token from localStorage:', error)
       }
     }
     
@@ -125,7 +125,7 @@ export class TokenManager {
         this.setTokens(newTokens)
         
         return newTokens
-      } catch (error) {
+      } catch (_error) {
         // Si el refresh falla, limpiar tokens y lanzar error
         this.clearTokens()
         throw error
@@ -223,8 +223,8 @@ class APIClient {
               this.isRefreshing = true
               const newTokens = await tokenManager.refreshAccessToken()
               config.headers.Authorization = `Bearer ${newTokens.access_token}`
-            } catch (error) {
-              console.error('Failed to refresh token proactively:', error)
+            } catch (_error) {
+              // console.error('Failed to refresh token proactively:', error)
             } finally {
               this.isRefreshing = false
             }

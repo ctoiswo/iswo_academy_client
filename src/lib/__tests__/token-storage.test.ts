@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { tokenStorage } from '../token-storage'
-import type { AuthTokens, StoredTokens } from '../token-storage'
+import { tokenStorage, type AuthTokens, type StoredTokens } from '../token-storage'
 import * as cookieUtils from '../cookies'
 
 // Mock the cookies utility
@@ -43,13 +42,13 @@ describe('TokenStorage', () => {
     vi.clearAllMocks()
     // Reset localStorage mock
     localStorageMock.getItem.mockReturnValue(null)
-    localStorageMock.setItem.mockImplementation(() => {})
-    localStorageMock.removeItem.mockImplementation(() => {})
-    
+    localStorageMock.setItem.mockImplementation(() => { })
+    localStorageMock.removeItem.mockImplementation(() => { })
+
     // Reset cookie mocks
     vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
-    vi.mocked(cookieUtils.setCookie).mockImplementation(() => {})
-    vi.mocked(cookieUtils.removeCookie).mockImplementation(() => {})
+    vi.mocked(cookieUtils.setCookie).mockImplementation(() => { })
+    vi.mocked(cookieUtils.removeCookie).mockImplementation(() => { })
   })
 
   afterEach(() => {
@@ -96,7 +95,7 @@ describe('TokenStorage', () => {
   describe('getTokens', () => {
     it('should retrieve tokens from cookies first', () => {
       const expiresAt = Date.now() + 3600000
-      
+
       vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         switch (key) {
           case 'iswo_access_token':

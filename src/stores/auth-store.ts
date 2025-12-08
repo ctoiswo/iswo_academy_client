@@ -89,14 +89,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
       const response = await authService.login(credentials)
 
-      // DEBUG: Ver qué trae la respuesta del backend
-      console.log('🔍 DEBUG Login Response:', {
-        user: response.user ? { id: response.user.id, email: response.user.email } : null,
-        academies: response.academies,
-        hasAcademies: !!response.academies,
-        academyCount: response.academies?.count
-      })
-
       const tokens: AuthTokens = {
         access_token: response.access_token,
         refresh_token: response.refresh_token,
@@ -110,8 +102,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       // Backend returns { count, academies: [...] }
       const academyData = response.academies || { count: 0, academies: [] }
 
-      console.log('🔍 DEBUG Academy Data to store:', academyData)
-
       set({
         user: response.user,
         tokens,
@@ -119,12 +109,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         isLoading: false,
         error: null,
         academyData
-      })
-
-      console.log('🔍 DEBUG Store after login:', {
-        hasUser: !!response.user,
-        academyData: academyData,
-        willSelectAcademy: academyData.count === 1
       })
 
       // Determine routing based on academy count
@@ -207,9 +191,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       if (tokens?.refresh_token) {
         try {
           await authService.logout()
-        } catch (error) {
+        } catch (_error) {
           // Continue with logout even if API call fails
-          console.warn('Logout API call failed:', error)
+          // console.warn('Logout API call failed:', error)
         }
       }
 
@@ -255,9 +239,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         error: null
       })
       return true
-    } catch (error) {
+    } catch (_error) {
       // If refresh fails, clear tokens and redirect to login
-      console.error('Token refresh failed:', error)
+      // console.error('Token refresh failed:', error)
       set({
         user: null,
         tokens: null,
@@ -273,8 +257,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       const user = await authService.getCurrentUser()
       set({ user })
       await get().refreshAcademies()
-    } catch (error) {
-      console.error('Failed to refresh user:', error)
+    } catch (_error) {
+      // console.error('Failed to refresh user:', error)
       throw error
     }
   },
@@ -344,8 +328,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           set({ isLoading: false, isInitialized: true, isAuthenticated: false })
           return
         }
-      } catch (error) {
-        console.error('Failed to refresh tokens on initialization:', error)
+      } catch (_error) {
+        // console.error('Failed to refresh tokens on initialization:', error)
         get().reset()
         set({ isLoading: false, isInitialized: true, isAuthenticated: false })
         return
@@ -358,14 +342,14 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
         // Refresh academy data after successful profile fetch
         await get().refreshAcademies()
-      } catch (error) {
+      } catch (_error) {
         // If profile fetch fails, clear everything
-        console.error('Failed to fetch user profile:', error)
+        // console.error('Failed to fetch user profile:', error)
         get().reset()
         set({ isLoading: false, isInitialized: true })
       }
-    } catch (error) {
-      console.error('Auth initialization failed:', error)
+    } catch (_error) {
+      // console.error('Auth initialization failed:', error)
       get().reset()
       set({ isLoading: false, isInitialized: true })
     }
@@ -392,10 +376,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       const { isAuthenticated } = get()
       if (!isAuthenticated) return
 
-      console.log('🔍 DEBUG refreshAcademies: Loading academies...')
       const academyData = await academyService.getUserAcademies()
-      console.log('🔍 DEBUG refreshAcademies: Loaded academies:', academyData)
-
       set({ academyData })
 
       // If user had a currentAcademy stored, try to restore it
@@ -403,22 +384,17 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       if (storedAcademyId && academyData.academies.length > 0) {
         const academy = academyData.academies.find((a: AcademyMembership) => a.id === parseInt(storedAcademyId))
         if (academy) {
-          console.log('🔍 DEBUG refreshAcademies: Restoring currentAcademy:', academy)
           set({ currentAcademy: academy })
         } else if (academyData.count === 1) {
-          // Auto-select if only one academy
-          console.log('🔍 DEBUG refreshAcademies: Auto-selecting single academy')
           set({ currentAcademy: academyData.academies[0] })
           localStorage.setItem('currentAcademyId', academyData.academies[0].id.toString())
         }
       } else if (academyData.count === 1) {
-        // Auto-select if only one academy
-        console.log('🔍 DEBUG refreshAcademies: Auto-selecting single academy')
         set({ currentAcademy: academyData.academies[0] })
         localStorage.setItem('currentAcademyId', academyData.academies[0].id.toString())
       }
-    } catch (error) {
-      console.error('Failed to refresh academy data:', error)
+    } catch (_error) {
+      // console.error('Failed to refresh academy data:', error)
       // Don't throw error to avoid breaking the flow
     }
   },

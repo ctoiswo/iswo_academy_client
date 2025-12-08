@@ -68,7 +68,7 @@ export function AcademiesPage() {
         }
         const data = await response.json()
         setCategories(data.categories)
-      } catch (err) {
+      } catch (_err) {
         setError(err instanceof Error ? err.message : 'An error occurred')
       } finally {
         setLoading(false)

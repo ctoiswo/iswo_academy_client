@@ -188,7 +188,7 @@ export function PublicCoursePage() {
           text: courseData.description,
           url: url,
         })
-      } catch (err) {
+      } catch (_err) {
         // User cancelled share
       }
     } else {
@@ -196,7 +196,7 @@ export function PublicCoursePage() {
       try {
         await navigator.clipboard.writeText(url)
         toast.success('Enlace copiado al portapapeles')
-      } catch (err) {
+      } catch (_err) {
         toast.error('No se pudo copiar el enlace')
       }
     }

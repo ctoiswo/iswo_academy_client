@@ -56,7 +56,7 @@ export function useCategories(options?: UseCategoriesOptions) {
       }
 
       setCategories(filteredCategories)
-    } catch (err) {
+    } catch (_err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
       setCategories([])
     } finally {

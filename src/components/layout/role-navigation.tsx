@@ -1,4 +1,4 @@
-import { useMemo, Fragment } from 'react'
+import { useMemo } from 'react'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
 import { useAcademyPermissions } from '@/hooks/use-academy-permissions'
@@ -16,7 +16,6 @@ import {
   Award,
   CreditCard,
   FileText,
-  Bell,
   ChevronRight,
   Home
 } from 'lucide-react'
@@ -105,7 +104,7 @@ function useNavigationGuards(
         const hasRole = item.roles.some(role => {
           if (role === 'super_admin') return helpers.isSuperAdmin()
           if (role === 'any') return !!user // Any authenticated user
-          return checkAccess.role(role as any)
+          return checkAccess.role(role as 'admin' | 'teacher' | 'student')
         })
         if (!hasRole) return false
       }
@@ -113,7 +112,7 @@ function useNavigationGuards(
       // Check if user has required permissions
       if (item.permissions && item.permissions.length > 0) {
         const hasPermission = item.permissions.some(permission => 
-          checkAccess.permission(permission as any)
+          checkAccess.permission(permission as string)
         )
         if (!hasPermission) return false
       }
@@ -131,14 +130,14 @@ function useNavigationGuards(
             const hasRole = child.roles.some(role => {
               if (role === 'super_admin') return helpers.isSuperAdmin()
               if (role === 'any') return !!user
-              return checkAccess.role(role as any)
+              return checkAccess.role(role as 'admin' | 'teacher' | 'student')
             })
             if (!hasRole) return false
           }
           
           if (child.permissions && child.permissions.length > 0) {
             const hasPermission = child.permissions.some(permission => 
-              checkAccess.permission(permission as any)
+              checkAccess.permission(permission as string)
             )
             if (!hasPermission) return false
           }
@@ -166,7 +165,7 @@ function useNavigationGuards(
 function NavigationLink({ 
   item, 
   currentPath, 
-  academyId 
+  academyId: _academyId 
 }: { 
   item: NavigationItem
   currentPath: string
@@ -175,9 +174,7 @@ function NavigationLink({
   const IconComponent = item.icon
   
   // Build the full path with academy ID if needed
-  const fullPath = academyId && !item.path.startsWith('/') 
-    ? `/academy/${academyId}/${item.path}`
-    : item.path
+  const fullPath = item.path
   
   // Check if this item is active based on the full path
   const isActive = currentPath === fullPath || currentPath.startsWith(fullPath + '/')
@@ -577,7 +574,7 @@ function formatBreadcrumbLabel(
     previousSegment?: string
   }
 ): string {
-  const { academy, isLast, previousSegment } = context
+  const { academy, previousSegment } = context
   
   // Special cases for common segments
   const specialLabels: Record<string, string> = {

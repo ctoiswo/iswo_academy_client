@@ -67,8 +67,8 @@ export function LearningPathSettings() {
         to: '/academy/$academySlug/learning-paths',
         params: { academySlug },
       })
-    } catch (error) {
-      console.error('Error deleting learning path:', error)
+    } catch (_error) {
+      // console.error('Error deleting learning path:', error)
     }
   }
 

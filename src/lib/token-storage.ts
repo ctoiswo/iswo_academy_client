@@ -46,8 +46,8 @@ class TokenStorage {
       
       // NOTE: access_token is NOT persisted - it lives only in memory (auth store state)
       // This is more secure and prevents issues with expired access tokens on reload
-    } catch (error) {
-      console.error('Failed to store tokens:', error)
+    } catch (_error) {
+      // console.error('Failed to store tokens:', error)
       throw new Error('Token storage failed')
     }
   }
@@ -82,8 +82,8 @@ class TokenStorage {
       }
 
       return null
-    } catch (error) {
-      console.error('Failed to retrieve tokens:', error)
+    } catch (_error) {
+      // console.error('Failed to retrieve tokens:', error)
       return null
     }
   }
@@ -141,8 +141,8 @@ class TokenStorage {
         // Also clear old token format for migration
         localStorage.removeItem('iswo_auth_tokens')
       }
-    } catch (error) {
-      console.error('Failed to clear tokens:', error)
+    } catch (_error) {
+      // console.error('Failed to clear tokens:', error)
     }
   }
 

@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
-import { useAuthStore } from '@/stores/auth-store'
+import { useAuthStore, type AcademyMembership, type AuthUser } from '@/stores/auth-store'
 import { useAcademyPermissions } from '@/hooks/use-academy-permissions'
-import type { AcademyMembership, AuthUser } from '@/stores/auth-store'
 
 // Dashboard component types
 export type DashboardType = 'super-admin' | 'academy-admin' | 'teacher' | 'student'
@@ -66,6 +65,9 @@ export function DashboardRouter({
   currentAcademy, 
   fallbackComponent: FallbackComponent 
 }: DashboardRouterProps) {
+  // Always call hooks at the top level, never conditionally
+  const { helpers, hasAccess } = useAcademyPermissions(currentAcademy?.id)
+  
   // Handle unauthenticated user
   if (!user) {
     return (
@@ -77,9 +79,6 @@ export function DashboardRouter({
       </div>
     )
   }
-
-  // Always call hooks at the top level, never conditionally
-  const { helpers, hasAccess } = useAcademyPermissions(currentAcademy?.id)
   
   // Determine dashboard type
   const dashboardType = getDashboardType(user, currentAcademy)
