@@ -65,12 +65,13 @@ jobs:
         VITE_API_URL: https://api.34-139-56-65.nip.io
       run: pnpm build
 
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
     - name: Set up Google Cloud CLI
       uses: google-github-actions/setup-gcloud@v2
-      with:
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        project_id: iswo-academy-prod
-        export_default_credentials: true
 
     - name: Deploy to Cloud Storage
       run: |
