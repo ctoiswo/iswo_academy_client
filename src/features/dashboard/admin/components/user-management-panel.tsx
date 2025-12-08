@@ -1,29 +1,32 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { DashboardCard, ListCard } from '@/components/dashboard/dashboard-card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu'
-import { 
-  Users, 
-  Plus, 
-  MoreHorizontal, 
-  Edit, 
-  Eye, 
-  Trash2, 
+import {
+  Users,
+  Plus,
+  MoreHorizontal,
+  Edit,
+  Eye,
+  Trash2,
   UserCheck,
   GraduationCap,
   Shield,
   Mail,
-  Calendar
+  Calendar,
 } from 'lucide-react'
-import { academyAdminQueries, academyAdminMutations } from '@/lib/api/academy-admin'
 import type { AcademyMembership } from '@/stores/auth-store'
+import {
+  academyAdminQueries,
+  academyAdminMutations,
+} from '@/lib/api/academy-admin'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { DashboardCard, ListCard } from '@/components/dashboard/dashboard-card'
 
 export interface AcademyUser {
   id: number
@@ -43,18 +46,23 @@ interface UserManagementPanelProps {
   loading?: boolean
 }
 
-export function UserManagementPanel({ academy, loading = false }: UserManagementPanelProps) {
-  const [selectedRole, setSelectedRole] = useState<'all' | 'admin' | 'teacher' | 'student'>('all')
+export function UserManagementPanel({
+  academy,
+  loading = false,
+}: UserManagementPanelProps) {
+  const [selectedRole, setSelectedRole] = useState<
+    'all' | 'admin' | 'teacher' | 'student'
+  >('all')
   const queryClient = useQueryClient()
 
   const filters = selectedRole === 'all' ? {} : { role: selectedRole }
 
   const academyIdentifier = academy.slug || academy.id
 
-  const { 
-    data: usersResponse, 
-    isLoading, 
-    error 
+  const {
+    data: usersResponse,
+    isLoading,
+    error,
   } = useQuery({
     ...academyAdminQueries.users(academyIdentifier, filters),
     enabled: !!(academy?.slug || academy?.id) && !loading,
@@ -63,58 +71,58 @@ export function UserManagementPanel({ academy, loading = false }: UserManagement
   const removeUserMutation = useMutation({
     ...academyAdminMutations.removeUser,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['academy-admin', 'users', academyIdentifier] })
+      queryClient.invalidateQueries({
+        queryKey: ['academy-admin', 'users', academyIdentifier],
+      })
     },
   })
 
   const updateRoleMutation = useMutation({
     ...academyAdminMutations.updateUserRole,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['academy-admin', 'users', academyIdentifier] })
+      queryClient.invalidateQueries({
+        queryKey: ['academy-admin', 'users', academyIdentifier],
+      })
     },
   })
 
   const users = usersResponse?.data || []
-  const usersByRole = usersResponse?.meta?.role_counts || { admin: 0, teacher: 0, student: 0 }
+  const usersByRole = usersResponse?.meta?.role_counts || {
+    admin: 0,
+    teacher: 0,
+    student: 0,
+  }
 
   const getRoleBadge = (role: AcademyUser['role']) => {
     const variants = {
       admin: 'destructive',
       teacher: 'default',
-      student: 'secondary'
+      student: 'secondary',
     } as const
 
     const labels = {
       admin: 'Admin',
       teacher: 'Teacher',
-      student: 'Student'
+      student: 'Student',
     }
 
-    return (
-      <Badge variant={variants[role]}>
-        {labels[role]}
-      </Badge>
-    )
+    return <Badge variant={variants[role]}>{labels[role]}</Badge>
   }
 
   const getStatusBadge = (status: AcademyUser['status']) => {
     const variants = {
       active: 'default',
       inactive: 'secondary',
-      pending: 'outline'
+      pending: 'outline',
     } as const
 
     const labels = {
       active: 'Active',
       inactive: 'Inactive',
-      pending: 'Pending'
+      pending: 'Pending',
     }
 
-    return (
-      <Badge variant={variants[status]}>
-        {labels[status]}
-      </Badge>
-    )
+    return <Badge variant={variants[status]}>{labels[status]}</Badge>
   }
 
   const getRoleIcon = (role: AcademyUser['role']) => {
@@ -145,7 +153,11 @@ export function UserManagementPanel({ academy, loading = false }: UserManagement
   }
 
   const handleDeleteUser = async (userId: number) => {
-    if (window.confirm('Are you sure you want to remove this user from the academy? This action cannot be undone.')) {
+    if (
+      window.confirm(
+        'Are you sure you want to remove this user from the academy? This action cannot be undone.'
+      )
+    ) {
       try {
         await removeUserMutation.mutateAsync({ academyIdentifier, userId })
       } catch (_error) {
@@ -157,31 +169,33 @@ export function UserManagementPanel({ academy, loading = false }: UserManagement
 
   if (error) {
     return (
-      <DashboardCard title="Error" variant="outline">
-        <p className="text-destructive">Failed to load users. Please try again.</p>
+      <DashboardCard title='Error' variant='outline'>
+        <p className='text-destructive'>
+          Failed to load users. Please try again.
+        </p>
       </DashboardCard>
     )
   }
 
-  const userItems = users.map(user => {
+  const userItems = users.map((user) => {
     const RoleIcon = getRoleIcon(user.role)
-    
+
     return {
       id: user.id,
       title: (
-        <div className="space-y-1">
-          <div className="flex items-center space-x-2">
-            <span className="font-medium">{user.name}</span>
+        <div className='space-y-1'>
+          <div className='flex items-center space-x-2'>
+            <span className='font-medium'>{user.name}</span>
             {getRoleBadge(user.role)}
             {getStatusBadge(user.status)}
           </div>
-          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-            <Mail className="h-3 w-3" />
+          <div className='text-muted-foreground flex items-center space-x-1 text-xs'>
+            <Mail className='h-3 w-3' />
             <span>{user.email}</span>
           </div>
-          <div className="flex items-center space-x-4 text-xs text-muted-foreground">
-            <span className="flex items-center space-x-1">
-              <Calendar className="h-3 w-3" />
+          <div className='text-muted-foreground flex items-center space-x-4 text-xs'>
+            <span className='flex items-center space-x-1'>
+              <Calendar className='h-3 w-3' />
               <span>Joined {new Date(user.joinedAt).toLocaleDateString()}</span>
             </span>
             {user.role === 'student' && user.enrollments && (
@@ -195,108 +209,118 @@ export function UserManagementPanel({ academy, loading = false }: UserManagement
       ),
       subtitle: `Last active: ${new Date(user.lastActive).toLocaleDateString()}`,
       value: (
-        <div className="flex items-center space-x-2">
-          <RoleIcon className="h-4 w-4 text-muted-foreground" />
+        <div className='flex items-center space-x-2'>
+          <RoleIcon className='text-muted-foreground h-4 w-4' />
         </div>
       ),
       action: (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <MoreHorizontal className="h-4 w-4" />
+            <Button variant='ghost' size='sm'>
+              <MoreHorizontal className='h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align='end'>
             <DropdownMenuItem onClick={() => handleViewUser(user.id)}>
-              <Eye className="h-4 w-4 mr-2" />
+              <Eye className='mr-2 h-4 w-4' />
               View Profile
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleEditUser(user.id)}>
-              <Edit className="h-4 w-4 mr-2" />
+              <Edit className='mr-2 h-4 w-4' />
               Edit User
             </DropdownMenuItem>
             {user.role !== 'admin' && (
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={() => handleDeleteUser(user.id)}
-                className="text-destructive"
+                className='text-destructive'
               >
-                <Trash2 className="h-4 w-4 mr-2" />
+                <Trash2 className='mr-2 h-4 w-4' />
                 Remove User
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      ),
     }
   })
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {/* User Statistics */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <DashboardCard size="sm">
-          <div className="flex items-center justify-between">
+      <div className='grid gap-4 md:grid-cols-4'>
+        <DashboardCard size='sm'>
+          <div className='flex items-center justify-between'>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Total Users</p>
-              <p className="text-2xl font-bold">{users.length}</p>
+              <p className='text-muted-foreground text-sm font-medium'>
+                Total Users
+              </p>
+              <p className='text-2xl font-bold'>{users.length}</p>
             </div>
-            <Users className="h-8 w-8 text-muted-foreground" />
+            <Users className='text-muted-foreground h-8 w-8' />
           </div>
         </DashboardCard>
 
-        <DashboardCard size="sm">
-          <div className="flex items-center justify-between">
+        <DashboardCard size='sm'>
+          <div className='flex items-center justify-between'>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Admins</p>
-              <p className="text-2xl font-bold">{usersByRole.admin}</p>
+              <p className='text-muted-foreground text-sm font-medium'>
+                Admins
+              </p>
+              <p className='text-2xl font-bold'>{usersByRole.admin}</p>
             </div>
-            <Shield className="h-8 w-8 text-red-500" />
+            <Shield className='h-8 w-8 text-red-500' />
           </div>
         </DashboardCard>
 
-        <DashboardCard size="sm">
-          <div className="flex items-center justify-between">
+        <DashboardCard size='sm'>
+          <div className='flex items-center justify-between'>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Teachers</p>
-              <p className="text-2xl font-bold">{usersByRole.teacher}</p>
+              <p className='text-muted-foreground text-sm font-medium'>
+                Teachers
+              </p>
+              <p className='text-2xl font-bold'>{usersByRole.teacher}</p>
             </div>
-            <UserCheck className="h-8 w-8 text-blue-500" />
+            <UserCheck className='h-8 w-8 text-blue-500' />
           </div>
         </DashboardCard>
 
-        <DashboardCard size="sm">
-          <div className="flex items-center justify-between">
+        <DashboardCard size='sm'>
+          <div className='flex items-center justify-between'>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Students</p>
-              <p className="text-2xl font-bold">{usersByRole.student}</p>
+              <p className='text-muted-foreground text-sm font-medium'>
+                Students
+              </p>
+              <p className='text-2xl font-bold'>{usersByRole.student}</p>
             </div>
-            <GraduationCap className="h-8 w-8 text-green-500" />
+            <GraduationCap className='h-8 w-8 text-green-500' />
           </div>
         </DashboardCard>
       </div>
 
       {/* Role Filter */}
-      <div className="flex items-center space-x-2">
-        <span className="text-sm font-medium">Filter by role:</span>
+      <div className='flex items-center space-x-2'>
+        <span className='text-sm font-medium'>Filter by role:</span>
         {(['all', 'admin', 'teacher', 'student'] as const).map((role) => (
           <Button
             key={role}
             variant={selectedRole === role ? 'default' : 'outline'}
-            size="sm"
+            size='sm'
             onClick={() => setSelectedRole(role)}
           >
-            {role === 'all' ? 'All Users' : role.charAt(0).toUpperCase() + role.slice(1)}
+            {role === 'all'
+              ? 'All Users'
+              : role.charAt(0).toUpperCase() + role.slice(1)}
           </Button>
         ))}
       </div>
 
       {/* User List */}
       <ListCard
-        title="User Management"
+        title='User Management'
         description={`Manage ${selectedRole === 'all' ? 'all users' : `${selectedRole}s`} in your academy`}
         action={
-          <Button onClick={handleInviteUser} size="sm">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button onClick={handleInviteUser} size='sm'>
+            <Plus className='mr-2 h-4 w-4' />
             Invite User
           </Button>
         }

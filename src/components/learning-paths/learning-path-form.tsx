@@ -1,21 +1,48 @@
+import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { z } from 'zod'
+import {
+  learningPathService,
+  type LearningPath,
+  type CreateLearningPathData,
+  type UpdateLearningPathData,
+} from '@/services/learning-path-service'
 import { toast } from 'sonner'
-
-import { learningPathService, type LearningPath, type CreateLearningPathData, type UpdateLearningPathData } from '@/services/learning-path-service'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { DialogFooter } from '@/components/ui/dialog'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 
 const learningPathSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
-  description: z.string().min(1, 'Description is required').max(1000, 'Description must be less than 1000 characters'),
-  estimated_duration_hours: z.number().min(1, 'Duration must be at least 1 hour').max(500, 'Duration must be less than 500 hours'),
+  title: z
+    .string()
+    .min(1, 'Title is required')
+    .max(100, 'Title must be less than 100 characters'),
+  description: z
+    .string()
+    .min(1, 'Description is required')
+    .max(1000, 'Description must be less than 1000 characters'),
+  estimated_duration_hours: z
+    .number()
+    .min(1, 'Duration must be at least 1 hour')
+    .max(500, 'Duration must be less than 500 hours'),
   difficulty_level: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
   status: z.enum(['draft', 'published']).optional(),
 })
@@ -29,23 +56,33 @@ interface LearningPathFormProps {
   onCancel: () => void
 }
 
-export function LearningPathForm({ academySlug, learningPath, onSuccess, onCancel }: LearningPathFormProps) {
+export function LearningPathForm({
+  academySlug,
+  learningPath,
+  onSuccess,
+  onCancel,
+}: LearningPathFormProps) {
   const isEditing = !!learningPath
-  
+
   const form = useForm<LearningPathFormData>({
     resolver: zodResolver(learningPathSchema),
     defaultValues: {
       title: learningPath?.title || '',
       description: learningPath?.description || '',
       estimated_duration_hours: learningPath?.estimated_duration_hours || 1,
-      difficulty_level: learningPath?.difficulty_level as 'beginner' | 'intermediate' | 'advanced' || 'beginner',
+      difficulty_level:
+        (learningPath?.difficulty_level as
+          | 'beginner'
+          | 'intermediate'
+          | 'advanced') || 'beginner',
       status: learningPath?.status === 'published' ? 'published' : 'draft',
     },
   })
 
   // Create mutation
   const createMutation = useMutation({
-    mutationFn: (data: CreateLearningPathData) => learningPathService.createLearningPath(academySlug, data),
+    mutationFn: (data: CreateLearningPathData) =>
+      learningPathService.createLearningPath(academySlug, data),
     onSuccess: () => {
       toast.success('Learning Path created successfully')
       onSuccess()
@@ -57,8 +94,12 @@ export function LearningPathForm({ academySlug, learningPath, onSuccess, onCance
 
   // Update mutation
   const updateMutation = useMutation({
-    mutationFn: (data: UpdateLearningPathData) => 
-      learningPathService.updateLearningPath(academySlug, learningPath!.slug, data),
+    mutationFn: (data: UpdateLearningPathData) =>
+      learningPathService.updateLearningPath(
+        academySlug,
+        learningPath!.slug,
+        data
+      ),
     onSuccess: () => {
       toast.success('Learning Path updated successfully')
       onSuccess()
@@ -80,18 +121,18 @@ export function LearningPathForm({ academySlug, learningPath, onSuccess, onCance
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
         {/* Title */}
         <FormField
           control={form.control}
-          name="title"
+          name='title'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="e.g., Frontend Development Mastery" 
-                  {...field} 
+                <Input
+                  placeholder='e.g., Frontend Development Mastery'
+                  {...field}
                 />
               </FormControl>
               <FormDescription>
@@ -105,14 +146,14 @@ export function LearningPathForm({ academySlug, learningPath, onSuccess, onCance
         {/* Description */}
         <FormField
           control={form.control}
-          name="description"
+          name='description'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Describe what students will learn in this path..."
-                  className="min-h-[100px]"
+                  placeholder='Describe what students will learn in this path...'
+                  className='min-h-[100px]'
                   {...field}
                 />
               </FormControl>
@@ -125,23 +166,23 @@ export function LearningPathForm({ academySlug, learningPath, onSuccess, onCance
         />
 
         {/* Duration and Difficulty Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
           {/* Estimated Duration */}
           <FormField
             control={form.control}
-            name="estimated_duration_hours"
+            name='estimated_duration_hours'
             render={({ field: { onChange, value, ...field } }) => (
               <FormItem>
                 <FormLabel>Estimated Duration (hours)</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    min="1"
-                    max="500"
-                    placeholder="40"
+                  <Input
+                    type='number'
+                    min='1'
+                    max='500'
+                    placeholder='40'
                     value={value}
                     onChange={(e) => onChange(Number(e.target.value))}
-                    {...field} 
+                    {...field}
                   />
                 </FormControl>
                 <FormDescription>
@@ -155,20 +196,23 @@ export function LearningPathForm({ academySlug, learningPath, onSuccess, onCance
           {/* Difficulty Level */}
           <FormField
             control={form.control}
-            name="difficulty_level"
+            name='difficulty_level'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Difficulty Level</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select difficulty" />
+                      <SelectValue placeholder='Select difficulty' />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="beginner">Beginner</SelectItem>
-                    <SelectItem value="intermediate">Intermediate</SelectItem>
-                    <SelectItem value="advanced">Advanced</SelectItem>
+                    <SelectItem value='beginner'>Beginner</SelectItem>
+                    <SelectItem value='intermediate'>Intermediate</SelectItem>
+                    <SelectItem value='advanced'>Advanced</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormDescription>
@@ -183,26 +227,25 @@ export function LearningPathForm({ academySlug, learningPath, onSuccess, onCance
         {/* Status */}
         <FormField
           control={form.control}
-          name="status"
+          name='status'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Status</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
+                    <SelectValue placeholder='Select status' />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="published">Published</SelectItem>
+                  <SelectItem value='draft'>Draft</SelectItem>
+                  <SelectItem value='published'>Published</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>
-                {field.value === 'published' 
-                  ? 'Learning path is visible to students' 
-                  : 'Learning path is hidden from students'
-                }
+                {field.value === 'published'
+                  ? 'Learning path is visible to students'
+                  : 'Learning path is hidden from students'}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -212,21 +255,21 @@ export function LearningPathForm({ academySlug, learningPath, onSuccess, onCance
         {/* Form Actions */}
         <DialogFooter>
           <Button
-            type="button"
-            variant="outline"
+            type='button'
+            variant='outline'
             onClick={onCancel}
             disabled={isLoading}
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            disabled={isLoading}
-          >
-            {isLoading 
-              ? (isEditing ? 'Updating...' : 'Creating...') 
-              : (isEditing ? 'Update Learning Path' : 'Create Learning Path')
-            }
+          <Button type='submit' disabled={isLoading}>
+            {isLoading
+              ? isEditing
+                ? 'Updating...'
+                : 'Creating...'
+              : isEditing
+                ? 'Update Learning Path'
+                : 'Create Learning Path'}
           </Button>
         </DialogFooter>
       </form>

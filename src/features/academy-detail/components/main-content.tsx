@@ -49,23 +49,17 @@ export function MainContent({ academy }: MainContentProps) {
             {academy.courses && academy.courses.length > 0 ? (
               <div className='grid gap-6'>
                 {academy.courses.map((course: any, index: number) => (
-                  <CourseCard
-                    key={course.id}
-                    course={course}
-                    index={index}
-                  />
+                  <CourseCard key={course.id} course={course} index={index} />
                 ))}
               </div>
             ) : (
               <Card>
                 <CardContent className='py-12 text-center'>
                   <BookOpen className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
-                  <h3 className='mb-2 text-lg font-semibold'>
-                    Próximamente
-                  </h3>
+                  <h3 className='mb-2 text-lg font-semibold'>Próximamente</h3>
                   <p className='text-muted-foreground'>
-                    Esta academia está preparando contenido increíble.
-                    ¡Mantente atento!
+                    Esta academia está preparando contenido increíble. ¡Mantente
+                    atento!
                   </p>
                 </CardContent>
               </Card>

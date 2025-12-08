@@ -15,7 +15,9 @@ import { type SidebarData } from '../types'
  * Sidebar para usuarios Guest (sin academias)
  * Vista básica con opciones limitadas
  */
-export function getGuestSidebar(showOnboarding: boolean): SidebarData['navGroups'] {
+export function getGuestSidebar(
+  showOnboarding: boolean
+): SidebarData['navGroups'] {
   const generalItems = [
     {
       title: 'Panel Principal',

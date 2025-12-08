@@ -1,4 +1,3 @@
-import apiClient from '@/lib/api-client'
 import type {
   GamificationOverview,
   BadgeTemplate,
@@ -6,8 +5,9 @@ import type {
   AcademyGamificationStatus,
   CreateSuperAdminBadgeRequest,
   UpdateSuperAdminBadgeRequest,
-  SuperAdminBadgeFilters
+  SuperAdminBadgeFilters,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Super Admin Gamification Service

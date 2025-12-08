@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import CoursesManagementPage from '../courses-management'
 
 // Mock dependencies
@@ -27,7 +27,7 @@ vi.mock('@/stores/auth-store', () => ({
 
 vi.mock('@/components/courses', () => ({
   CourseForm: ({ onSuccess }: { onSuccess: () => void }) => (
-    <div data-testid="course-form">
+    <div data-testid='course-form'>
       <button onClick={onSuccess}>Guardar Curso</button>
     </div>
   ),
@@ -117,7 +117,9 @@ describe('CoursesManagementPage', () => {
 
     it('renderiza el botón para crear nuevo curso', () => {
       renderComponent()
-      expect(screen.getByRole('button', { name: /crear curso/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /crear curso/i })
+      ).toBeInTheDocument()
     })
 
     it('renderiza los filtros de búsqueda', () => {
@@ -130,7 +132,9 @@ describe('CoursesManagementPage', () => {
     it('renderiza todos los cursos', () => {
       renderComponent()
       expect(screen.getByText('Curso de React')).toBeInTheDocument()
-      expect(screen.getByText('Curso Avanzado de TypeScript')).toBeInTheDocument()
+      expect(
+        screen.getByText('Curso Avanzado de TypeScript')
+      ).toBeInTheDocument()
       expect(screen.getByText('Curso de Node.js')).toBeInTheDocument()
     })
 
@@ -172,7 +176,9 @@ describe('CoursesManagementPage', () => {
       await user.type(searchInput, 'React')
 
       expect(screen.getByText('Curso de React')).toBeInTheDocument()
-      expect(screen.queryByText('Curso Avanzado de TypeScript')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText('Curso Avanzado de TypeScript')
+      ).not.toBeInTheDocument()
       expect(screen.queryByText('Curso de Node.js')).not.toBeInTheDocument()
     })
 
@@ -183,7 +189,9 @@ describe('CoursesManagementPage', () => {
       const searchInput = screen.getByPlaceholderText(/buscar cursos/i)
       await user.type(searchInput, 'profesionales')
 
-      expect(screen.getByText('Curso Avanzado de TypeScript')).toBeInTheDocument()
+      expect(
+        screen.getByText('Curso Avanzado de TypeScript')
+      ).toBeInTheDocument()
       expect(screen.queryByText('Curso de React')).not.toBeInTheDocument()
     })
 
@@ -197,7 +205,9 @@ describe('CoursesManagementPage', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Curso de React')).toBeInTheDocument()
-        expect(screen.getByText('Curso Avanzado de TypeScript')).toBeInTheDocument()
+        expect(
+          screen.getByText('Curso Avanzado de TypeScript')
+        ).toBeInTheDocument()
         expect(screen.getByText('Curso de Node.js')).toBeInTheDocument()
       })
     })
@@ -210,7 +220,9 @@ describe('CoursesManagementPage', () => {
       // El Select de Radix UI puede ser difícil de testear, verificamos que el componente renderiza
       expect(screen.getByText('Curso de React')).toBeInTheDocument()
       expect(screen.getByText('Curso de Node.js')).toBeInTheDocument()
-      expect(screen.getByText('Curso Avanzado de TypeScript')).toBeInTheDocument()
+      expect(
+        screen.getByText('Curso Avanzado de TypeScript')
+      ).toBeInTheDocument()
     })
 
     it('filtra cursos por nivel de dificultad', () => {
@@ -254,10 +266,14 @@ describe('CoursesManagementPage', () => {
       const user = userEvent.setup()
       renderComponent()
 
-      const manageButtons = screen.getAllByTitle(/gestionar contenido del curso/i)
+      const manageButtons = screen.getAllByTitle(
+        /gestionar contenido del curso/i
+      )
       await user.click(manageButtons[0])
 
-      expect(mockNavigate).toHaveBeenCalledWith({ to: '/admin/courses/1/manage' })
+      expect(mockNavigate).toHaveBeenCalledWith({
+        to: '/admin/courses/1/manage',
+      })
     })
 
     it('abre el modal de edición al hacer clic en editar', async () => {
@@ -277,7 +293,9 @@ describe('CoursesManagementPage', () => {
       const deleteButtons = screen.getAllByTitle(/eliminar curso/i)
       await user.click(deleteButtons[0])
 
-      expect(screen.getByText(/estás seguro de que quieres eliminar/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/estás seguro de que quieres eliminar/i)
+      ).toBeInTheDocument()
     })
 
     it('elimina el curso al confirmar', async () => {
@@ -287,7 +305,9 @@ describe('CoursesManagementPage', () => {
       const deleteButtons = screen.getAllByTitle(/eliminar curso/i)
       await user.click(deleteButtons[0])
 
-      const confirmButton = screen.getByRole('button', { name: /eliminar curso/i })
+      const confirmButton = screen.getByRole('button', {
+        name: /eliminar curso/i,
+      })
       await user.click(confirmButton)
 
       expect(mockDeleteMutation.mutate).toHaveBeenCalledWith(1)
@@ -301,7 +321,9 @@ describe('CoursesManagementPage', () => {
       })
 
       renderComponent()
-      expect(screen.getByText('No hay Academia Seleccionada')).toBeInTheDocument()
+      expect(
+        screen.getByText('No hay Academia Seleccionada')
+      ).toBeInTheDocument()
     })
 
     it('muestra estado de carga', () => {

@@ -2,7 +2,6 @@
  * Learning Path Entity Types
  * Based on Rails LearningPath model structure
  */
-
 import type { Course } from './course'
 
 export type LearningPathStatus = 'draft' | 'published' | 'archived'

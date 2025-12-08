@@ -1,29 +1,32 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import axios, { type AxiosError, type AxiosResponse } from 'axios'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { tokenStorage } from '@/lib/token-storage'
+// Import after mocking
+import apiClient, { tokenManager, setAuthStore } from '../api-client'
 
 // Mock axios and dependencies
 vi.mock('axios', () => {
   const mockAxiosInstance = {
     interceptors: {
       request: {
-        use: vi.fn()
+        use: vi.fn(),
       },
       response: {
-        use: vi.fn()
-      }
+        use: vi.fn(),
+      },
     },
     post: vi.fn(),
     get: vi.fn(),
     patch: vi.fn(),
-    delete: vi.fn()
+    delete: vi.fn(),
   }
 
   return {
     default: {
       create: vi.fn(() => mockAxiosInstance),
       post: vi.fn(),
-      get: vi.fn()
-    }
+      get: vi.fn(),
+    },
   }
 })
 
@@ -37,15 +40,11 @@ vi.mock('@/lib/token-storage', () => ({
     getRefreshToken: vi.fn(),
     hasValidTokens: vi.fn(),
     willExpireSoon: vi.fn(),
-    getTokenInfo: vi.fn()
-  }
+    getTokenInfo: vi.fn(),
+  },
 }))
 
 const mockedAxios = vi.mocked(axios)
-
-// Import after mocking
-import apiClient, { tokenManager, setAuthStore } from '../api-client'
-import { tokenStorage } from '@/lib/token-storage'
 
 describe('Token Refresh Mechanism', () => {
   let mockAuthStore: any
@@ -58,8 +57,8 @@ describe('Token Refresh Mechanism', () => {
     mockAuthStore = {
       getState: vi.fn(() => ({
         setTokens: vi.fn(),
-        reset: vi.fn()
-      }))
+        reset: vi.fn(),
+      })),
     }
     setAuthStore(mockAuthStore)
   })
@@ -78,8 +77,8 @@ describe('Token Refresh Mechanism', () => {
         data: {
           access_token: 'new-access-token',
           refresh_token: 'new-refresh-token',
-          expires_in: 3600
-        }
+          expires_in: 3600,
+        },
       }
 
       mockedAxios.post.mockResolvedValue(mockRefreshResponse)
@@ -94,7 +93,7 @@ describe('Token Refresh Mechanism', () => {
       expect(tokenStorage.setTokens).toHaveBeenCalledWith({
         access_token: 'new-access-token',
         refresh_token: 'new-refresh-token',
-        expires_in: 3600
+        expires_in: 3600,
       })
     })
 
@@ -102,13 +101,16 @@ describe('Token Refresh Mechanism', () => {
       vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Refresh failed'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 
       expect(result).toBe(false)
       expect(tokenStorage.clearTokens).toHaveBeenCalled()
-      expect(consoleSpy).toHaveBeenCalledWith('Manual token refresh failed:', expect.any(Error))
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Manual token refresh failed:',
+        expect.any(Error)
+      )
 
       consoleSpy.mockRestore()
     })
@@ -128,13 +130,16 @@ describe('Token Refresh Mechanism', () => {
       vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Network error'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 
       expect(result).toBe(false)
       expect(tokenStorage.clearTokens).toHaveBeenCalled()
-      expect(consoleSpy).toHaveBeenCalledWith('Manual token refresh failed:', expect.any(Error))
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Manual token refresh failed:',
+        expect.any(Error)
+      )
 
       consoleSpy.mockRestore()
     })
@@ -144,11 +149,11 @@ describe('Token Refresh Mechanism', () => {
       mockedAxios.post.mockRejectedValue({
         response: {
           status: 401,
-          data: { error: 'Invalid refresh token' }
-        }
+          data: { error: 'Invalid refresh token' },
+        },
       })
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 
@@ -163,11 +168,11 @@ describe('Token Refresh Mechanism', () => {
       mockedAxios.post.mockRejectedValue({
         response: {
           status: 500,
-          data: { error: 'Internal server error' }
-        }
+          data: { error: 'Internal server error' },
+        },
       })
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 
@@ -183,7 +188,7 @@ describe('Token Refresh Mechanism', () => {
       const mockTokens = {
         access_token: 'token',
         refresh_token: 'refresh',
-        expires_at: Date.now() + 3600000 // 1 hour from now
+        expires_at: Date.now() + 3600000, // 1 hour from now
       }
 
       vi.mocked(tokenStorage.getTokens).mockReturnValue(mockTokens)
@@ -200,7 +205,7 @@ describe('Token Refresh Mechanism', () => {
       const mockTokens = {
         access_token: 'token',
         refresh_token: 'refresh',
-        expires_at: Date.now() - 1000 // Expired
+        expires_at: Date.now() - 1000, // Expired
       }
 
       vi.mocked(tokenStorage.getTokens).mockReturnValue(mockTokens)
@@ -226,8 +231,8 @@ describe('Token Refresh Mechanism', () => {
         data: {
           access_token: 'new-access-token',
           refresh_token: 'new-refresh-token',
-          expires_in: 3600
-        }
+          expires_in: 3600,
+        },
       }
 
       mockedAxios.post.mockResolvedValue(mockRefreshResponse)
@@ -246,13 +251,16 @@ describe('Token Refresh Mechanism', () => {
       vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Refresh failed'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 
       expect(result).toBe(false)
       expect(tokenStorage.clearTokens).toHaveBeenCalled()
-      expect(consoleSpy).toHaveBeenCalledWith('Manual token refresh failed:', expect.any(Error))
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Manual token refresh failed:',
+        expect.any(Error)
+      )
 
       consoleSpy.mockRestore()
     })
@@ -271,7 +279,7 @@ describe('Token Refresh Mechanism', () => {
         hasTokens: true,
         isExpired: false,
         expiresAt: '2024-01-01T12:00:00Z',
-        timeUntilExpiration: 3600000
+        timeUntilExpiration: 3600000,
       }
 
       vi.mocked(tokenStorage.getTokenInfo).mockReturnValue(mockInfo)
@@ -295,7 +303,7 @@ describe('Token Refresh Mechanism', () => {
       const mockTokens = {
         access_token: 'token',
         refresh_token: 'refresh',
-        expires_at: Date.now() + 3600000 // 1 hour from now
+        expires_at: Date.now() + 3600000, // 1 hour from now
       }
 
       vi.mocked(tokenStorage.getTokens).mockReturnValue(mockTokens)
@@ -309,12 +317,15 @@ describe('Token Refresh Mechanism', () => {
       vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Network error'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 
       expect(result).toBe(false)
-      expect(consoleSpy).toHaveBeenCalledWith('Manual token refresh failed:', expect.any(Error))
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Manual token refresh failed:',
+        expect.any(Error)
+      )
       consoleSpy.mockRestore()
     })
 

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { apiClient } from '@/lib/api-client'
 import type { Academy, AcademyFilters, PaginatedResponse } from '@/types'
+import { apiClient } from '@/lib/api-client'
 
 // Re-export types for backward compatibility
 export type { Academy, AcademyFilters }

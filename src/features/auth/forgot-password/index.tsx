@@ -15,7 +15,10 @@ export function ForgotPassword() {
   const { t } = useTranslation()
 
   return (
-    <AnimatedAuthLayout title={t('auth.forgotPassword.title')} subtitle={t('auth.forgotPassword.subtitle')}>
+    <AnimatedAuthLayout
+      title={t('auth.forgotPassword.title')}
+      subtitle={t('auth.forgotPassword.subtitle')}
+    >
       <Card className='gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>

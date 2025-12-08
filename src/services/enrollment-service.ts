@@ -1,9 +1,9 @@
-import apiClient from '@/lib/api-client'
 import type {
   Enrollment,
   EnrollmentFilters,
-  UpdateEnrollmentProgressRequest
+  UpdateEnrollmentProgressRequest,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Enrollment Service
@@ -20,7 +20,8 @@ class EnrollmentService {
 
     if (filters?.status) params.append('status', filters.status)
     if (filters?.page) params.append('page', filters.page.toString())
-    if (filters?.per_page) params.append('per_page', filters.per_page.toString())
+    if (filters?.per_page)
+      params.append('per_page', filters.per_page.toString())
 
     const response = await apiClient.get(`/enrollments?${params}`)
     return response.data
@@ -46,7 +47,10 @@ class EnrollmentService {
     enrollmentId: number,
     progressData: UpdateEnrollmentProgressRequest
   ): Promise<Enrollment> {
-    const response = await apiClient.patch(`/enrollments/${enrollmentId}/progress`, progressData)
+    const response = await apiClient.patch(
+      `/enrollments/${enrollmentId}/progress`,
+      progressData
+    )
     return response.data.data
   }
 
@@ -56,8 +60,13 @@ class EnrollmentService {
    * @param courseSlug - Course slug
    * @returns Promise with array of enrollments
    */
-  async getCourseEnrollments(academySlug: string, courseSlug: string): Promise<Enrollment[]> {
-    const response = await apiClient.get(`/academies/${academySlug}/courses/${courseSlug}/enrollments`)
+  async getCourseEnrollments(
+    academySlug: string,
+    courseSlug: string
+  ): Promise<Enrollment[]> {
+    const response = await apiClient.get(
+      `/academies/${academySlug}/courses/${courseSlug}/enrollments`
+    )
     return response.data.data
   }
 
@@ -68,8 +77,14 @@ class EnrollmentService {
    * @param enrollmentId - Enrollment ID
    * @returns Promise that resolves when enrollment is deleted
    */
-  async deleteEnrollment(academySlug: string, courseSlug: string, enrollmentId: number): Promise<void> {
-    await apiClient.delete(`/academies/${academySlug}/courses/${courseSlug}/enrollments/${enrollmentId}`)
+  async deleteEnrollment(
+    academySlug: string,
+    courseSlug: string,
+    enrollmentId: number
+  ): Promise<void> {
+    await apiClient.delete(
+      `/academies/${academySlug}/courses/${courseSlug}/enrollments/${enrollmentId}`
+    )
   }
 }
 

@@ -1,5 +1,4 @@
-import apiClient from '@/lib/api-client'
-import type { 
+import type {
   Academy,
   AcademyMinimal,
   AcademySummaryLight,
@@ -9,8 +8,9 @@ import type {
   PaginationMeta,
   CreateAcademyRequest,
   UpdateAcademyRequest,
-  ApiViewMode
+  ApiViewMode,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 // Response types for specific endpoints
 export interface FeaturedAcademiesByCategory {
@@ -33,7 +33,9 @@ class AcademyService {
    * @param categoryId - Optional category ID to filter by
    * @returns Promise with array of featured academies grouped by category
    */
-  async getFeaturedAcademies(categoryId?: number): Promise<FeaturedAcademiesByCategory[]> {
+  async getFeaturedAcademies(
+    categoryId?: number
+  ): Promise<FeaturedAcademiesByCategory[]> {
     const params = categoryId ? { academy_category_id: categoryId } : {}
     const response = await apiClient.get('/academies/featured', { params })
     return response.data
@@ -45,15 +47,21 @@ class AcademyService {
    * @param view - View mode: 'minimal' | 'summary' | 'summary_light' | 'full' (default: 'summary')
    * @returns Promise with academy details typed according to view
    */
-  async getAcademyBySlug<TView extends ApiViewMode | 'summary_light' = 'summary'>(
+  async getAcademyBySlug<
+    TView extends ApiViewMode | 'summary_light' = 'summary',
+  >(
     slug: string,
     view?: TView
   ): Promise<
-    TView extends 'minimal' ? AcademyMinimal :
-    TView extends 'summary_light' ? AcademySummaryLight :
-    TView extends 'summary' ? AcademySummary :
-    TView extends 'full' ? AcademyFull :
-    AcademySummary
+    TView extends 'minimal'
+      ? AcademyMinimal
+      : TView extends 'summary_light'
+        ? AcademySummaryLight
+        : TView extends 'summary'
+          ? AcademySummary
+          : TView extends 'full'
+            ? AcademyFull
+            : AcademySummary
   > {
     const params = view ? { view } : {}
     const response = await apiClient.get(`/academies/${slug}`, { params })
@@ -75,8 +83,10 @@ class AcademyService {
    * @param view - View mode: 'minimal' | 'summary_light' | 'summary' | 'full' (default: 'summary_light')
    * @returns Promise with paginated academies data typed according to view
    */
-  async getAcademies<TView extends ApiViewMode | 'summary_light' = 'summary_light'>(
-    params?: { 
+  async getAcademies<
+    TView extends ApiViewMode | 'summary_light' = 'summary_light',
+  >(
+    params?: {
       search?: string
       page?: number
       per_page?: number
@@ -84,28 +94,32 @@ class AcademyService {
     },
     view?: TView
   ): Promise<{
-    data: (
-      TView extends 'minimal' ? AcademyMinimal :
-      TView extends 'summary_light' ? AcademySummaryLight :
-      TView extends 'summary' ? AcademySummary :
-      TView extends 'full' ? AcademyFull :
-      AcademySummaryLight
-    )[]
+    data: (TView extends 'minimal'
+      ? AcademyMinimal
+      : TView extends 'summary_light'
+        ? AcademySummaryLight
+        : TView extends 'summary'
+          ? AcademySummary
+          : TView extends 'full'
+            ? AcademyFull
+            : AcademySummaryLight)[]
     meta: PaginationMeta
   }> {
     const queryParams = {
       ...params,
-      ...(view && { view })
+      ...(view && { view }),
     }
     const response = await apiClient.get('/academies', { params: queryParams })
     return {
-      data: Array.isArray(response.data) ? response.data : response.data.data || [],
+      data: Array.isArray(response.data)
+        ? response.data
+        : response.data.data || [],
       meta: response.data.meta || {
         current_page: 1,
         total_pages: 1,
         total_count: Array.isArray(response.data) ? response.data.length : 0,
-        per_page: params?.per_page || 15
-      }
+        per_page: params?.per_page || 15,
+      },
     }
   }
 
@@ -116,7 +130,7 @@ class AcademyService {
    */
   async createAcademy(data: CreateAcademyRequest): Promise<Academy> {
     const response = await apiClient.post('/academies', {
-      academy: data
+      academy: data,
     })
     return response.data
   }
@@ -127,9 +141,12 @@ class AcademyService {
    * @param data - Updated academy data
    * @returns Promise with updated academy
    */
-  async updateAcademy(id: number, data: UpdateAcademyRequest): Promise<Academy> {
+  async updateAcademy(
+    id: number,
+    data: UpdateAcademyRequest
+  ): Promise<Academy> {
     const response = await apiClient.patch(`/academies/${id}`, {
-      academy: data
+      academy: data,
     })
     return response.data
   }

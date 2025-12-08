@@ -182,7 +182,7 @@ export function getAdminSidebar(
           title: 'Configuraciones',
           url: `/academy/${academySlug}/settings`,
           icon: Settings2,
-        }
+        },
       ],
     },
     {
@@ -214,6 +214,6 @@ export function getAdminSidebar(
           icon: Award,
         },
       ],
-    }
+    },
   ]
 }

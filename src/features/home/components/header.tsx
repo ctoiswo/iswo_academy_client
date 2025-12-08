@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
-import { ArrowLeft} from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from '@/hooks/use-translation'
 import { Button } from '@/components/ui/button'
 import { LanguageToggle } from '@/components/language-toggle'
@@ -69,4 +69,3 @@ export function Header({
     </header>
   )
 }
-

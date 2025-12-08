@@ -1,5 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   LineChart,
   Line,
@@ -15,8 +13,16 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export interface ChartData {
   [key: string]: string | number
@@ -48,7 +54,7 @@ const DEFAULT_COLORS = [
   '#00ff00',
   '#ff00ff',
   '#00ffff',
-  '#ff0000'
+  '#ff0000',
 ]
 
 export function ChartWidget({
@@ -66,15 +72,15 @@ export function ChartWidget({
   showGrid = true,
   showLegend = true,
   showTooltip = true,
-  emptyMessage = 'No data available'
+  emptyMessage = 'No data available',
 }: ChartWidgetProps) {
   if (loading) {
     return (
       <Card className={className}>
         {(title || description) && (
           <CardHeader>
-            {title && <Skeleton className="h-5 w-32" />}
-            {description && <Skeleton className="h-4 w-48 mt-2" />}
+            {title && <Skeleton className='h-5 w-32' />}
+            {description && <Skeleton className='mt-2 h-4 w-48' />}
           </CardHeader>
         )}
         <CardContent>
@@ -94,8 +100,8 @@ export function ChartWidget({
           </CardHeader>
         )}
         <CardContent>
-          <div 
-            className="flex items-center justify-center text-muted-foreground"
+          <div
+            className='text-muted-foreground flex items-center justify-center'
             style={{ height }}
           >
             {emptyMessage}
@@ -109,7 +115,7 @@ export function ChartWidget({
     const commonProps = {
       data,
       width: '100%',
-      height
+      height,
     }
 
     switch (type) {
@@ -117,7 +123,7 @@ export function ChartWidget({
         return (
           <ResponsiveContainer {...commonProps}>
             <LineChart data={data}>
-              {showGrid && <CartesianGrid strokeDasharray="3 3" />}
+              {showGrid && <CartesianGrid strokeDasharray='3 3' />}
               <XAxis dataKey={xAxisKey} />
               <YAxis />
               {showTooltip && <Tooltip />}
@@ -125,7 +131,7 @@ export function ChartWidget({
               {dataKeys.map((key, index) => (
                 <Line
                   key={key}
-                  type="monotone"
+                  type='monotone'
                   dataKey={key}
                   stroke={colors[index % colors.length]}
                   strokeWidth={2}
@@ -139,7 +145,7 @@ export function ChartWidget({
         return (
           <ResponsiveContainer {...commonProps}>
             <AreaChart data={data}>
-              {showGrid && <CartesianGrid strokeDasharray="3 3" />}
+              {showGrid && <CartesianGrid strokeDasharray='3 3' />}
               <XAxis dataKey={xAxisKey} />
               <YAxis />
               {showTooltip && <Tooltip />}
@@ -147,9 +153,9 @@ export function ChartWidget({
               {dataKeys.map((key, index) => (
                 <Area
                   key={key}
-                  type="monotone"
+                  type='monotone'
                   dataKey={key}
-                  stackId="1"
+                  stackId='1'
                   stroke={colors[index % colors.length]}
                   fill={colors[index % colors.length]}
                   fillOpacity={0.6}
@@ -163,7 +169,7 @@ export function ChartWidget({
         return (
           <ResponsiveContainer {...commonProps}>
             <BarChart data={data}>
-              {showGrid && <CartesianGrid strokeDasharray="3 3" />}
+              {showGrid && <CartesianGrid strokeDasharray='3 3' />}
               <XAxis dataKey={xAxisKey} />
               <YAxis />
               {showTooltip && <Tooltip />}
@@ -185,16 +191,21 @@ export function ChartWidget({
             <PieChart>
               <Pie
                 data={data}
-                cx="50%"
-                cy="50%"
+                cx='50%'
+                cy='50%'
                 labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }) =>
+                  `${name} ${(percent * 100).toFixed(0)}%`
+                }
                 outerRadius={80}
-                fill="#8884d8"
+                fill='#8884d8'
                 dataKey={yAxisKey}
               >
                 {data.map((_entry, index) => (
-                  <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={colors[index % colors.length]}
+                  />
                 ))}
               </Pie>
               {showTooltip && <Tooltip />}
@@ -216,29 +227,29 @@ export function ChartWidget({
           {description && <CardDescription>{description}</CardDescription>}
         </CardHeader>
       )}
-      <CardContent>
-        {renderChart()}
-      </CardContent>
+      <CardContent>{renderChart()}</CardContent>
     </Card>
   )
 }
 
 // Specialized chart components for common use cases
-export interface TrendChartProps extends Omit<ChartWidgetProps, 'type' | 'data'> {
+export interface TrendChartProps
+  extends Omit<ChartWidgetProps, 'type' | 'data'> {
   data: Array<{ date: string; value: number; [key: string]: string | number }>
   trend?: 'up' | 'down' | 'stable'
 }
 
 export function TrendChart({ data, trend, ...props }: TrendChartProps) {
-  const trendColor = trend === 'up' ? '#22c55e' : trend === 'down' ? '#ef4444' : '#6b7280'
-  
+  const trendColor =
+    trend === 'up' ? '#22c55e' : trend === 'down' ? '#ef4444' : '#6b7280'
+
   return (
     <ChartWidget
       {...props}
-      type="line"
+      type='line'
       data={data}
-      xAxisKey="date"
-      yAxisKey="value"
+      xAxisKey='date'
+      yAxisKey='value'
       colors={[trendColor]}
       showGrid={true}
       showLegend={false}
@@ -246,7 +257,8 @@ export function TrendChart({ data, trend, ...props }: TrendChartProps) {
   )
 }
 
-export interface ComparisonChartProps extends Omit<ChartWidgetProps, 'type' | 'data'> {
+export interface ComparisonChartProps
+  extends Omit<ChartWidgetProps, 'type' | 'data'> {
   data: Array<{ category: string; current: number; previous: number }>
 }
 
@@ -254,31 +266,32 @@ export function ComparisonChart({ data, ...props }: ComparisonChartProps) {
   return (
     <ChartWidget
       {...props}
-      type="bar"
+      type='bar'
       data={data}
-      xAxisKey="category"
+      xAxisKey='category'
       dataKeys={['current', 'previous']}
       colors={['#3b82f6', '#e5e7eb']}
     />
   )
 }
 
-export interface DistributionChartProps extends Omit<ChartWidgetProps, 'type' | 'data'> {
+export interface DistributionChartProps
+  extends Omit<ChartWidgetProps, 'type' | 'data'> {
   data: Array<{ name: string; value: number; color?: string }>
 }
 
 export function DistributionChart({ data, ...props }: DistributionChartProps) {
-  const chartData = data.map(item => ({
+  const chartData = data.map((item) => ({
     name: item.name,
-    value: item.value
+    value: item.value,
   }))
-  
-  const chartColors = data.map(item => item.color).filter(Boolean) as string[]
-  
+
+  const chartColors = data.map((item) => item.color).filter(Boolean) as string[]
+
   return (
     <ChartWidget
       {...props}
-      type="pie"
+      type='pie'
       data={chartData}
       colors={chartColors.length > 0 ? chartColors : DEFAULT_COLORS}
       showGrid={false}

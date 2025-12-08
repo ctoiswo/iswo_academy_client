@@ -1,11 +1,11 @@
 // Permission types and validation utilities for academy access control
 
 export type AcademyRole = 'guest' | 'student' | 'teacher' | 'admin'
-export type Permission = 
-  | 'read' 
-  | 'create' 
-  | 'update' 
-  | 'delete' 
+export type Permission =
+  | 'read'
+  | 'create'
+  | 'update'
+  | 'delete'
   | 'enroll'
   | 'manage_courses'
   | 'manage_users'
@@ -29,21 +29,33 @@ const ROLE_HIERARCHY: Record<AcademyRole, number> = {
   guest: 0,
   student: 1,
   teacher: 2,
-  admin: 3
+  admin: 3,
 }
 
 // Permissions by role
 const ROLE_PERMISSIONS: Record<AcademyRole, Permission[]> = {
-  admin: ['read', 'create', 'update', 'delete', 'enroll', 'manage_courses', 'manage_users', 'manage_payments'],
+  admin: [
+    'read',
+    'create',
+    'update',
+    'delete',
+    'enroll',
+    'manage_courses',
+    'manage_users',
+    'manage_payments',
+  ],
   teacher: ['read', 'create', 'update', 'enroll', 'manage_courses'],
   student: ['read', 'enroll'],
-  guest: ['read'] // Guests can only read public content
+  guest: ['read'], // Guests can only read public content
 }
 
 /**
  * Check if a role has sufficient permissions compared to required role
  */
-export function hasRoleLevel(userRole: AcademyRole, requiredRole: AcademyRole): boolean {
+export function hasRoleLevel(
+  userRole: AcademyRole,
+  requiredRole: AcademyRole
+): boolean {
   const userLevel = ROLE_HIERARCHY[userRole] || 0
   const requiredLevel = ROLE_HIERARCHY[requiredRole] || 0
   return userLevel >= requiredLevel
@@ -59,7 +71,10 @@ export function getRolePermissions(role: AcademyRole): Permission[] {
 /**
  * Check if a role has a specific permission
  */
-export function hasPermission(role: AcademyRole, permission: Permission): boolean {
+export function hasPermission(
+  role: AcademyRole,
+  permission: Permission
+): boolean {
   const rolePermissions = getRolePermissions(role)
   return rolePermissions.includes(permission)
 }
@@ -73,7 +88,7 @@ export function canPerformAction(
   context?: PermissionContext
 ): boolean {
   if (!academyMembership) return false
-  
+
   const role = academyMembership.user_role as AcademyRole
   return hasPermission(role, action)
 }
@@ -86,9 +101,9 @@ export function canAccessAcademy(
   academyId: number,
   requiredRole: AcademyRole = 'student'
 ): boolean {
-  const membership = academyMemberships.find(m => m.id === academyId)
+  const membership = academyMemberships.find((m) => m.id === academyId)
   if (!membership) return false
-  
+
   return hasRoleLevel(membership.user_role as AcademyRole, requiredRole)
 }
 
@@ -99,7 +114,7 @@ export function getUserAcademyRole(
   academyMemberships: Array<{ id: number; user_role: string }>,
   academyId: number
 ): AcademyRole | null {
-  const membership = academyMemberships.find(m => m.id === academyId)
+  const membership = academyMemberships.find((m) => m.id === academyId)
   return membership ? (membership.user_role as AcademyRole) : null
 }
 
@@ -110,7 +125,7 @@ export function filterAcademiesByRole(
   academyMemberships: Array<{ id: number; user_role: string }>,
   requiredRole: AcademyRole
 ): Array<{ id: number; user_role: string }> {
-  return academyMemberships.filter(membership => 
+  return academyMemberships.filter((membership) =>
     hasRoleLevel(membership.user_role as AcademyRole, requiredRole)
   )
 }
@@ -125,10 +140,10 @@ export function canManageUser(
 ): boolean {
   // Users can always manage themselves (for profile updates)
   if (isSameUser) return true
-  
+
   // Only admins can manage other users
   if (currentUserRole !== 'admin') return false
-  
+
   // Admins can manage users with lower or equal roles
   return hasRoleLevel(currentUserRole, targetUserRole)
 }
@@ -147,34 +162,34 @@ export function validateRouteAccess(
   reason?: string
 } {
   const userRole = getUserAcademyRole(academyMemberships, academyId)
-  
+
   if (!userRole) {
     return {
       hasAccess: false,
       userRole: null,
-      reason: 'Not a member of this academy'
+      reason: 'Not a member of this academy',
     }
   }
-  
+
   if (requiredRole && !hasRoleLevel(userRole, requiredRole)) {
     return {
       hasAccess: false,
       userRole,
-      reason: `Insufficient role. Required: ${requiredRole}, Current: ${userRole}`
+      reason: `Insufficient role. Required: ${requiredRole}, Current: ${userRole}`,
     }
   }
-  
+
   if (requiredPermission && !hasPermission(userRole, requiredPermission)) {
     return {
       hasAccess: false,
       userRole,
-      reason: `Missing permission: ${requiredPermission}`
+      reason: `Missing permission: ${requiredPermission}`,
     }
   }
-  
+
   return {
     hasAccess: true,
-    userRole
+    userRole,
   }
 }
 

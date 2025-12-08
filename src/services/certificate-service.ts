@@ -1,12 +1,12 @@
-import apiClient from '@/lib/api-client'
 import type {
   Certificate,
   CertificateVerification,
   CertificateDownloadData,
   LearningPathCertificateConfiguration,
   PaginationMeta,
-  MessageResponse
+  MessageResponse,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 export interface CertificatesResponse {
   certificates: Certificate[]
@@ -30,10 +30,15 @@ class CertificateService {
    * @param filters - Optional filters (course_id, user_id, pagination)
    * @returns Promise with certificates and pagination
    */
-  async getCertificates(filters?: CertificateFilters): Promise<CertificatesResponse> {
-    const response = await apiClient.get<CertificatesResponse>('/certificates', {
-      params: filters
-    })
+  async getCertificates(
+    filters?: CertificateFilters
+  ): Promise<CertificatesResponse> {
+    const response = await apiClient.get<CertificatesResponse>(
+      '/certificates',
+      {
+        params: filters,
+      }
+    )
     return response.data
   }
 
@@ -43,7 +48,9 @@ class CertificateService {
    * @returns Promise with certificate details
    */
   async getCertificate(certificateId: number): Promise<Certificate> {
-    const response = await apiClient.get<{ certificate: Certificate }>(`/certificates/${certificateId}`)
+    const response = await apiClient.get<{ certificate: Certificate }>(
+      `/certificates/${certificateId}`
+    )
     return response.data.certificate
   }
 
@@ -53,9 +60,12 @@ class CertificateService {
    * @returns Promise with created certificate
    */
   async createCertificate(courseId: number): Promise<Certificate> {
-    const response = await apiClient.post<{ certificate: Certificate }>('/certificates', {
-      course_id: courseId
-    })
+    const response = await apiClient.post<{ certificate: Certificate }>(
+      '/certificates',
+      {
+        course_id: courseId,
+      }
+    )
     return response.data.certificate
   }
 
@@ -64,8 +74,12 @@ class CertificateService {
    * @param certificateId - Certificate ID
    * @returns Promise with certificate download data
    */
-  async downloadCertificate(certificateId: number): Promise<CertificateDownloadData> {
-    const response = await apiClient.get<CertificateDownloadData>(`/certificates/${certificateId}/download`)
+  async downloadCertificate(
+    certificateId: number
+  ): Promise<CertificateDownloadData> {
+    const response = await apiClient.get<CertificateDownloadData>(
+      `/certificates/${certificateId}/download`
+    )
     return response.data
   }
 
@@ -74,8 +88,12 @@ class CertificateService {
    * @param certificateNumber - Certificate number to verify
    * @returns Promise with verification result
    */
-  async verifyCertificate(certificateNumber: string): Promise<CertificateVerification> {
-    const response = await apiClient.get<CertificateVerification>(`/certificates/verify/${certificateNumber}`)
+  async verifyCertificate(
+    certificateNumber: string
+  ): Promise<CertificateVerification> {
+    const response = await apiClient.get<CertificateVerification>(
+      `/certificates/verify/${certificateNumber}`
+    )
     return response.data
   }
 
@@ -85,7 +103,9 @@ class CertificateService {
    * @returns Promise with success message
    */
   async revokeCertificate(certificateId: number): Promise<MessageResponse> {
-    const response = await apiClient.patch<MessageResponse>(`/certificates/${certificateId}/revoke`)
+    const response = await apiClient.patch<MessageResponse>(
+      `/certificates/${certificateId}/revoke`
+    )
     return response.data
   }
 

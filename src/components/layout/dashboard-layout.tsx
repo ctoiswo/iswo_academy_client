@@ -12,11 +12,11 @@ import { LanguageToggle } from '@/components/language-toggle'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { TopNav } from '@/components/layout/top-nav'
+import { NotificationDropdown } from '@/components/notifications'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { SkipToMain } from '@/components/skip-to-main'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { NotificationDropdown } from '@/components/notifications'
 
 export type DashboardLayoutVariant = 'full' | 'sidebar' | 'compact'
 

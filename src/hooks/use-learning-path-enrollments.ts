@@ -1,5 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import learningPathEnrollmentsService, { type EnrollmentFilters } from '@/services/learning-path-enrollments-service'
+import learningPathEnrollmentsService, {
+  type EnrollmentFilters,
+} from '@/services/learning-path-enrollments-service'
 import { toast } from 'sonner'
 
 export function useLearningPathEnrollments(
@@ -8,8 +10,18 @@ export function useLearningPathEnrollments(
   filters?: EnrollmentFilters
 ) {
   return useQuery({
-    queryKey: ['learning-path-enrollments', academySlug, learningPathSlug, filters],
-    queryFn: () => learningPathEnrollmentsService.getEnrollments(academySlug, learningPathSlug, filters),
+    queryKey: [
+      'learning-path-enrollments',
+      academySlug,
+      learningPathSlug,
+      filters,
+    ],
+    queryFn: () =>
+      learningPathEnrollmentsService.getEnrollments(
+        academySlug,
+        learningPathSlug,
+        filters
+      ),
     enabled: !!academySlug && !!learningPathSlug,
   })
 }
@@ -20,18 +32,35 @@ export function useLearningPathEnrollment(
   enrollmentId: number
 ) {
   return useQuery({
-    queryKey: ['learning-path-enrollment', academySlug, learningPathSlug, enrollmentId],
-    queryFn: () => learningPathEnrollmentsService.getEnrollment(academySlug, learningPathSlug, enrollmentId),
+    queryKey: [
+      'learning-path-enrollment',
+      academySlug,
+      learningPathSlug,
+      enrollmentId,
+    ],
+    queryFn: () =>
+      learningPathEnrollmentsService.getEnrollment(
+        academySlug,
+        learningPathSlug,
+        enrollmentId
+      ),
     enabled: !!academySlug && !!learningPathSlug && !!enrollmentId,
   })
 }
 
-export function useDeleteLearningPathEnrollment(academySlug: string, learningPathSlug: string) {
+export function useDeleteLearningPathEnrollment(
+  academySlug: string,
+  learningPathSlug: string
+) {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (enrollmentId: number) =>
-      learningPathEnrollmentsService.deleteEnrollment(academySlug, learningPathSlug, enrollmentId),
+      learningPathEnrollmentsService.deleteEnrollment(
+        academySlug,
+        learningPathSlug,
+        enrollmentId
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['learning-path-enrollments', academySlug, learningPathSlug],

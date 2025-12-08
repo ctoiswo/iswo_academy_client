@@ -1,17 +1,16 @@
 /**
  * Academy related types
  * Matches backend AcademySerializer views
- * 
+ *
  * Active Storage Attachments:
  * - Backend: has_one_attached :logo, has_one_attached :banner
  * - Upload: Send File objects with keys 'logo' and 'banner' in FormData
  * - Response: logo_url and banner_url are generated URLs from Active Storage
  */
-
 import type { BaseFilters } from '../common'
 import type { AcademyCategory } from './category'
-import type { Creator } from './user'
 import type { Course } from './course'
+import type { Creator } from './user'
 
 export type AcademyStatus = 'draft' | 'active' | 'archived'
 
@@ -114,7 +113,7 @@ export interface AcademyFormData {
   subscription_required: boolean
   monthly_price: number
   academy_category_id?: number
-  
+
   // File uploads (File objects, not URLs)
   logo?: File | null
   banner?: File | null

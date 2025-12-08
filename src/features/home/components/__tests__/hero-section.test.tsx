@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { HeroSection } from '../hero-section'
 
 // Mock framer-motion
@@ -18,17 +18,18 @@ vi.mock('react-i18next', () => ({
       const translations: Record<string, string> = {
         'home.hero.title': 'Descubre tu próxima',
         'home.hero.titleHighlight': 'oportunidad de aprendizaje',
-        'home.hero.description': 'Explora miles de cursos creados por expertos en academias especializadas',
+        'home.hero.description':
+          'Explora miles de cursos creados por expertos en academias especializadas',
         'home.hero.imageAlt': 'Fondo de hero section',
       }
       return translations[key] || key
-    }
-  })
+    },
+  }),
 }))
 
 // Mock GlobalSearchBar component
 vi.mock('@/components/search/global-search-bar', () => ({
-  GlobalSearchBar: () => <div data-testid="global-search-bar">Search Bar</div>,
+  GlobalSearchBar: () => <div data-testid='global-search-bar'>Search Bar</div>,
 }))
 
 describe('HeroSection', () => {
@@ -47,14 +48,21 @@ describe('HeroSection', () => {
     it('should render hero description', () => {
       render(<HeroSection />)
 
-      expect(screen.getByText('Explora miles de cursos creados por expertos en academias especializadas')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'Explora miles de cursos creados por expertos en academias especializadas'
+        )
+      ).toBeInTheDocument()
     })
 
     it('should render background image with proper attributes', () => {
       render(<HeroSection />)
 
       const image = screen.getByRole('img')
-      expect(image).toHaveAttribute('src', 'https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')
+      expect(image).toHaveAttribute(
+        'src',
+        'https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+      )
       expect(image).toHaveAttribute('alt', 'Fondo de hero section')
     })
 
@@ -79,7 +87,13 @@ describe('HeroSection', () => {
 
       const heading = screen.getByRole('heading', { level: 1 })
       expect(heading).toBeInTheDocument()
-      expect(heading).toHaveClass('text-4xl', 'font-bold', 'tracking-tight', 'sm:text-6xl', 'lg:text-7xl')
+      expect(heading).toHaveClass(
+        'text-4xl',
+        'font-bold',
+        'tracking-tight',
+        'sm:text-6xl',
+        'lg:text-7xl'
+      )
     })
 
     it('should highlight title portion correctly', () => {
@@ -95,7 +109,12 @@ describe('HeroSection', () => {
       render(<HeroSection />)
 
       const image = screen.getByRole('img')
-      expect(image).toHaveClass('h-full', 'w-full', 'object-cover', 'opacity-10')
+      expect(image).toHaveClass(
+        'h-full',
+        'w-full',
+        'object-cover',
+        'opacity-10'
+      )
     })
 
     it('should render gradient overlay', () => {
@@ -113,10 +132,10 @@ describe('HeroSection', () => {
 
       const section = screen.getByRole('img').closest('section')
       expect(section).toBeInTheDocument()
-      
+
       const heading = screen.getByRole('heading', { level: 1 })
       expect(heading).toBeInTheDocument()
-      
+
       const image = screen.getByRole('img')
       expect(image).toBeInTheDocument()
     })
@@ -141,7 +160,9 @@ describe('HeroSection', () => {
       render(<HeroSection />)
 
       // Background should have z-0
-      const backgroundDiv = screen.getByRole('img').closest('.absolute.inset-0.z-0')
+      const backgroundDiv = screen
+        .getByRole('img')
+        .closest('.absolute.inset-0.z-0')
       expect(backgroundDiv).toBeInTheDocument()
     })
   })

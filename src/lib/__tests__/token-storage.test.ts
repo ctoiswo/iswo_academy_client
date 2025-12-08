@@ -1,12 +1,16 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { tokenStorage, type AuthTokens, type StoredTokens } from '../token-storage'
 import * as cookieUtils from '../cookies'
+import {
+  tokenStorage,
+  type AuthTokens,
+  type StoredTokens,
+} from '../token-storage'
 
 // Mock the cookies utility
 vi.mock('../cookies', () => ({
   getCookie: vi.fn(),
   setCookie: vi.fn(),
-  removeCookie: vi.fn()
+  removeCookie: vi.fn(),
 }))
 
 // Mock localStorage
@@ -16,25 +20,25 @@ const localStorageMock = {
   removeItem: vi.fn(),
   clear: vi.fn(),
   length: 0,
-  key: vi.fn()
+  key: vi.fn(),
 }
 
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
-  writable: true
+  writable: true,
 })
 
 // Mock data
 const mockTokens: AuthTokens = {
   access_token: 'mock-access-token',
   refresh_token: 'mock-refresh-token',
-  expires_in: 3600
+  expires_in: 3600,
 }
 
 const mockStoredTokens: StoredTokens = {
   access_token: 'mock-access-token',
   refresh_token: 'mock-refresh-token',
-  expires_at: Date.now() + 3600000 // 1 hour from now
+  expires_at: Date.now() + 3600000, // 1 hour from now
 }
 
 describe('TokenStorage', () => {
@@ -42,13 +46,13 @@ describe('TokenStorage', () => {
     vi.clearAllMocks()
     // Reset localStorage mock
     localStorageMock.getItem.mockReturnValue(null)
-    localStorageMock.setItem.mockImplementation(() => { })
-    localStorageMock.removeItem.mockImplementation(() => { })
+    localStorageMock.setItem.mockImplementation(() => {})
+    localStorageMock.removeItem.mockImplementation(() => {})
 
     // Reset cookie mocks
     vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
-    vi.mocked(cookieUtils.setCookie).mockImplementation(() => { })
-    vi.mocked(cookieUtils.removeCookie).mockImplementation(() => { })
+    vi.mocked(cookieUtils.setCookie).mockImplementation(() => {})
+    vi.mocked(cookieUtils.removeCookie).mockImplementation(() => {})
   })
 
   afterEach(() => {
@@ -88,7 +92,9 @@ describe('TokenStorage', () => {
         throw new Error('Cookie storage failed')
       })
 
-      expect(() => tokenStorage.setTokens(mockTokens)).toThrow('Token storage failed')
+      expect(() => tokenStorage.setTokens(mockTokens)).toThrow(
+        'Token storage failed'
+      )
     })
   })
 
@@ -114,7 +120,7 @@ describe('TokenStorage', () => {
       expect(tokens).toEqual({
         access_token: mockTokens.access_token,
         refresh_token: mockTokens.refresh_token,
-        expires_at: expiresAt
+        expires_at: expiresAt,
       })
     })
 
@@ -152,7 +158,8 @@ describe('TokenStorage', () => {
       vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return mockTokens.access_token
         if (key === 'iswo_refresh_token') return mockTokens.refresh_token
-        if (key === 'iswo_token_expires') return (Date.now() + 3600000).toString()
+        if (key === 'iswo_token_expires')
+          return (Date.now() + 3600000).toString()
         return undefined
       })
 
@@ -176,7 +183,8 @@ describe('TokenStorage', () => {
       vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return mockTokens.access_token
         if (key === 'iswo_refresh_token') return mockTokens.refresh_token
-        if (key === 'iswo_token_expires') return (Date.now() + 3600000).toString()
+        if (key === 'iswo_token_expires')
+          return (Date.now() + 3600000).toString()
         return undefined
       })
 
@@ -200,7 +208,7 @@ describe('TokenStorage', () => {
       const validTokens: StoredTokens = {
         access_token: 'token',
         refresh_token: 'refresh',
-        expires_at: Date.now() + 3600000 // 1 hour from now
+        expires_at: Date.now() + 3600000, // 1 hour from now
       }
 
       const isExpired = tokenStorage.isTokenExpired(validTokens)
@@ -212,7 +220,7 @@ describe('TokenStorage', () => {
       const expiredTokens: StoredTokens = {
         access_token: 'token',
         refresh_token: 'refresh',
-        expires_at: Date.now() - 1000 // 1 second ago
+        expires_at: Date.now() - 1000, // 1 second ago
       }
 
       const isExpired = tokenStorage.isTokenExpired(expiredTokens)
@@ -224,7 +232,7 @@ describe('TokenStorage', () => {
       const soonToExpireTokens: StoredTokens = {
         access_token: 'token',
         refresh_token: 'refresh',
-        expires_at: Date.now() + 60000 // 1 minute from now (less than 5 minute buffer)
+        expires_at: Date.now() + 60000, // 1 minute from now (less than 5 minute buffer)
       }
 
       const isExpired = tokenStorage.isTokenExpired(soonToExpireTokens)
@@ -242,7 +250,8 @@ describe('TokenStorage', () => {
       vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'token'
         if (key === 'iswo_refresh_token') return 'refresh'
-        if (key === 'iswo_token_expires') return (Date.now() + 3600000).toString()
+        if (key === 'iswo_token_expires')
+          return (Date.now() + 3600000).toString()
         return undefined
       })
 
@@ -257,7 +266,8 @@ describe('TokenStorage', () => {
       vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'token'
         if (key === 'iswo_refresh_token') return 'refresh'
-        if (key === 'iswo_token_expires') return (Date.now() + 3600000).toString()
+        if (key === 'iswo_token_expires')
+          return (Date.now() + 3600000).toString()
         return undefined
       })
 
@@ -294,9 +304,15 @@ describe('TokenStorage', () => {
       tokenStorage.clearTokens()
 
       expect(cookieUtils.removeCookie).toHaveBeenCalledWith('iswo_access_token')
-      expect(cookieUtils.removeCookie).toHaveBeenCalledWith('iswo_refresh_token')
-      expect(cookieUtils.removeCookie).toHaveBeenCalledWith('iswo_token_expires')
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith('iswo_auth_tokens')
+      expect(cookieUtils.removeCookie).toHaveBeenCalledWith(
+        'iswo_refresh_token'
+      )
+      expect(cookieUtils.removeCookie).toHaveBeenCalledWith(
+        'iswo_token_expires'
+      )
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith(
+        'iswo_auth_tokens'
+      )
     })
 
     it('should handle clearing errors gracefully', () => {
@@ -398,7 +414,8 @@ describe('TokenStorage', () => {
       vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'old-token'
         if (key === 'iswo_refresh_token') return 'refresh-token'
-        if (key === 'iswo_token_expires') return (Date.now() + 3600000).toString()
+        if (key === 'iswo_token_expires')
+          return (Date.now() + 3600000).toString()
         return undefined
       })
     })
@@ -422,8 +439,9 @@ describe('TokenStorage', () => {
       vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
       localStorageMock.getItem.mockReturnValue(null)
 
-      expect(() => tokenStorage.updateAccessToken('new-token', 3600))
-        .toThrow('No existing tokens to update')
+      expect(() => tokenStorage.updateAccessToken('new-token', 3600)).toThrow(
+        'No existing tokens to update'
+      )
     })
   })
 

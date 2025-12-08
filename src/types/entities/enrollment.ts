@@ -2,7 +2,6 @@
  * Enrollment Entity Types
  * Based on Rails Enrollment model structure
  */
-
 import type { Course } from './course'
 
 export type EnrollmentStatus = 'active' | 'completed' | 'suspended'

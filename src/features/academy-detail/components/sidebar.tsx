@@ -61,29 +61,21 @@ export function Sidebar({ academy }: SidebarProps) {
           </CardHeader>
           <CardContent className='space-y-4'>
             <div className='flex items-center justify-between'>
-              <span className='text-muted-foreground text-sm'>
-                Estudiantes
-              </span>
+              <span className='text-muted-foreground text-sm'>Estudiantes</span>
               <span className='font-semibold'>
                 {(academy.enrolled_users_count || 0).toLocaleString()}
               </span>
             </div>
             <div className='flex items-center justify-between'>
-              <span className='text-muted-foreground text-sm'>
-                Cursos
-              </span>
+              <span className='text-muted-foreground text-sm'>Cursos</span>
               <span className='font-semibold'>
                 {academy.courses_count || 0}
               </span>
             </div>
             {academy.total_lessons && (
               <div className='flex items-center justify-between'>
-                <span className='text-muted-foreground text-sm'>
-                  Lecciones
-                </span>
-                <span className='font-semibold'>
-                  {academy.total_lessons}
-                </span>
+                <span className='text-muted-foreground text-sm'>Lecciones</span>
+                <span className='font-semibold'>{academy.total_lessons}</span>
               </div>
             )}
             {academy.total_duration_hours && (
@@ -106,9 +98,7 @@ export function Sidebar({ academy }: SidebarProps) {
                 </span>
                 <div className='flex items-center gap-1'>
                   <Star className='h-4 w-4 fill-current text-yellow-500' />
-                  <span className='font-semibold'>
-                    {academy.rating}
-                  </span>
+                  <span className='font-semibold'>{academy.rating}</span>
                 </div>
               </div>
             )}
@@ -121,9 +111,7 @@ export function Sidebar({ academy }: SidebarProps) {
         <Card className='border-2 border-blue-200 bg-blue-50/50'>
           <CardContent className='p-6'>
             <div className='mb-4 text-center'>
-              <h3 className='mb-2 text-xl font-bold'>
-                Acceso Completo
-              </h3>
+              <h3 className='mb-2 text-xl font-bold'>Acceso Completo</h3>
               <div className='text-3xl font-bold text-blue-600'>
                 ${academy.monthly_price || 0}
                 <span className='text-muted-foreground text-lg font-normal'>
@@ -151,10 +139,7 @@ export function Sidebar({ academy }: SidebarProps) {
               </div>
             </div>
 
-            <Button
-              className='w-full bg-blue-600 hover:bg-blue-700'
-              size='lg'
-            >
+            <Button className='w-full bg-blue-600 hover:bg-blue-700' size='lg'>
               <ShoppingCart className='mr-2 h-4 w-4' />
               Suscribirse Ahora
             </Button>

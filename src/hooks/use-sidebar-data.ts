@@ -1,12 +1,12 @@
-import { useAuthStore } from '@/stores/auth-store'
 import { useLocation } from '@tanstack/react-router'
+import { useAuthStore } from '@/stores/auth-store'
+import { useUserEnrollments } from '@/hooks/use-enrollments'
 import { getAdminSidebar } from '@/components/layout/data/sidebar-admin'
-import { getTeacherSidebar } from '@/components/layout/data/sidebar-teacher'
+import { getGuestSidebar } from '@/components/layout/data/sidebar-guest'
 import { getStudentSidebar } from '@/components/layout/data/sidebar-student'
 import { getSuperAdminSidebar } from '@/components/layout/data/sidebar-super-admin'
-import { getGuestSidebar } from '@/components/layout/data/sidebar-guest'
+import { getTeacherSidebar } from '@/components/layout/data/sidebar-teacher'
 import { type SidebarData } from '@/components/layout/types'
-import { useUserEnrollments } from '@/hooks/use-enrollments'
 
 type UserRole = 'guest' | 'student' | 'teacher' | 'admin' | 'super_admin'
 
@@ -45,12 +45,18 @@ export function useSidebarData(): SidebarData['navGroups'] {
   const isInAcademyRoute = location.pathname.startsWith('/academy/')
 
   // Detectar si estamos en una ruta de curso específico
-  const courseSlugMatch = location.pathname.match(/\/academy\/[^/]+\/courses\/([^/]+)/)
+  const courseSlugMatch = location.pathname.match(
+    /\/academy\/[^/]+\/courses\/([^/]+)/
+  )
   const courseSlug = courseSlugMatch ? courseSlugMatch[1] : undefined
 
   // Detectar si estamos en una ruta de learning path específico
-  const learningPathSlugMatch = location.pathname.match(/\/academy\/[^/]+\/learning-paths\/([^/]+)/)
-  const learningPathSlug = learningPathSlugMatch ? learningPathSlugMatch[1] : undefined
+  const learningPathSlugMatch = location.pathname.match(
+    /\/academy\/[^/]+\/learning-paths\/([^/]+)/
+  )
+  const learningPathSlug = learningPathSlugMatch
+    ? learningPathSlugMatch[1]
+    : undefined
 
   // Obtener el sidebar según el rol y la ubicación
   if (userRole === 'super_admin') {
@@ -81,7 +87,8 @@ export function useSidebarData(): SidebarData['navGroups'] {
 
   // Si es estudiante y no está en una ruta de academia, usar la primera academia de sus enrollments
   if (userRole === 'student' && enrollmentsData?.enrollments?.length) {
-    const firstAcademySlug = enrollmentsData.enrollments[0]?.course?.academy_slug
+    const firstAcademySlug =
+      enrollmentsData.enrollments[0]?.course?.academy_slug
     if (firstAcademySlug) {
       return getStudentSidebar(firstAcademySlug)
     }

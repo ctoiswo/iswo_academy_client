@@ -1,3 +1,4 @@
+import type { Course } from '@/types'
 import { motion } from 'framer-motion'
 import { BookOpen } from 'lucide-react'
 import {
@@ -7,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { Course } from '@/types'
 
 interface CourseContentProps {
   course: Course & {

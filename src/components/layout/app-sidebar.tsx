@@ -17,13 +17,13 @@ import { TeamSwitcher } from './team-switcher'
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
   const { user, academyData } = useAuthStore()
-  
+
   // Usar el hook centralizado para obtener el sidebar apropiado
   const navGroups = useSidebarData()
-  
-  // Determinar si el usuario es guest
-  const isGuest = !user?.is_super_admin && (!academyData || academyData.count === 0)
 
+  // Determinar si el usuario es guest
+  const isGuest =
+    !user?.is_super_admin && (!academyData || academyData.count === 0)
 
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
@@ -54,7 +54,6 @@ export function AppSidebar() {
             ]}
           />
         )}
-
       </SidebarHeader>
       <SidebarContent>
         {navGroups.map((props) => (

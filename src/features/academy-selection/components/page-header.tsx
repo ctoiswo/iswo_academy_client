@@ -7,28 +7,29 @@ interface PageHeaderProps {
 
 export function PageHeader({ userName }: PageHeaderProps) {
   return (
-    <motion.header 
-      className="text-center mb-16"
+    <motion.header
+      className='mb-16 text-center'
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <div className="flex items-center justify-center mb-6">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mr-4 shadow-xl">
-          <GraduationCap className="w-8 h-8 text-white" />
+      <div className='mb-6 flex items-center justify-center'>
+        <div className='from-primary to-primary/80 mr-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br shadow-xl'>
+          <GraduationCap className='h-8 w-8 text-white' />
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+        <h1 className='from-primary to-primary/60 bg-gradient-to-r bg-clip-text text-4xl font-bold tracking-tight text-transparent md:text-5xl'>
           Selecciona tu Academia
         </h1>
       </div>
-      <motion.p 
-        className="text-xl text-muted-foreground max-w-2xl mx-auto"
+      <motion.p
+        className='text-muted-foreground mx-auto max-w-2xl text-xl'
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        ¡Bienvenido de nuevo, <span className="font-semibold text-foreground">{userName}</span>! 
-        Elige la academia a la que deseas acceder hoy.
+        ¡Bienvenido de nuevo,{' '}
+        <span className='text-foreground font-semibold'>{userName}</span>! Elige
+        la academia a la que deseas acceder hoy.
       </motion.p>
     </motion.header>
   )

@@ -25,10 +25,13 @@ type MinimalAcademy = {
   monthly_price: string
 }
 
-export function adaptBackendAcademyToCard(academy: MinimalAcademy, categoryName: string): AcademyCardData {
+export function adaptBackendAcademyToCard(
+  academy: MinimalAcademy,
+  categoryName: string
+): AcademyCardData {
   // Parse the price safely
   const price = parseFloat(academy.monthly_price) || 0
-  
+
   return {
     id: academy.id,
     name: academy.name,
@@ -42,8 +45,8 @@ export function adaptBackendAcademyToCard(academy: MinimalAcademy, categoryName:
     image: `https://images.pexels.com/photos/574071/pexels-photo-574071.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2`,
     category: categoryName,
     duration: undefined, // No disponible en el backend aún
-    level: undefined, // No disponible en el backend aún  
-    price: price
+    level: undefined, // No disponible en el backend aún
+    price: price,
   }
 }
 
@@ -53,8 +56,8 @@ export function adaptCategoryForCarousel(category: AcademyCategory): {
 } {
   return {
     title: category.name,
-    academies: category.academies.map(academy =>
+    academies: category.academies.map((academy) =>
       adaptBackendAcademyToCard(academy, category.name)
-    )
+    ),
   }
 }

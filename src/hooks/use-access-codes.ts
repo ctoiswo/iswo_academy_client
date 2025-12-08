@@ -1,12 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-
 import { accessCodeService } from '@/services/access-code-service'
 import type {
   CreateAccessCodeRequest,
   UpdateAccessCodeRequest,
-  RedeemAccessCodeRequest
+  RedeemAccessCodeRequest,
 } from '@/types'
+import { toast } from 'sonner'
 
 export function useAccessCodes(courseId: number | string) {
   return useQuery({
@@ -44,8 +43,13 @@ export function useUpdateAccessCode(courseId: number | string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ accessCodeId, data }: { accessCodeId: number; data: UpdateAccessCodeRequest }) =>
-      accessCodeService.updateAccessCode(courseId, accessCodeId, data),
+    mutationFn: ({
+      accessCodeId,
+      data,
+    }: {
+      accessCodeId: number
+      data: UpdateAccessCodeRequest
+    }) => accessCodeService.updateAccessCode(courseId, accessCodeId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['access_codes', courseId] })
       toast.success('Código de acceso actualizado exitosamente')
@@ -83,7 +87,9 @@ export function useToggleAccessCodeStatus(courseId: number | string) {
       toast.success('Estado del código de acceso actualizado exitosamente')
     },
     onError: (error) => {
-      toast.error(`Error al actualizar el estado del código de acceso: ${error.message}`)
+      toast.error(
+        `Error al actualizar el estado del código de acceso: ${error.message}`
+      )
     },
   })
 }
@@ -103,8 +109,7 @@ export function useRedeemAccessCode() {
 
 export function useValidateAccessCode() {
   return useMutation({
-    mutationFn: (code: string) =>
-      accessCodeService.validateAccessCode(code),
+    mutationFn: (code: string) => accessCodeService.validateAccessCode(code),
     onError: (error) => {
       toast.error(`Error al validar el código de acceso: ${error.message}`)
     },

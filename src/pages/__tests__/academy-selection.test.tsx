@@ -1,20 +1,19 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-} from '@testing-library/react'
+import type { AcademyMembership, AcademyData } from '@/types'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { vi, beforeEach, describe, it, expect } from 'vitest'
 import { AcademySelectionPage } from '../../features/academy-selection/index'
-import type { AcademyMembership, AcademyData } from '@/types'
 
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    header: ({ children, ...props }: any) => <header {...props}>{children}</header>,
+    header: ({ children, ...props }: any) => (
+      <header {...props}>{children}</header>
+    ),
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-    footer: ({ children, ...props }: any) => <footer {...props}>{children}</footer>,
+    footer: ({ children, ...props }: any) => (
+      <footer {...props}>{children}</footer>
+    ),
   },
 }))
 
@@ -34,9 +33,13 @@ vi.mock('@/stores/auth-store', () => ({
 // Mock UI components
 vi.mock('@/components/ui/card', () => ({
   Card: ({ children, onClick, ...props }: any) => (
-    <div onClick={onClick} {...props}>{children}</div>
+    <div onClick={onClick} {...props}>
+      {children}
+    </div>
   ),
-  CardContent: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  CardContent: ({ children, ...props }: any) => (
+    <div {...props}>{children}</div>
+  ),
   CardHeader: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   CardTitle: ({ children, ...props }: any) => <h3 {...props}>{children}</h3>,
 }))
@@ -47,7 +50,9 @@ vi.mock('@/components/ui/badge', () => ({
 
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, ...props }: any) => (
-    <button onClick={onClick} {...props}>{children}</button>
+    <button onClick={onClick} {...props}>
+      {children}
+    </button>
   ),
 }))
 
@@ -163,7 +168,11 @@ describe('AcademySelectionPage', () => {
       render(<AcademySelectionPage />)
 
       expect(screen.getByText('No tienes academias')).toBeInTheDocument()
-      expect(screen.getByText('Aún no perteneces a ninguna academia. Crea tu propia academia o solicita una invitación a un administrador.')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'Aún no perteneces a ninguna academia. Crea tu propia academia o solicita una invitación a un administrador.'
+        )
+      ).toBeInTheDocument()
       expect(screen.getByText('Crear Academia')).toBeInTheDocument()
       expect(screen.getByText('Solicitar Invitación')).toBeInTheDocument()
     })
@@ -205,9 +214,15 @@ describe('AcademySelectionPage', () => {
     it('should display academy descriptions', () => {
       render(<AcademySelectionPage />)
 
-      expect(screen.getByText('Aprende desarrollo web desde cero')).toBeInTheDocument()
-      expect(screen.getByText('Explora el mundo de las ciencias')).toBeInTheDocument()
-      expect(screen.getByText('Desarrolla tu creatividad artística')).toBeInTheDocument()
+      expect(
+        screen.getByText('Aprende desarrollo web desde cero')
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText('Explora el mundo de las ciencias')
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText('Desarrolla tu creatividad artística')
+      ).toBeInTheDocument()
     })
 
     it('should display correct role badges', () => {
@@ -234,8 +249,14 @@ describe('AcademySelectionPage', () => {
     it('should render page footer', () => {
       render(<AcademySelectionPage />)
 
-      expect(screen.getByText('¿Necesitas ayuda? Contacta al administrador de tu academia o')).toBeInTheDocument()
-      expect(screen.getByText('visita nuestro centro de ayuda')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          '¿Necesitas ayuda? Contacta al administrador de tu academia o'
+        )
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText('visita nuestro centro de ayuda')
+      ).toBeInTheDocument()
     })
   })
 
@@ -251,26 +272,34 @@ describe('AcademySelectionPage', () => {
     it('should call selectAcademy and navigate when academy is clicked', async () => {
       render(<AcademySelectionPage />)
 
-      const academyCard = screen.getByText('Academia de Desarrollo Web').closest('.academy-card')
+      const academyCard = screen
+        .getByText('Academia de Desarrollo Web')
+        .closest('.academy-card')
       expect(academyCard).toBeInTheDocument()
 
       fireEvent.click(academyCard!)
 
       await waitFor(() => {
         expect(mockSelectAcademy).toHaveBeenCalledWith(1)
-        expect(mockNavigate).toHaveBeenCalledWith({ to: '/academy/desarrollo-web/dashboard' })
+        expect(mockNavigate).toHaveBeenCalledWith({
+          to: '/academy/desarrollo-web/dashboard',
+        })
       })
     })
 
     it('should handle academy selection for different academies', async () => {
       render(<AcademySelectionPage />)
 
-      const academyCard = screen.getByText('Academia de Ciencias').closest('.academy-card')
+      const academyCard = screen
+        .getByText('Academia de Ciencias')
+        .closest('.academy-card')
       fireEvent.click(academyCard!)
 
       await waitFor(() => {
         expect(mockSelectAcademy).toHaveBeenCalledWith(2)
-        expect(mockNavigate).toHaveBeenCalledWith({ to: '/academy/ciencias/dashboard' })
+        expect(mockNavigate).toHaveBeenCalledWith({
+          to: '/academy/ciencias/dashboard',
+        })
       })
     })
 
@@ -283,11 +312,16 @@ describe('AcademySelectionPage', () => {
 
       render(<AcademySelectionPage />)
 
-      const academyCard = screen.getByText('Academia de Arte').closest('.academy-card')
+      const academyCard = screen
+        .getByText('Academia de Arte')
+        .closest('.academy-card')
       fireEvent.click(academyCard!)
 
       await waitFor(() => {
-        expect(consoleSpy).toHaveBeenCalledWith('Failed to select academy:', expect.any(Error))
+        expect(consoleSpy).toHaveBeenCalledWith(
+          'Failed to select academy:',
+          expect.any(Error)
+        )
       })
 
       consoleSpy.mockRestore()
@@ -327,9 +361,21 @@ describe('AcademySelectionPage', () => {
       const teacherBadge = screen.getByText('Profesor').parentElement
       const studentBadge = screen.getByText('Estudiante').parentElement
 
-      expect(adminBadge).toHaveClass('bg-red-100', 'text-red-700', 'border-red-200')
-      expect(teacherBadge).toHaveClass('bg-blue-100', 'text-blue-700', 'border-blue-200')
-      expect(studentBadge).toHaveClass('bg-green-100', 'text-green-700', 'border-green-200')
+      expect(adminBadge).toHaveClass(
+        'bg-red-100',
+        'text-red-700',
+        'border-red-200'
+      )
+      expect(teacherBadge).toHaveClass(
+        'bg-blue-100',
+        'text-blue-700',
+        'border-blue-200'
+      )
+      expect(studentBadge).toHaveClass(
+        'bg-green-100',
+        'text-green-700',
+        'border-green-200'
+      )
     })
   })
 })

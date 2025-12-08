@@ -1,12 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { RoleNavigation, RoleBreadcrumb } from '../role-navigation'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { AuthUser, AcademyMembership } from '@/stores/auth-store'
 import type { DashboardType } from '@/components/dashboard-router'
+import { RoleNavigation, RoleBreadcrumb } from '../role-navigation'
 
 // Mock the hooks
 vi.mock('@/hooks/use-academy-permissions', () => ({
-  useAcademyPermissions: vi.fn()
+  useAcademyPermissions: vi.fn(),
 }))
 
 // Mock TanStack Router
@@ -17,8 +17,8 @@ vi.mock('@tanstack/react-router', () => ({
     </a>
   ),
   useRouterState: vi.fn(() => ({
-    location: { pathname: '/academy/1/dashboard' }
-  }))
+    location: { pathname: '/academy/1/dashboard' },
+  })),
 }))
 
 describe('RoleNavigation', () => {
@@ -32,7 +32,7 @@ describe('RoleNavigation', () => {
     confirmed: true,
     is_super_admin: false,
     created_at: '2024-01-01T00:00:00Z',
-    last_login_at: '2024-01-01T00:00:00Z'
+    last_login_at: '2024-01-01T00:00:00Z',
   }
 
   const mockAcademy: AcademyMembership = {
@@ -43,21 +43,23 @@ describe('RoleNavigation', () => {
     user_role: 'student',
     user_role_display: 'Student',
     created_at: '2024-01-01T00:00:00Z',
-    last_accessed: null
+    last_accessed: null,
   }
 
   beforeEach(async () => {
     vi.clearAllMocks()
     // Set default mock return value
-    const { useAcademyPermissions } = await import('@/hooks/use-academy-permissions')
+    const { useAcademyPermissions } = await import(
+      '@/hooks/use-academy-permissions'
+    )
     vi.mocked(useAcademyPermissions).mockReturnValue({
       checkAccess: {
         role: vi.fn(() => true),
-        permission: vi.fn(() => true)
+        permission: vi.fn(() => true),
       },
       helpers: {
-        isSuperAdmin: vi.fn(() => false)
-      }
+        isSuperAdmin: vi.fn(() => false),
+      },
     })
   })
 
@@ -67,8 +69,8 @@ describe('RoleNavigation', () => {
         <RoleNavigation
           user={mockUser}
           academy={mockAcademy}
-          dashboardType="student"
-          currentPath="/academy/1/dashboard"
+          dashboardType='student'
+          currentPath='/academy/1/dashboard'
         />
       )
 
@@ -84,8 +86,8 @@ describe('RoleNavigation', () => {
         <RoleNavigation
           user={mockUser}
           academy={mockAcademy}
-          dashboardType="student"
-          currentPath="/academy/1/dashboard"
+          dashboardType='student'
+          currentPath='/academy/1/dashboard'
         />
       )
 
@@ -98,8 +100,8 @@ describe('RoleNavigation', () => {
         <RoleNavigation
           user={mockUser}
           academy={mockAcademy}
-          dashboardType="student"
-          currentPath="/academy/1/dashboard"
+          dashboardType='student'
+          currentPath='/academy/1/dashboard'
         />
       )
 
@@ -109,15 +111,19 @@ describe('RoleNavigation', () => {
   })
 
   describe('Teacher Dashboard Navigation', () => {
-    const teacherAcademy = { ...mockAcademy, user_role: 'teacher', user_role_display: 'Teacher' }
+    const teacherAcademy = {
+      ...mockAcademy,
+      user_role: 'teacher',
+      user_role_display: 'Teacher',
+    }
 
     it('should render teacher navigation items', () => {
       render(
         <RoleNavigation
           user={mockUser}
           academy={teacherAcademy}
-          dashboardType="teacher"
-          currentPath="/academy/1/dashboard"
+          dashboardType='teacher'
+          currentPath='/academy/1/dashboard'
         />
       )
 
@@ -130,23 +136,25 @@ describe('RoleNavigation', () => {
     })
 
     it('should filter items based on permissions', async () => {
-      const { useAcademyPermissions } = await import('@/hooks/use-academy-permissions')
+      const { useAcademyPermissions } = await import(
+        '@/hooks/use-academy-permissions'
+      )
       vi.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
           role: vi.fn(() => true),
-          permission: vi.fn((permission) => permission !== 'manage_courses')
+          permission: vi.fn((permission) => permission !== 'manage_courses'),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => false)
-        }
+          isSuperAdmin: vi.fn(() => false),
+        },
       })
 
       render(
         <RoleNavigation
           user={mockUser}
           academy={teacherAcademy}
-          dashboardType="teacher"
-          currentPath="/academy/1/dashboard"
+          dashboardType='teacher'
+          currentPath='/academy/1/dashboard'
         />
       )
 
@@ -156,15 +164,19 @@ describe('RoleNavigation', () => {
   })
 
   describe('Academy Admin Dashboard Navigation', () => {
-    const adminAcademy = { ...mockAcademy, user_role: 'admin', user_role_display: 'Administrator' }
+    const adminAcademy = {
+      ...mockAcademy,
+      user_role: 'admin',
+      user_role_display: 'Administrator',
+    }
 
     it('should render admin navigation items', () => {
       render(
         <RoleNavigation
           user={mockUser}
           academy={adminAcademy}
-          dashboardType="academy-admin"
-          currentPath="/academy/1/dashboard"
+          dashboardType='academy-admin'
+          currentPath='/academy/1/dashboard'
         />
       )
 
@@ -182,8 +194,8 @@ describe('RoleNavigation', () => {
         <RoleNavigation
           user={mockUser}
           academy={null}
-          dashboardType="academy-admin"
-          currentPath="/dashboard"
+          dashboardType='academy-admin'
+          currentPath='/dashboard'
         />
       )
 
@@ -197,23 +209,25 @@ describe('RoleNavigation', () => {
     const superAdminUser = { ...mockUser, is_super_admin: true }
 
     it('should render super admin navigation items', async () => {
-      const { useAcademyPermissions } = await import('@/hooks/use-academy-permissions')
+      const { useAcademyPermissions } = await import(
+        '@/hooks/use-academy-permissions'
+      )
       vi.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
           role: vi.fn(() => true),
-          permission: vi.fn(() => true)
+          permission: vi.fn(() => true),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => true)
-        }
+          isSuperAdmin: vi.fn(() => true),
+        },
       })
 
       render(
         <RoleNavigation
           user={superAdminUser}
           academy={mockAcademy}
-          dashboardType="super-admin"
-          currentPath="/super-admin/dashboard"
+          dashboardType='super-admin'
+          currentPath='/super-admin/dashboard'
         />
       )
 
@@ -225,23 +239,25 @@ describe('RoleNavigation', () => {
     })
 
     it('should only show super admin items to super admin users', async () => {
-      const { useAcademyPermissions } = await import('@/hooks/use-academy-permissions')
+      const { useAcademyPermissions } = await import(
+        '@/hooks/use-academy-permissions'
+      )
       vi.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
           role: vi.fn(() => false),
-          permission: vi.fn(() => false)
+          permission: vi.fn(() => false),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => false)
-        }
+          isSuperAdmin: vi.fn(() => false),
+        },
       })
 
       render(
         <RoleNavigation
           user={mockUser} // Regular user, not super admin
           academy={mockAcademy}
-          dashboardType="super-admin"
-          currentPath="/super-admin/dashboard"
+          dashboardType='super-admin'
+          currentPath='/super-admin/dashboard'
         />
       )
 
@@ -253,23 +269,25 @@ describe('RoleNavigation', () => {
   describe('Navigation Guards', () => {
     it('should hide disabled items', async () => {
       // Mock navigation items with disabled item
-      const { useAcademyPermissions } = await import('@/hooks/use-academy-permissions')
+      const { useAcademyPermissions } = await import(
+        '@/hooks/use-academy-permissions'
+      )
       vi.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
           role: vi.fn(() => true),
-          permission: vi.fn(() => true)
+          permission: vi.fn(() => true),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => false)
-        }
+          isSuperAdmin: vi.fn(() => false),
+        },
       })
 
       render(
         <RoleNavigation
           user={mockUser}
           academy={mockAcademy}
-          dashboardType="student"
-          currentPath="/academy/1/dashboard"
+          dashboardType='student'
+          currentPath='/academy/1/dashboard'
         />
       )
 
@@ -278,23 +296,25 @@ describe('RoleNavigation', () => {
     })
 
     it('should filter based on role hierarchy', async () => {
-      const { useAcademyPermissions } = await import('@/hooks/use-academy-permissions')
+      const { useAcademyPermissions } = await import(
+        '@/hooks/use-academy-permissions'
+      )
       vi.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
           role: vi.fn((role) => role === 'student'), // Only student role
-          permission: vi.fn(() => true)
+          permission: vi.fn(() => true),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => false)
-        }
+          isSuperAdmin: vi.fn(() => false),
+        },
       })
 
       render(
         <RoleNavigation
           user={mockUser}
           academy={mockAcademy}
-          dashboardType="teacher"
-          currentPath="/academy/1/dashboard"
+          dashboardType='teacher'
+          currentPath='/academy/1/dashboard'
         />
       )
 
@@ -315,7 +335,7 @@ describe('RoleBreadcrumb', () => {
     confirmed: true,
     is_super_admin: false,
     created_at: '2024-01-01T00:00:00Z',
-    last_login_at: '2024-01-01T00:00:00Z'
+    last_login_at: '2024-01-01T00:00:00Z',
   }
 
   const mockAcademy: AcademyMembership = {
@@ -326,21 +346,23 @@ describe('RoleBreadcrumb', () => {
     user_role: 'student',
     user_role_display: 'Student',
     created_at: '2024-01-01T00:00:00Z',
-    last_accessed: null
+    last_accessed: null,
   }
 
   beforeEach(async () => {
     vi.clearAllMocks()
     // Set default mock return value for breadcrumb tests
-    const { useAcademyPermissions } = await import('@/hooks/use-academy-permissions')
+    const { useAcademyPermissions } = await import(
+      '@/hooks/use-academy-permissions'
+    )
     vi.mocked(useAcademyPermissions).mockReturnValue({
       checkAccess: {
         role: vi.fn(() => true),
-        permission: vi.fn(() => true)
+        permission: vi.fn(() => true),
       },
       helpers: {
-        isSuperAdmin: vi.fn(() => false)
-      }
+        isSuperAdmin: vi.fn(() => false),
+      },
     })
   })
 
@@ -349,7 +371,7 @@ describe('RoleBreadcrumb', () => {
       render(
         <RoleBreadcrumb
           academy={mockAcademy}
-          currentPath="/academy/1/dashboard"
+          currentPath='/academy/1/dashboard'
           user={mockUser}
         />
       )
@@ -361,7 +383,7 @@ describe('RoleBreadcrumb', () => {
       render(
         <RoleBreadcrumb
           academy={mockAcademy}
-          currentPath="/academy/1/dashboard"
+          currentPath='/academy/1/dashboard'
           user={mockUser}
         />
       )
@@ -373,7 +395,7 @@ describe('RoleBreadcrumb', () => {
       render(
         <RoleBreadcrumb
           academy={mockAcademy}
-          currentPath="/academy/1/courses"
+          currentPath='/academy/1/courses'
           user={mockUser}
         />
       )
@@ -387,7 +409,7 @@ describe('RoleBreadcrumb', () => {
       render(
         <RoleBreadcrumb
           academy={mockAcademy}
-          currentPath="/academy/1/courses/123"
+          currentPath='/academy/1/courses/123'
           user={mockUser}
         />
       )
@@ -401,21 +423,23 @@ describe('RoleBreadcrumb', () => {
     const superAdminUser = { ...mockUser, is_super_admin: true }
 
     it('should render system admin context for super admin', async () => {
-      const { useAcademyPermissions } = await import('@/hooks/use-academy-permissions')
+      const { useAcademyPermissions } = await import(
+        '@/hooks/use-academy-permissions'
+      )
       vi.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
           role: vi.fn(() => true),
-          permission: vi.fn(() => true)
+          permission: vi.fn(() => true),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => true)
-        }
+          isSuperAdmin: vi.fn(() => true),
+        },
       })
 
       render(
         <RoleBreadcrumb
           academy={null}
-          currentPath="/super-admin/academies"
+          currentPath='/super-admin/academies'
           user={superAdminUser}
         />
       )
@@ -430,7 +454,7 @@ describe('RoleBreadcrumb', () => {
       render(
         <RoleBreadcrumb
           academy={mockAcademy}
-          currentPath="/academy/1/user-management"
+          currentPath='/academy/1/user-management'
           user={mockUser}
         />
       )
@@ -442,7 +466,7 @@ describe('RoleBreadcrumb', () => {
       render(
         <RoleBreadcrumb
           academy={mockAcademy}
-          currentPath="/academy/1/course/123"
+          currentPath='/academy/1/course/123'
           user={mockUser}
         />
       )
@@ -454,7 +478,7 @@ describe('RoleBreadcrumb', () => {
       render(
         <RoleBreadcrumb
           academy={mockAcademy}
-          currentPath="/academy/1/dashboard"
+          currentPath='/academy/1/dashboard'
           user={mockUser}
         />
       )
@@ -469,7 +493,7 @@ describe('RoleBreadcrumb', () => {
       render(
         <RoleBreadcrumb
           academy={null}
-          currentPath="/dashboard"
+          currentPath='/dashboard'
           user={mockUser}
         />
       )
@@ -480,11 +504,7 @@ describe('RoleBreadcrumb', () => {
 
     it('should handle root path', () => {
       render(
-        <RoleBreadcrumb
-          academy={mockAcademy}
-          currentPath="/"
-          user={mockUser}
-        />
+        <RoleBreadcrumb academy={mockAcademy} currentPath='/' user={mockUser} />
       )
 
       expect(screen.getByText('Test Academy')).toBeInTheDocument()
@@ -494,7 +514,7 @@ describe('RoleBreadcrumb', () => {
       render(
         <RoleBreadcrumb
           academy={mockAcademy}
-          currentPath="/academy/1/courses/123/lessons/456/edit"
+          currentPath='/academy/1/courses/123/lessons/456/edit'
           user={mockUser}
         />
       )

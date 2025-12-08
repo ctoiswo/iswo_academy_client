@@ -1,6 +1,6 @@
-import { apiClient } from '../api-client'
 import type { AcademyStats } from '@/features/dashboard/admin/components/academy-stats-overview'
 import type { AcademyUser } from '@/features/dashboard/admin/components/user-management-panel'
+import { apiClient } from '../api-client'
 import { type Course } from '../models/course'
 
 export interface AcademyAdminApiResponse<T> {
@@ -33,7 +33,7 @@ export interface CreateCourseRequest {
   teacher_id?: number
 }
 
-export interface UpdateCourseRequest extends Partial<CreateCourseRequest> { }
+export interface UpdateCourseRequest extends Partial<CreateCourseRequest> {}
 
 export interface UpdateUserRoleRequest {
   role: 'admin' | 'teacher' | 'student'
@@ -62,7 +62,9 @@ export class AcademyAdminApi {
   /**
    * Get academy statistics for admin dashboard
    */
-  static async getStats(academyIdentifier: number | string): Promise<AcademyStats> {
+  static async getStats(
+    academyIdentifier: number | string
+  ): Promise<AcademyStats> {
     const response = await apiClient.get<AcademyAdminApiResponse<AcademyStats>>(
       `/academies/${academyIdentifier}/admin/stats`
     )
@@ -79,7 +81,8 @@ export class AcademyAdminApi {
     const params = new URLSearchParams()
 
     if (filters.status) params.append('status', filters.status)
-    if (filters.teacher_id) params.append('teacher_id', filters.teacher_id.toString())
+    if (filters.teacher_id)
+      params.append('teacher_id', filters.teacher_id.toString())
     if (filters.search) params.append('search', filters.search)
     if (filters.page) params.append('page', filters.page.toString())
     if (filters.per_page) params.append('per_page', filters.per_page.toString())
@@ -109,7 +112,8 @@ export class AcademyAdminApi {
     const queryString = params.toString()
     const url = `/academies/${academyIdentifier}/admin/users${queryString ? `?${queryString}` : ''}`
 
-    const response = await apiClient.get<AcademyAdminApiResponse<AcademyUser[]>>(url)
+    const response =
+      await apiClient.get<AcademyAdminApiResponse<AcademyUser[]>>(url)
     return response.data
   }
 
@@ -145,8 +149,13 @@ export class AcademyAdminApi {
   /**
    * Delete a course
    */
-  static async deleteCourse(academyIdentifier: number | string, courseId: number): Promise<void> {
-    await apiClient.delete(`/academies/${academyIdentifier}/admin/courses/${courseId}`)
+  static async deleteCourse(
+    academyIdentifier: number | string,
+    courseId: number
+  ): Promise<void> {
+    await apiClient.delete(
+      `/academies/${academyIdentifier}/admin/courses/${courseId}`
+    )
   }
 
   /**
@@ -167,8 +176,13 @@ export class AcademyAdminApi {
   /**
    * Remove user from academy
    */
-  static async removeUser(academyIdentifier: number | string, userId: number): Promise<void> {
-    await apiClient.delete(`/academies/${academyIdentifier}/admin/users/${userId}`)
+  static async removeUser(
+    academyIdentifier: number | string,
+    userId: number
+  ): Promise<void> {
+    await apiClient.delete(
+      `/academies/${academyIdentifier}/admin/users/${userId}`
+    )
   }
 }
 
@@ -182,7 +196,10 @@ export const academyAdminQueries = {
     staleTime: 5 * 60 * 1000, // 5 minutes
   }),
 
-  courses: (academyIdentifier: number | string, filters: CoursesFilters = {}) => ({
+  courses: (
+    academyIdentifier: number | string,
+    filters: CoursesFilters = {}
+  ) => ({
     queryKey: ['academy-admin', 'courses', academyIdentifier, filters],
     queryFn: () => AcademyAdminApi.getCourses(academyIdentifier, filters),
     staleTime: 2 * 60 * 1000, // 2 minutes
@@ -200,14 +217,21 @@ export const academyAdminQueries = {
  */
 export const academyAdminMutations = {
   createCourse: {
-    mutationFn: ({ academyIdentifier, courseData }: {
+    mutationFn: ({
+      academyIdentifier,
+      courseData,
+    }: {
       academyIdentifier: number | string
       courseData: CreateCourseRequest
     }) => AcademyAdminApi.createCourse(academyIdentifier, courseData),
   },
 
   updateCourse: {
-    mutationFn: ({ academyIdentifier, courseId, courseData }: {
+    mutationFn: ({
+      academyIdentifier,
+      courseId,
+      courseData,
+    }: {
       academyIdentifier: number | string
       courseId: number
       courseData: UpdateCourseRequest
@@ -215,14 +239,21 @@ export const academyAdminMutations = {
   },
 
   deleteCourse: {
-    mutationFn: ({ academyIdentifier, courseId }: {
+    mutationFn: ({
+      academyIdentifier,
+      courseId,
+    }: {
       academyIdentifier: number | string
       courseId: number
     }) => AcademyAdminApi.deleteCourse(academyIdentifier, courseId),
   },
 
   updateUserRole: {
-    mutationFn: ({ academyIdentifier, userId, roleData }: {
+    mutationFn: ({
+      academyIdentifier,
+      userId,
+      roleData,
+    }: {
       academyIdentifier: number | string
       userId: number
       roleData: UpdateUserRoleRequest
@@ -230,7 +261,10 @@ export const academyAdminMutations = {
   },
 
   removeUser: {
-    mutationFn: ({ academyIdentifier, userId }: {
+    mutationFn: ({
+      academyIdentifier,
+      userId,
+    }: {
       academyIdentifier: number | string
       userId: number
     }) => AcademyAdminApi.removeUser(academyIdentifier, userId),

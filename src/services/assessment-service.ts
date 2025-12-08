@@ -1,4 +1,3 @@
-import apiClient from '@/lib/api-client'
 import type {
   AssessmentType,
   AssessmentSummary,
@@ -6,8 +5,9 @@ import type {
   AssessmentStatistics,
   AssessmentAttempt,
   CreateAssessmentRequest,
-  UpdateAssessmentRequest
+  UpdateAssessmentRequest,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 export interface AssessmentFilters {
   type?: AssessmentType
@@ -34,14 +34,17 @@ class AssessmentService {
   ): Promise<AssessmentSummary[]> {
     const queryParams = new URLSearchParams()
     if (params?.type) queryParams.append('type', params.type)
-    if (params?.section_id) queryParams.append('section_id', params.section_id.toString())
+    if (params?.section_id)
+      queryParams.append('section_id', params.section_id.toString())
     if (params?.status) queryParams.append('status', params.status)
 
     const url = `/academies/${academySlug}/courses/${courseSlug}/assessments${
       queryParams.toString() ? `?${queryParams.toString()}` : ''
     }`
 
-    const response = await apiClient.get<{ assessments: AssessmentSummary[] }>(url)
+    const response = await apiClient.get<{ assessments: AssessmentSummary[] }>(
+      url
+    )
     return response.data?.assessments || []
   }
 
@@ -75,10 +78,12 @@ class AssessmentService {
     courseSlug: string,
     data: CreateAssessmentRequest
   ): Promise<AssessmentFull> {
-    const response = await apiClient.post<{ assessment: AssessmentFull; message: string }>(
-      `/academies/${academySlug}/courses/${courseSlug}/assessments`,
-      { assessment: data }
-    )
+    const response = await apiClient.post<{
+      assessment: AssessmentFull
+      message: string
+    }>(`/academies/${academySlug}/courses/${courseSlug}/assessments`, {
+      assessment: data,
+    })
     return response.data.assessment
   }
 
@@ -96,7 +101,10 @@ class AssessmentService {
     assessmentId: number,
     data: UpdateAssessmentRequest
   ): Promise<AssessmentFull> {
-    const response = await apiClient.patch<{ assessment: AssessmentFull; message: string }>(
+    const response = await apiClient.patch<{
+      assessment: AssessmentFull
+      message: string
+    }>(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}`,
       { assessment: data }
     )

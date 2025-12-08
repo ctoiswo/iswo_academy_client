@@ -2,7 +2,6 @@
  * Gamification Entity Types
  * Based on Rails Gamification system
  */
-
 import type { Badge } from './badge'
 
 export interface GamificationProfile {

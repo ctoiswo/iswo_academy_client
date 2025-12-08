@@ -12,14 +12,18 @@ const ERROR_MESSAGES: Record<string, string> = {
   ACCOUNT_LOCKED:
     'Tu cuenta ha sido bloqueada. Por favor contacta a soporte para más información.',
   TOKEN_EXPIRED: 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.',
-  TOKEN_INVALID: 'Token de autenticación inválido. Por favor inicia sesión nuevamente.',
-  TOKEN_REVOKED: 'Tu sesión ha sido revocada. Por favor inicia sesión nuevamente.',
-  MISSING_TOKEN: 'No se encontró token de autenticación. Por favor inicia sesión.',
+  TOKEN_INVALID:
+    'Token de autenticación inválido. Por favor inicia sesión nuevamente.',
+  TOKEN_REVOKED:
+    'Tu sesión ha sido revocada. Por favor inicia sesión nuevamente.',
+  MISSING_TOKEN:
+    'No se encontró token de autenticación. Por favor inicia sesión.',
 
   // Authorization errors
   UNAUTHORIZED: 'No tienes permiso para realizar esta acción.',
   FORBIDDEN: 'Acceso denegado. No tienes los permisos necesarios.',
-  INSUFFICIENT_PERMISSIONS: 'No tienes los permisos suficientes para esta acción.',
+  INSUFFICIENT_PERMISSIONS:
+    'No tienes los permisos suficientes para esta acción.',
 
   // Validation errors
   VALIDATION_ERROR: 'Por favor verifica los datos ingresados.',
@@ -49,11 +53,13 @@ const ERROR_MESSAGES: Record<string, string> = {
   // Network errors
   NETWORK_ERROR:
     'Error de conexión. Por favor verifica tu conexión a internet.',
-  TIMEOUT_ERROR: 'La solicitud tardó demasiado tiempo. Por favor intenta nuevamente.',
+  TIMEOUT_ERROR:
+    'La solicitud tardó demasiado tiempo. Por favor intenta nuevamente.',
   SERVER_ERROR: 'Error del servidor. Por favor intenta más tarde.',
 
   // Payment errors
-  PAYMENT_FAILED: 'El pago no pudo ser procesado. Por favor intenta nuevamente.',
+  PAYMENT_FAILED:
+    'El pago no pudo ser procesado. Por favor intenta nuevamente.',
   INVALID_PAYMENT_METHOD: 'Método de pago inválido.',
   CARD_DECLINED: 'Tu tarjeta fue rechazada. Por favor verifica los datos.',
 
@@ -123,7 +129,9 @@ export function isValidationError(error: ApiError | unknown): boolean {
   }
 
   const apiError = error as ApiError
-  return apiError.code === 'VALIDATION_ERROR' || apiError.code === 'INVALID_INPUT'
+  return (
+    apiError.code === 'VALIDATION_ERROR' || apiError.code === 'INVALID_INPUT'
+  )
 }
 
 /**

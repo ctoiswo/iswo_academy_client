@@ -1,11 +1,11 @@
-import { apiClient } from '@/lib/api-client'
 import type {
   WishlistableType,
   WishlistResponse,
   ToggleWishlistResponse,
   AddToWishlistResponse,
-  RemoveFromWishlistResponse
+  RemoveFromWishlistResponse,
 } from '@/types'
+import { apiClient } from '@/lib/api-client'
 
 /**
  * Wishlist Service
@@ -31,10 +31,13 @@ class WishlistService {
     wishlistableType: WishlistableType,
     wishlistableId: number
   ): Promise<ToggleWishlistResponse> {
-    const response = await apiClient.post<ToggleWishlistResponse>('/api/v1/wishlists/toggle', {
-      wishlistable_type: wishlistableType,
-      wishlistable_id: wishlistableId,
-    })
+    const response = await apiClient.post<ToggleWishlistResponse>(
+      '/api/v1/wishlists/toggle',
+      {
+        wishlistable_type: wishlistableType,
+        wishlistable_id: wishlistableId,
+      }
+    )
     return response.data
   }
 
@@ -78,12 +81,15 @@ class WishlistService {
     wishlistableType: WishlistableType,
     wishlistableId: number
   ): Promise<RemoveFromWishlistResponse> {
-    const response = await apiClient.delete('/api/v1/wishlists/remove_by_resource', {
-      params: {
-        wishlistable_type: wishlistableType,
-        wishlistable_id: wishlistableId,
-      },
-    })
+    const response = await apiClient.delete(
+      '/api/v1/wishlists/remove_by_resource',
+      {
+        params: {
+          wishlistable_type: wishlistableType,
+          wishlistable_id: wishlistableId,
+        },
+      }
+    )
     return response.data
   }
 }

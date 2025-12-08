@@ -4,6 +4,8 @@ function CourseLayoutRoute() {
   return <Outlet />
 }
 
-export const Route = createFileRoute('/academy/$academySlug/courses/$courseSlug')({
+export const Route = createFileRoute(
+  '/academy/$academySlug/courses/$courseSlug'
+)({
   component: CourseLayoutRoute,
 })

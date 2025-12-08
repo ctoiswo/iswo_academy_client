@@ -2,7 +2,6 @@
  * Academy Categories Hooks
  * React Query hooks para categorías de academias con soporte de vistas
  */
-
 import { useQuery } from '@tanstack/react-query'
 import academyCategoryService from '@/services/academy-category-service'
 import type { ApiViewMode } from '@/types'
@@ -11,14 +10,14 @@ import type { ApiViewMode } from '@/types'
  * Hook for fetching academy categories with view mode support
  * @param view - View mode: 'minimal' | 'summary' | 'full' (default: 'summary')
  * @returns Query object with academy categories data, loading and error states
- * 
+ *
  * @example
  * // Minimal view - for dropdowns
  * const { data } = useAcademyCategories('minimal')
- * 
+ *
  * // Summary view - for lists with counts
  * const { data } = useAcademyCategories('summary')
- * 
+ *
  * // Full view - with academies array
  * const { data } = useAcademyCategories('full')
  */
@@ -26,7 +25,7 @@ export function useAcademyCategories<TView extends ApiViewMode = 'summary'>(
   view?: TView
 ) {
   const viewMode = view || ('summary' as TView)
-  
+
   return useQuery({
     queryKey: ['academy', 'categories', viewMode],
     queryFn: () => academyCategoryService.getCategories(viewMode),
@@ -46,7 +45,7 @@ export function useAcademyCategoryBySlug<TView extends ApiViewMode = 'full'>(
   view?: TView
 ) {
   const viewMode = view || ('full' as TView)
-  
+
   return useQuery({
     queryKey: ['academy', 'category', 'slug', slug, viewMode],
     queryFn: () => academyCategoryService.getCategoryBySlug(slug, viewMode),

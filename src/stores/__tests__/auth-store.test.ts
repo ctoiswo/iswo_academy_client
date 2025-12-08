@@ -1,8 +1,16 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { useAuthStore, type AuthUser, type AuthTokens, type LoginCredentials, type RegisterData, type AcademyMembership, type AcademyData } from '../auth-store'
-import { tokenStorage } from '@/lib/token-storage'
-import { tokenManager } from '@/lib/api-client'
 import { authApi } from '@/services'
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
+import { tokenManager } from '@/lib/api-client'
+import { tokenStorage } from '@/lib/token-storage'
+import {
+  useAuthStore,
+  type AuthUser,
+  type AuthTokens,
+  type LoginCredentials,
+  type RegisterData,
+  type AcademyMembership,
+  type AcademyData,
+} from '../auth-store'
 
 // Mock dependencies
 vi.mock('@/lib/token-storage', () => ({
@@ -13,8 +21,8 @@ vi.mock('@/lib/token-storage', () => ({
     isTokenExpired: vi.fn(),
     getAccessToken: vi.fn(),
     getRefreshToken: vi.fn(),
-    hasValidTokens: vi.fn()
-  }
+    hasValidTokens: vi.fn(),
+  },
 }))
 
 vi.mock('@/services', () => ({
@@ -22,24 +30,24 @@ vi.mock('@/services', () => ({
     login: vi.fn(),
     register: vi.fn(),
     logout: vi.fn(),
-    refreshTokens: vi.fn()
+    refreshTokens: vi.fn(),
   },
   userApi: {
-    getProfile: vi.fn()
-  }
+    getProfile: vi.fn(),
+  },
 }))
 
 vi.mock('@/lib/api-client', () => ({
   academyApi: {
-    getUserAcademies: vi.fn()
+    getUserAcademies: vi.fn(),
   },
   tokenManager: {
     initialize: vi.fn(),
     refreshTokens: vi.fn(),
     hasValidTokens: vi.fn(),
     getTokenInfo: vi.fn(),
-    clearTokens: vi.fn()
-  }
+    clearTokens: vi.fn(),
+  },
 }))
 
 // Mock data
@@ -53,18 +61,18 @@ const mockUser: AuthUser = {
   confirmed: true,
   is_super_admin: false,
   created_at: '2024-01-01T00:00:00Z',
-  last_login_at: '2024-01-01T12:00:00Z'
+  last_login_at: '2024-01-01T12:00:00Z',
 }
 
 const mockTokens: AuthTokens = {
   access_token: 'mock-access-token',
   refresh_token: 'mock-refresh-token',
-  expires_in: 3600
+  expires_in: 3600,
 }
 
 const mockLoginCredentials: LoginCredentials = {
   email: 'john@example.com',
-  password: 'password123'
+  password: 'password123',
 }
 
 const mockRegisterData: RegisterData = {
@@ -72,7 +80,7 @@ const mockRegisterData: RegisterData = {
   last_name: 'Doe',
   email: 'john@example.com',
   password: 'password123',
-  password_confirmation: 'password123'
+  password_confirmation: 'password123',
 }
 
 // Mock academy data
@@ -84,7 +92,7 @@ const mockAcademyMembership: AcademyMembership = {
   user_role: 'admin',
   user_role_display: 'Administrator',
   created_at: '2024-01-01T00:00:00Z',
-  last_accessed: '2024-02-01T10:30:00Z'
+  last_accessed: '2024-02-01T10:30:00Z',
 }
 
 const mockMultipleAcademies: AcademyMembership[] = [
@@ -97,23 +105,23 @@ const mockMultipleAcademies: AcademyMembership[] = [
     user_role: 'student',
     user_role_display: 'Student',
     created_at: '2024-01-15T00:00:00Z',
-    last_accessed: null
-  }
+    last_accessed: null,
+  },
 ]
 
 const mockSingleAcademyData: AcademyData = {
   count: 1,
-  academies: [mockAcademyMembership]
+  academies: [mockAcademyMembership],
 }
 
 const mockMultipleAcademyData: AcademyData = {
   count: 2,
-  academies: mockMultipleAcademies
+  academies: mockMultipleAcademies,
 }
 
 const mockEmptyAcademyData: AcademyData = {
   count: 0,
-  academies: []
+  academies: [],
 }
 
 describe('AuthStore', () => {
@@ -162,7 +170,7 @@ describe('AuthStore', () => {
         access_token: mockTokens.access_token,
         refresh_token: mockTokens.refresh_token,
         expires_in: mockTokens.expires_in,
-        message: 'Login successful'
+        message: 'Login successful',
       }
 
       vi.mocked(authApi.login).mockResolvedValue(mockResponse)
@@ -187,7 +195,9 @@ describe('AuthStore', () => {
 
       const { login } = useAuthStore.getState()
 
-      await expect(login(mockLoginCredentials)).rejects.toThrow('Invalid credentials')
+      await expect(login(mockLoginCredentials)).rejects.toThrow(
+        'Invalid credentials'
+      )
 
       const state = useAuthStore.getState()
 
@@ -218,7 +228,7 @@ describe('AuthStore', () => {
         access_token: mockTokens.access_token,
         refresh_token: mockTokens.refresh_token,
         expires_in: mockTokens.expires_in,
-        message: 'Login successful'
+        message: 'Login successful',
       })
 
       await loginCall
@@ -232,7 +242,7 @@ describe('AuthStore', () => {
     it('should register successfully', async () => {
       const mockResponse = {
         message: 'Registration successful. Please check your email.',
-        user: mockUser
+        user: mockUser,
       }
 
       vi.mocked(authApi.register).mockResolvedValue(mockResponse)
@@ -252,7 +262,9 @@ describe('AuthStore', () => {
 
       const { register } = useAuthStore.getState()
 
-      await expect(register(mockRegisterData)).rejects.toThrow('Email already exists')
+      await expect(register(mockRegisterData)).rejects.toThrow(
+        'Email already exists'
+      )
 
       const state = useAuthStore.getState()
       expect(state.isLoading).toBe(false)
@@ -269,7 +281,9 @@ describe('AuthStore', () => {
     })
 
     it('should logout successfully', async () => {
-      vi.mocked(authApi.logout).mockResolvedValue({ message: 'Logged out successfully' })
+      vi.mocked(authApi.logout).mockResolvedValue({
+        message: 'Logged out successfully',
+      })
 
       const { logout } = useAuthStore.getState()
       await logout()
@@ -323,7 +337,7 @@ describe('AuthStore', () => {
       const newStoredTokens = {
         access_token: 'new-access-token',
         refresh_token: 'new-refresh-token',
-        expires_at: Date.now() + 3600000
+        expires_at: Date.now() + 3600000,
       }
 
       vi.mocked(tokenManager.refreshTokens).mockResolvedValue(true)
@@ -362,7 +376,9 @@ describe('AuthStore', () => {
     })
 
     it('should handle token manager throwing error', async () => {
-      vi.mocked(tokenManager.refreshTokens).mockRejectedValue(new Error('Token manager error'))
+      vi.mocked(tokenManager.refreshTokens).mockRejectedValue(
+        new Error('Token manager error')
+      )
 
       const { refreshTokens } = useAuthStore.getState()
       const result = await refreshTokens()
@@ -456,7 +472,8 @@ describe('AuthStore', () => {
     })
 
     it('should reset state completely', () => {
-      const { setUser, setTokens, setError, setLoading, reset } = useAuthStore.getState()
+      const { setUser, setTokens, setError, setLoading, reset } =
+        useAuthStore.getState()
 
       // Set some state
       setUser(mockUser)
@@ -498,7 +515,7 @@ describe('AuthStore', () => {
       const mockStoredTokens = {
         access_token: 'stored-token',
         refresh_token: 'stored-refresh',
-        expires_at: Date.now() + 3600000
+        expires_at: Date.now() + 3600000,
       }
 
       vi.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
@@ -524,7 +541,7 @@ describe('AuthStore', () => {
       const mockStoredTokens = {
         access_token: 'expired-token',
         refresh_token: 'stored-refresh',
-        expires_at: Date.now() - 1000 // Expired
+        expires_at: Date.now() - 1000, // Expired
       }
 
       vi.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
@@ -532,7 +549,9 @@ describe('AuthStore', () => {
 
       // Mock successful refresh
       const mockRefreshStore = useAuthStore.getState()
-      const refreshSpy = vi.spyOn(mockRefreshStore, 'refreshTokens').mockResolvedValue(true)
+      const refreshSpy = vi
+        .spyOn(mockRefreshStore, 'refreshTokens')
+        .mockResolvedValue(true)
 
       // Mock successful profile fetch after refresh
       const { userApi } = await import('@/lib/api-client')
@@ -555,7 +574,7 @@ describe('AuthStore', () => {
       const mockStoredTokens = {
         access_token: 'stored-token',
         refresh_token: 'stored-refresh',
-        expires_at: Date.now() + 3600000
+        expires_at: Date.now() + 3600000,
       }
 
       vi.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
@@ -568,7 +587,9 @@ describe('AuthStore', () => {
         .mockResolvedValueOnce(mockUser)
 
       const mockRefreshStore = useAuthStore.getState()
-      const refreshSpy = vi.spyOn(mockRefreshStore, 'refreshTokens').mockResolvedValue(true)
+      const refreshSpy = vi
+        .spyOn(mockRefreshStore, 'refreshTokens')
+        .mockResolvedValue(true)
 
       const { initialize } = useAuthStore.getState()
       await initialize()
@@ -587,7 +608,7 @@ describe('AuthStore', () => {
       const mockStoredTokens = {
         access_token: 'stored-token',
         refresh_token: 'stored-refresh',
-        expires_at: Date.now() + 3600000
+        expires_at: Date.now() + 3600000,
       }
 
       vi.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
@@ -595,7 +616,9 @@ describe('AuthStore', () => {
 
       // Mock profile fetch failure and refresh failure
       const { userApi } = await import('@/lib/api-client')
-      vi.mocked(userApi.getProfile).mockRejectedValue(new Error('Profile fetch failed'))
+      vi.mocked(userApi.getProfile).mockRejectedValue(
+        new Error('Profile fetch failed')
+      )
 
       // Mock the refresh to fail
       vi.mocked(tokenManager.refreshTokens).mockResolvedValue(false)
@@ -618,14 +641,17 @@ describe('AuthStore', () => {
         throw new Error('Storage error')
       })
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
       const mockRefreshStore = useAuthStore.getState()
       const resetSpy = vi.spyOn(mockRefreshStore, 'reset')
 
       const { initialize } = useAuthStore.getState()
       await initialize()
 
-      expect(consoleSpy).toHaveBeenCalledWith('Auth initialization failed:', expect.any(Error))
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Auth initialization failed:',
+        expect.any(Error)
+      )
       expect(resetSpy).toHaveBeenCalled()
 
       const state = useAuthStore.getState()
@@ -690,7 +716,7 @@ describe('AuthStore', () => {
           refresh_token: mockTokens.refresh_token,
           expires_in: mockTokens.expires_in,
           message: 'Login successful',
-          academies: mockSingleAcademyData
+          academies: mockSingleAcademyData,
         }
 
         vi.mocked(authApi.login).mockResolvedValue(mockResponse)
@@ -701,7 +727,7 @@ describe('AuthStore', () => {
         expect(result).toEqual({
           shouldRedirect: true,
           redirectPath: '/academy/1/dashboard',
-          showAcademySelection: false
+          showAcademySelection: false,
         })
 
         const state = useAuthStore.getState()
@@ -716,7 +742,7 @@ describe('AuthStore', () => {
           refresh_token: mockTokens.refresh_token,
           expires_in: mockTokens.expires_in,
           message: 'Login successful',
-          academies: mockMultipleAcademyData
+          academies: mockMultipleAcademyData,
         }
 
         vi.mocked(authApi.login).mockResolvedValue(mockResponse)
@@ -727,7 +753,7 @@ describe('AuthStore', () => {
         expect(result).toEqual({
           shouldRedirect: true,
           redirectPath: '/academy-selection',
-          showAcademySelection: true
+          showAcademySelection: true,
         })
 
         const state = useAuthStore.getState()
@@ -742,7 +768,7 @@ describe('AuthStore', () => {
           refresh_token: mockTokens.refresh_token,
           expires_in: mockTokens.expires_in,
           message: 'Login successful',
-          academies: mockEmptyAcademyData
+          academies: mockEmptyAcademyData,
         }
 
         vi.mocked(authApi.login).mockResolvedValue(mockResponse)
@@ -753,7 +779,7 @@ describe('AuthStore', () => {
         expect(result).toEqual({
           shouldRedirect: true,
           redirectPath: '/create-academy',
-          showAcademySelection: false
+          showAcademySelection: false,
         })
 
         const state = useAuthStore.getState()
@@ -767,7 +793,7 @@ describe('AuthStore', () => {
           access_token: mockTokens.access_token,
           refresh_token: mockTokens.refresh_token,
           expires_in: mockTokens.expires_in,
-          message: 'Login successful'
+          message: 'Login successful',
           // No academies field
         }
 
@@ -779,7 +805,7 @@ describe('AuthStore', () => {
         expect(result).toEqual({
           shouldRedirect: true,
           redirectPath: '/create-academy',
-          showAcademySelection: false
+          showAcademySelection: false,
         })
 
         const state = useAuthStore.getState()
@@ -849,7 +875,9 @@ describe('AuthStore', () => {
 
       it('should refresh academy data successfully', async () => {
         const { academyApi } = await import('@/lib/api-client')
-        vi.mocked(academyApi.getUserAcademies).mockResolvedValue(mockSingleAcademyData)
+        vi.mocked(academyApi.getUserAcademies).mockResolvedValue(
+          mockSingleAcademyData
+        )
 
         const { refreshAcademies } = useAuthStore.getState()
         await refreshAcademies()
@@ -862,14 +890,21 @@ describe('AuthStore', () => {
 
       it('should handle refresh failure gracefully', async () => {
         const { academyApi } = await import('@/lib/api-client')
-        vi.mocked(academyApi.getUserAcademies).mockRejectedValue(new Error('Network error'))
+        vi.mocked(academyApi.getUserAcademies).mockRejectedValue(
+          new Error('Network error')
+        )
 
-        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { })
+        const consoleSpy = vi
+          .spyOn(console, 'error')
+          .mockImplementation(() => {})
 
         const { refreshAcademies } = useAuthStore.getState()
         await refreshAcademies()
 
-        expect(consoleSpy).toHaveBeenCalledWith('Failed to refresh academy data:', expect.any(Error))
+        expect(consoleSpy).toHaveBeenCalledWith(
+          'Failed to refresh academy data:',
+          expect.any(Error)
+        )
 
         // Should not throw error
         const state = useAuthStore.getState()
@@ -930,7 +965,8 @@ describe('AuthStore', () => {
     describe('Logout with Academy Data', () => {
       beforeEach(() => {
         // Set up authenticated state with academy data
-        const { setUser, setTokens, setAcademyData, setCurrentAcademy } = useAuthStore.getState()
+        const { setUser, setTokens, setAcademyData, setCurrentAcademy } =
+          useAuthStore.getState()
         setUser(mockUser)
         setTokens(mockTokens)
         setAcademyData(mockSingleAcademyData)
@@ -938,7 +974,9 @@ describe('AuthStore', () => {
       })
 
       it('should clear academy data on logout', async () => {
-        vi.mocked(authApi.logout).mockResolvedValue({ message: 'Logged out successfully' })
+        vi.mocked(authApi.logout).mockResolvedValue({
+          message: 'Logged out successfully',
+        })
 
         const { logout } = useAuthStore.getState()
         await logout()
@@ -952,7 +990,8 @@ describe('AuthStore', () => {
     describe('Reset with Academy Data', () => {
       beforeEach(() => {
         // Set up state with academy data
-        const { setUser, setTokens, setAcademyData, setCurrentAcademy } = useAuthStore.getState()
+        const { setUser, setTokens, setAcademyData, setCurrentAcademy } =
+          useAuthStore.getState()
         setUser(mockUser)
         setTokens(mockTokens)
         setAcademyData(mockSingleAcademyData)

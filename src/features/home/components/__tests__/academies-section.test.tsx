@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import type { FeaturedAcademiesByCategory } from '@/services/academy-service'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { AcademiesSection } from '../academies-section'
-import type { FeaturedAcademiesByCategory } from '@/services/academy-service'
 
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
@@ -17,7 +17,8 @@ vi.mock('react-i18next', () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
         'home.academies.title': 'Academias Destacadas',
-        'home.academies.description': 'Descubre las mejores academias especializadas en diferentes áreas',
+        'home.academies.description':
+          'Descubre las mejores academias especializadas en diferentes áreas',
         'home.academies.loading': 'Cargando academias...',
         'home.academies.error': 'Error al cargar las academias destacadas.',
         'home.academies.retry': 'Reintentar',
@@ -25,8 +26,8 @@ vi.mock('react-i18next', () => ({
         'home.academies.viewAll': 'Ver Todas las Academias',
       }
       return translations[key] || key
-    }
-  })
+    },
+  }),
 }))
 
 // Mock TanStack Router
@@ -41,25 +42,31 @@ vi.mock('@tanstack/react-router', () => ({
 // Mock lucide-react
 vi.mock('lucide-react', () => ({
   Loader2: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="loader-icon">Loading...</div>
+    <div className={className} data-testid='loader-icon'>
+      Loading...
+    </div>
   ),
   AlertCircle: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="alert-icon">Alert</div>
+    <div className={className} data-testid='alert-icon'>
+      Alert
+    </div>
   ),
   ArrowRight: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="arrow-icon">→</div>
+    <div className={className} data-testid='arrow-icon'>
+      →
+    </div>
   ),
 }))
 
 // Mock UI components
 vi.mock('@/components/ui/alert', () => ({
   Alert: ({ children, variant, ...props }: any) => (
-    <div data-testid="alert" data-variant={variant} {...props}>
+    <div data-testid='alert' data-variant={variant} {...props}>
       {children}
     </div>
   ),
   AlertDescription: ({ children, ...props }: any) => (
-    <div data-testid="alert-description" {...props}>
+    <div data-testid='alert-description' {...props}>
       {children}
     </div>
   ),
@@ -67,10 +74,10 @@ vi.mock('@/components/ui/alert', () => ({
 
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, variant, size, ...props }: any) => (
-    <button 
-      onClick={onClick} 
-      data-variant={variant} 
-      data-size={size} 
+    <button
+      onClick={onClick}
+      data-variant={variant}
+      data-size={size}
       {...props}
     >
       {children}
@@ -98,7 +105,7 @@ const mockData: FeaturedAcademiesByCategory[] = [
       academies_count: 2,
       academies: [],
       created_at: '2024-01-01',
-      updated_at: '2024-01-01'
+      updated_at: '2024-01-01',
     },
     academies: [
       {
@@ -113,16 +120,16 @@ const mockData: FeaturedAcademiesByCategory[] = [
         creator: {
           id: 1,
           name: 'Juan Pérez',
-          email: 'juan@example.com'
+          email: 'juan@example.com',
         },
         academy_category: null,
         academy_configuration: {
-          enable_gamification: true
+          enable_gamification: true,
         },
         courses_count: 10,
         enrolled_users_count: 500,
         badges_count: 5,
-        courses: []
+        courses: [],
       },
       {
         id: 2,
@@ -136,18 +143,18 @@ const mockData: FeaturedAcademiesByCategory[] = [
         creator: {
           id: 2,
           name: 'María González',
-          email: 'maria@example.com'
+          email: 'maria@example.com',
         },
         academy_category: null,
         academy_configuration: {
-          enable_gamification: true
+          enable_gamification: true,
         },
         courses_count: 8,
         enrolled_users_count: 300,
         badges_count: 3,
-        courses: []
-      }
-    ]
+        courses: [],
+      },
+    ],
   },
   {
     category: {
@@ -158,7 +165,7 @@ const mockData: FeaturedAcademiesByCategory[] = [
       academies_count: 1,
       academies: [],
       created_at: '2024-01-01',
-      updated_at: '2024-01-01'
+      updated_at: '2024-01-01',
     },
     academies: [
       {
@@ -173,19 +180,19 @@ const mockData: FeaturedAcademiesByCategory[] = [
         creator: {
           id: 3,
           name: 'Carlos López',
-          email: 'carlos@example.com'
+          email: 'carlos@example.com',
         },
         academy_category: null,
         academy_configuration: {
-          enable_gamification: false
+          enable_gamification: false,
         },
         courses_count: 12,
         enrolled_users_count: 400,
         badges_count: 8,
-        courses: []
-      }
-    ]
-  }
+        courses: [],
+      },
+    ],
+  },
 ]
 
 describe('AcademiesSection', () => {
@@ -224,13 +231,15 @@ describe('AcademiesSection', () => {
 
       expect(screen.getByTestId('alert')).toBeInTheDocument()
       expect(screen.getByTestId('alert-icon')).toBeInTheDocument()
-      expect(screen.getByText('Error al cargar las academias destacadas.')).toBeInTheDocument()
+      expect(
+        screen.getByText('Error al cargar las academias destacadas.')
+      ).toBeInTheDocument()
       expect(screen.getByText('Reintentar')).toBeInTheDocument()
     })
 
     it('should call onRetry when retry button is clicked', async () => {
       const user = userEvent.setup()
-      
+
       render(
         <AcademiesSection
           data={[]}
@@ -242,7 +251,7 @@ describe('AcademiesSection', () => {
 
       const retryButton = screen.getByText('Reintentar')
       await user.click(retryButton)
-      
+
       expect(mockOnRetry).toHaveBeenCalledTimes(1)
     })
   })
@@ -259,7 +268,11 @@ describe('AcademiesSection', () => {
       )
 
       expect(screen.getByText('Academias Destacadas')).toBeInTheDocument()
-      expect(screen.getByText('Descubre las mejores academias especializadas en diferentes áreas')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'Descubre las mejores academias especializadas en diferentes áreas'
+        )
+      ).toBeInTheDocument()
     })
 
     it('should render academies grouped by category', () => {
@@ -312,10 +325,10 @@ describe('AcademiesSection', () => {
             academies_count: 0,
             academies: [],
             created_at: '2024-01-01',
-            updated_at: '2024-01-01'
+            updated_at: '2024-01-01',
           },
-          academies: []
-        }
+          academies: [],
+        },
       ]
 
       render(
@@ -342,7 +355,9 @@ describe('AcademiesSection', () => {
         />
       )
 
-      expect(screen.getByText('No se encontraron academias destacadas.')).toBeInTheDocument()
+      expect(
+        screen.getByText('No se encontraron academias destacadas.')
+      ).toBeInTheDocument()
     })
 
     it('should render empty state when data exists but all categories are empty', () => {
@@ -356,10 +371,10 @@ describe('AcademiesSection', () => {
             academies_count: 0,
             academies: [],
             created_at: '2024-01-01',
-            updated_at: '2024-01-01'
+            updated_at: '2024-01-01',
           },
-          academies: []
-        }
+          academies: [],
+        },
       ]
 
       render(
@@ -391,12 +406,18 @@ describe('AcademiesSection', () => {
       )
 
       // Main section title
-      const mainHeading = screen.getByRole('heading', { name: 'Academias Destacadas' })
+      const mainHeading = screen.getByRole('heading', {
+        name: 'Academias Destacadas',
+      })
       expect(mainHeading).toBeInTheDocument()
 
       // Category headings
-      expect(screen.getByRole('heading', { name: 'Tecnología' })).toBeInTheDocument()
-      expect(screen.getByRole('heading', { name: 'Diseño' })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: 'Tecnología' })
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: 'Diseño' })
+      ).toBeInTheDocument()
     })
   })
 })

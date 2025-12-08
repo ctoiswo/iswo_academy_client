@@ -1,8 +1,8 @@
+import type { Course } from '@/types'
 import { motion } from 'framer-motion'
 import { Clock, Users, Star, Play } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import type { Course } from '@/types'
 
 interface CourseHeroProps {
   course: Course & {
@@ -19,10 +19,10 @@ interface CourseHeroProps {
   formatDifficulty: (level: string) => string
 }
 
-export function CourseHero({ 
-  course, 
-  getDifficultyColor, 
-  formatDifficulty 
+export function CourseHero({
+  course,
+  getDifficultyColor,
+  formatDifficulty,
 }: CourseHeroProps) {
   return (
     <div className='container pb-8'>
@@ -62,9 +62,7 @@ export function CourseHero({
                 />
                 <span>
                   Por{' '}
-                  <span className='font-medium'>
-                    {course.instructor.name}
-                  </span>
+                  <span className='font-medium'>{course.instructor.name}</span>
                 </span>
               </div>
               <div className='flex items-center gap-1'>

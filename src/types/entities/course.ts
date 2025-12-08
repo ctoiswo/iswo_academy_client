@@ -2,9 +2,8 @@
  * Course Entity Types
  * Based on Rails Course model structure
  */
-
-import type { Creator } from './user'
 import type { AcademyCategory } from './category'
+import type { Creator } from './user'
 
 export type CourseStatus = 'draft' | 'published' | 'archived'
 export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced'

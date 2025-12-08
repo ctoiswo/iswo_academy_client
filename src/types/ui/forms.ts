@@ -1,7 +1,6 @@
 /**
  * Form related types
  */
-
 import type { z } from 'zod'
 
 // Generic form state

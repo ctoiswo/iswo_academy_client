@@ -63,8 +63,7 @@ export function useQuestion(
         assessmentId,
         questionId
       ),
-    enabled:
-      !!academySlug && !!courseSlug && !!assessmentId && !!questionId,
+    enabled: !!academySlug && !!courseSlug && !!assessmentId && !!questionId,
   })
 }
 

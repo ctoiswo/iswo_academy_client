@@ -1,5 +1,13 @@
 import { cn } from '@/lib/utils'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardAction, CardFooter } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardAction,
+  CardFooter,
+} from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export interface DashboardCardProps {
@@ -25,7 +33,7 @@ export function DashboardCard({
   className,
   contentClassName,
   variant = 'default',
-  size = 'md'
+  size = 'md',
 }: DashboardCardProps) {
   const getVariantStyles = () => {
     switch (variant) {
@@ -56,25 +64,25 @@ export function DashboardCard({
       <Card className={cn(getVariantStyles(), getSizeStyles(), className)}>
         {(title || description || action) && (
           <CardHeader>
-            <div className="flex items-start justify-between">
-              <div className="space-y-2">
-                {title && <Skeleton className="h-5 w-32" />}
-                {description && <Skeleton className="h-4 w-48" />}
+            <div className='flex items-start justify-between'>
+              <div className='space-y-2'>
+                {title && <Skeleton className='h-5 w-32' />}
+                {description && <Skeleton className='h-4 w-48' />}
               </div>
-              {action && <Skeleton className="h-8 w-20" />}
+              {action && <Skeleton className='h-8 w-20' />}
             </div>
           </CardHeader>
         )}
         <CardContent className={contentClassName}>
-          <div className="space-y-4">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
+          <div className='space-y-4'>
+            <Skeleton className='h-4 w-full' />
+            <Skeleton className='h-4 w-3/4' />
+            <Skeleton className='h-4 w-1/2' />
           </div>
         </CardContent>
         {footer && (
           <CardFooter>
-            <Skeleton className="h-8 w-24" />
+            <Skeleton className='h-8 w-24' />
           </CardFooter>
         )}
       </Card>
@@ -85,7 +93,7 @@ export function DashboardCard({
     <Card className={cn(getVariantStyles(), getSizeStyles(), className)}>
       {(title || description || action) && (
         <CardHeader>
-          <div className="flex items-start justify-between">
+          <div className='flex items-start justify-between'>
             <div>
               {title && <CardTitle>{title}</CardTitle>}
               {description && <CardDescription>{description}</CardDescription>}
@@ -94,14 +102,8 @@ export function DashboardCard({
           </div>
         </CardHeader>
       )}
-      <CardContent className={contentClassName}>
-        {children}
-      </CardContent>
-      {footer && (
-        <CardFooter>
-          {footer}
-        </CardFooter>
-      )}
+      <CardContent className={contentClassName}>{children}</CardContent>
+      {footer && <CardFooter>{footer}</CardFooter>}
     </Card>
   )
 }
@@ -137,19 +139,20 @@ export function MetricCard({
 
   return (
     <DashboardCard {...props}>
-      <div className="flex items-center justify-between">
+      <div className='flex items-center justify-between'>
         <div>
-          <p className="text-sm font-medium text-muted-foreground">{label}</p>
-          <p className="text-2xl font-bold">{metric}</p>
+          <p className='text-muted-foreground text-sm font-medium'>{label}</p>
+          <p className='text-2xl font-bold'>{metric}</p>
           {change !== undefined && (
             <p className={cn('text-xs', getChangeColor())}>
-              {change > 0 ? '+' : ''}{change}% from last period
+              {change > 0 ? '+' : ''}
+              {change}% from last period
             </p>
           )}
         </div>
         {Icon && (
-          <div className="rounded-full bg-muted p-2">
-            <Icon className="h-4 w-4 text-muted-foreground" />
+          <div className='bg-muted rounded-full p-2'>
+            <Icon className='text-muted-foreground h-4 w-4' />
           </div>
         )}
       </div>
@@ -176,22 +179,24 @@ export function ListCard({
   return (
     <DashboardCard {...props}>
       {items.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">{emptyMessage}</p>
+        <div className='py-8 text-center'>
+          <p className='text-muted-foreground'>{emptyMessage}</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className='space-y-4'>
           {items.map((item) => (
-            <div key={item.id} className="flex items-center justify-between">
+            <div key={item.id} className='flex items-center justify-between'>
               <div>
-                <p className="font-medium">{item.title}</p>
+                <p className='font-medium'>{item.title}</p>
                 {item.subtitle && (
-                  <p className="text-sm text-muted-foreground">{item.subtitle}</p>
+                  <p className='text-muted-foreground text-sm'>
+                    {item.subtitle}
+                  </p>
                 )}
               </div>
-              <div className="flex items-center space-x-2">
+              <div className='flex items-center space-x-2'>
                 {item.value && (
-                  <span className="text-sm font-medium">{item.value}</span>
+                  <span className='text-sm font-medium'>{item.value}</span>
                 )}
                 {item.action}
               </div>

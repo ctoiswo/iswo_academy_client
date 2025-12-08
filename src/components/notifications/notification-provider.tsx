@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { toast } from 'sonner'
-import { BadgeModal } from '@/components/gamification/badge-modal'
 import { useBadgeNotifications } from '@/hooks/use-badge-notifications'
 import { useNotifications } from '@/hooks/use-notifications'
+import { BadgeModal } from '@/components/gamification/badge-modal'
 
 interface NotificationProviderProps {
   children: React.ReactNode
@@ -18,25 +18,24 @@ interface NotificationProviderProps {
 export function NotificationProvider({
   children,
   enabled = true,
-  showToasts = true
+  showToasts = true,
 }: NotificationProviderProps) {
-  
   // Hook de notificaciones generales
   const {
     isConnected: notificationsConnected,
-    connectionError: notificationsError
-  } = useNotifications({ 
-    enabled, 
-    showToasts 
+    connectionError: notificationsError,
+  } = useNotifications({
+    enabled,
+    showToasts,
   })
 
   // Hook de notificaciones de badges
   const {
     currentBadge,
     isConnected: badgeConnected,
-    dismissCurrentBadge
-  } = useBadgeNotifications({ 
-    enabled 
+    dismissCurrentBadge,
+  } = useBadgeNotifications({
+    enabled,
   })
 
   // Toast para estado de conexión
@@ -53,7 +52,7 @@ export function NotificationProvider({
   return (
     <>
       {children}
-      
+
       {/* Modal de Badge */}
       <BadgeModal
         badge={currentBadge}

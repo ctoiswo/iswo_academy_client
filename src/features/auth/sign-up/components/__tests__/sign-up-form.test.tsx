@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { SignUpForm } from '../sign-up-form'
-import { useAuthStore } from '@/stores/auth-store'
 import { toast } from 'sonner'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { useAuthStore } from '@/stores/auth-store'
+import { SignUpForm } from '../sign-up-form'
 
 // Create mock navigate function
 const mockNavigate = vi.fn()
@@ -65,7 +65,9 @@ describe('SignUpForm', () => {
     expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/^contraseña$/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/confirmar contraseña/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /crear cuenta/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /crear cuenta/i })
+    ).toBeInTheDocument()
   })
 
   it('validates required fields', async () => {
@@ -77,9 +79,15 @@ describe('SignUpForm', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/el nombre es obligatorio/i)).toBeInTheDocument()
-      expect(screen.getByText(/el apellido es obligatorio/i)).toBeInTheDocument()
-      expect(screen.getByText(/el correo electrónico es obligatorio/i)).toBeInTheDocument()
-      expect(screen.getByText(/la contraseña es obligatoria/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/el apellido es obligatorio/i)
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(/el correo electrónico es obligatorio/i)
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(/la contraseña es obligatoria/i)
+      ).toBeInTheDocument()
     })
   })
 
@@ -90,9 +98,15 @@ describe('SignUpForm', () => {
     // Fill required fields first
     await user.type(screen.getByLabelText(/nombre/i), 'John')
     await user.type(screen.getByLabelText(/apellido/i), 'Doe')
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'invalid-email')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'invalid-email'
+    )
     await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
+    await user.type(
+      screen.getByLabelText(/confirmar contraseña/i),
+      'ValidPassword123'
+    )
 
     const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
@@ -109,14 +123,16 @@ describe('SignUpForm', () => {
     render(<SignUpForm />)
 
     const passwordInput = screen.getByLabelText(/^contraseña$/i)
-    
+
     // Test minimum length
     await user.type(passwordInput, '123')
     const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText(/la contraseña debe tener al menos 8 caracteres/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/la contraseña debe tener al menos 8 caracteres/i)
+      ).toBeInTheDocument()
     })
 
     // Test complexity requirements
@@ -125,7 +141,11 @@ describe('SignUpForm', () => {
     await user.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText(/la contraseña debe contener al menos una letra minúscula, una mayúscula y un número/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /la contraseña debe contener al menos una letra minúscula, una mayúscula y un número/i
+        )
+      ).toBeInTheDocument()
     })
   })
 
@@ -143,13 +163,17 @@ describe('SignUpForm', () => {
     await user.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText(/las contraseñas no coinciden/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/las contraseñas no coinciden/i)
+      ).toBeInTheDocument()
     })
   })
 
   it('submits form with valid data', async () => {
     const user = userEvent.setup()
-    const mockResponse = { message: 'Registration successful! Please check your email.' }
+    const mockResponse = {
+      message: 'Registration successful! Please check your email.',
+    }
     mockRegister.mockResolvedValue(mockResponse)
 
     render(<SignUpForm />)
@@ -157,9 +181,15 @@ describe('SignUpForm', () => {
     // Fill out the form
     await user.type(screen.getByLabelText(/nombre/i), 'John')
     await user.type(screen.getByLabelText(/apellido/i), 'Doe')
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
+    await user.type(
+      screen.getByLabelText(/confirmar contraseña/i),
+      'ValidPassword123'
+    )
 
     const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
@@ -175,14 +205,20 @@ describe('SignUpForm', () => {
     })
 
     // Check success toast
-    expect(mockToast.success).toHaveBeenCalledWith('¡Cuenta creada exitosamente!', {
-      description: 'Por favor revisa tu correo electrónico para confirmar tu cuenta.',
-    })
+    expect(mockToast.success).toHaveBeenCalledWith(
+      '¡Cuenta creada exitosamente!',
+      {
+        description:
+          'Por favor revisa tu correo electrónico para confirmar tu cuenta.',
+      }
+    )
   })
 
   it('navigates to success page after successful registration', async () => {
     const user = userEvent.setup()
-    const mockResponse = { message: 'Registration successful! Please check your email.' }
+    const mockResponse = {
+      message: 'Registration successful! Please check your email.',
+    }
     mockRegister.mockResolvedValue(mockResponse)
 
     render(<SignUpForm />)
@@ -190,9 +226,15 @@ describe('SignUpForm', () => {
     // Fill out and submit the form
     await user.type(screen.getByLabelText(/nombre/i), 'John')
     await user.type(screen.getByLabelText(/apellido/i), 'Doe')
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
+    await user.type(
+      screen.getByLabelText(/confirmar contraseña/i),
+      'ValidPassword123'
+    )
 
     const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
@@ -209,7 +251,7 @@ describe('SignUpForm', () => {
       type: 'ValidationError',
       message: 'Validation failed',
       code: 'VALIDATION_ERROR',
-      details: ['Email has already been taken', 'Password is too weak']
+      details: ['Email has already been taken', 'Password is too weak'],
     }
     mockRegister.mockRejectedValue(mockError)
 
@@ -218,9 +260,15 @@ describe('SignUpForm', () => {
     // Fill out and submit the form
     await user.type(screen.getByLabelText(/nombre/i), 'John')
     await user.type(screen.getByLabelText(/apellido/i), 'Doe')
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'existing@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'existing@example.com'
+    )
     await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
+    await user.type(
+      screen.getByLabelText(/confirmar contraseña/i),
+      'ValidPassword123'
+    )
 
     const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
@@ -238,7 +286,7 @@ describe('SignUpForm', () => {
     const mockError = {
       type: 'ServerError',
       message: 'Internal server error',
-      code: 'SERVER_ERROR'
+      code: 'SERVER_ERROR',
     }
     mockRegister.mockRejectedValue(mockError)
 
@@ -247,9 +295,15 @@ describe('SignUpForm', () => {
     // Fill out and submit the form
     await user.type(screen.getByLabelText(/nombre/i), 'John')
     await user.type(screen.getByLabelText(/apellido/i), 'Doe')
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
+    await user.type(
+      screen.getByLabelText(/confirmar contraseña/i),
+      'ValidPassword123'
+    )
 
     const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
@@ -275,17 +329,27 @@ describe('SignUpForm', () => {
     // Fill out the form
     await user.type(screen.getByLabelText(/nombre/i), 'John')
     await user.type(screen.getByLabelText(/apellido/i), 'Doe')
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
+    await user.type(
+      screen.getByLabelText(/confirmar contraseña/i),
+      'ValidPassword123'
+    )
 
     const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)
 
     // Check loading state
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /creando cuenta.../i })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /creando cuenta.../i })).toBeDisabled()
+      expect(
+        screen.getByRole('button', { name: /creando cuenta.../i })
+      ).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /creando cuenta.../i })
+      ).toBeDisabled()
     })
 
     // Resolve the promise to finish the test
@@ -302,9 +366,15 @@ describe('SignUpForm', () => {
     // Fill out and submit the form
     await user.type(screen.getByLabelText(/nombre/i), 'John')
     await user.type(screen.getByLabelText(/apellido/i), 'Doe')
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/^contraseña$/i), 'ValidPassword123')
-    await user.type(screen.getByLabelText(/confirmar contraseña/i), 'ValidPassword123')
+    await user.type(
+      screen.getByLabelText(/confirmar contraseña/i),
+      'ValidPassword123'
+    )
 
     const submitButton = screen.getByRole('button', { name: /crear cuenta/i })
     await user.click(submitButton)

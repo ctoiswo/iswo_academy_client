@@ -1,10 +1,9 @@
 import i18n from 'i18next'
-import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-
+import { initReactI18next } from 'react-i18next'
+import enTranslations from './locales/en.json'
 // Importar traducciones
 import esTranslations from './locales/es.json'
-import enTranslations from './locales/en.json'
 
 // Configuración de i18next
 i18n
@@ -23,13 +22,13 @@ i18n
         translation: enTranslations,
       },
     },
-    
+
     // Idioma por defecto
     fallbackLng: 'es',
-    
+
     // Idiomas soportados
     supportedLngs: ['es', 'en'],
-    
+
     // Configuración del detector de idioma
     detection: {
       // Orden de detección: localStorage > navegador
@@ -39,15 +38,15 @@ i18n
       // Key para localStorage (debe coincidir con locale-store)
       lookupLocalStorage: 'i18nextLng',
     },
-    
+
     // Debug en desarrollo
     debug: import.meta.env.DEV,
-    
+
     // Interpolación
     interpolation: {
       escapeValue: false, // React ya escapa por defecto
     },
-    
+
     // React specific
     react: {
       useSuspense: false, // Evitar suspense para mejor control

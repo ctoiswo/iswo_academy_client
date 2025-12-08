@@ -1,15 +1,16 @@
+import type { DashboardProps } from '@/components/dashboard-router'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { AcademyStatsOverview } from './components'
-import type { DashboardProps } from '@/components/dashboard-router'
 
 export function AdminDashboard({ user, academy }: DashboardProps) {
   if (!user || !academy) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold">Academia Requerida</h2>
-          <p className="mt-2 text-muted-foreground">
-            Por favor selecciona una academia para acceder al panel de administración.
+      <div className='flex min-h-screen items-center justify-center'>
+        <div className='text-center'>
+          <h2 className='text-2xl font-bold'>Academia Requerida</h2>
+          <p className='text-muted-foreground mt-2'>
+            Por favor selecciona una academia para acceder al panel de
+            administración.
           </p>
         </div>
       </div>
@@ -20,17 +21,19 @@ export function AdminDashboard({ user, academy }: DashboardProps) {
     <DashboardLayout
       user={user}
       academy={academy}
-      variant="full"
-      dashboardType="academy-admin"
+      variant='full'
+      dashboardType='academy-admin'
     >
-      <div className="w-full space-y-6">
+      <div className='w-full space-y-6'>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Panel de Administración</h1>
-          <p className="text-muted-foreground">
+          <h1 className='text-3xl font-bold tracking-tight'>
+            Panel de Administración
+          </h1>
+          <p className='text-muted-foreground'>
             Resumen general y estadísticas de tu academia
           </p>
         </div>
-        
+
         <AcademyStatsOverview academy={academy} />
       </div>
     </DashboardLayout>

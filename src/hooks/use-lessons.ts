@@ -1,10 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
 import {
   lessonService,
   type CreateLessonData,
   type UpdateLessonData,
 } from '@/services/lesson-service'
+import { toast } from 'sonner'
 
 export function useLessons(
   academySlug: string,
@@ -46,7 +46,9 @@ export function useCreateLesson(
       queryClient.invalidateQueries({
         queryKey: ['lessons', academySlug, courseSlug, sectionId],
       })
-      queryClient.invalidateQueries({ queryKey: ['sections', academySlug, courseSlug] })
+      queryClient.invalidateQueries({
+        queryKey: ['sections', academySlug, courseSlug],
+      })
       queryClient.invalidateQueries({ queryKey: ['courses'] })
       toast.success('Lección creada exitosamente')
     },
@@ -71,12 +73,20 @@ export function useUpdateLesson(
       lessonId: number
       data: UpdateLessonData
     }) =>
-      lessonService.updateLesson(academySlug, courseSlug, sectionId, lessonId, data),
+      lessonService.updateLesson(
+        academySlug,
+        courseSlug,
+        sectionId,
+        lessonId,
+        data
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['lessons', academySlug, courseSlug, sectionId],
       })
-      queryClient.invalidateQueries({ queryKey: ['sections', academySlug, courseSlug] })
+      queryClient.invalidateQueries({
+        queryKey: ['sections', academySlug, courseSlug],
+      })
       queryClient.invalidateQueries({ queryKey: ['courses'] })
       toast.success('Lección actualizada exitosamente')
     },
@@ -100,7 +110,9 @@ export function useDeleteLesson(
       queryClient.invalidateQueries({
         queryKey: ['lessons', academySlug, courseSlug, sectionId],
       })
-      queryClient.invalidateQueries({ queryKey: ['sections', academySlug, courseSlug] })
+      queryClient.invalidateQueries({
+        queryKey: ['sections', academySlug, courseSlug],
+      })
       queryClient.invalidateQueries({ queryKey: ['courses'] })
       toast.success('Lección eliminada exitosamente')
     },

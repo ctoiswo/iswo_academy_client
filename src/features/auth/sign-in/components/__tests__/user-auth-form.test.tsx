@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { UserAuthForm } from '../user-auth-form'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { useAuthStore } from '@/stores/auth-store'
 import * as apiClient from '@/lib/api-client'
+import { UserAuthForm } from '../user-auth-form'
 
 // Create mock functions first
 const mockNavigate = vi.fn()
@@ -32,7 +32,7 @@ describe('UserAuthForm', () => {
   beforeEach(() => {
     // Reset mocks
     mockNavigate.mockClear()
-    
+
     // Mock auth store
     mockUseAuthStore.mockReturnValue({
       login: vi.fn(),
@@ -72,11 +72,15 @@ describe('UserAuthForm', () => {
 
     expect(screen.getByLabelText(/correo electrónico/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/contraseña/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /iniciar sesión/i })
+    ).toBeInTheDocument()
     expect(screen.getByText(/olvidaste tu contraseña/i)).toBeInTheDocument()
     expect(screen.getByText(/o continúa con/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /github/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /facebook/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /facebook/i })
+    ).toBeInTheDocument()
   })
 
   it('validates required fields', async () => {
@@ -89,8 +93,12 @@ describe('UserAuthForm', () => {
 
     // Should show validation errors
     await waitFor(() => {
-      expect(screen.getByText(/por favor ingresa tu correo electrónico/i)).toBeInTheDocument()
-      expect(screen.getByText(/por favor ingresa tu contraseña/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/por favor ingresa tu correo electrónico/i)
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(/por favor ingresa tu contraseña/i)
+      ).toBeInTheDocument()
     })
 
     // Should not call login
@@ -103,7 +111,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Enter invalid email
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'invalid-email')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'invalid-email'
+    )
     await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     // Try to submit
@@ -112,7 +123,11 @@ describe('UserAuthForm', () => {
 
     // Should show email validation error
     await waitFor(() => {
-      expect(screen.getByText(/por favor ingresa una dirección de correo electrónico válida/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          /por favor ingresa una dirección de correo electrónico válida/i
+        )
+      ).toBeInTheDocument()
     })
 
     // Should not call login
@@ -125,7 +140,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Enter short password
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/contraseña/i), '123')
 
     // Try to submit
@@ -134,7 +152,9 @@ describe('UserAuthForm', () => {
 
     // Should show password validation error
     await waitFor(() => {
-      expect(screen.getByText(/la contraseña debe tener al menos 7 caracteres/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/la contraseña debe tener al menos 7 caracteres/i)
+      ).toBeInTheDocument()
     })
 
     // Should not call login
@@ -145,7 +165,7 @@ describe('UserAuthForm', () => {
   it('calls login with correct credentials', async () => {
     const user = userEvent.setup()
     const mockLogin = vi.fn().mockResolvedValue(undefined)
-    
+
     mockUseAuthStore.mockReturnValue({
       ...mockUseAuthStore(),
       login: mockLogin,
@@ -156,7 +176,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     // Submit the form
@@ -175,7 +198,7 @@ describe('UserAuthForm', () => {
   it('navigates to default route after successful login', async () => {
     const user = userEvent.setup()
     const mockLogin = vi.fn().mockResolvedValue(undefined)
-    
+
     mockUseAuthStore.mockReturnValue({
       ...mockUseAuthStore(),
       login: mockLogin,
@@ -186,7 +209,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
@@ -194,7 +220,10 @@ describe('UserAuthForm', () => {
 
     // Should navigate to default route
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith({ to: '/academies', replace: true })
+      expect(mockNavigate).toHaveBeenCalledWith({
+        to: '/academies',
+        replace: true,
+      })
     })
   })
 
@@ -202,7 +231,7 @@ describe('UserAuthForm', () => {
     const user = userEvent.setup()
     const mockLogin = vi.fn().mockResolvedValue(undefined)
     const redirectTo = '/dashboard/settings'
-    
+
     mockUseAuthStore.mockReturnValue({
       ...mockUseAuthStore(),
       login: mockLogin,
@@ -213,7 +242,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm redirectTo={redirectTo} />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
@@ -221,14 +253,21 @@ describe('UserAuthForm', () => {
 
     // Should navigate to redirect route
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith({ to: redirectTo, replace: true })
+      expect(mockNavigate).toHaveBeenCalledWith({
+        to: redirectTo,
+        replace: true,
+      })
     })
   })
 
   it('shows loading state during login', async () => {
     const user = userEvent.setup()
-    const mockLogin = vi.fn().mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)))
-    
+    const mockLogin = vi
+      .fn()
+      .mockImplementation(
+        () => new Promise((resolve) => setTimeout(resolve, 100))
+      )
+
     mockUseAuthStore.mockReturnValue({
       ...mockUseAuthStore(),
       login: mockLogin,
@@ -239,7 +278,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out the form
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     // Submit the form
@@ -261,7 +303,7 @@ describe('UserAuthForm', () => {
     const user = userEvent.setup()
     const mockLogin = vi.fn().mockResolvedValue(undefined)
     const mockSetError = vi.fn()
-    
+
     mockUseAuthStore.mockReturnValue({
       ...mockUseAuthStore(),
       login: mockLogin,
@@ -272,7 +314,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
@@ -300,11 +345,11 @@ describe('UserAuthForm', () => {
     const mockError = {
       type: 'AuthenticationError',
       message: 'Invalid credentials',
-      code: 'INVALID_CREDENTIALS'
+      code: 'INVALID_CREDENTIALS',
     }
     const mockLogin = vi.fn().mockRejectedValue(mockError)
     const mockSetError = vi.fn()
-    
+
     mockUseAuthStore.mockReturnValue({
       ...mockUseAuthStore(),
       login: mockLogin,
@@ -315,7 +360,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
@@ -333,11 +381,11 @@ describe('UserAuthForm', () => {
       type: 'ValidationError',
       message: 'Validation failed',
       code: 'VALIDATION_ERROR',
-      details: ['Email is invalid', 'Password is too short']
+      details: ['Email is invalid', 'Password is too short'],
     }
     const mockLogin = vi.fn().mockRejectedValue(mockError)
     const mockSetError = vi.fn()
-    
+
     mockUseAuthStore.mockReturnValue({
       ...mockUseAuthStore(),
       login: mockLogin,
@@ -348,7 +396,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out and submit the form with valid data (client-side validation will pass)
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'test@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'test@example.com'
+    )
     await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })
@@ -365,11 +416,11 @@ describe('UserAuthForm', () => {
     const mockError = {
       type: 'NetworkError',
       message: 'Network connection failed',
-      code: 'NETWORK_ERROR'
+      code: 'NETWORK_ERROR',
     }
     const mockLogin = vi.fn().mockRejectedValue(mockError)
     const mockSetError = vi.fn()
-    
+
     mockUseAuthStore.mockReturnValue({
       ...mockUseAuthStore(),
       login: mockLogin,
@@ -380,7 +431,10 @@ describe('UserAuthForm', () => {
     render(<UserAuthForm />)
 
     // Fill out and submit the form
-    await user.type(screen.getByLabelText(/correo electrónico/i), 'john.doe@example.com')
+    await user.type(
+      screen.getByLabelText(/correo electrónico/i),
+      'john.doe@example.com'
+    )
     await user.type(screen.getByLabelText(/contraseña/i), 'ValidPassword123')
 
     const submitButton = screen.getByRole('button', { name: /iniciar sesión/i })

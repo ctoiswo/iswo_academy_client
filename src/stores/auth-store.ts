@@ -1,16 +1,16 @@
-import { create } from 'zustand'
-import { tokenManager } from '@/lib/api-client'
-import { tokenStorage } from '@/lib/token-storage'
-import authService from '@/services/auth-service'
 import academyService from '@/services/academy-service'
+import authService from '@/services/auth-service'
 import type {
   AuthUser,
   AcademyMembership,
   AcademyData,
   AuthTokens,
   LoginRequest,
-  RegisterRequest
+  RegisterRequest,
 } from '@/types'
+import { create } from 'zustand'
+import { tokenManager } from '@/lib/api-client'
+import { tokenStorage } from '@/lib/token-storage'
 
 // Re-export types for backward compatibility
 export type { AuthUser, AcademyMembership, AcademyData, AuthTokens }
@@ -38,7 +38,9 @@ export interface AuthState {
 
   // Actions
   login: (credentials: LoginCredentials) => Promise<LoginResult>
-  register: (userData: RegisterData) => Promise<{ message: string; user: AuthUser }>
+  register: (
+    userData: RegisterData
+  ) => Promise<{ message: string; user: AuthUser }>
   logout: () => Promise<void>
   refreshTokens: () => Promise<boolean>
   refreshUser: () => Promise<void>
@@ -92,7 +94,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       const tokens: AuthTokens = {
         access_token: response.access_token,
         refresh_token: response.refresh_token,
-        expires_in: response.expires_in
+        expires_in: response.expires_in,
       }
 
       // Store tokens securely
@@ -108,7 +110,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         isAuthenticated: true,
         isLoading: false,
         error: null,
-        academyData
+        academyData,
       })
 
       // Determine routing based on academy count
@@ -117,7 +119,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         return {
           shouldRedirect: true,
           redirectPath: '/dashboard',
-          showAcademySelection: false
+          showAcademySelection: false,
         }
       } else if (academyData.count === 1) {
         // Auto-select the single academy and redirect to role-specific dashboard
@@ -136,14 +138,14 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         return {
           shouldRedirect: true,
           redirectPath: dashboardPath,
-          showAcademySelection: false
+          showAcademySelection: false,
         }
       } else {
         // Multiple academies - show selection page
         return {
           shouldRedirect: true,
           redirectPath: '/academy-selection',
-          showAcademySelection: true
+          showAcademySelection: true,
         }
       }
     } catch (error: any) {
@@ -155,7 +157,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         isLoading: false,
         error: errorMessage,
         academyData: null,
-        currentAcademy: null
+        currentAcademy: null,
       })
       throw error
     }
@@ -169,7 +171,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
       set({
         isLoading: false,
-        error: null
+        error: null,
       })
 
       return response
@@ -177,7 +179,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       const errorMessage = error?.message || 'Registration failed'
       set({
         isLoading: false,
-        error: errorMessage
+        error: errorMessage,
       })
       throw error
     }
@@ -208,7 +210,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         isLoading: false,
         error: null,
         academyData: null,
-        currentAcademy: null
+        currentAcademy: null,
       })
     } catch (error: any) {
       // Even if logout fails, clear local state
@@ -220,7 +222,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         isLoading: false,
         error: null,
         academyData: null,
-        currentAcademy: null
+        currentAcademy: null,
       })
     }
   },
@@ -234,9 +236,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         tokens: {
           access_token: newTokens.access_token,
           refresh_token: newTokens.refresh_token,
-          expires_in: newTokens.expires_in
+          expires_in: newTokens.expires_in,
         },
-        error: null
+        error: null,
       })
       return true
     } catch (_error) {
@@ -246,7 +248,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         user: null,
         tokens: null,
         isAuthenticated: false,
-        error: 'Session expired'
+        error: 'Session expired',
       })
       return false
     }
@@ -295,7 +297,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       isInitialized: false,
       error: null,
       academyData: null,
-      currentAcademy: null
+      currentAcademy: null,
     })
   },
 
@@ -360,7 +362,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     const { academyData } = get()
     if (!academyData) return
 
-    const selectedAcademy = academyData.academies.find((academy: AcademyMembership) => academy.id === academyId)
+    const selectedAcademy = academyData.academies.find(
+      (academy: AcademyMembership) => academy.id === academyId
+    )
     if (selectedAcademy) {
       set({ currentAcademy: selectedAcademy })
       localStorage.setItem('currentAcademyId', academyId.toString())
@@ -382,16 +386,24 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       // If user had a currentAcademy stored, try to restore it
       const storedAcademyId = localStorage.getItem('currentAcademyId')
       if (storedAcademyId && academyData.academies.length > 0) {
-        const academy = academyData.academies.find((a: AcademyMembership) => a.id === parseInt(storedAcademyId))
+        const academy = academyData.academies.find(
+          (a: AcademyMembership) => a.id === parseInt(storedAcademyId)
+        )
         if (academy) {
           set({ currentAcademy: academy })
         } else if (academyData.count === 1) {
           set({ currentAcademy: academyData.academies[0] })
-          localStorage.setItem('currentAcademyId', academyData.academies[0].id.toString())
+          localStorage.setItem(
+            'currentAcademyId',
+            academyData.academies[0].id.toString()
+          )
         }
       } else if (academyData.count === 1) {
         set({ currentAcademy: academyData.academies[0] })
-        localStorage.setItem('currentAcademyId', academyData.academies[0].id.toString())
+        localStorage.setItem(
+          'currentAcademyId',
+          academyData.academies[0].id.toString()
+        )
       }
     } catch (_error) {
       // console.error('Failed to refresh academy data:', error)
@@ -434,6 +446,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     resetAccessToken: () => {
       get().reset()
     },
-    reset: () => get().reset()
-  }
+    reset: () => get().reset(),
+  },
 }))

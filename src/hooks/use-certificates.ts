@@ -1,16 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-
 import { certificateService } from '@/services'
+import { toast } from 'sonner'
 
 export function useLearningPathCertificateConfiguration(
   academySlug: string,
   learningPathSlug: string
 ) {
   return useQuery({
-    queryKey: ['learning-path-certificate-config', academySlug, learningPathSlug],
+    queryKey: [
+      'learning-path-certificate-config',
+      academySlug,
+      learningPathSlug,
+    ],
     queryFn: () =>
-      certificateService.getLearningPathCertificateConfiguration(academySlug, learningPathSlug),
+      certificateService.getLearningPathCertificateConfiguration(
+        academySlug,
+        learningPathSlug
+      ),
     enabled: !!academySlug && !!learningPathSlug,
   })
 }
@@ -30,7 +36,11 @@ export function useUpdateLearningPathCertificateConfiguration(
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['learning-path-certificate-config', academySlug, learningPathSlug],
+        queryKey: [
+          'learning-path-certificate-config',
+          academySlug,
+          learningPathSlug,
+        ],
       })
       queryClient.invalidateQueries({
         queryKey: ['learning-path', academySlug, learningPathSlug],
@@ -50,9 +60,20 @@ export function useLearningPathCertificates(
   perPage: number = 25
 ) {
   return useQuery({
-    queryKey: ['learning-path-certificates', academySlug, learningPathSlug, page, perPage],
+    queryKey: [
+      'learning-path-certificates',
+      academySlug,
+      learningPathSlug,
+      page,
+      perPage,
+    ],
     queryFn: () =>
-      certificateService.getLearningPathCertificates(academySlug, learningPathSlug, page, perPage),
+      certificateService.getLearningPathCertificates(
+        academySlug,
+        learningPathSlug,
+        page,
+        perPage
+      ),
     enabled: !!academySlug && !!learningPathSlug,
   })
 }

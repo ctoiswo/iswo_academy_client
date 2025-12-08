@@ -2,8 +2,20 @@
  * Lesson and Section related types
  */
 
-export type LessonType = 'video' | 'text' | 'quiz' | 'assignment' | 'interactive' | 'document'
-export type VideoProvider = 'none' | 'youtube' | 'vimeo' | 'google_drive' | 's3_direct' | 'bunny_cdn'
+export type LessonType =
+  | 'video'
+  | 'text'
+  | 'quiz'
+  | 'assignment'
+  | 'interactive'
+  | 'document'
+export type VideoProvider =
+  | 'none'
+  | 'youtube'
+  | 'vimeo'
+  | 'google_drive'
+  | 's3_direct'
+  | 'bunny_cdn'
 export type ProcessingStatus = 'pending' | 'processing' | 'completed' | 'failed'
 
 export interface Lesson {

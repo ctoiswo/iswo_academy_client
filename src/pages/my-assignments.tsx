@@ -1,6 +1,11 @@
 import { useState } from 'react'
-import { useParams, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
+import { useParams, Link } from '@tanstack/react-router'
+import {
+  studentAssignmentService,
+  type CourseAssignments,
+  type StudentAssignment,
+} from '@/services/student-assignment-service'
 import { motion } from 'framer-motion'
 import {
   ClipboardList,
@@ -12,12 +17,10 @@ import {
   FileText,
   CalendarClock,
 } from 'lucide-react'
-
-import { DashboardLayout } from '@/components/layout/dashboard-layout'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useAuthStore } from '@/stores/auth-store'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Select,
   SelectContent,
@@ -25,12 +28,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useAuthStore } from '@/stores/auth-store'
-import {
-  studentAssignmentService,
-  type CourseAssignments,
-  type StudentAssignment,
-} from '@/services/student-assignment-service'
+import { Skeleton } from '@/components/ui/skeleton'
+import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
 type FilterStatus = 'all' | 'pending' | 'past_due' | 'upcoming'
 
@@ -128,7 +127,7 @@ export default function MyAssignmentsPage() {
         <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
           <div>
             <h1 className='text-3xl font-bold text-gray-900'>Mis Tareas</h1>
-            <p className='text-gray-600 mt-1'>
+            <p className='mt-1 text-gray-600'>
               Gestiona todas tus asignaciones pendientes
             </p>
           </div>
@@ -169,7 +168,7 @@ export default function MyAssignmentsPage() {
                 <div className='text-2xl font-bold'>
                   {assignmentsData.summary.total_assignments}
                 </div>
-                <p className='text-xs text-gray-500 mt-1'>
+                <p className='mt-1 text-xs text-gray-500'>
                   {assignmentsData.summary.courses_with_assignments} cursos
                 </p>
               </CardContent>
@@ -186,7 +185,7 @@ export default function MyAssignmentsPage() {
                 <div className='text-2xl font-bold text-blue-600'>
                   {assignmentsData.summary.upcoming}
                 </div>
-                <p className='text-xs text-gray-500 mt-1'>Próximos 7 días</p>
+                <p className='mt-1 text-xs text-gray-500'>Próximos 7 días</p>
               </CardContent>
             </Card>
 
@@ -201,7 +200,7 @@ export default function MyAssignmentsPage() {
                 <div className='text-2xl font-bold text-red-600'>
                   {assignmentsData.summary.past_due}
                 </div>
-                <p className='text-xs text-gray-500 mt-1'>Requieren atención</p>
+                <p className='mt-1 text-xs text-gray-500'>Requieren atención</p>
               </CardContent>
             </Card>
 
@@ -216,7 +215,7 @@ export default function MyAssignmentsPage() {
                 <div className='text-2xl font-bold text-purple-600'>
                   {assignmentsData.summary.courses_with_assignments}
                 </div>
-                <p className='text-xs text-gray-500 mt-1'>Con asignaciones</p>
+                <p className='mt-1 text-xs text-gray-500'>Con asignaciones</p>
               </CardContent>
             </Card>
           </div>
@@ -307,7 +306,7 @@ function CourseAssignmentsCard({
               <CardTitle className='text-xl'>
                 {courseData.course.title}
               </CardTitle>
-              <p className='text-sm text-gray-500 mt-1'>
+              <p className='mt-1 text-sm text-gray-500'>
                 {courseData.assignments.length}{' '}
                 {courseData.assignments.length === 1
                   ? 'asignación'
@@ -345,11 +344,11 @@ function CourseAssignmentsCard({
                       {assignment.title}
                     </h4>
                     {assignment.description && (
-                      <p className='text-sm text-gray-600 mt-1 line-clamp-2'>
+                      <p className='mt-1 line-clamp-2 text-sm text-gray-600'>
                         {assignment.description}
                       </p>
                     )}
-                    <div className='flex flex-wrap items-center gap-3 mt-3 text-sm text-gray-500'>
+                    <div className='mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-500'>
                       {assignment.section && (
                         <span className='flex items-center gap-1'>
                           <BookOpen className='h-4 w-4' />

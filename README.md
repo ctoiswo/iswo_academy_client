@@ -9,7 +9,7 @@ A comprehensive online learning platform where anyone can create their own acade
 ISWO Academy is a multi-role learning management system that provides:
 
 - **Public Catalog**: Browse featured academies and courses
-- **Academy Creation**: Landing page and tools for educators to create their own academies  
+- **Academy Creation**: Landing page and tools for educators to create their own academies
 - **Student Experience**: Course discovery, purchasing, and learning interface
 - **Dynamic Dashboards**: Role-based interfaces that adapt to user permissions (students, instructors, academy owners)
 - **Multi-Academy Support**: Complete ecosystem supporting multiple independent academies
@@ -67,7 +67,6 @@ When updating components using the Shadcn CLI (e.g., `npx shadcn@latest add <com
 - For implementation details, check the source files in `src/components/ui/`
 - All other Shadcn UI components are standard and can be safely updated via CLI
 
-
 **UI Framework:** ShadcnUI (TailwindCSS + RadixUI)
 
 **Build Tool:** Vite
@@ -86,30 +85,34 @@ When updating components using the Shadcn CLI (e.g., `npx shadcn@latest add <com
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - pnpm package manager
 - ISWO Academy Core API running (see backend repository)
 
 ### Installation
 
 1. Clone the repository
+
 ```bash
 git clone <repository-url>
 cd iswo_academy_client
 ```
 
 2. Install dependencies
+
 ```bash
 pnpm install
 ```
 
 3. Configure environment variables
+
 ```bash
 cp .env.example .env
 # Edit .env with your API endpoints and configuration
 ```
 
 4. Start the development server
+
 ```bash
 pnpm run dev
 ```
@@ -123,7 +126,6 @@ pnpm run dev
 - `pnpm run preview` - Preview production build
 - `pnpm run lint` - Run ESLint
 - `pnpm run type-check` - Run TypeScript checks
-
 
 ## License
 

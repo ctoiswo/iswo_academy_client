@@ -2,7 +2,6 @@
  * Search related types
  * Matches backend SearchController :search view responses
  */
-
 import type { DifficultyLevel } from '../common'
 
 // Academy search result (from AcademySerializer :search view)

@@ -1,4 +1,10 @@
 import { useState, useEffect } from 'react'
+import superAdminGamificationService, {
+  type BadgeDetail,
+  type UpdateBadgeData,
+} from '@/services/super-admin-gamification-service'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -7,9 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import {
   Select,
@@ -19,8 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { toast } from 'sonner'
-import superAdminGamificationService, { type BadgeDetail, type UpdateBadgeData } from '@/services/super-admin-gamification-service'
+import { Textarea } from '@/components/ui/textarea'
 
 interface EditBadgeDialogProps {
   open: boolean
@@ -107,7 +110,8 @@ export function EditBadgeDialog({
     if (!formData.slug || formData.slug.length < 3) {
       newErrors.slug = 'El slug debe tener al menos 3 caracteres'
     } else if (!/^[a-z0-9-]+$/.test(formData.slug)) {
-      newErrors.slug = 'El slug solo puede contener letras minúsculas, números y guiones'
+      newErrors.slug =
+        'El slug solo puede contener letras minúsculas, números y guiones'
     }
 
     if (!formData.description || formData.description.length < 10) {
@@ -146,7 +150,11 @@ export function EditBadgeDialog({
         display_order: formData.display_order,
       }
 
-      await superAdminGamificationService.updateBadge(academySlug, badge.id, updateData)
+      await superAdminGamificationService.updateBadge(
+        academySlug,
+        badge.id,
+        updateData
+      )
 
       toast.success('Badge actualizado correctamente')
       onSuccess()
@@ -165,7 +173,7 @@ export function EditBadgeDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className='max-h-[90vh] max-w-2xl overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>Editar Badge</DialogTitle>
           <DialogDescription>
@@ -173,67 +181,70 @@ export function EditBadgeDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className='space-y-4'>
           {/* Name */}
-          <div className="space-y-2">
-            <Label htmlFor="edit-name">
-              Nombre <span className="text-destructive">*</span>
+          <div className='space-y-2'>
+            <Label htmlFor='edit-name'>
+              Nombre <span className='text-destructive'>*</span>
             </Label>
             <Input
-              id="edit-name"
+              id='edit-name'
               value={formData.name}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, name: e.target.value }))
               }
             />
             {errors.name && (
-              <p className="text-sm text-destructive">{errors.name}</p>
+              <p className='text-destructive text-sm'>{errors.name}</p>
             )}
           </div>
 
           {/* Slug */}
-          <div className="space-y-2">
-            <Label htmlFor="edit-slug">
-              Slug <span className="text-destructive">*</span>
+          <div className='space-y-2'>
+            <Label htmlFor='edit-slug'>
+              Slug <span className='text-destructive'>*</span>
             </Label>
             <Input
-              id="edit-slug"
+              id='edit-slug'
               value={formData.slug}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, slug: e.target.value }))
               }
             />
-            <p className="text-xs text-muted-foreground">
+            <p className='text-muted-foreground text-xs'>
               Identificador único (solo letras minúsculas, números y guiones)
             </p>
             {errors.slug && (
-              <p className="text-sm text-destructive">{errors.slug}</p>
+              <p className='text-destructive text-sm'>{errors.slug}</p>
             )}
           </div>
 
           {/* Description */}
-          <div className="space-y-2">
-            <Label htmlFor="edit-description">
-              Descripción <span className="text-destructive">*</span>
+          <div className='space-y-2'>
+            <Label htmlFor='edit-description'>
+              Descripción <span className='text-destructive'>*</span>
             </Label>
             <Textarea
-              id="edit-description"
+              id='edit-description'
               value={formData.description}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, description: e.target.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
               }
               rows={3}
             />
             {errors.description && (
-              <p className="text-sm text-destructive">{errors.description}</p>
+              <p className='text-destructive text-sm'>{errors.description}</p>
             )}
           </div>
 
           {/* Category, Tier, Rarity */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="edit-category">
-                Categoría <span className="text-destructive">*</span>
+          <div className='grid grid-cols-3 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='edit-category'>
+                Categoría <span className='text-destructive'>*</span>
               </Label>
               <Select
                 value={formData.category}
@@ -241,7 +252,7 @@ export function EditBadgeDialog({
                   setFormData((prev) => ({ ...prev, category: value }))
                 }
               >
-                <SelectTrigger id="edit-category">
+                <SelectTrigger id='edit-category'>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -254,9 +265,9 @@ export function EditBadgeDialog({
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="edit-tier">
-                Nivel <span className="text-destructive">*</span>
+            <div className='space-y-2'>
+              <Label htmlFor='edit-tier'>
+                Nivel <span className='text-destructive'>*</span>
               </Label>
               <Select
                 value={formData.tier}
@@ -264,7 +275,7 @@ export function EditBadgeDialog({
                   setFormData((prev) => ({ ...prev, tier: value }))
                 }
               >
-                <SelectTrigger id="edit-tier">
+                <SelectTrigger id='edit-tier'>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -277,9 +288,9 @@ export function EditBadgeDialog({
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="edit-rarity">
-                Rareza <span className="text-destructive">*</span>
+            <div className='space-y-2'>
+              <Label htmlFor='edit-rarity'>
+                Rareza <span className='text-destructive'>*</span>
               </Label>
               <Select
                 value={formData.rarity}
@@ -287,7 +298,7 @@ export function EditBadgeDialog({
                   setFormData((prev) => ({ ...prev, rarity: value }))
                 }
               >
-                <SelectTrigger id="edit-rarity">
+                <SelectTrigger id='edit-rarity'>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -302,15 +313,15 @@ export function EditBadgeDialog({
           </div>
 
           {/* Points and Display Order */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="edit-points_reward">
-                Puntos de Recompensa <span className="text-destructive">*</span>
+          <div className='grid grid-cols-2 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='edit-points_reward'>
+                Puntos de Recompensa <span className='text-destructive'>*</span>
               </Label>
               <Input
-                id="edit-points_reward"
-                type="number"
-                min="0"
+                id='edit-points_reward'
+                type='number'
+                min='0'
                 value={formData.points_reward}
                 onChange={(e) =>
                   setFormData((prev) => ({
@@ -320,16 +331,18 @@ export function EditBadgeDialog({
                 }
               />
               {errors.points_reward && (
-                <p className="text-sm text-destructive">{errors.points_reward}</p>
+                <p className='text-destructive text-sm'>
+                  {errors.points_reward}
+                </p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="edit-display_order">Orden de Visualización</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='edit-display_order'>Orden de Visualización</Label>
               <Input
-                id="edit-display_order"
-                type="number"
-                min="0"
+                id='edit-display_order'
+                type='number'
+                min='0'
                 value={formData.display_order}
                 onChange={(e) =>
                   setFormData((prev) => ({
@@ -342,33 +355,33 @@ export function EditBadgeDialog({
           </div>
 
           {/* Icon URL */}
-          <div className="space-y-2">
-            <Label htmlFor="edit-icon_url">URL del Icono</Label>
+          <div className='space-y-2'>
+            <Label htmlFor='edit-icon_url'>URL del Icono</Label>
             <Input
-              id="edit-icon_url"
-              type="url"
-              placeholder="https://ejemplo.com/icono.png"
+              id='edit-icon_url'
+              type='url'
+              placeholder='https://ejemplo.com/icono.png'
               value={formData.icon_url}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, icon_url: e.target.value }))
               }
             />
-            <p className="text-xs text-muted-foreground">
+            <p className='text-muted-foreground text-xs'>
               Opcional: URL de la imagen del badge
             </p>
           </div>
 
           {/* Switches */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="edit-is_secret">Badge Secreto</Label>
-                <p className="text-sm text-muted-foreground">
+          <div className='space-y-4'>
+            <div className='flex items-center justify-between'>
+              <div className='space-y-0.5'>
+                <Label htmlFor='edit-is_secret'>Badge Secreto</Label>
+                <p className='text-muted-foreground text-sm'>
                   Los badges secretos solo se revelan cuando se ganan
                 </p>
               </div>
               <Switch
-                id="edit-is_secret"
+                id='edit-is_secret'
                 checked={formData.is_secret}
                 onCheckedChange={(checked) =>
                   setFormData((prev) => ({ ...prev, is_secret: checked }))
@@ -376,15 +389,15 @@ export function EditBadgeDialog({
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="edit-is_active">Badge Activo</Label>
-                <p className="text-sm text-muted-foreground">
+            <div className='flex items-center justify-between'>
+              <div className='space-y-0.5'>
+                <Label htmlFor='edit-is_active'>Badge Activo</Label>
+                <p className='text-muted-foreground text-sm'>
                   Solo los badges activos pueden ser ganados
                 </p>
               </div>
               <Switch
-                id="edit-is_active"
+                id='edit-is_active'
                 checked={formData.is_active}
                 onCheckedChange={(checked) =>
                   setFormData((prev) => ({ ...prev, is_active: checked }))
@@ -394,30 +407,32 @@ export function EditBadgeDialog({
           </div>
 
           {/* Stats Info */}
-          <div className="rounded-lg bg-muted p-4 space-y-2">
-            <h4 className="text-sm font-medium">Estadísticas del Badge</h4>
-            <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className='bg-muted space-y-2 rounded-lg p-4'>
+            <h4 className='text-sm font-medium'>Estadísticas del Badge</h4>
+            <div className='grid grid-cols-2 gap-4 text-sm'>
               <div>
-                <span className="text-muted-foreground">Veces ganado:</span>
-                <span className="ml-2 font-medium">{badge.earned_count}</span>
+                <span className='text-muted-foreground'>Veces ganado:</span>
+                <span className='ml-2 font-medium'>{badge.earned_count}</span>
               </div>
               <div>
-                <span className="text-muted-foreground">Tasa de logro:</span>
-                <span className="ml-2 font-medium">{badge.earn_rate?.toFixed(1)}%</span>
+                <span className='text-muted-foreground'>Tasa de logro:</span>
+                <span className='ml-2 font-medium'>
+                  {badge.earn_rate?.toFixed(1)}%
+                </span>
               </div>
             </div>
           </div>
 
           <DialogFooter>
             <Button
-              type="button"
-              variant="outline"
+              type='button'
+              variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type='submit' disabled={isSubmitting}>
               {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
             </Button>
           </DialogFooter>

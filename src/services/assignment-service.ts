@@ -1,12 +1,12 @@
-import apiClient from '@/lib/api-client'
 import type {
   AssignmentSummary,
   AssignmentFull,
   AssignmentStatistics,
   AssignmentSubmission,
   CreateAssignmentRequest,
-  UpdateAssignmentRequest
+  UpdateAssignmentRequest,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 export interface AssignmentFilters {
   section_id?: number
@@ -31,14 +31,17 @@ class AssignmentService {
     params?: AssignmentFilters
   ): Promise<AssignmentSummary[]> {
     const queryParams = new URLSearchParams()
-    if (params?.section_id) queryParams.append('section_id', params.section_id.toString())
+    if (params?.section_id)
+      queryParams.append('section_id', params.section_id.toString())
     if (params?.status) queryParams.append('status', params.status)
-    
+
     const url = `/academies/${academySlug}/courses/${courseSlug}/assignments${
       queryParams.toString() ? `?${queryParams.toString()}` : ''
     }`
-    
-    const response = await apiClient.get<{ assignments: AssignmentSummary[] }>(url)
+
+    const response = await apiClient.get<{ assignments: AssignmentSummary[] }>(
+      url
+    )
     return response.data?.assignments || []
   }
 
@@ -72,10 +75,12 @@ class AssignmentService {
     courseSlug: string,
     data: CreateAssignmentRequest
   ): Promise<AssignmentFull> {
-    const response = await apiClient.post<{ assignment: AssignmentFull; message: string }>(
-      `/academies/${academySlug}/courses/${courseSlug}/assignments`,
-      { assignment: data }
-    )
+    const response = await apiClient.post<{
+      assignment: AssignmentFull
+      message: string
+    }>(`/academies/${academySlug}/courses/${courseSlug}/assignments`, {
+      assignment: data,
+    })
     return response.data.assignment
   }
 
@@ -93,7 +98,10 @@ class AssignmentService {
     assignmentId: number,
     data: UpdateAssignmentRequest
   ): Promise<AssignmentFull> {
-    const response = await apiClient.patch<{ assignment: AssignmentFull; message: string }>(
+    const response = await apiClient.patch<{
+      assignment: AssignmentFull
+      message: string
+    }>(
       `/academies/${academySlug}/courses/${courseSlug}/assignments/${assignmentId}`,
       { assignment: data }
     )
@@ -153,7 +161,9 @@ class AssignmentService {
     const url = `/academies/${academySlug}/courses/${courseSlug}/assignments/${assignmentId}/submissions${
       status ? `?status=${status}` : ''
     }`
-    const response = await apiClient.get<{ submissions: AssignmentSubmission[] }>(url)
+    const response = await apiClient.get<{
+      submissions: AssignmentSubmission[]
+    }>(url)
     return response.data?.submissions || []
   }
 }

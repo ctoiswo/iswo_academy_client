@@ -1,4 +1,3 @@
-import apiClient, { tokenManager } from '@/lib/api-client'
 import type {
   AuthUser,
   AuthTokens,
@@ -6,8 +5,9 @@ import type {
   LoginResponse,
   RegisterRequest,
   RegisterResponse,
-  MessageResponse
+  MessageResponse,
 } from '@/types'
+import apiClient, { tokenManager } from '@/lib/api-client'
 
 /**
  * Authentication Service
@@ -21,7 +21,7 @@ class AuthService {
    */
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     const response = await apiClient.post<LoginResponse>('/auth/login', {
-      auth: credentials
+      auth: credentials,
     })
 
     // Store tokens automatically
@@ -42,7 +42,7 @@ class AuthService {
    */
   async register(userData: RegisterRequest): Promise<RegisterResponse> {
     const response = await apiClient.post<RegisterResponse>('/auth/register', {
-      auth: userData
+      auth: userData,
     })
 
     // Do NOT store tokens - registration requires email confirmation
@@ -61,7 +61,7 @@ class AuthService {
       const refreshToken = tokenManager.getRefreshToken()
       if (refreshToken) {
         await apiClient.delete('/auth/logout', {
-          data: { refresh_token: refreshToken }
+          data: { refresh_token: refreshToken },
         })
       }
     } finally {
@@ -93,7 +93,10 @@ class AuthService {
    * @returns Promise with success message
    */
   async forgotPassword(email: string): Promise<MessageResponse> {
-    const response = await apiClient.post<MessageResponse>('/auth/forgot_password', { email })
+    const response = await apiClient.post<MessageResponse>(
+      '/auth/forgot_password',
+      { email }
+    )
     return response.data
   }
 
@@ -109,11 +112,14 @@ class AuthService {
     password: string,
     passwordConfirmation: string
   ): Promise<MessageResponse> {
-    const response = await apiClient.post<MessageResponse>('/auth/reset_password', {
-      token,
-      password,
-      password_confirmation: passwordConfirmation,
-    })
+    const response = await apiClient.post<MessageResponse>(
+      '/auth/reset_password',
+      {
+        token,
+        password,
+        password_confirmation: passwordConfirmation,
+      }
+    )
     return response.data
   }
 

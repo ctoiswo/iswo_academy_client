@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { AcademyStatsOverview } from '../academy-stats-overview'
 import type { AcademyMembership } from '@/stores/auth-store'
+import { AcademyStatsOverview } from '../academy-stats-overview'
 
 // Mock the academy membership
 const mockAcademy: AcademyMembership = {
@@ -14,14 +14,14 @@ const mockAcademy: AcademyMembership = {
     name: 'Test Academy',
     description: 'A test academy',
     created_at: '2024-01-01',
-    updated_at: '2024-01-01'
-  }
+    updated_at: '2024-01-01',
+  },
 }
 
 describe('AcademyStatsOverview', () => {
   it('should render loading state initially', () => {
     render(<AcademyStatsOverview academy={mockAcademy} loading={true} />)
-    
+
     // Check for skeleton loading elements
     const skeletons = document.querySelectorAll('[data-slot="skeleton"]')
     expect(skeletons.length).toBeGreaterThan(0)
@@ -29,7 +29,7 @@ describe('AcademyStatsOverview', () => {
 
   it('should render academy statistics after loading', async () => {
     render(<AcademyStatsOverview academy={mockAcademy} />)
-    
+
     // Wait for the mock data to load
     await waitFor(() => {
       expect(screen.getByText('Total Students')).toBeInTheDocument()
@@ -49,7 +49,7 @@ describe('AcademyStatsOverview', () => {
 
   it('should display enrollment trends', async () => {
     render(<AcademyStatsOverview academy={mockAcademy} />)
-    
+
     await waitFor(() => {
       expect(screen.getByText('Enrollment Trends')).toBeInTheDocument()
       expect(screen.getByText('Monthly enrollment growth')).toBeInTheDocument()
@@ -65,23 +65,27 @@ describe('AcademyStatsOverview', () => {
 
   it('should display top performing courses', async () => {
     render(<AcademyStatsOverview academy={mockAcademy} />)
-    
+
     await waitFor(() => {
       expect(screen.getByText('Top Performing Courses')).toBeInTheDocument()
-      expect(screen.getByText('Highest enrollment and revenue')).toBeInTheDocument()
+      expect(
+        screen.getByText('Highest enrollment and revenue')
+      ).toBeInTheDocument()
     })
 
     // Check for course data
     await waitFor(() => {
       expect(screen.getByText('Advanced React Development')).toBeInTheDocument()
       expect(screen.getByText('Python for Data Science')).toBeInTheDocument()
-      expect(screen.getByText('Digital Marketing Fundamentals')).toBeInTheDocument()
+      expect(
+        screen.getByText('Digital Marketing Fundamentals')
+      ).toBeInTheDocument()
     })
   })
 
   it('should show growth indicators with correct colors', async () => {
     render(<AcademyStatsOverview academy={mockAcademy} />)
-    
+
     await waitFor(() => {
       // Check for positive growth indicators (should be green)
       const growthElements = screen.getAllByText(/\+\d+\.\d+%/)
@@ -91,10 +95,10 @@ describe('AcademyStatsOverview', () => {
 
   it('should handle academy prop changes', async () => {
     const { rerender } = render(<AcademyStatsOverview academy={mockAcademy} />)
-    
+
     const updatedAcademy = { ...mockAcademy, name: 'Updated Academy' }
     rerender(<AcademyStatsOverview academy={updatedAcademy} />)
-    
+
     // Component should re-fetch data when academy changes
     await waitFor(() => {
       expect(screen.getByText('Total Students')).toBeInTheDocument()
@@ -103,7 +107,7 @@ describe('AcademyStatsOverview', () => {
 
   it('should display correct format for currency values', async () => {
     render(<AcademyStatsOverview academy={mockAcademy} />)
-    
+
     await waitFor(() => {
       // Check currency formatting
       expect(screen.getByText('$89,750')).toBeInTheDocument()
@@ -114,7 +118,7 @@ describe('AcademyStatsOverview', () => {
 
   it('should display descriptive text for each metric', async () => {
     render(<AcademyStatsOverview academy={mockAcademy} />)
-    
+
     await waitFor(() => {
       expect(screen.getByText('Active enrolled students')).toBeInTheDocument()
       expect(screen.getByText('Active teaching staff')).toBeInTheDocument()

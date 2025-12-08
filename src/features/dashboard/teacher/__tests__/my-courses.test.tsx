@@ -1,54 +1,54 @@
-import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
 import { MyCourses } from '../components/my-courses'
 import type { TeacherCourse } from '../types'
 
 const mockCourses: TeacherCourse[] = [
   {
     id: 1,
-    title: "Introduction to React",
-    description: "Learn the fundamentals of React development",
-    status: "published",
+    title: 'Introduction to React',
+    description: 'Learn the fundamentals of React development',
+    status: 'published',
     enrollments: 45,
     completionRate: 82,
     totalLessons: 12,
     completedLessons: 10,
-    createdAt: "2024-01-15T00:00:00Z",
-    updatedAt: "2024-02-01T00:00:00Z",
+    createdAt: '2024-01-15T00:00:00Z',
+    updatedAt: '2024-02-01T00:00:00Z',
     price: 99,
-    duration: "8 weeks",
-    academy: { id: 1, name: "Tech Academy" }
+    duration: '8 weeks',
+    academy: { id: 1, name: 'Tech Academy' },
   },
   {
     id: 2,
-    title: "Advanced JavaScript",
-    description: "Master advanced JavaScript concepts",
-    status: "draft",
+    title: 'Advanced JavaScript',
+    description: 'Master advanced JavaScript concepts',
+    status: 'draft',
     enrollments: 0,
     completionRate: 0,
     totalLessons: 15,
     completedLessons: 5,
-    createdAt: "2024-01-20T00:00:00Z",
-    updatedAt: "2024-02-05T00:00:00Z",
+    createdAt: '2024-01-20T00:00:00Z',
+    updatedAt: '2024-02-05T00:00:00Z',
     price: 149,
-    duration: "10 weeks",
-    academy: { id: 1, name: "Tech Academy" }
+    duration: '10 weeks',
+    academy: { id: 1, name: 'Tech Academy' },
   },
   {
     id: 3,
-    title: "Node.js Backend",
-    description: "Build scalable backend applications",
-    status: "archived",
+    title: 'Node.js Backend',
+    description: 'Build scalable backend applications',
+    status: 'archived',
     enrollments: 25,
     completionRate: 95,
     totalLessons: 20,
     completedLessons: 20,
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: "2024-01-30T00:00:00Z",
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-30T00:00:00Z',
     price: 199,
-    duration: "12 weeks",
-    academy: { id: 1, name: "Tech Academy" }
-  }
+    duration: '12 weeks',
+    academy: { id: 1, name: 'Tech Academy' },
+  },
 ]
 
 describe('MyCourses', () => {
@@ -59,10 +59,10 @@ describe('MyCourses', () => {
       expect(screen.getByText('My Courses')).toBeInTheDocument()
       expect(screen.getByText('3')).toBeInTheDocument() // Total courses
       expect(screen.getByText('1 published, 1 draft')).toBeInTheDocument()
-      
+
       expect(screen.getByText('Total Students')).toBeInTheDocument()
       expect(screen.getByText('70')).toBeInTheDocument() // 45 + 0 + 25
-      
+
       expect(screen.getByText('Avg. Completion')).toBeInTheDocument()
       expect(screen.getByText('59%')).toBeInTheDocument() // (82 + 0 + 95) / 3
     })
@@ -100,7 +100,7 @@ describe('MyCourses', () => {
 
       // Click on Published filter
       fireEvent.click(screen.getByText('Published'))
-      
+
       expect(screen.getByText('Introduction to React')).toBeInTheDocument()
       expect(screen.queryByText('Advanced JavaScript')).not.toBeInTheDocument()
       expect(screen.queryByText('Node.js Backend')).not.toBeInTheDocument()
@@ -125,7 +125,9 @@ describe('MyCourses', () => {
 
       // Click on Draft filter first
       fireEvent.click(screen.getByText('Draft'))
-      expect(screen.queryByText('Introduction to React')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText('Introduction to React')
+      ).not.toBeInTheDocument()
 
       // Click on All filter
       fireEvent.click(screen.getByText('All'))
@@ -138,7 +140,9 @@ describe('MyCourses', () => {
   describe('Event Handlers', () => {
     it('calls onCreateCourse when New Course button is clicked', () => {
       const onCreateCourse = vi.fn()
-      render(<MyCourses courses={mockCourses} onCreateCourse={onCreateCourse} />)
+      render(
+        <MyCourses courses={mockCourses} onCreateCourse={onCreateCourse} />
+      )
 
       fireEvent.click(screen.getByText('New Course'))
       expect(onCreateCourse).toHaveBeenCalledTimes(1)
@@ -172,7 +176,9 @@ describe('MyCourses', () => {
 
     it('calls onManageCourse when Manage Settings is clicked', () => {
       const onManageCourse = vi.fn()
-      render(<MyCourses courses={mockCourses} onManageCourse={onManageCourse} />)
+      render(
+        <MyCourses courses={mockCourses} onManageCourse={onManageCourse} />
+      )
 
       // Click on the first dropdown menu
       const dropdownTriggers = screen.getAllByRole('button', { name: '' })
@@ -198,7 +204,11 @@ describe('MyCourses', () => {
     it('shows empty message when no courses', () => {
       render(<MyCourses courses={[]} />)
 
-      expect(screen.getByText('No courses found. Create your first course to get started.')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'No courses found. Create your first course to get started.'
+        )
+      ).toBeInTheDocument()
     })
 
     it('shows filtered empty message when filter has no results', () => {
@@ -248,9 +258,15 @@ describe('MyCourses', () => {
       // Second course: 5/15 lessons = 33.33%
       // Third course: 20/20 lessons = 100%
       const progressBars = document.querySelectorAll('[role="progressbar"]')
-      
-      expect(progressBars[0]).toHaveAttribute('aria-valuenow', '83.33333333333334')
-      expect(progressBars[1]).toHaveAttribute('aria-valuenow', '33.333333333333336')
+
+      expect(progressBars[0]).toHaveAttribute(
+        'aria-valuenow',
+        '83.33333333333334'
+      )
+      expect(progressBars[1]).toHaveAttribute(
+        'aria-valuenow',
+        '33.333333333333336'
+      )
       expect(progressBars[2]).toHaveAttribute('aria-valuenow', '100')
     })
   })

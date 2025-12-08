@@ -17,8 +17,8 @@ This module provides a comprehensive API client for communicating with the Rails
 ### Basic Setup
 
 ```typescript
-import apiClient, { setAuthStore } from '@/lib/api-client'
 import { useAuthStore } from '@/stores/auth-store'
+import apiClient, { setAuthStore } from '@/lib/api-client'
 
 // Connect the API client with your auth store
 setAuthStore(useAuthStore)
@@ -35,13 +35,13 @@ const registerResult = await authApi.register({
   last_name: 'Doe',
   email: 'john@example.com',
   password: 'password123',
-  password_confirmation: 'password123'
+  password_confirmation: 'password123',
 })
 
 // Login
 const loginResult = await authApi.login({
   email: 'john@example.com',
-  password: 'password123'
+  password: 'password123',
 })
 
 // Logout
@@ -65,7 +65,7 @@ const profile = await userApi.getProfile()
 // Update user profile
 const updatedProfile = await userApi.updateProfile({
   first_name: 'Jane',
-  last_name: 'Smith'
+  last_name: 'Smith',
 })
 ```
 
@@ -101,6 +101,7 @@ try {
 ## TypeScript Interfaces
 
 ### AuthUser
+
 ```typescript
 interface AuthUser {
   id: number
@@ -117,6 +118,7 @@ interface AuthUser {
 ```
 
 ### AuthTokens
+
 ```typescript
 interface AuthTokens {
   access_token: string
@@ -126,6 +128,7 @@ interface AuthTokens {
 ```
 
 ### ApiError
+
 ```typescript
 interface ApiError {
   type: string
@@ -154,7 +157,8 @@ The API client uses environment variables for configuration:
 
 ```typescript
 // Default configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1'
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1'
 const API_TIMEOUT = 10000
 ```
 

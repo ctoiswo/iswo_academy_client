@@ -1,38 +1,60 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { useAcademies } from '@/hooks/use-academies'
+import { useCategories } from '@/hooks/use-categories'
+import { useGeneralStatistics } from '@/hooks/use-statistics'
+import { PublicAcademiesPage } from '@/features/public-academies'
 
 // Mock the entire public-academies feature
 vi.mock('@/features/public-academies', () => ({
   PublicAcademiesPage: () => {
     // Mock functions will be injected via global variables set up in beforeEach
-    const academiesData = (global as any).__mockUseAcademies?.() || { data: [], isLoading: false, error: null }
-    const categoriesData = (global as any).__mockUseCategories?.() || { categories: [], loading: false, error: null }
-    const statsData = (global as any).__mockUseGeneralStatistics?.() || { data: { total_academies: 0, total_students: 0, total_categories: 0 }, isLoading: false, error: null }
-    
+    const academiesData = (global as any).__mockUseAcademies?.() || {
+      data: [],
+      isLoading: false,
+      error: null,
+    }
+    const categoriesData = (global as any).__mockUseCategories?.() || {
+      categories: [],
+      loading: false,
+      error: null,
+    }
+    const statsData = (global as any).__mockUseGeneralStatistics?.() || {
+      data: { total_academies: 0, total_students: 0, total_categories: 0 },
+      isLoading: false,
+      error: null,
+    }
+
     return (
       <div>
-        <header data-testid="public-header">Header</header>
-        <div data-testid="page-header">
+        <header data-testid='public-header'>Header</header>
+        <div data-testid='page-header'>
           <h1>Explora Nuestras Academias</h1>
           <p>Descubre las mejores academias online</p>
         </div>
-        <div data-testid="stats-section">
-          <div>{statsData?.data?.total_academies || 0}+ Academias Disponibles</div>
+        <div data-testid='stats-section'>
+          <div>
+            {statsData?.data?.total_academies || 0}+ Academias Disponibles
+          </div>
           <div>{statsData?.data?.total_students || 0} Estudiantes Activos</div>
-          <div>{statsData?.data?.total_categories || 0}+ Categorías Principales</div>
+          <div>
+            {statsData?.data?.total_categories || 0}+ Categorías Principales
+          </div>
         </div>
-        <div data-testid="search-filters">
+        <div data-testid='search-filters'>
           <input
-            type="text"
-            placeholder="Buscar academias por nombre o descripción..."
-            defaultValue=""
+            type='text'
+            placeholder='Buscar academias por nombre o descripción...'
+            defaultValue=''
           />
-          <select defaultValue="all">
-            <option value="all">Todas las categorías</option>
+          <select defaultValue='all'>
+            <option value='all'>Todas las categorías</option>
             {categoriesData?.categories?.map((cat: any) => (
-              <option key={cat.slug} value={cat.slug}>{cat.name}</option>
+              <option key={cat.slug} value={cat.slug}>
+                {cat.name}
+              </option>
             ))}
           </select>
         </div>
@@ -46,21 +68,29 @@ vi.mock('@/features/public-academies', () => ({
         )}
         {!academiesData?.isLoading && !academiesData?.error && (
           <>
-            <div data-testid="category-carousel-list">
+            <div data-testid='category-carousel-list'>
               {categoriesData?.categories?.map((category: any) => (
-                <div key={category.slug} data-testid="category-carousel">
+                <div key={category.slug} data-testid='category-carousel'>
                   <h2>{category.name}</h2>
-                  <div data-testid="academies-list">
-                    {academiesData?.data?.filter((academy: any) => academy.academy_category.slug === category.slug).map((academy: any) => (
-                      <div key={academy.id} data-testid={`academy-${academy.slug}`}>
-                        {academy.name}
-                      </div>
-                    ))}
+                  <div data-testid='academies-list'>
+                    {academiesData?.data
+                      ?.filter(
+                        (academy: any) =>
+                          academy.academy_category.slug === category.slug
+                      )
+                      .map((academy: any) => (
+                        <div
+                          key={academy.id}
+                          data-testid={`academy-${academy.slug}`}
+                        >
+                          {academy.name}
+                        </div>
+                      ))}
                   </div>
                 </div>
               ))}
             </div>
-            <div data-testid="academy-grid">
+            <div data-testid='academy-grid'>
               {academiesData?.data?.length === 0 ? (
                 <div>No se encontraron academias</div>
               ) : (
@@ -73,24 +103,38 @@ vi.mock('@/features/public-academies', () => ({
             </div>
           </>
         )}
-        <div data-testid="cta-section">
+        <div data-testid='cta-section'>
           <h2>¿No encuentras lo que buscas?</h2>
           <p>Crea tu propia academia y comparte tu conocimiento</p>
           <button>Crear Mi Academia</button>
         </div>
       </div>
     )
-  }
+  },
 }))
-
-import { PublicAcademiesPage } from '@/features/public-academies'
 
 // Mock lucide-react
 vi.mock('lucide-react', () => ({
-  Loader2: ({ className, ...props }: any) => <div className={className} {...props}>Loading...</div>,
-  Search: ({ className, ...props }: any) => <div className={className} {...props}>Search</div>,
-  Filter: ({ className, ...props }: any) => <div className={className} {...props}>Filter</div>,
-  X: ({ className, ...props }: any) => <div className={className} {...props}>X</div>,
+  Loader2: ({ className, ...props }: any) => (
+    <div className={className} {...props}>
+      Loading...
+    </div>
+  ),
+  Search: ({ className, ...props }: any) => (
+    <div className={className} {...props}>
+      Search
+    </div>
+  ),
+  Filter: ({ className, ...props }: any) => (
+    <div className={className} {...props}>
+      Filter
+    </div>
+  ),
+  X: ({ className, ...props }: any) => (
+    <div className={className} {...props}>
+      X
+    </div>
+  ),
 }))
 
 // Mock hooks
@@ -109,26 +153,31 @@ vi.mock('react-i18next', () => ({
         'academies.stats.academiesAvailable': 'Academias Disponibles',
         'academies.stats.activeStudents': 'Estudiantes Activos',
         'academies.stats.mainCategories': 'Categorías Principales',
-        'academies.search.placeholder': 'Buscar academias por nombre o descripción...',
+        'academies.search.placeholder':
+          'Buscar academias por nombre o descripción...',
         'academies.search.allCategories': 'Todas las categorías',
         'academies.search.activeFilters': 'Filtros activos:',
         'academies.search.searchLabel': 'Búsqueda:',
         'academies.search.clearAll': 'Limpiar todos',
         'academies.grid.noAcademies': 'No se encontraron academias',
-        'academies.grid.noResultsWithSearch': 'No hay academias que coincidan con',
-        'academies.grid.noAvailable': 'No hay academias disponibles en esta categoría',
+        'academies.grid.noResultsWithSearch':
+          'No hay academias que coincidan con',
+        'academies.grid.noAvailable':
+          'No hay academias disponibles en esta categoría',
         'academies.resultsFound': 'Encontramos',
-        'academies.resultsFoundSuffix': 'academias que coinciden con tu búsqueda',
+        'academies.resultsFoundSuffix':
+          'academias que coinciden con tu búsqueda',
         'academies.loading': 'Cargando academias...',
         'academies.error': 'Error',
         'academies.tryAgain': 'Intentar de nuevo',
         'academies.cta.title': '¿No encuentras lo que buscas?',
-        'academies.cta.description': 'Crea tu propia academia y comparte tu conocimiento',
-        'academies.cta.button': 'Crear Mi Academia'
+        'academies.cta.description':
+          'Crea tu propia academia y comparte tu conocimiento',
+        'academies.cta.button': 'Crear Mi Academia',
       }
       return translations[key] || key
-    }
-  })
+    },
+  }),
 }))
 
 // Mock TanStack Router
@@ -149,15 +198,11 @@ vi.mock('framer-motion', () => ({
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
     h2: ({ children, ...props }: any) => <h2 {...props}>{children}</h2>,
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-    section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
-  }
+    section: ({ children, ...props }: any) => (
+      <section {...props}>{children}</section>
+    ),
+  },
 }))
-
-
-
-import { useAcademies } from '@/hooks/use-academies'
-import { useCategories } from '@/hooks/use-categories'
-import { useGeneralStatistics } from '@/hooks/use-statistics'
 
 const mockUseAcademies = vi.mocked(useAcademies)
 const mockUseCategories = vi.mocked(useCategories)
@@ -219,13 +264,11 @@ describe('PublicAcademiesPage', () => {
       isLoading: false,
       error: null,
     })
-
     ;(global as any).__mockUseCategories = vi.fn().mockReturnValue({
       categories: mockCategories,
       loading: false,
       error: null,
     })
-
     ;(global as any).__mockUseGeneralStatistics = vi.fn().mockReturnValue({
       data: mockStats,
       isLoading: false,
@@ -291,7 +334,6 @@ describe('PublicAcademiesPage', () => {
       isLoading: true,
       error: null,
     })
-
     ;(global as any).__mockUseCategories = vi.fn().mockReturnValue({
       categories: [],
       loading: true,
@@ -315,7 +357,9 @@ describe('PublicAcademiesPage', () => {
 
     expect(screen.getByText('Error')).toBeInTheDocument()
     expect(screen.getByText(error.message)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Intentar de nuevo/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /Intentar de nuevo/i })
+    ).toBeInTheDocument()
   })
 
   it('renderiza las academias agrupadas por categoría cuando no hay filtros', async () => {
@@ -371,7 +415,7 @@ describe('PublicAcademiesPage', () => {
 
     const searchInput = screen.getByPlaceholderText(/Buscar academias/i)
     await user.type(searchInput, 'Test')
-    
+
     // Just verify the input works
     expect(searchInput).toHaveValue('Test')
 
@@ -398,10 +442,12 @@ describe('PublicAcademiesPage', () => {
 
     // Verificar que el select de categorías se renderiza
     expect(screen.getByRole('combobox')).toBeInTheDocument()
-    
+
     // Verificar que las opciones de categorías están presentes
     expect(screen.getByText('Todas las categorías')).toBeInTheDocument()
-    expect(screen.getByRole('option', { name: 'Programación' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('option', { name: 'Programación' })
+    ).toBeInTheDocument()
     expect(screen.getByRole('option', { name: 'Diseño' })).toBeInTheDocument()
   })
 
@@ -410,13 +456,15 @@ describe('PublicAcademiesPage', () => {
 
     const select = screen.getByRole('combobox')
     expect(select).toHaveValue('all')
-    expect(screen.getByRole('option', { name: 'Todas las categorías' })).toHaveProperty('selected', true)
+    expect(
+      screen.getByRole('option', { name: 'Todas las categorías' })
+    ).toHaveProperty('selected', true)
   })
 
   it('recarga la página cuando se hace click en "Intentar de nuevo" tras error', async () => {
     const user = userEvent.setup()
     const error = new Error('Error de red')
-    
+
     // Configure global mock for error state
     ;(global as any).__mockUseAcademies = vi.fn().mockReturnValue({
       data: undefined,
@@ -426,12 +474,14 @@ describe('PublicAcademiesPage', () => {
 
     renderWithProvider(<PublicAcademiesPage />)
 
-    const retryButton = screen.getByRole('button', { name: /Intentar de nuevo/i })
-    
+    const retryButton = screen.getByRole('button', {
+      name: /Intentar de nuevo/i,
+    })
+
     // Just verify the button exists and is clickable
     expect(retryButton).toBeInTheDocument()
     await user.click(retryButton)
-    
+
     // No specific assertion needed - just verify it doesn't crash
     expect(retryButton).toBeInTheDocument()
   })
@@ -439,8 +489,12 @@ describe('PublicAcademiesPage', () => {
   it('muestra CTA para crear academia', () => {
     renderWithProvider(<PublicAcademiesPage />)
 
-    expect(screen.getByText(/¿No encuentras lo que buscas?/)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Crear Mi Academia/i })).toBeInTheDocument()
+    expect(
+      screen.getByText(/¿No encuentras lo que buscas?/)
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /Crear Mi Academia/i })
+    ).toBeInTheDocument()
   })
 
   it('muestra mensaje correcto cuando hay resultados de búsqueda', async () => {

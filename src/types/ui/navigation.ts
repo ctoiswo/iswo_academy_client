@@ -1,7 +1,6 @@
 /**
  * Navigation and UI related types
  */
-
 import type { LucideIcon } from 'lucide-react'
 
 export interface NavItem {
@@ -21,7 +20,13 @@ export interface SidebarSection {
   items: NavItem[]
 }
 
-export type TabType = 'lessons' | 'assignments' | 'exams' | 'content' | 'info' | 'students'
+export type TabType =
+  | 'lessons'
+  | 'assignments'
+  | 'exams'
+  | 'content'
+  | 'info'
+  | 'students'
 
 export interface TabItem {
   id: string

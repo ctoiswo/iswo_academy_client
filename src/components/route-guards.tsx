@@ -1,7 +1,11 @@
 import { useEffect } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
-import { validateRouteAccess, type AcademyRole, type Permission } from '@/lib/permissions'
+import {
+  validateRouteAccess,
+  type AcademyRole,
+  type Permission,
+} from '@/lib/permissions'
 import { Skeleton } from '@/components/ui/skeleton'
 
 interface RouteGuardProps {
@@ -246,10 +250,10 @@ export function AcademyGuard({
       // Support both numeric IDs and slugs
       const academyIdentifier = String(academyId)
       const isNumericId = /^\d+$/.test(academyIdentifier)
-      
+
       // Find academy by ID or slug
-      const academyMembership = academyData.academies.find((a) => 
-        isNumericId 
+      const academyMembership = academyData.academies.find((a) =>
+        isNumericId
           ? a.id === parseInt(academyIdentifier, 10)
           : a.slug === academyIdentifier
       )
@@ -269,13 +273,14 @@ export function AcademyGuard({
       )
 
       if (!validation.hasAccess) {
-
         if (validation.reason === 'Not a member of this academy') {
           // User doesn't have access to this academy - redirect to academy selection
           router.navigate({ to: '/academy-selection' })
         } else {
           // User has access but insufficient permissions - redirect to academy dashboard
-          router.navigate({ to: `/academy/${academyMembership.slug || academyIdNum}/dashboard` })
+          router.navigate({
+            to: `/academy/${academyMembership.slug || academyIdNum}/dashboard`,
+          })
         }
         return
       }

@@ -1,6 +1,6 @@
 /**
  * Gamification Components - Barrel Export
- * 
+ *
  * Centralized export point for all gamification-related components
  */
 

@@ -71,7 +71,11 @@ export function PublicAcademyCard({
   }
 
   return (
-    <Link to='/academies/$slug' params={{ slug: academy.slug }} className='block'>
+    <Link
+      to='/academies/$slug'
+      params={{ slug: academy.slug }}
+      className='block'
+    >
       <motion.div
         variants={cardVariants}
         initial='hidden'
@@ -85,127 +89,139 @@ export function PublicAcademyCard({
         className='mx-auto w-full max-w-sm'
       >
         <Card className='bg-card group cursor-pointer overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl'>
-        {/* Image Container with Banner */}
-        <div className='relative h-48 overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50'>
-          {(academy.banner_url || academy.image) ? (
-            <motion.img
-              src={academy.banner_url || academy.image}
-              alt={academy.name}
-              className='h-full w-full object-cover'
-              variants={imageVariants}
-              whileHover='hover'
-              transition={{ duration: 0.3 }}
-            />
-          ) : (
-            <div className='h-full w-full bg-gradient-to-br from-blue-500 to-indigo-600' />
-          )}
+          {/* Image Container with Banner */}
+          <div className='relative h-48 overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50'>
+            {academy.banner_url || academy.image ? (
+              <motion.img
+                src={academy.banner_url || academy.image}
+                alt={academy.name}
+                className='h-full w-full object-cover'
+                variants={imageVariants}
+                whileHover='hover'
+                transition={{ duration: 0.3 }}
+              />
+            ) : (
+              <div className='h-full w-full bg-gradient-to-br from-blue-500 to-indigo-600' />
+            )}
 
-          {/* Overlay con categoria */}
-          {academy.category && (
-            <div className='absolute top-4 left-4'>
-              <Badge
-                variant='secondary'
-                className='bg-white/90 font-medium text-gray-800'
-              >
-                {academy.category}
-              </Badge>
-            </div>
-          )}
+            {/* Overlay con categoria */}
+            {academy.category && (
+              <div className='absolute top-4 left-4'>
+                <Badge
+                  variant='secondary'
+                  className='bg-white/90 font-medium text-gray-800'
+                >
+                  {academy.category}
+                </Badge>
+              </div>
+            )}
 
-          {/* Level badge */}
-          {academy.level && (
-            <div className='absolute top-4 right-4'>
-              <Badge className={getLevelColor(academy.level)}>
-                {academy.level}
-              </Badge>
-            </div>
-          )}
+            {/* Level badge */}
+            {academy.level && (
+              <div className='absolute top-4 right-4'>
+                <Badge className={getLevelColor(academy.level)}>
+                  {academy.level}
+                </Badge>
+              </div>
+            )}
 
-          {/* Rating overlay */}
-          {academy.rating && (
-            <div className='bg-background/95 absolute right-4 bottom-4 flex items-center gap-1 rounded-full border px-3 py-1.5 shadow-sm backdrop-blur-sm'>
-              <Star className='h-4 w-4 fill-current text-yellow-500' />
-              <span className='text-foreground text-sm font-semibold'>
-                {academy.rating}
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Content */}
-        <CardContent className='p-6'>
-          {/* Title */}
-          <h3 className='text-foreground mb-2 line-clamp-2 text-xl font-bold transition-colors group-hover:text-blue-600'>
-            {academy.name}
-          </h3>
-
-          {/* Description */}
-          {academy.description && (
-            <p className='text-muted-foreground mb-4 line-clamp-2 text-sm leading-relaxed'>
-              {academy.description}
-            </p>
-          )}
-
-          {/* Instructor */}
-          {academy.instructor && (
-            <div className='mb-4 flex items-center gap-2'>
-              <GraduationCap className='text-muted-foreground h-4 w-4' />
-              <span className='text-foreground text-sm font-medium'>
-                {academy.instructor}
-              </span>
-            </div>
-          )}
-
-          {/* Stats */}
-          <div className='mb-4 grid grid-cols-2 gap-4'>
-            <div className='flex items-center gap-2'>
-              <Users className='h-4 w-4 text-blue-600' />
-              <span className='text-muted-foreground text-sm'>
-                {(academy.students || academy.enrolled_users_count || 0).toLocaleString()} estudiantes
-              </span>
-            </div>
-            <div className='flex items-center gap-2'>
-              <BookOpen className='h-4 w-4 text-green-600' />
-              <span className='text-muted-foreground text-sm'>
-                {(academy.courses || academy.courses_count || 0)} cursos
-              </span>
-            </div>
+            {/* Rating overlay */}
+            {academy.rating && (
+              <div className='bg-background/95 absolute right-4 bottom-4 flex items-center gap-1 rounded-full border px-3 py-1.5 shadow-sm backdrop-blur-sm'>
+                <Star className='h-4 w-4 fill-current text-yellow-500' />
+                <span className='text-foreground text-sm font-semibold'>
+                  {academy.rating}
+                </span>
+              </div>
+            )}
           </div>
 
-          {/* Duration and Price */}
-          <div className='mb-4 flex items-center justify-between'>
-            {academy.duration && (
-              <div className='flex items-center gap-1'>
-                <Clock className='text-muted-foreground h-4 w-4' />
-                <span className='text-muted-foreground text-sm'>
-                  {academy.duration}
+          {/* Content */}
+          <CardContent className='p-6'>
+            {/* Title */}
+            <h3 className='text-foreground mb-2 line-clamp-2 text-xl font-bold transition-colors group-hover:text-blue-600'>
+              {academy.name}
+            </h3>
+
+            {/* Description */}
+            {academy.description && (
+              <p className='text-muted-foreground mb-4 line-clamp-2 text-sm leading-relaxed'>
+                {academy.description}
+              </p>
+            )}
+
+            {/* Instructor */}
+            {academy.instructor && (
+              <div className='mb-4 flex items-center gap-2'>
+                <GraduationCap className='text-muted-foreground h-4 w-4' />
+                <span className='text-foreground text-sm font-medium'>
+                  {academy.instructor}
                 </span>
               </div>
             )}
 
-            {(academy.price !== undefined || academy.monthly_price) && (
-              <div className='text-right'>
-                {(academy.price === 0 || academy.monthly_price === '0' || academy.monthly_price === '0.0') ? (
-                  <Badge className='border-green-200 bg-green-100 text-green-800'>
-                    Gratis
-                  </Badge>
-                ) : (
-                  <span className='text-foreground text-lg font-bold'>
-                    ${(academy.price || parseFloat(academy.monthly_price || '0')).toLocaleString()}/mes
-                  </span>
-                )}
+            {/* Stats */}
+            <div className='mb-4 grid grid-cols-2 gap-4'>
+              <div className='flex items-center gap-2'>
+                <Users className='h-4 w-4 text-blue-600' />
+                <span className='text-muted-foreground text-sm'>
+                  {(
+                    academy.students ||
+                    academy.enrolled_users_count ||
+                    0
+                  ).toLocaleString()}{' '}
+                  estudiantes
+                </span>
               </div>
-            )}
-          </div>
+              <div className='flex items-center gap-2'>
+                <BookOpen className='h-4 w-4 text-green-600' />
+                <span className='text-muted-foreground text-sm'>
+                  {academy.courses || academy.courses_count || 0} cursos
+                </span>
+              </div>
+            </div>
 
-          {/* Action Button */}
-          <div className='group/btn flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90'>
-            Ver Academia
-            <ArrowRight className='h-4 w-4 transition-transform group-hover/btn:translate-x-1' />
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+            {/* Duration and Price */}
+            <div className='mb-4 flex items-center justify-between'>
+              {academy.duration && (
+                <div className='flex items-center gap-1'>
+                  <Clock className='text-muted-foreground h-4 w-4' />
+                  <span className='text-muted-foreground text-sm'>
+                    {academy.duration}
+                  </span>
+                </div>
+              )}
+
+              {(academy.price !== undefined || academy.monthly_price) && (
+                <div className='text-right'>
+                  {academy.price === 0 ||
+                  academy.monthly_price === '0' ||
+                  academy.monthly_price === '0.0' ? (
+                    <Badge className='border-green-200 bg-green-100 text-green-800'>
+                      Gratis
+                    </Badge>
+                  ) : (
+                    <span className='text-foreground text-lg font-bold'>
+                      $
+                      {(
+                        academy.price ||
+                        parseFloat(academy.monthly_price || '0')
+                      ).toLocaleString()}
+                      /mes
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Action Button */}
+            <div className='group/btn bg-primary text-primary-foreground hover:bg-primary/90 flex w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors'>
+              Ver Academia
+              <ArrowRight className='h-4 w-4 transition-transform group-hover/btn:translate-x-1' />
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </Link>
   )
 }

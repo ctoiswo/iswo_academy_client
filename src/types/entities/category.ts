@@ -2,7 +2,6 @@
  * Category related types
  * Matches backend AcademyCategorySerializer views
  */
-
 import type { Academy } from './academy'
 
 // Base fields present in ALL views

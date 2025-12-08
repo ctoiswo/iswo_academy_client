@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
 import { Header } from '../header'
 
 // Mock react-i18next through custom hook
@@ -9,11 +9,11 @@ vi.mock('@/hooks/use-translation', () => ({
       const translations: Record<string, string> = {
         'navigation.backToHome': 'Volver al inicio',
         'navigation.exploreAcademies': 'Explorar Academias',
-        'navigation.createAcademy': 'Crear Academia'
+        'navigation.createAcademy': 'Crear Academia',
       }
       return translations[key] || key
-    }
-  })
+    },
+  }),
 }))
 
 // Mock framer-motion
@@ -37,7 +37,9 @@ vi.mock('@tanstack/react-router', () => ({
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
   ArrowLeft: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="arrow-left-icon">←</div>
+    <div className={className} data-testid='arrow-left-icon'>
+      ←
+    </div>
   ),
 }))
 
@@ -46,10 +48,10 @@ vi.mock('@/components/ui/button', () => ({
   Button: ({ children, variant, size, asChild, ...props }: any) => {
     const Component = asChild ? 'div' : 'button'
     return (
-      <Component 
+      <Component
         data-variant={variant}
         data-size={size}
-        data-testid="button"
+        data-testid='button'
         {...props}
       >
         {children}
@@ -59,15 +61,15 @@ vi.mock('@/components/ui/button', () => ({
 }))
 
 vi.mock('@/components/language-toggle', () => ({
-  LanguageToggle: () => <div data-testid="language-toggle">Lang</div>
+  LanguageToggle: () => <div data-testid='language-toggle'>Lang</div>,
 }))
 
 vi.mock('@/components/large-logo', () => ({
-  LargeLogo: () => <div data-testid="large-logo">LOGO</div>
+  LargeLogo: () => <div data-testid='large-logo'>LOGO</div>,
 }))
 
 vi.mock('@/components/theme-switch', () => ({
-  ThemeSwitch: () => <div data-testid="theme-switch">Theme</div>
+  ThemeSwitch: () => <div data-testid='theme-switch'>Theme</div>,
 }))
 
 // Mock auth store for UserMenu
@@ -84,7 +86,7 @@ vi.mock('@/stores/auth-store', () => ({
 }))
 
 vi.mock('./user-menu', () => ({
-  UserMenu: () => <div data-testid="user-menu">User Menu</div>
+  UserMenu: () => <div data-testid='user-menu'>User Menu</div>,
 }))
 
 describe('Header', () => {
@@ -115,7 +117,9 @@ describe('Header', () => {
     it('should have container with proper layout', () => {
       render(<Header />)
 
-      const container = document.querySelector('.container.flex.h-16.items-center.justify-between')
+      const container = document.querySelector(
+        '.container.flex.h-16.items-center.justify-between'
+      )
       expect(container).toBeInTheDocument()
     })
   })
@@ -137,9 +141,13 @@ describe('Header', () => {
     it('should have motion wrapper around logo', () => {
       render(<Header />)
 
-      const logoContainer = document.querySelector('.flex.items-center.space-x-2')
+      const logoContainer = document.querySelector(
+        '.flex.items-center.space-x-2'
+      )
       expect(logoContainer).toBeInTheDocument()
-      expect(logoContainer).toContainElement(screen.getByTestId('large-logo').closest('a'))
+      expect(logoContainer).toContainElement(
+        screen.getByTestId('large-logo').closest('a')
+      )
     })
   })
 
@@ -167,8 +175,19 @@ describe('Header', () => {
       const academiesLink = screen.getByText('Explorar Academias')
       const createLink = screen.getByText('Crear Academia')
 
-      expect(academiesLink).toHaveClass('hover:text-primary', 'text-sm', 'font-medium', 'transition-colors')
-      expect(createLink).toHaveClass('text-primary', 'hover:text-primary/80', 'text-sm', 'font-medium', 'transition-colors')
+      expect(academiesLink).toHaveClass(
+        'hover:text-primary',
+        'text-sm',
+        'font-medium',
+        'transition-colors'
+      )
+      expect(createLink).toHaveClass(
+        'text-primary',
+        'hover:text-primary/80',
+        'text-sm',
+        'font-medium',
+        'transition-colors'
+      )
     })
 
     it('should be hidden on mobile devices', () => {
@@ -204,13 +223,16 @@ describe('Header', () => {
       render(<Header />)
 
       // Get the rightmost utility container (last one)
-      const utilityContainers = document.querySelectorAll('.flex.items-center.space-x-4')
-      const rightUtilityContainer = utilityContainers[utilityContainers.length - 1]
+      const utilityContainers = document.querySelectorAll(
+        '.flex.items-center.space-x-4'
+      )
+      const rightUtilityContainer =
+        utilityContainers[utilityContainers.length - 1]
       expect(rightUtilityContainer).toBeInTheDocument()
-      
+
       const themeSwitch = screen.getByTestId('theme-switch')
       const languageToggle = screen.getByTestId('language-toggle')
-      
+
       expect(rightUtilityContainer).toContainElement(themeSwitch)
       expect(rightUtilityContainer).toContainElement(languageToggle)
       // User menu buttons are also in this container
@@ -234,14 +256,14 @@ describe('Header', () => {
     })
 
     it('should use custom back button text', () => {
-      render(<Header showBackButton={true} backButtonText="Regresar" />)
+      render(<Header showBackButton={true} backButtonText='Regresar' />)
 
       expect(screen.getByText('Regresar')).toBeInTheDocument()
       expect(screen.queryByText('Volver al inicio')).not.toBeInTheDocument()
     })
 
     it('should use custom back button href', () => {
-      render(<Header showBackButton={true} backButtonHref="/custom-path" />)
+      render(<Header showBackButton={true} backButtonHref='/custom-path' />)
 
       const backLink = screen.getByText('Volver al inicio').closest('a')
       expect(backLink).toHaveAttribute('href', '/custom-path')
@@ -257,7 +279,9 @@ describe('Header', () => {
     it('should render back button with correct styling', () => {
       render(<Header showBackButton={true} />)
 
-      const backButton = screen.getByText('Volver al inicio').closest('[data-testid="button"]')
+      const backButton = screen
+        .getByText('Volver al inicio')
+        .closest('[data-testid="button"]')
       expect(backButton).toHaveAttribute('data-variant', 'ghost')
       expect(backButton).toHaveAttribute('data-size', 'sm')
     })
@@ -283,7 +307,9 @@ describe('Header', () => {
       expect(logoSection).toBeInTheDocument()
 
       // Right section (utilities)
-      const rightSection = document.querySelector('.flex.items-center.space-x-4')
+      const rightSection = document.querySelector(
+        '.flex.items-center.space-x-4'
+      )
       expect(rightSection).toBeInTheDocument()
     })
 
@@ -293,7 +319,7 @@ describe('Header', () => {
       // Container should be responsive
       const container = document.querySelector('.container')
       expect(container).toBeInTheDocument()
-      
+
       // Navigation should be responsive
       const nav = document.querySelector('nav.hidden.md\\:flex')
       expect(nav).toBeInTheDocument()
@@ -311,7 +337,9 @@ describe('Header', () => {
     it('should have accessible navigation links', () => {
       render(<Header />)
 
-      const academiesLink = screen.getByRole('link', { name: 'Explorar Academias' })
+      const academiesLink = screen.getByRole('link', {
+        name: 'Explorar Academias',
+      })
       const createLink = screen.getByRole('link', { name: 'Crear Academia' })
 
       expect(academiesLink).toBeInTheDocument()
@@ -322,7 +350,9 @@ describe('Header', () => {
       render(<Header />)
 
       const logoLinks = screen.getAllByRole('link')
-      const homeLink = logoLinks.find(link => link.getAttribute('href') === '/')
+      const homeLink = logoLinks.find(
+        (link) => link.getAttribute('href') === '/'
+      )
       expect(homeLink).toBeInTheDocument()
     })
   })

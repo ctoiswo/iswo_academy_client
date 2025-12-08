@@ -8,12 +8,12 @@ import {
   useAcademyCategories,
   useFeaturedCourses,
 } from '@/hooks/use-featured-content'
-import { Header } from './components/header'
 import { AcademiesSection } from './components/academies-section'
 import { CategoriesFilter } from './components/categories-filter'
 import { CoursesSection } from './components/courses-section'
 import { CTASection } from './components/cta-section'
 import { Footer } from './components/footer'
+import { Header } from './components/header'
 import { HeroSection } from './components/hero-section'
 
 export function HomePage() {

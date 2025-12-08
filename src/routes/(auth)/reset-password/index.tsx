@@ -1,6 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
-
+import { createFileRoute } from '@tanstack/react-router'
 import { GuestGuard } from '@/components/route-guards'
 import { ResetPassword } from '@/features/auth/reset-password'
 

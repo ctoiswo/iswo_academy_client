@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { AcademyCard } from '../academy-card'
 import type { AcademyFull as Academy } from '@/types/entities/academy'
+import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
+import { AcademyCard } from '../academy-card'
 
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
@@ -22,37 +22,41 @@ vi.mock('@tanstack/react-router', () => ({
 // Mock lucide-react
 vi.mock('lucide-react', () => ({
   BookOpen: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="book-icon">📚</div>
+    <div className={className} data-testid='book-icon'>
+      📚
+    </div>
   ),
   Users: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="users-icon">👥</div>
+    <div className={className} data-testid='users-icon'>
+      👥
+    </div>
   ),
 }))
 
 // Mock UI components
 vi.mock('@/components/ui/card', () => ({
   Card: ({ children, className, ...props }: any) => (
-    <div className={className} data-testid="card" {...props}>
+    <div className={className} data-testid='card' {...props}>
       {children}
     </div>
   ),
   CardContent: ({ children, ...props }: any) => (
-    <div data-testid="card-content" {...props}>
+    <div data-testid='card-content' {...props}>
       {children}
     </div>
   ),
   CardDescription: ({ children, className, ...props }: any) => (
-    <p className={className} data-testid="card-description" {...props}>
+    <p className={className} data-testid='card-description' {...props}>
       {children}
     </p>
   ),
   CardHeader: ({ children, ...props }: any) => (
-    <div data-testid="card-header" {...props}>
+    <div data-testid='card-header' {...props}>
       {children}
     </div>
   ),
   CardTitle: ({ children, className, ...props }: any) => (
-    <h3 className={className} data-testid="card-title" {...props}>
+    <h3 className={className} data-testid='card-title' {...props}>
       {children}
     </h3>
   ),
@@ -112,8 +116,12 @@ describe('AcademyCard', () => {
       render(<AcademyCard academy={mockAcademy} />)
 
       // Check academy name and description
-      expect(screen.getByTestId('card-title')).toHaveTextContent('Academia de Programación')
-      expect(screen.getByTestId('card-description')).toHaveTextContent('Aprende a programar desde cero con los mejores instructores')
+      expect(screen.getByTestId('card-title')).toHaveTextContent(
+        'Academia de Programación'
+      )
+      expect(screen.getByTestId('card-description')).toHaveTextContent(
+        'Aprende a programar desde cero con los mejores instructores'
+      )
 
       // Check creator name
       expect(screen.getByText('Por Juan Pérez')).toBeInTheDocument()
@@ -138,7 +146,10 @@ describe('AcademyCard', () => {
       render(<AcademyCard academy={mockAcademyWithoutOptionalFields} />)
 
       const image = screen.getByRole('img')
-      expect(image).toHaveAttribute('src', 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2')
+      expect(image).toHaveAttribute(
+        'src',
+        'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'
+      )
     })
 
     it('should handle null/undefined optional fields gracefully', () => {
@@ -158,7 +169,10 @@ describe('AcademyCard', () => {
       render(<AcademyCard academy={mockAcademy} />)
 
       const link = screen.getByRole('link')
-      expect(link).toHaveAttribute('href', '/academies/$slug/academia-programacion')
+      expect(link).toHaveAttribute(
+        'href',
+        '/academies/$slug/academia-programacion'
+      )
     })
 
     it('should make entire card clickable', () => {
@@ -181,7 +195,12 @@ describe('AcademyCard', () => {
       render(<AcademyCard academy={mockAcademy} />)
 
       const card = screen.getByTestId('card')
-      expect(card).toHaveClass('group', 'h-full', 'cursor-pointer', 'overflow-hidden')
+      expect(card).toHaveClass(
+        'group',
+        'h-full',
+        'cursor-pointer',
+        'overflow-hidden'
+      )
     })
   })
 
@@ -211,7 +230,9 @@ describe('AcademyCard', () => {
 
   describe('Animation and interaction', () => {
     it('should pass index prop for staggered animations', () => {
-      const { rerender } = render(<AcademyCard academy={mockAcademy} index={0} />)
+      const { rerender } = render(
+        <AcademyCard academy={mockAcademy} index={0} />
+      )
       expect(screen.getByTestId('card')).toBeInTheDocument()
 
       rerender(<AcademyCard academy={mockAcademy} index={5} />)

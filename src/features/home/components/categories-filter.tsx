@@ -2,10 +2,10 @@
  * Categories Filter Component
  * Displays category filter buttons
  */
+import type { AcademyCategoryMinimal } from '@/types/entities/category'
 import { motion } from 'framer-motion'
 import { Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import type { AcademyCategoryMinimal } from '@/types/entities/category'
 
 interface CategoriesFilterProps {
   categories: AcademyCategoryMinimal[]

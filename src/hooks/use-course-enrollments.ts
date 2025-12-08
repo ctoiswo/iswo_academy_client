@@ -11,7 +11,8 @@ export const enrollmentKeys = {
 export function useCourseEnrollments(academySlug: string, courseSlug: string) {
   return useQuery({
     queryKey: enrollmentKeys.course(academySlug, courseSlug),
-    queryFn: () => enrollmentService.getCourseEnrollments(academySlug, courseSlug),
+    queryFn: () =>
+      enrollmentService.getCourseEnrollments(academySlug, courseSlug),
   })
 }
 
@@ -22,7 +23,9 @@ export function useDeleteEnrollment(academySlug: string, courseSlug: string) {
     mutationFn: (enrollmentId: number) =>
       enrollmentService.deleteEnrollment(academySlug, courseSlug, enrollmentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: enrollmentKeys.course(academySlug, courseSlug) })
+      queryClient.invalidateQueries({
+        queryKey: enrollmentKeys.course(academySlug, courseSlug),
+      })
       toast.success('Estudiante eliminado exitosamente')
     },
     onError: () => {

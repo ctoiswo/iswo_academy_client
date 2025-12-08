@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { BadgeModal } from '@/components/gamification/badge-modal'
 import { useBadgeNotifications } from '@/hooks/use-badge-notifications'
+import { BadgeModal } from '@/components/gamification/badge-modal'
 
 interface BadgeNotificationProviderProps {
   children?: React.ReactNode
@@ -16,9 +16,10 @@ export function BadgeNotificationProvider({
   children,
   enabled = true,
 }: BadgeNotificationProviderProps) {
-  const { currentBadge, dismissCurrentBadge, isConnected } = useBadgeNotifications({
-    enabled,
-  })
+  const { currentBadge, dismissCurrentBadge, isConnected } =
+    useBadgeNotifications({
+      enabled,
+    })
 
   // Monitor connection status
   useEffect(() => {

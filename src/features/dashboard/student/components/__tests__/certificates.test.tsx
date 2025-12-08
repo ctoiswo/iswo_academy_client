@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { Certificates } from '../certificates'
 import type { Certificate } from '../../types'
+import { Certificates } from '../certificates'
 
 const mockCertificates: Certificate[] = [
   {
@@ -14,7 +14,8 @@ const mockCertificates: Certificate[] = [
     course: {
       id: 1,
       title: 'JavaScript Fundamentals',
-      description: 'Master the core concepts of JavaScript programming language.',
+      description:
+        'Master the core concepts of JavaScript programming language.',
       price: 79,
       difficulty_level: 'beginner',
       is_published: true,
@@ -22,8 +23,8 @@ const mockCertificates: Certificate[] = [
       enrollment_count: 2100,
       academy_id: 1,
       created_at: '2023-12-01T10:00:00Z',
-      updated_at: '2023-12-01T10:00:00Z'
-    }
+      updated_at: '2023-12-01T10:00:00Z',
+    },
   },
   {
     id: 2,
@@ -45,47 +46,51 @@ const mockCertificates: Certificate[] = [
       enrollment_count: 1250,
       academy_id: 1,
       created_at: '2024-01-01T10:00:00Z',
-      updated_at: '2024-01-01T10:00:00Z'
-    }
-  }
+      updated_at: '2024-01-01T10:00:00Z',
+    },
+  },
 ]
 
 describe('Certificates', () => {
   it('renders loading state correctly', () => {
     render(<Certificates certificates={[]} loading={true} />)
-    
+
     // Loading skeleton should be present
     expect(document.querySelector('.animate-pulse')).toBeInTheDocument()
   })
 
   it('renders empty state when no certificates', () => {
     render(<Certificates certificates={[]} />)
-    
+
     expect(screen.getByText('No certificates yet')).toBeInTheDocument()
-    expect(screen.getByText('Complete your courses to earn certificates and showcase your achievements.')).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'Complete your courses to earn certificates and showcase your achievements.'
+      )
+    ).toBeInTheDocument()
     expect(screen.getByText('View Available Courses')).toBeInTheDocument()
   })
 
   it('renders certificate statistics correctly', () => {
     render(<Certificates certificates={mockCertificates} />)
-    
+
     expect(screen.getByText('Total Certificates')).toBeInTheDocument()
     expect(screen.getByText('2')).toBeInTheDocument()
-    
+
     expect(screen.getAllByText('Active')).toHaveLength(3) // Stats card, badge, and timeline
     expect(screen.getByText('1')).toBeInTheDocument() // Only one active certificate
-    
+
     expect(screen.getByText('This Year')).toBeInTheDocument()
     expect(screen.getByText('2')).toBeInTheDocument() // Both certificates are from 2024
   })
 
   it('separates active and revoked certificates correctly', () => {
     render(<Certificates certificates={mockCertificates} />)
-    
+
     // Active certificates section
     expect(screen.getByText('Active Certificates')).toBeInTheDocument()
     expect(screen.getByText('1 valid certificate')).toBeInTheDocument()
-    
+
     // Revoked certificates section
     expect(screen.getByText('Revoked Certificates')).toBeInTheDocument()
     expect(screen.getByText('1 revoked certificate')).toBeInTheDocument()
@@ -93,29 +98,35 @@ describe('Certificates', () => {
 
   it('displays certificate details correctly', () => {
     render(<Certificates certificates={mockCertificates} />)
-    
+
     // Check course titles (will appear multiple times in different sections)
     expect(screen.getAllByText('JavaScript Fundamentals')).toHaveLength(2) // Active section and timeline
     expect(screen.getAllByText('Introduction to React')).toHaveLength(2) // Revoked section and timeline
-    
+
     // Check certificate numbers
-    expect(screen.getByText('Certificate #: CERT-JS-2024-001')).toBeInTheDocument()
-    expect(screen.getByText('Certificate #: CERT-REACT-2024-002')).toBeInTheDocument()
-    
+    expect(
+      screen.getByText('Certificate #: CERT-JS-2024-001')
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText('Certificate #: CERT-REACT-2024-002')
+    ).toBeInTheDocument()
+
     // Check issued dates (will appear multiple times)
     expect(screen.getAllByText(/Issued:/)).toHaveLength(2)
   })
 
   it('shows revocation details for revoked certificates', () => {
     render(<Certificates certificates={mockCertificates} />)
-    
+
     expect(screen.getByText(/Revoked:/)).toBeInTheDocument()
-    expect(screen.getByText('Reason: Course content updated')).toBeInTheDocument()
+    expect(
+      screen.getByText('Reason: Course content updated')
+    ).toBeInTheDocument()
   })
 
   it('displays correct action buttons for active certificates', () => {
     render(<Certificates certificates={mockCertificates} />)
-    
+
     // Should have Verify, View, and Download buttons for active certificates
     expect(screen.getByText('Verify')).toBeInTheDocument()
     expect(screen.getByText('View')).toBeInTheDocument()
@@ -126,26 +137,26 @@ describe('Certificates', () => {
     const mockDownload = vi.fn()
     const mockView = vi.fn()
     const mockVerify = vi.fn()
-    
+
     render(
-      <Certificates 
+      <Certificates
         certificates={mockCertificates}
         onDownloadCertificate={mockDownload}
         onViewCertificate={mockView}
         onVerifyCertificate={mockVerify}
       />
     )
-    
+
     // Click Download button
     const downloadButton = screen.getByText('Download')
     fireEvent.click(downloadButton)
     expect(mockDownload).toHaveBeenCalledWith(1) // certificate id
-    
+
     // Click View button
     const viewButton = screen.getByText('View')
     fireEvent.click(viewButton)
     expect(mockView).toHaveBeenCalledWith(1) // certificate id
-    
+
     // Click Verify button
     const verifyButton = screen.getByText('Verify')
     fireEvent.click(verifyButton)
@@ -154,14 +165,16 @@ describe('Certificates', () => {
 
   it('renders achievement timeline correctly', () => {
     render(<Certificates certificates={mockCertificates} />)
-    
+
     expect(screen.getByText('Achievement Timeline')).toBeInTheDocument()
-    expect(screen.getByText('Your certification journey over time')).toBeInTheDocument()
-    
+    expect(
+      screen.getByText('Your certification journey over time')
+    ).toBeInTheDocument()
+
     // Timeline should show both certificates with their status
     const activeBadges = screen.getAllByText('Active')
     const revokedBadges = screen.getAllByText('Revoked')
-    
+
     // Should have Active badge in stats and timeline
     expect(activeBadges.length).toBeGreaterThan(0)
     // Should have Revoked badge in stats and timeline
@@ -170,7 +183,7 @@ describe('Certificates', () => {
 
   it('sorts certificates by issued date in timeline', () => {
     render(<Certificates certificates={mockCertificates} />)
-    
+
     // The timeline should show the most recent certificate first
     // JavaScript Fundamentals was issued on 2024-02-15 (more recent)
     // Introduction to React was issued on 2024-01-15 (older)
@@ -183,16 +196,16 @@ describe('Certificates', () => {
     const certificatesFromDifferentYears: Certificate[] = [
       {
         ...mockCertificates[0],
-        issued_at: `${currentYear}-02-15T10:00:00Z`
+        issued_at: `${currentYear}-02-15T10:00:00Z`,
       },
       {
         ...mockCertificates[1],
-        issued_at: `${currentYear - 1}-01-15T10:00:00Z`
-      }
+        issued_at: `${currentYear - 1}-01-15T10:00:00Z`,
+      },
     ]
-    
+
     render(<Certificates certificates={certificatesFromDifferentYears} />)
-    
+
     // Should only count certificates from current year
     const thisYearElements = screen.getAllByText('1')
     expect(thisYearElements.length).toBeGreaterThan(0)
@@ -202,12 +215,12 @@ describe('Certificates', () => {
     const certificateWithoutReason: Certificate[] = [
       {
         ...mockCertificates[1],
-        revoked_reason: undefined
-      }
+        revoked_reason: undefined,
+      },
     ]
-    
+
     render(<Certificates certificates={certificateWithoutReason} />)
-    
+
     // Should not show reason section if no reason provided
     expect(screen.queryByText(/Reason:/)).not.toBeInTheDocument()
   })

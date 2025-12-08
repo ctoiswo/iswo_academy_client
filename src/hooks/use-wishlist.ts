@@ -13,7 +13,7 @@ const WISHLIST_STORAGE_KEY = 'iswo_wishlist'
 
 /**
  * Hook para manejar cursos y academias guardados (wishlist)
- * 
+ *
  * Funcionalidad:
  * - Usuarios no autenticados: Se guarda en localStorage
  * - Usuarios autenticados: Se guarda en localStorage con el ID del usuario

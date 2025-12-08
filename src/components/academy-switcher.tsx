@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { ArrowLeftRight, Building, ChevronsUpDown } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
+import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +17,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { Badge } from '@/components/ui/badge'
 
 interface AcademySwitcherProps {
   fallback?: React.ReactNode
@@ -43,20 +43,20 @@ export function AcademySwitcher({ fallback }: AcademySwitcherProps) {
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton
-            size="lg"
+            size='lg'
             onClick={handleSwitchAcademy}
-            className="cursor-pointer"
+            className='cursor-pointer'
           >
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-              <Building className="size-4" />
+            <div className='bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg'>
+              <Building className='size-4' />
             </div>
-            <div className="grid flex-1 text-start text-sm leading-tight">
-              <span className="truncate font-semibold">Select Academy</span>
-              <span className="truncate text-xs text-muted-foreground">
+            <div className='grid flex-1 text-start text-sm leading-tight'>
+              <span className='truncate font-semibold'>Select Academy</span>
+              <span className='text-muted-foreground truncate text-xs'>
                 Choose an academy
               </span>
             </div>
-            <ChevronsUpDown className="ms-auto" />
+            <ChevronsUpDown className='ms-auto' />
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
@@ -69,16 +69,16 @@ export function AcademySwitcher({ fallback }: AcademySwitcherProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              size='lg'
+              className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
             >
               {/* Academy Logo or Default Icon */}
-              <div className="flex-shrink-0">
+              <div className='flex-shrink-0'>
                 {currentAcademy.logo_url ? (
                   <img
                     src={currentAcademy.logo_url}
                     alt={`${currentAcademy.name} logo`}
-                    className="size-8 rounded-lg object-cover"
+                    className='size-8 rounded-lg object-cover'
                     onError={(e) => {
                       // Fallback to default icon if image fails to load
                       const target = e.target as HTMLImageElement
@@ -93,51 +93,51 @@ export function AcademySwitcher({ fallback }: AcademySwitcherProps) {
                     currentAcademy.logo_url ? 'hidden' : ''
                   }`}
                 >
-                  <Building className="size-4" />
+                  <Building className='size-4' />
                 </div>
               </div>
 
               {/* Academy Name and Role */}
-              <div className="grid flex-1 text-start text-sm leading-tight">
-                <span className="truncate font-semibold">
+              <div className='grid flex-1 text-start text-sm leading-tight'>
+                <span className='truncate font-semibold'>
                   {currentAcademy.name}
                 </span>
-                <span className="truncate text-xs text-muted-foreground">
+                <span className='text-muted-foreground truncate text-xs'>
                   {currentAcademy.user_role_display}
                 </span>
               </div>
-              <ChevronsUpDown className="ms-auto" />
+              <ChevronsUpDown className='ms-auto' />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            align="start"
+            className='w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg'
+            align='start'
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
-            <DropdownMenuLabel className="text-muted-foreground text-xs">
+            <DropdownMenuLabel className='text-muted-foreground text-xs'>
               Current Academy
             </DropdownMenuLabel>
-            
+
             {/* Current Academy Display */}
-            <div className="px-2 py-1.5">
-              <div className="flex items-center gap-2">
+            <div className='px-2 py-1.5'>
+              <div className='flex items-center gap-2'>
                 {currentAcademy.logo_url ? (
                   <img
                     src={currentAcademy.logo_url}
                     alt={`${currentAcademy.name} logo`}
-                    className="size-6 rounded object-cover"
+                    className='size-6 rounded object-cover'
                   />
                 ) : (
-                  <div className="bg-primary/10 text-primary flex size-6 items-center justify-center rounded">
-                    <Building className="size-3" />
+                  <div className='bg-primary/10 text-primary flex size-6 items-center justify-center rounded'>
+                    <Building className='size-3' />
                   </div>
                 )}
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm truncate">
+                <div className='min-w-0 flex-1'>
+                  <div className='truncate text-sm font-medium'>
                     {currentAcademy.name}
                   </div>
-                  <Badge variant="secondary" className="text-xs mt-0.5">
+                  <Badge variant='secondary' className='mt-0.5 text-xs'>
                     {currentAcademy.user_role_display}
                   </Badge>
                 </div>
@@ -145,13 +145,13 @@ export function AcademySwitcher({ fallback }: AcademySwitcherProps) {
             </div>
 
             <DropdownMenuSeparator />
-            
+
             {/* Switch Academy Action */}
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={handleSwitchAcademy}
-              className="gap-2 p-2 cursor-pointer"
+              className='cursor-pointer gap-2 p-2'
             >
-              <ArrowLeftRight className="size-4" />
+              <ArrowLeftRight className='size-4' />
               <span>Cambiar Academia</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

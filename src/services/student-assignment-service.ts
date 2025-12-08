@@ -1,8 +1,8 @@
-import apiClient from '@/lib/api-client'
 import type {
   StudentAssignmentsResponse,
-  StudentAssignmentFilters
+  StudentAssignmentFilters,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Student Assignment Service
@@ -24,8 +24,9 @@ class StudentAssignmentService {
     const queryParams = new URLSearchParams()
     if (params?.status) queryParams.append('status', params.status)
 
-    const url = `/academies/${academySlug}/students/${studentId}/assignments${queryParams.toString() ? `?${queryParams.toString()}` : ''
-      }`
+    const url = `/academies/${academySlug}/students/${studentId}/assignments${
+      queryParams.toString() ? `?${queryParams.toString()}` : ''
+    }`
 
     const response = await apiClient.get<StudentAssignmentsResponse>(url)
     return response.data

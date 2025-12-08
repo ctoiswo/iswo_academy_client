@@ -2,9 +2,8 @@
  * Secure token storage utilities
  * Handles JWT tokens with secure cookie storage and fallback to localStorage
  */
-
-import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
 import type { AuthTokens } from '@/stores/auth-store'
+import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
 
 // Cookie names for token storage
 const ACCESS_TOKEN_KEY = 'iswo_access_token'
@@ -30,20 +29,20 @@ class TokenStorage {
    */
   setTokens(tokens: AuthTokens): void {
     try {
-      const expiresAt = Date.now() + (tokens.expires_in * 1000)
-      
+      const expiresAt = Date.now() + tokens.expires_in * 1000
+
       // Only store refresh token in localStorage (persistent across reloads)
       if (typeof localStorage !== 'undefined') {
         const tokenData = {
           refresh_token: tokens.refresh_token,
-          expires_at: expiresAt
+          expires_at: expiresAt,
         }
         localStorage.setItem('iswo_refresh_token', JSON.stringify(tokenData))
       }
-      
+
       // Store refresh token in cookie as fallback
       setCookie(REFRESH_TOKEN_KEY, tokens.refresh_token, 30 * 24 * 60 * 60) // 30 days for refresh token
-      
+
       // NOTE: access_token is NOT persisted - it lives only in memory (auth store state)
       // This is more secure and prevents issues with expired access tokens on reload
     } catch (_error) {
@@ -66,7 +65,7 @@ class TokenStorage {
           return {
             access_token: '', // Access token is not persisted
             refresh_token: tokenData.refresh_token,
-            expires_at: tokenData.expires_at
+            expires_at: tokenData.expires_at,
           }
         }
       }
@@ -77,7 +76,7 @@ class TokenStorage {
         return {
           access_token: '', // Access token is not persisted
           refresh_token: refreshToken,
-          expires_at: Date.now() + (30 * 24 * 60 * 60 * 1000) // Assume 30 days
+          expires_at: Date.now() + 30 * 24 * 60 * 60 * 1000, // Assume 30 days
         }
       }
 
@@ -113,7 +112,7 @@ class TokenStorage {
 
     const now = Date.now()
     const expiresAt = tokenData.expires_at - EXPIRATION_BUFFER
-    
+
     return now >= expiresAt
   }
 
@@ -155,7 +154,7 @@ class TokenStorage {
 
     const now = Date.now()
     const expiresAt = tokens.expires_at
-    
+
     return Math.max(0, expiresAt - now)
   }
 
@@ -179,7 +178,7 @@ class TokenStorage {
     const newTokens: AuthTokens = {
       access_token: accessToken,
       refresh_token: tokens.refresh_token,
-      expires_in: expiresIn
+      expires_in: expiresIn,
     }
 
     this.setTokens(newTokens)
@@ -195,12 +194,12 @@ class TokenStorage {
     timeUntilExpiration: number
   } {
     const tokens = this.getTokens()
-    
+
     return {
       hasTokens: !!tokens,
       isExpired: this.isTokenExpired(tokens || undefined),
       expiresAt: tokens ? new Date(tokens.expires_at).toISOString() : null,
-      timeUntilExpiration: this.getTimeUntilExpiration()
+      timeUntilExpiration: this.getTimeUntilExpiration(),
     }
   }
 }
@@ -213,4 +212,5 @@ export const getAccessToken = () => tokenStorage.getAccessToken()
 export const getRefreshToken = () => tokenStorage.getRefreshToken()
 export const hasValidTokens = () => tokenStorage.hasValidTokens()
 export const clearTokens = () => tokenStorage.clearTokens()
-export const isTokenExpired = (tokens?: StoredTokens) => tokenStorage.isTokenExpired(tokens)
+export const isTokenExpired = (tokens?: StoredTokens) =>
+  tokenStorage.isTokenExpired(tokens)

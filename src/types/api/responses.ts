@@ -1,9 +1,46 @@
 /**
  * API Response types
  */
-
 import type { PaginationMeta } from '../common'
+import type { LearningPath } from '../entities/learning-path'
+// ============================================
+// Learning Path Enrollment Specific Responses
+// ============================================
+
+import type { LearningPathEnrollment } from '../entities/learning-path-enrollment'
+// ============================================
+// Student Assignment Responses
+// ============================================
+
+import type {
+  CourseAssignments,
+  StudentAssignmentsSummary,
+} from '../entities/student-assignment'
+// ============================================
+// Super Admin Gamification Responses
+// ============================================
+
+import type {
+  GamificationOverview,
+  BadgeTemplate,
+  BadgeDetail,
+  AcademyGamificationStatus,
+} from '../entities/super-admin-gamification'
 import type { AuthUser, AcademyData } from '../entities/user'
+// ============================================
+// User Profile Specific Responses
+// ============================================
+
+import type {
+  UserDetail,
+  UserAddress,
+  SocialNetwork,
+} from '../entities/user-profile'
+// ============================================
+// Wishlist Responses
+// ============================================
+
+import type { WishlistItem, WishlistMeta } from '../entities/wishlist'
 
 // Generic paginated response
 export interface PaginatedApiResponse<T> {
@@ -32,9 +69,7 @@ export interface ErrorResponse {
   status?: number
 }
 
-// ============================================
 // Auth Specific Responses
-// ============================================
 
 export interface AuthTokens {
   access_token: string
@@ -57,9 +92,7 @@ export interface MessageResponse {
   message: string
 }
 
-// ============================================
 // Access Code Specific Responses
-// ============================================
 
 export interface AccessCodeRedemptionResponse {
   message: string
@@ -112,30 +145,19 @@ export interface AccessCodeValidationResponse {
   }
 }
 
-// ============================================
 // Course Specific Responses
-// ============================================
 
 export interface CoursesResponse<T = unknown> {
   data: T[]
   meta: PaginationMeta
 }
 
-// ============================================
-// Learning Path Enrollment Specific Responses
-// ============================================
-
-import type { LearningPathEnrollment } from '../entities/learning-path-enrollment'
-import type { LearningPath } from '../entities/learning-path'
-
 export interface LearningPathEnrollmentsResponse {
   data: LearningPathEnrollment[]
   meta?: PaginationMeta
 }
 
-// ============================================
 // Learning Path Specific Responses
-// ============================================
 
 export interface LearningPathsResponse {
   data: LearningPath[]
@@ -153,10 +175,8 @@ export interface VideoUrlResponse {
 }
 
 // ============================================
-// User Profile Specific Responses
-// ============================================
 
-import type { UserDetail, UserAddress, SocialNetwork } from '../entities/user-profile'
+// ============================================
 
 export interface UserDetailResponse {
   user_detail: UserDetail
@@ -179,10 +199,8 @@ export interface SocialNetworksResponse {
 }
 
 // ============================================
-// Student Assignment Responses
-// ============================================
 
-import type { CourseAssignments, StudentAssignmentsSummary } from '../entities/student-assignment'
+// ============================================
 
 export interface StudentAssignmentsResponse {
   data: {
@@ -203,15 +221,8 @@ export interface StudentAssignmentsResponse {
 }
 
 // ============================================
-// Super Admin Gamification Responses
-// ============================================
 
-import type {
-  GamificationOverview,
-  BadgeTemplate,
-  BadgeDetail,
-  AcademyGamificationStatus
-} from '../entities/super-admin-gamification'
+// ============================================
 
 export interface GamificationOverviewResponse {
   data: GamificationOverview
@@ -234,10 +245,8 @@ export interface AcademyGamificationStatusResponse {
 }
 
 // ============================================
-// Wishlist Responses
-// ============================================
 
-import type { WishlistItem, WishlistMeta } from '../entities/wishlist'
+// ============================================
 
 export interface WishlistResponse {
   data: WishlistItem[]

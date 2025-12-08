@@ -1,5 +1,4 @@
-import apiClient from '@/lib/api-client'
-import type { 
+import type {
   AcademyCategory,
   AcademyCategoryMinimal,
   AcademyCategorySummary,
@@ -8,8 +7,9 @@ import type {
   CreateCategoryRequest,
   UpdateCategoryRequest,
   ApiViewMode,
-  ViewResponse
+  ViewResponse,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Academy Category Service
@@ -20,20 +20,27 @@ class AcademyCategoryService {
    * Get all academy categories
    * @param view - View mode: 'minimal' | 'summary' | 'full' (default: 'summary')
    * @returns Promise with array of categories typed according to view
-   * 
+   *
    * @example
    * // Get minimal data (id, name, slug)
    * const categories = await getCategories('minimal')
-   * 
+   *
    * // Get summary data (includes academies_count)
    * const categories = await getCategories('summary')
-   * 
+   *
    * // Get full data (includes academies array)
    * const categories = await getCategories('full')
    */
   async getCategories<TView extends ApiViewMode = 'summary'>(
     view?: TView
-  ): Promise<ViewResponse<AcademyCategoryMinimal, AcademyCategorySummary, AcademyCategoryFull, TView>[]> {
+  ): Promise<
+    ViewResponse<
+      AcademyCategoryMinimal,
+      AcademyCategorySummary,
+      AcademyCategoryFull,
+      TView
+    >[]
+  > {
     const params = view ? { view } : {}
     const response = await apiClient.get('/academy_categories', { params })
     return response.data.data || response.data
@@ -48,9 +55,18 @@ class AcademyCategoryService {
   async getCategoryById<TView extends ApiViewMode = 'full'>(
     id: string | number,
     view?: TView
-  ): Promise<ViewResponse<AcademyCategoryMinimal, AcademyCategorySummary, AcademyCategoryFull, TView>> {
+  ): Promise<
+    ViewResponse<
+      AcademyCategoryMinimal,
+      AcademyCategorySummary,
+      AcademyCategoryFull,
+      TView
+    >
+  > {
     const params = view ? { view } : {}
-    const response = await apiClient.get(`/academy_categories/${id}`, { params })
+    const response = await apiClient.get(`/academy_categories/${id}`, {
+      params,
+    })
     return response.data
   }
 
@@ -63,9 +79,18 @@ class AcademyCategoryService {
   async getCategoryBySlug<TView extends ApiViewMode = 'full'>(
     slug: string,
     view?: TView
-  ): Promise<ViewResponse<AcademyCategoryMinimal, AcademyCategorySummary, AcademyCategoryFull, TView>> {
+  ): Promise<
+    ViewResponse<
+      AcademyCategoryMinimal,
+      AcademyCategorySummary,
+      AcademyCategoryFull,
+      TView
+    >
+  > {
     const params = view ? { view } : {}
-    const response = await apiClient.get(`/academy_categories/slug/${slug}`, { params })
+    const response = await apiClient.get(`/academy_categories/slug/${slug}`, {
+      params,
+    })
     return response.data
   }
 
@@ -84,13 +109,15 @@ class AcademyCategoryService {
   }> {
     const response = await apiClient.get('/academy_categories', { params })
     return {
-      data: Array.isArray(response.data) ? response.data : response.data.data || [],
+      data: Array.isArray(response.data)
+        ? response.data
+        : response.data.data || [],
       meta: response.data.meta || {
         current_page: 1,
         total_pages: 1,
         total_count: Array.isArray(response.data) ? response.data.length : 0,
-        per_page: params?.per_page || 15
-      }
+        per_page: params?.per_page || 15,
+      },
     }
   }
 
@@ -101,7 +128,7 @@ class AcademyCategoryService {
    */
   async createCategory(data: CreateCategoryRequest): Promise<AcademyCategory> {
     const response = await apiClient.post('/academy_categories', {
-      academy_category: data
+      academy_category: data,
     })
     return response.data
   }
@@ -112,9 +139,12 @@ class AcademyCategoryService {
    * @param data - Updated category data
    * @returns Promise with updated category
    */
-  async updateCategory(id: number, data: UpdateCategoryRequest): Promise<AcademyCategory> {
+  async updateCategory(
+    id: number,
+    data: UpdateCategoryRequest
+  ): Promise<AcademyCategory> {
     const response = await apiClient.patch(`/academy_categories/${id}`, {
-      academy_category: data
+      academy_category: data,
     })
     return response.data
   }

@@ -1,19 +1,16 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor
-} from '@testing-library/react'
-import { vi, beforeEach, describe, it, expect } from 'vitest'
-import { toast } from 'sonner'
-import { PublicAcademyPage } from '../../features/public-academy/index'
 import type { AcademySummary } from '@/types'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { toast } from 'sonner'
+import { vi, beforeEach, describe, it, expect } from 'vitest'
+import { PublicAcademyPage } from '../../features/public-academy/index'
 
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
+    section: ({ children, ...props }: any) => (
+      <section {...props}>{children}</section>
+    ),
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
   },
@@ -27,7 +24,9 @@ vi.mock('@tanstack/react-router', () => ({
   useParams: () => mockUseParams(),
   useNavigate: () => mockNavigate,
   Link: ({ children, to, ...props }: any) => (
-    <a href={to} {...props}>{children}</a>
+    <a href={to} {...props}>
+      {children}
+    </a>
   ),
 }))
 
@@ -61,7 +60,9 @@ vi.mock('sonner', () => ({
 // Mock UI components
 vi.mock('@/components/ui/alert', () => ({
   Alert: ({ children, variant, ...props }: any) => (
-    <div data-testid={`alert-${variant}`} {...props}>{children}</div>
+    <div data-testid={`alert-${variant}`} {...props}>
+      {children}
+    </div>
   ),
   AlertDescription: ({ children, ...props }: any) => (
     <div {...props}>{children}</div>
@@ -94,22 +95,22 @@ vi.mock('lucide-react', () => {
 
 // Mock components
 vi.mock('./components/page-header', () => ({
-  PageHeader: () => <header data-testid="page-header">Header</header>,
+  PageHeader: () => <header data-testid='page-header'>Header</header>,
 }))
 
 vi.mock('./components/page-footer', () => ({
-  PageFooter: () => <footer data-testid="page-footer">Footer</footer>,
+  PageFooter: () => <footer data-testid='page-footer'>Footer</footer>,
 }))
 
 vi.mock('./components/academy-hero', () => ({
   AcademyHero: ({ academy, isSaved, onSave, onShare }: any) => (
-    <div data-testid="academy-hero">
+    <div data-testid='academy-hero'>
       <h1>{academy.name}</h1>
       <p>{academy.description}</p>
-      <button onClick={onSave} data-testid="save-button">
+      <button onClick={onSave} data-testid='save-button'>
         {isSaved ? 'Guardado' : 'Guardar'}
       </button>
-      <button onClick={onShare} data-testid="share-button">
+      <button onClick={onShare} data-testid='share-button'>
         Compartir
       </button>
     </div>
@@ -118,7 +119,7 @@ vi.mock('./components/academy-hero', () => ({
 
 vi.mock('./components/academy-info', () => ({
   AcademyInfo: ({ academy }: any) => (
-    <div data-testid="academy-info">
+    <div data-testid='academy-info'>
       <span>Cursos: {academy.courses_count}</span>
       <span>Estudiantes: {academy.enrolled_users_count}</span>
     </div>
@@ -127,10 +128,10 @@ vi.mock('./components/academy-info', () => ({
 
 vi.mock('./components/courses-section', () => ({
   CoursesSection: ({ courses, academyName }: any) => (
-    <div data-testid="courses-section">
+    <div data-testid='courses-section'>
       <h2>Cursos de {academyName}</h2>
       {courses.map((course: any) => (
-        <div key={course.id} data-testid="course-item">
+        <div key={course.id} data-testid='course-item'>
           {course.title}
         </div>
       ))}
@@ -214,7 +215,7 @@ describe('PublicAcademyPage', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    
+
     // Default mocks
     mockUseParams.mockReturnValue({ slug: 'react-avanzado' })
     mockUseAuthStore.mockReturnValue({ isAuthenticated: true })
@@ -224,7 +225,7 @@ describe('PublicAcademyPage', () => {
     })
     mockIsInWishlist.mockReturnValue(false)
     mockToggleWishlist.mockReturnValue(true)
-    
+
     // Mock clipboard and share APIs
     Object.assign(navigator, {
       clipboard: {
@@ -319,7 +320,9 @@ describe('PublicAcademyPage', () => {
       render(<PublicAcademyPage />)
 
       expect(screen.getByText('React Avanzado')).toBeInTheDocument()
-      expect(screen.getByText('Aprende React desde cero hasta nivel avanzado')).toBeInTheDocument()
+      expect(
+        screen.getByText('Aprende React desde cero hasta nivel avanzado')
+      ).toBeInTheDocument()
       expect(screen.getByText('Cursos: 8')).toBeInTheDocument()
       expect(screen.getByText('Estudiantes: 1250')).toBeInTheDocument()
     })
@@ -400,7 +403,9 @@ describe('PublicAcademyPage', () => {
       const saveButton = screen.getByTestId('save-button')
       fireEvent.click(saveButton)
 
-      expect(vi.mocked(toast.info)).toHaveBeenCalledWith('Inicia sesión para guardar academias')
+      expect(vi.mocked(toast.info)).toHaveBeenCalledWith(
+        'Inicia sesión para guardar academias'
+      )
       expect(mockNavigate).toHaveBeenCalledWith({ to: '/sign-in' })
     })
   })
@@ -438,7 +443,7 @@ describe('PublicAcademyPage', () => {
       Object.assign(navigator, { share: undefined })
       const mockWriteText = vi.fn().mockResolvedValue(undefined)
       Object.assign(navigator, {
-        clipboard: { writeText: mockWriteText }
+        clipboard: { writeText: mockWriteText },
       })
 
       render(<PublicAcademyPage />)
@@ -448,15 +453,19 @@ describe('PublicAcademyPage', () => {
 
       await waitFor(() => {
         expect(mockWriteText).toHaveBeenCalledWith(window.location.href)
-        expect(vi.mocked(toast.success)).toHaveBeenCalledWith('Enlace copiado al portapapeles')
+        expect(vi.mocked(toast.success)).toHaveBeenCalledWith(
+          'Enlace copiado al portapapeles'
+        )
       })
     })
 
     it('should handle clipboard error', async () => {
       Object.assign(navigator, { share: undefined })
-      const mockWriteText = vi.fn().mockRejectedValue(new Error('Clipboard error'))
+      const mockWriteText = vi
+        .fn()
+        .mockRejectedValue(new Error('Clipboard error'))
       Object.assign(navigator, {
-        clipboard: { writeText: mockWriteText }
+        clipboard: { writeText: mockWriteText },
       })
 
       render(<PublicAcademyPage />)
@@ -465,7 +474,9 @@ describe('PublicAcademyPage', () => {
       fireEvent.click(shareButton)
 
       await waitFor(() => {
-        expect(vi.mocked(toast.error)).toHaveBeenCalledWith('No se pudo copiar el enlace')
+        expect(vi.mocked(toast.error)).toHaveBeenCalledWith(
+          'No se pudo copiar el enlace'
+        )
       })
     })
 

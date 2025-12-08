@@ -1,34 +1,34 @@
 import { useState } from 'react'
-import { DashboardCard } from '@/components/dashboard'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from '@/components/ui/table'
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import { 
-  Building2, 
-  Users, 
-  BookOpen, 
-  DollarSign, 
+import {
+  Building2,
+  Users,
+  BookOpen,
+  DollarSign,
   MoreHorizontal,
   Search,
   Plus,
   Eye,
   Settings,
-  Ban
+  Ban,
 } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { DashboardCard } from '@/components/dashboard'
 import type { AcademyOverview } from '../index'
 
 interface AcademyManagementPanelProps {
@@ -37,19 +37,23 @@ interface AcademyManagementPanelProps {
   error?: string | null
 }
 
-export function AcademyManagementPanel({ 
-  academies, 
-  loading = false, 
-  error 
+export function AcademyManagementPanel({
+  academies,
+  loading = false,
+  error,
 }: AcademyManagementPanelProps) {
   const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'suspended'>('all')
+  const [statusFilter, setStatusFilter] = useState<
+    'all' | 'active' | 'inactive' | 'suspended'
+  >('all')
 
   // Filter academies based on search and status
-  const filteredAcademies = academies.filter(academy => {
-    const matchesSearch = academy.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         academy.description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = statusFilter === 'all' || academy.status === statusFilter
+  const filteredAcademies = academies.filter((academy) => {
+    const matchesSearch =
+      academy.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      academy.description.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesStatus =
+      statusFilter === 'all' || academy.status === statusFilter
     return matchesSearch && matchesStatus
   })
 
@@ -70,54 +74,54 @@ export function AcademyManagementPanel({
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     })
   }
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'USD',
     }).format(amount)
   }
 
   if (error) {
     return (
-      <DashboardCard title="Academy Management">
-        <div className="text-center py-8">
-          <p className="text-destructive">Error loading academies: {error}</p>
+      <DashboardCard title='Academy Management'>
+        <div className='py-8 text-center'>
+          <p className='text-destructive'>Error loading academies: {error}</p>
         </div>
       </DashboardCard>
     )
   }
 
   return (
-    <DashboardCard 
-      title="Academy Management"
-      description="Manage all academies on the platform"
+    <DashboardCard
+      title='Academy Management'
+      description='Manage all academies on the platform'
       action={
-        <Button size="sm">
-          <Plus className="h-4 w-4 mr-2" />
+        <Button size='sm'>
+          <Plus className='mr-2 h-4 w-4' />
           Add Academy
         </Button>
       }
     >
       {/* Search and Filter Controls */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <div className='mb-6 flex items-center justify-between'>
+        <div className='flex items-center space-x-4'>
+          <div className='relative'>
+            <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform' />
             <Input
-              placeholder="Search academies..."
+              placeholder='Search academies...'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-64"
+              className='w-64 pl-10'
             />
           </div>
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
+              <Button variant='outline' size='sm'>
                 Status: {statusFilter === 'all' ? 'All' : statusFilter}
               </Button>
             </DropdownMenuTrigger>
@@ -137,66 +141,65 @@ export function AcademyManagementPanel({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        
-        <div className="text-sm text-muted-foreground">
+
+        <div className='text-muted-foreground text-sm'>
           {filteredAcademies.length} of {academies.length} academies
         </div>
       </div>
 
       {/* Academy Table */}
       {loading ? (
-        <div className="space-y-4">
+        <div className='space-y-4'>
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="animate-pulse">
-              <div className="h-16 bg-muted rounded"></div>
+            <div key={i} className='animate-pulse'>
+              <div className='bg-muted h-16 rounded'></div>
             </div>
           ))}
         </div>
       ) : filteredAcademies.length === 0 ? (
-        <div className="text-center py-8">
-          <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground">
-            {searchTerm || statusFilter !== 'all' 
-              ? 'No academies match your filters' 
-              : 'No academies found'
-            }
+        <div className='py-8 text-center'>
+          <Building2 className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
+          <p className='text-muted-foreground'>
+            {searchTerm || statusFilter !== 'all'
+              ? 'No academies match your filters'
+              : 'No academies found'}
           </p>
         </div>
       ) : (
-        <div className="rounded-md border">
+        <div className='rounded-md border'>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Academy</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="text-right">Users</TableHead>
-                <TableHead className="text-right">Courses</TableHead>
-                <TableHead className="text-right">Revenue</TableHead>
-                <TableHead className="text-right">Created</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
+                <TableHead className='text-right'>Users</TableHead>
+                <TableHead className='text-right'>Courses</TableHead>
+                <TableHead className='text-right'>Revenue</TableHead>
+                <TableHead className='text-right'>Created</TableHead>
+                <TableHead className='w-[50px]'></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredAcademies.map((academy) => (
                 <TableRow key={academy.id}>
                   <TableCell>
-                    <div className="flex items-center space-x-3">
-                      <div className="flex-shrink-0">
+                    <div className='flex items-center space-x-3'>
+                      <div className='flex-shrink-0'>
                         {academy.logo_url ? (
-                          <img 
-                            src={academy.logo_url} 
+                          <img
+                            src={academy.logo_url}
                             alt={academy.name}
-                            className="h-8 w-8 rounded-full object-cover"
+                            className='h-8 w-8 rounded-full object-cover'
                           />
                         ) : (
-                          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-                            <Building2 className="h-4 w-4 text-muted-foreground" />
+                          <div className='bg-muted flex h-8 w-8 items-center justify-center rounded-full'>
+                            <Building2 className='text-muted-foreground h-4 w-4' />
                           </div>
                         )}
                       </div>
                       <div>
-                        <div className="font-medium">{academy.name}</div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className='font-medium'>{academy.name}</div>
+                        <div className='text-muted-foreground text-sm'>
                           {academy.description}
                         </div>
                       </div>
@@ -207,45 +210,45 @@ export function AcademyManagementPanel({
                       {academy.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end space-x-1">
-                      <Users className="h-4 w-4 text-muted-foreground" />
+                  <TableCell className='text-right'>
+                    <div className='flex items-center justify-end space-x-1'>
+                      <Users className='text-muted-foreground h-4 w-4' />
                       <span>{academy.total_users.toLocaleString()}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end space-x-1">
-                      <BookOpen className="h-4 w-4 text-muted-foreground" />
+                  <TableCell className='text-right'>
+                    <div className='flex items-center justify-end space-x-1'>
+                      <BookOpen className='text-muted-foreground h-4 w-4' />
                       <span>{academy.total_courses}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end space-x-1">
-                      <DollarSign className="h-4 w-4 text-muted-foreground" />
+                  <TableCell className='text-right'>
+                    <div className='flex items-center justify-end space-x-1'>
+                      <DollarSign className='text-muted-foreground h-4 w-4' />
                       <span>{formatCurrency(academy.total_revenue)}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right text-sm text-muted-foreground">
+                  <TableCell className='text-muted-foreground text-right text-sm'>
                     {formatDate(academy.created_at)}
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
+                        <Button variant='ghost' size='sm'>
+                          <MoreHorizontal className='h-4 w-4' />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent align='end'>
                         <DropdownMenuItem>
-                          <Eye className="h-4 w-4 mr-2" />
+                          <Eye className='mr-2 h-4 w-4' />
                           View Details
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <Settings className="h-4 w-4 mr-2" />
+                          <Settings className='mr-2 h-4 w-4' />
                           Manage Settings
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">
-                          <Ban className="h-4 w-4 mr-2" />
+                        <DropdownMenuItem className='text-destructive'>
+                          <Ban className='mr-2 h-4 w-4' />
                           Suspend Academy
                         </DropdownMenuItem>
                       </DropdownMenuContent>

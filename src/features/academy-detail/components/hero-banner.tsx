@@ -1,5 +1,14 @@
 import { motion } from 'framer-motion'
-import { ArrowLeft, Star, Users, BookOpen, Clock, Share2, Heart, ShoppingCart } from 'lucide-react'
+import {
+  ArrowLeft,
+  Star,
+  Users,
+  BookOpen,
+  Clock,
+  Share2,
+  Heart,
+  ShoppingCart,
+} from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 
@@ -51,10 +60,7 @@ export function HeroBanner({ academy, router }: HeroBannerProps) {
           </motion.div>
 
           {/* Academy Info */}
-          <motion.div
-            variants={sectionVariants}
-            className='flex-1 text-white'
-          >
+          <motion.div variants={sectionVariants} className='flex-1 text-white'>
             <div className='mb-2 flex items-center gap-2'>
               <Badge className='border-white/30 bg-white/20 text-white backdrop-blur-sm'>
                 {academy.category.name}
@@ -102,10 +108,7 @@ export function HeroBanner({ academy, router }: HeroBannerProps) {
             variants={sectionVariants}
             className='flex flex-col gap-3'
           >
-            <Button
-              size='lg'
-              className='bg-white text-black hover:bg-white/90'
-            >
+            <Button size='lg' className='bg-white text-black hover:bg-white/90'>
               <ShoppingCart className='mr-2 h-4 w-4' />
               Suscribirse ${academy.monthly_price || 0}/mes
             </Button>

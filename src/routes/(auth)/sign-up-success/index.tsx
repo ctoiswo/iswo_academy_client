@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { SignUpSuccess } from '@/features/auth/sign-up/success'
 import { GuestGuard } from '@/components/route-guards'
+import { SignUpSuccess } from '@/features/auth/sign-up/success'
 
 function SignUpSuccessRoute() {
   return (

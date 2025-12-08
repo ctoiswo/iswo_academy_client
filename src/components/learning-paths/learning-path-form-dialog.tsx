@@ -1,8 +1,12 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useAuthStore } from '@/stores/auth-store'
-import { useCreateLearningPath, useUpdateLearningPath } from '@/hooks/use-learning-paths'
 import type { LearningPath } from '@/services/learning-path-service'
+import { useAuthStore } from '@/stores/auth-store'
+import {
+  useCreateLearningPath,
+  useUpdateLearningPath,
+} from '@/hooks/use-learning-paths'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -11,10 +15,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
   SelectContent,
@@ -22,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 
 interface LearningPathFormDialogProps {
   open: boolean
@@ -107,7 +110,7 @@ export function LearningPathFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className='max-h-[90vh] max-w-2xl overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>
             {mode === 'create' ? 'Crear' : 'Editar'} Ruta de Aprendizaje
@@ -119,39 +122,45 @@ export function LearningPathFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Título *</Label>
+        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+          <div className='space-y-2'>
+            <Label htmlFor='title'>Título *</Label>
             <Input
-              id="title"
+              id='title'
               {...register('title', { required: 'El título es requerido' })}
-              placeholder="Ej: Desarrollo Web Full Stack"
+              placeholder='Ej: Desarrollo Web Full Stack'
             />
             {errors.title && (
-              <p className="text-sm text-destructive">{errors.title.message}</p>
+              <p className='text-destructive text-sm'>{errors.title.message}</p>
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="description">Descripción *</Label>
+          <div className='space-y-2'>
+            <Label htmlFor='description'>Descripción *</Label>
             <Textarea
-              id="description"
-              {...register('description', { required: 'La descripción es requerida' })}
-              placeholder="Describe el contenido y objetivos de esta ruta de aprendizaje..."
+              id='description'
+              {...register('description', {
+                required: 'La descripción es requerida',
+              })}
+              placeholder='Describe el contenido y objetivos de esta ruta de aprendizaje...'
               rows={4}
             />
             {errors.description && (
-              <p className="text-sm text-destructive">{errors.description.message}</p>
+              <p className='text-destructive text-sm'>
+                {errors.description.message}
+              </p>
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="estimated_duration_hours">Duración Estimada (horas) *</Label>
+          <div className='grid grid-cols-2 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='estimated_duration_hours'>
+                Duración Estimada (horas) *
+              </Label>
               <Input
-                id="estimated_duration_hours"
-                type="number"
-                min="1"
+                id='estimated_duration_hours'
+                type='number'
+                min='1'
                 {...register('estimated_duration_hours', {
                   required: 'La duración es requerida',
                   valueAsNumber: true,
@@ -159,53 +168,59 @@ export function LearningPathFormDialog({
                 })}
               />
               {errors.estimated_duration_hours && (
-                <p className="text-sm text-destructive">
+                <p className='text-destructive text-sm'>
                   {errors.estimated_duration_hours.message}
                 </p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="difficulty_level">Nivel de Dificultad</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='difficulty_level'>Nivel de Dificultad</Label>
               <Select
                 defaultValue={watch('difficulty_level')}
                 onValueChange={(value) => setValue('difficulty_level', value)}
               >
-                <SelectTrigger id="difficulty_level">
+                <SelectTrigger id='difficulty_level'>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="beginner">Principiante</SelectItem>
-                  <SelectItem value="intermediate">Intermedio</SelectItem>
-                  <SelectItem value="advanced">Avanzado</SelectItem>
+                  <SelectItem value='beginner'>Principiante</SelectItem>
+                  <SelectItem value='intermediate'>Intermedio</SelectItem>
+                  <SelectItem value='advanced'>Avanzado</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="status">Estado</Label>
+          <div className='space-y-2'>
+            <Label htmlFor='status'>Estado</Label>
             <Select
               defaultValue={watch('status')}
-              onValueChange={(value) => setValue('status', value as 'draft' | 'published')}
+              onValueChange={(value) =>
+                setValue('status', value as 'draft' | 'published')
+              }
             >
-              <SelectTrigger id="status">
+              <SelectTrigger id='status'>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="draft">Borrador</SelectItem>
-                <SelectItem value="published">Publicado</SelectItem>
-                <SelectItem value="archived">Archivado</SelectItem>
+                <SelectItem value='draft'>Borrador</SelectItem>
+                <SelectItem value='published'>Publicado</SelectItem>
+                <SelectItem value='archived'>Archivado</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type='button'
+              variant='outline'
+              onClick={() => onOpenChange(false)}
+            >
               Cancelar
             </Button>
             <Button
-              type="submit"
+              type='submit'
               disabled={createMutation.isPending || updateMutation.isPending}
             >
               {mode === 'create' ? 'Crear' : 'Guardar Cambios'}

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Otp } from '@/features/auth/otp'
 import { GuestGuard } from '@/components/route-guards'
+import { Otp } from '@/features/auth/otp'
 
 function OtpRoute() {
   return (

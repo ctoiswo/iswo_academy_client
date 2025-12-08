@@ -1,11 +1,7 @@
-import {
-  render,
-  screen,
-  fireEvent
-} from '@testing-library/react'
+import type { AcademySummary } from '@/types'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { vi, beforeEach, describe, it, expect } from 'vitest'
 import { AcademyDetailPage } from '../../features/academy-detail/index'
-import type { AcademySummary } from '@/types'
 
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
@@ -32,7 +28,7 @@ vi.mock('@/hooks/use-academy', () => ({
 
 // Mock Header component
 vi.mock('@/features/home/components/header', () => ({
-  Header: () => <header data-testid="public-header">Header</header>,
+  Header: () => <header data-testid='public-header'>Header</header>,
 }))
 
 // Mock UI components
@@ -46,14 +42,18 @@ vi.mock('@/components/ui/button', () => ({
 
 vi.mock('@/components/ui/card', () => ({
   Card: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  CardContent: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  CardContent: ({ children, ...props }: any) => (
+    <div {...props}>{children}</div>
+  ),
   CardHeader: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   CardTitle: ({ children, ...props }: any) => <h3 {...props}>{children}</h3>,
 }))
 
 vi.mock('@/components/ui/tabs', () => ({
   Tabs: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  TabsContent: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  TabsContent: ({ children, ...props }: any) => (
+    <div {...props}>{children}</div>
+  ),
   TabsList: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   TabsTrigger: ({ children, ...props }: any) => (
     <button {...props}>{children}</button>
@@ -79,7 +79,7 @@ vi.mock('@/components/ui/separator', () => ({
 // Mock CourseCard component
 vi.mock('@/components/course-card', () => ({
   CourseCard: ({ course }: any) => (
-    <div data-testid="course-card">
+    <div data-testid='course-card'>
       <h4>{course.title}</h4>
       <p>{course.description}</p>
     </div>
@@ -244,7 +244,9 @@ describe('AcademyDetailPage', () => {
 
       render(<AcademyDetailPage />)
 
-      expect(screen.getByRole('heading', { name: 'Academia no encontrada' })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: 'Academia no encontrada' })
+      ).toBeInTheDocument()
       expect(screen.getByText('Volver a Academias')).toBeInTheDocument()
     })
 
@@ -277,7 +279,9 @@ describe('AcademyDetailPage', () => {
     it('should render academy details correctly', () => {
       render(<AcademyDetailPage />)
 
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('React Avanzado')
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+        'React Avanzado'
+      )
       expect(screen.getByText('Desarrollo Web')).toBeInTheDocument()
       expect(screen.getAllByText('4.8')[0]).toBeInTheDocument()
       expect(screen.getByText('(156 reseñas)')).toBeInTheDocument()
@@ -297,9 +301,7 @@ describe('AcademyDetailPage', () => {
       expect(screen.getByText('Juan Pérez')).toBeInTheDocument()
       expect(screen.getByText('Creador de la Academia')).toBeInTheDocument()
       expect(
-        screen.getByText(
-          'Desarrollador Full Stack con 10 años de experiencia'
-        )
+        screen.getByText('Desarrollador Full Stack con 10 años de experiencia')
       ).toBeInTheDocument()
     })
 
@@ -327,9 +329,7 @@ describe('AcademyDetailPage', () => {
 
       expect(screen.getByText('Acceso a todos los cursos')).toBeInTheDocument()
       expect(screen.getByText('Nuevos cursos cada mes')).toBeInTheDocument()
-      expect(
-        screen.getByText('Certificados al completar')
-      ).toBeInTheDocument()
+      expect(screen.getByText('Certificados al completar')).toBeInTheDocument()
       expect(screen.getByText('Soporte del instructor')).toBeInTheDocument()
     })
 
@@ -392,7 +392,9 @@ describe('AcademyDetailPage', () => {
 
       render(<AcademyDetailPage />)
 
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('React Avanzado')
+      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+        'React Avanzado'
+      )
       expect(screen.getByText('Suscribirse $0/mes')).toBeInTheDocument()
       expect(screen.getByText('Juan Pérez')).toBeInTheDocument()
     })

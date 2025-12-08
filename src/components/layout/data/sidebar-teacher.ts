@@ -21,7 +21,9 @@ import { type SidebarData } from '../types'
  * Sidebar para usuarios Teacher
  * Enfocado en enseñanza y gestión de cursos propios
  */
-export function getTeacherSidebar(academySlug: string): SidebarData['navGroups'] {
+export function getTeacherSidebar(
+  academySlug: string
+): SidebarData['navGroups'] {
   return [
     {
       title: 'General',

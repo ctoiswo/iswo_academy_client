@@ -43,10 +43,10 @@ export default function CourseLessonsPage() {
   }
   const { academySlug, courseSlug } = params
   const { currentAcademy } = useAuthStore()
-  
+
   // Check if user is student
   const isStudent = currentAcademy?.user_role === 'student'
-  
+
   const [createSectionDialogOpen, setCreateSectionDialogOpen] = useState(false)
   const [editSectionDialogOpen, setEditSectionDialogOpen] = useState(false)
   const [createLessonDialogOpen, setCreateLessonDialogOpen] = useState(false)
@@ -187,14 +187,19 @@ export default function CourseLessonsPage() {
               <FolderOpen className='mx-auto mb-4 h-12 w-12' />
               {isStudent ? (
                 <>
-                  <h3 className='mb-2 text-lg font-medium'>Aún no hay contenido disponible</h3>
+                  <h3 className='mb-2 text-lg font-medium'>
+                    Aún no hay contenido disponible
+                  </h3>
                   <p className='mb-4'>
-                    El instructor está preparando el material del curso. Vuelve pronto para ver las lecciones.
+                    El instructor está preparando el material del curso. Vuelve
+                    pronto para ver las lecciones.
                   </p>
                 </>
               ) : (
                 <>
-                  <h3 className='mb-2 text-lg font-medium'>Aún no hay secciones</h3>
+                  <h3 className='mb-2 text-lg font-medium'>
+                    Aún no hay secciones
+                  </h3>
                   <p className='mb-4'>
                     Comienza a construir tu curso creando secciones y añadiendo
                     lecciones

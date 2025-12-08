@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
 import { CTASection } from '../cta-section'
 
 // Mock react-i18next
@@ -8,12 +8,13 @@ vi.mock('react-i18next', () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
         'home.cta.title': 'Crea tu propia academia online',
-        'home.cta.description': 'Únete a miles de creadores que ya están monetizando su conocimiento. Crea cursos, construye tu comunidad y genera ingresos pasivos.',
-        'home.cta.button': 'Crear Mi Academia'
+        'home.cta.description':
+          'Únete a miles de creadores que ya están monetizando su conocimiento. Crea cursos, construye tu comunidad y genera ingresos pasivos.',
+        'home.cta.button': 'Crear Mi Academia',
       }
       return translations[key] || key
-    }
-  })
+    },
+  }),
 }))
 
 // Mock framer-motion
@@ -35,7 +36,9 @@ vi.mock('@tanstack/react-router', () => ({
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
   ArrowRight: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="arrow-right-icon">➡️</div>
+    <div className={className} data-testid='arrow-right-icon'>
+      ➡️
+    </div>
   ),
 }))
 
@@ -44,11 +47,7 @@ vi.mock('@/components/ui/button', () => ({
   Button: ({ children, size, asChild, ...props }: any) => {
     const Component = asChild ? 'div' : 'button'
     return (
-      <Component 
-        data-size={size}
-        data-testid="button"
-        {...props}
-      >
+      <Component data-size={size} data-testid='button' {...props}>
         {children}
       </Component>
     )
@@ -60,8 +59,14 @@ describe('CTASection', () => {
     it('should render all text content correctly', () => {
       render(<CTASection />)
 
-      expect(screen.getByText('Crea tu propia academia online')).toBeInTheDocument()
-      expect(screen.getByText('Únete a miles de creadores que ya están monetizando su conocimiento. Crea cursos, construye tu comunidad y genera ingresos pasivos.')).toBeInTheDocument()
+      expect(
+        screen.getByText('Crea tu propia academia online')
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'Únete a miles de creadores que ya están monetizando su conocimiento. Crea cursos, construye tu comunidad y genera ingresos pasivos.'
+        )
+      ).toBeInTheDocument()
       expect(screen.getByText('Crear Mi Academia')).toBeInTheDocument()
     })
 
@@ -75,7 +80,9 @@ describe('CTASection', () => {
     it('should render description paragraph', () => {
       render(<CTASection />)
 
-      const description = screen.getByText('Únete a miles de creadores que ya están monetizando su conocimiento. Crea cursos, construye tu comunidad y genera ingresos pasivos.')
+      const description = screen.getByText(
+        'Únete a miles de creadores que ya están monetizando su conocimiento. Crea cursos, construye tu comunidad y genera ingresos pasivos.'
+      )
       expect(description.tagName).toBe('P')
     })
   })
@@ -106,7 +113,9 @@ describe('CTASection', () => {
     it('should have centered content wrapper', () => {
       render(<CTASection />)
 
-      const centeredDiv = document.querySelector('.mx-auto.max-w-4xl.text-center')
+      const centeredDiv = document.querySelector(
+        '.mx-auto.max-w-4xl.text-center'
+      )
       expect(centeredDiv).toBeInTheDocument()
     })
   })
@@ -141,7 +150,7 @@ describe('CTASection', () => {
 
       const link = screen.getByRole('link')
       const button = screen.getByTestId('button')
-      
+
       expect(button).toContainElement(link)
     })
   })
@@ -165,8 +174,12 @@ describe('CTASection', () => {
       render(<CTASection />)
 
       // Should have both title and description for context
-      expect(screen.getByText('Crea tu propia academia online')).toBeInTheDocument()
-      expect(screen.getByText(/únete a miles de creadores/i)).toBeInTheDocument()
+      expect(
+        screen.getByText('Crea tu propia academia online')
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(/únete a miles de creadores/i)
+      ).toBeInTheDocument()
     })
   })
 
@@ -175,14 +188,24 @@ describe('CTASection', () => {
       render(<CTASection />)
 
       const title = screen.getByRole('heading', { level: 2 })
-      expect(title).toHaveClass('text-3xl', 'font-bold', 'tracking-tight', 'sm:text-4xl')
+      expect(title).toHaveClass(
+        'text-3xl',
+        'font-bold',
+        'tracking-tight',
+        'sm:text-4xl'
+      )
     })
 
     it('should have proper description styling', () => {
       render(<CTASection />)
 
       const description = screen.getByText(/únete a miles de creadores/i)
-      expect(description).toHaveClass('text-muted-foreground', 'mt-6', 'text-lg', 'leading-8')
+      expect(description).toHaveClass(
+        'text-muted-foreground',
+        'mt-6',
+        'text-lg',
+        'leading-8'
+      )
     })
 
     it('should have proper button container spacing', () => {
@@ -201,7 +224,7 @@ describe('CTASection', () => {
       const title = screen.getByText('Crea tu propia academia online')
       const description = screen.getByText(/únete a miles de creadores/i)
       const button = screen.getByTestId('button')
-      
+
       // All elements should be present
       expect(title).toBeInTheDocument()
       expect(description).toBeInTheDocument()
@@ -216,8 +239,12 @@ describe('CTASection', () => {
       render(<CTASection />)
 
       // All text should come from translations
-      expect(screen.getByText('Crea tu propia academia online')).toBeInTheDocument()
-      expect(screen.getByText(/únete a miles de creadores/i)).toBeInTheDocument()
+      expect(
+        screen.getByText('Crea tu propia academia online')
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(/únete a miles de creadores/i)
+      ).toBeInTheDocument()
       expect(screen.getByText('Crear Mi Academia')).toBeInTheDocument()
     })
   })

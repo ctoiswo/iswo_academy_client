@@ -1,6 +1,6 @@
+import i18n from '@/i18n'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import i18n from '@/i18n'
 
 export type Locale = 'en' | 'es'
 
@@ -20,13 +20,13 @@ export const useLocaleStore = create<LocaleState>()(
 
       setLocale: (locale: Locale) => {
         set({ locale })
-        
+
         // Actualizar i18next
         i18n.changeLanguage(locale)
-        
+
         // Actualizar el html lang attribute
         document.documentElement.lang = locale
-        
+
         // Guardar en localStorage para i18next
         localStorage.setItem('i18nextLng', locale)
       },

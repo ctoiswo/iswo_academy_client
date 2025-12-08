@@ -1,14 +1,16 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import type { AcademyCategoryMinimal } from '@/types/entities/category'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { CategoriesFilter } from '../categories-filter'
-import type { AcademyCategoryMinimal } from '@/types/entities/category'
 
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    button: ({ children, ...props }: any) => (
+      <button {...props}>{children}</button>
+    ),
   },
 }))
 
@@ -21,14 +23,16 @@ vi.mock('react-i18next', () => ({
         'home.categories.loading': 'Cargando categorías...',
       }
       return translations[key] || key
-    }
-  })
+    },
+  }),
 }))
 
 // Mock lucide-react
 vi.mock('lucide-react', () => ({
   Loader2: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="loader-icon">Loading...</div>
+    <div className={className} data-testid='loader-icon'>
+      Loading...
+    </div>
   ),
 }))
 
@@ -73,9 +77,9 @@ describe('CategoriesFilter', () => {
 
       // Should show "All categories" option
       expect(screen.getByText('Todas las categorías')).toBeInTheDocument()
-      
+
       // Should show all provided categories
-      mockCategories.forEach(category => {
+      mockCategories.forEach((category) => {
         expect(screen.getByText(category.name)).toBeInTheDocument()
       })
     })
@@ -90,7 +94,10 @@ describe('CategoriesFilter', () => {
       )
 
       const selectedButton = screen.getByText('Tecnología').closest('button')
-      expect(selectedButton).toHaveClass('bg-primary', 'text-primary-foreground')
+      expect(selectedButton).toHaveClass(
+        'bg-primary',
+        'text-primary-foreground'
+      )
     })
 
     it('should highlight "All" when selectedCategory is null', () => {
@@ -102,13 +109,15 @@ describe('CategoriesFilter', () => {
         />
       )
 
-      const allButton = screen.getByText('Todas las categorías').closest('button')
+      const allButton = screen
+        .getByText('Todas las categorías')
+        .closest('button')
       expect(allButton).toHaveClass('bg-primary', 'text-primary-foreground')
     })
 
     it('should call onCategoryChange when category is clicked', async () => {
       const user = userEvent.setup()
-      
+
       render(
         <CategoriesFilter
           categories={mockCategories}
@@ -137,7 +146,7 @@ describe('CategoriesFilter', () => {
 
       // Should still show "All categories" option
       expect(screen.getByText('Todas las categorías')).toBeInTheDocument()
-      
+
       // Should only have one button (the "All" button)
       const buttons = screen.getAllByRole('button')
       expect(buttons).toHaveLength(1)
@@ -155,14 +164,14 @@ describe('CategoriesFilter', () => {
       )
 
       const buttons = screen.getAllByRole('button')
-      buttons.forEach(button => {
+      buttons.forEach((button) => {
         expect(button).toBeInTheDocument()
       })
     })
 
     it('should handle keyboard navigation', async () => {
       const user = userEvent.setup()
-      
+
       render(
         <CategoriesFilter
           categories={mockCategories}

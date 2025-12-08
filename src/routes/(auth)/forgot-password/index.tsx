@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ForgotPassword } from '@/features/auth/forgot-password'
 import { GuestGuard } from '@/components/route-guards'
+import { ForgotPassword } from '@/features/auth/forgot-password'
 
 function ForgotPasswordRoute() {
   return (

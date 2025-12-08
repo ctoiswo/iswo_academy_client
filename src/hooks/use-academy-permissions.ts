@@ -4,13 +4,12 @@ import {
   type AcademyRole,
   type Permission,
   canAccessAcademy,
-
   getUserAcademyRole,
   hasPermission,
   hasRoleLevel,
   validateRouteAccess,
   canManageUser,
-  filterAcademiesByRole
+  filterAcademiesByRole,
 } from '@/lib/permissions'
 
 /**
@@ -37,12 +36,12 @@ export function useAcademyPermissions(academyId?: number) {
         canManagePayments: false,
         isStudent: false,
         isTeacher: false,
-        isAdmin: false
+        isAdmin: false,
       }
     }
 
     const userRole = getUserAcademyRole(academyMemberships, targetAcademyId)
-    const membership = academyMemberships.find(m => m.id === targetAcademyId)
+    const membership = academyMemberships.find((m) => m.id === targetAcademyId)
 
     if (!userRole || !membership) {
       return {
@@ -58,7 +57,7 @@ export function useAcademyPermissions(academyId?: number) {
         canManagePayments: false,
         isStudent: false,
         isTeacher: false,
-        isAdmin: false
+        isAdmin: false,
       }
     }
 
@@ -75,105 +74,123 @@ export function useAcademyPermissions(academyId?: number) {
       canManagePayments: hasPermission(userRole, 'manage_payments'),
       isStudent: userRole === 'student',
       isTeacher: hasRoleLevel(userRole, 'teacher'),
-      isAdmin: userRole === 'admin'
+      isAdmin: userRole === 'admin',
     }
   }, [targetAcademyId, academyMemberships])
 
-  const checkAccess = useMemo(() => ({
-    /**
-     * Check if user can access academy with optional role requirement
-     */
-    academy: (requiredRole?: AcademyRole) => {
-      if (!targetAcademyId) return false
-      return canAccessAcademy(academyMemberships, targetAcademyId, requiredRole)
-    },
-
-    /**
-     * Check if user has specific permission
-     */
-    permission: (permission: Permission) => {
-      if (!permissions.userRole) return false
-      return hasPermission(permissions.userRole, permission)
-    },
-
-    /**
-     * Check if user has sufficient role level
-     */
-    role: (requiredRole: AcademyRole) => {
-      if (!permissions.userRole) return false
-      return hasRoleLevel(permissions.userRole, requiredRole)
-    },
-
-    /**
-     * Validate route access with detailed response
-     */
-    route: (requiredRole?: AcademyRole, requiredPermission?: Permission) => {
-      if (!targetAcademyId) {
-        return {
-          hasAccess: false,
-          userRole: null,
-          reason: 'No academy specified'
-        }
-      }
-      return validateRouteAccess(academyMemberships, targetAcademyId, requiredRole, requiredPermission)
-    },
-
-    /**
-     * Check if user can manage another user
-     */
-    userManagement: (targetUserRole: AcademyRole, isSameUser: boolean = false) => {
-      if (!permissions.userRole) return false
-      return canManageUser(permissions.userRole, targetUserRole, isSameUser)
-    }
-  }), [targetAcademyId, academyMemberships, permissions.userRole])
-
-  const helpers = useMemo(() => ({
-    /**
-     * Get academies where user has specific role or higher
-     */
-    getAcademiesWithRole: (requiredRole: AcademyRole) => {
-      return filterAcademiesByRole(academyMemberships, requiredRole)
-    },
-
-    /**
-     * Get user's role in current or specified academy
-     */
-    getCurrentRole: () => permissions.userRole,
-
-    /**
-     * Check if user is super admin
-     */
-    isSuperAdmin: () => user?.is_super_admin || false,
-
-    /**
-     * Get permission summary for debugging
-     */
-    getPermissionSummary: () => ({
-      academyId: targetAcademyId,
-      userRole: permissions.userRole,
-      hasAccess: permissions.hasAccess,
-      permissions: {
-        read: permissions.canRead,
-        create: permissions.canCreate,
-        update: permissions.canUpdate,
-        delete: permissions.canDelete,
-        enroll: permissions.canEnroll,
-        manageCourses: permissions.canManageCourses,
-        manageUsers: permissions.canManageUsers,
-        managePayments: permissions.canManagePayments
+  const checkAccess = useMemo(
+    () => ({
+      /**
+       * Check if user can access academy with optional role requirement
+       */
+      academy: (requiredRole?: AcademyRole) => {
+        if (!targetAcademyId) return false
+        return canAccessAcademy(
+          academyMemberships,
+          targetAcademyId,
+          requiredRole
+        )
       },
-      roles: {
-        isStudent: permissions.isStudent,
-        isTeacher: permissions.isTeacher,
-        isAdmin: permissions.isAdmin
-      }
-    })
-  }), [academyMemberships, permissions, targetAcademyId, user])
+
+      /**
+       * Check if user has specific permission
+       */
+      permission: (permission: Permission) => {
+        if (!permissions.userRole) return false
+        return hasPermission(permissions.userRole, permission)
+      },
+
+      /**
+       * Check if user has sufficient role level
+       */
+      role: (requiredRole: AcademyRole) => {
+        if (!permissions.userRole) return false
+        return hasRoleLevel(permissions.userRole, requiredRole)
+      },
+
+      /**
+       * Validate route access with detailed response
+       */
+      route: (requiredRole?: AcademyRole, requiredPermission?: Permission) => {
+        if (!targetAcademyId) {
+          return {
+            hasAccess: false,
+            userRole: null,
+            reason: 'No academy specified',
+          }
+        }
+        return validateRouteAccess(
+          academyMemberships,
+          targetAcademyId,
+          requiredRole,
+          requiredPermission
+        )
+      },
+
+      /**
+       * Check if user can manage another user
+       */
+      userManagement: (
+        targetUserRole: AcademyRole,
+        isSameUser: boolean = false
+      ) => {
+        if (!permissions.userRole) return false
+        return canManageUser(permissions.userRole, targetUserRole, isSameUser)
+      },
+    }),
+    [targetAcademyId, academyMemberships, permissions.userRole]
+  )
+
+  const helpers = useMemo(
+    () => ({
+      /**
+       * Get academies where user has specific role or higher
+       */
+      getAcademiesWithRole: (requiredRole: AcademyRole) => {
+        return filterAcademiesByRole(academyMemberships, requiredRole)
+      },
+
+      /**
+       * Get user's role in current or specified academy
+       */
+      getCurrentRole: () => permissions.userRole,
+
+      /**
+       * Check if user is super admin
+       */
+      isSuperAdmin: () => user?.is_super_admin || false,
+
+      /**
+       * Get permission summary for debugging
+       */
+      getPermissionSummary: () => ({
+        academyId: targetAcademyId,
+        userRole: permissions.userRole,
+        hasAccess: permissions.hasAccess,
+        permissions: {
+          read: permissions.canRead,
+          create: permissions.canCreate,
+          update: permissions.canUpdate,
+          delete: permissions.canDelete,
+          enroll: permissions.canEnroll,
+          manageCourses: permissions.canManageCourses,
+          manageUsers: permissions.canManageUsers,
+          managePayments: permissions.canManagePayments,
+        },
+        roles: {
+          isStudent: permissions.isStudent,
+          isTeacher: permissions.isTeacher,
+          isAdmin: permissions.isAdmin,
+        },
+      }),
+    }),
+    [academyMemberships, permissions, targetAcademyId, user]
+  )
 
   return {
     ...permissions,
     checkAccess,
-    helpers
+    helpers,
   }
 }
 
@@ -197,13 +214,19 @@ export function useGlobalPermissions() {
         academyCount: academyMemberships.length,
         adminAcademies: academyMemberships,
         teacherAcademies: academyMemberships,
-        studentAcademies: academyMemberships
+        studentAcademies: academyMemberships,
       }
     }
 
     const adminAcademies = filterAcademiesByRole(academyMemberships, 'admin')
-    const teacherAcademies = filterAcademiesByRole(academyMemberships, 'teacher')
-    const studentAcademies = filterAcademiesByRole(academyMemberships, 'student')
+    const teacherAcademies = filterAcademiesByRole(
+      academyMemberships,
+      'teacher'
+    )
+    const studentAcademies = filterAcademiesByRole(
+      academyMemberships,
+      'student'
+    )
 
     return {
       canCreateAcademy: adminAcademies.length > 0, // Users with admin role can create academies
@@ -213,7 +236,7 @@ export function useGlobalPermissions() {
       academyCount: academyMemberships.length,
       adminAcademies,
       teacherAcademies,
-      studentAcademies
+      studentAcademies,
     }
   }, [academyMemberships, user])
 

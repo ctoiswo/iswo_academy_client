@@ -2,7 +2,6 @@
  * API Filter Types
  * Filters for API queries across different resources
  */
-
 import type { CourseStatus, DifficultyLevel } from '../entities/course'
 import type { EnrollmentStatus } from '../entities/enrollment'
 

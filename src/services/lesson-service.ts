@@ -1,10 +1,10 @@
-import apiClient from '@/lib/api-client'
 import type {
   Lesson,
   CreateLessonRequest,
   UpdateLessonRequest,
-  VideoUrlResponse
+  VideoUrlResponse,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Lesson Service

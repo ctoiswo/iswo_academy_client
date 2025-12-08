@@ -1,7 +1,6 @@
 /**
  * User related types
  */
-
 import type { UserRole } from '../common'
 
 export interface User {

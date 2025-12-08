@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { academyCategoryService } from '@/services/academy-category-service'
-import { useDebounce } from './use-debounce'
 import type { CategoryWithCount } from '@/types'
+import { useDebounce } from './use-debounce'
 
 interface UseCategoriesOptions {
   search?: string
@@ -26,11 +26,11 @@ export function useCategories(options?: UseCategoriesOptions) {
 
       // Fetch all categories with summary view (includes academies_count)
       const data = await academyCategoryService.getCategories('summary')
-      
+
       // Map to CategoryWithCount format
       const categoriesWithCount: CategoryWithCount[] = data.map((cat) => ({
         ...cat,
-        count: cat.academies_count
+        count: cat.academies_count,
       }))
 
       // Apply filters if provided
@@ -38,20 +38,25 @@ export function useCategories(options?: UseCategoriesOptions) {
 
       // Filter by search if provided
       if (debouncedSearch) {
-        filteredCategories = filteredCategories.filter((cat) =>
-          cat.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-          cat.description?.toLowerCase().includes(debouncedSearch.toLowerCase())
+        filteredCategories = filteredCategories.filter(
+          (cat) =>
+            cat.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            cat.description
+              ?.toLowerCase()
+              .includes(debouncedSearch.toLowerCase())
         )
       }
 
       // Filter by minimum academies if provided
       if (fetchOptions?.onlyWithAcademies) {
-        filteredCategories = filteredCategories.filter((cat) => cat.academies_count > 0)
+        filteredCategories = filteredCategories.filter(
+          (cat) => cat.academies_count > 0
+        )
       }
 
       if (fetchOptions?.minAcademies !== undefined) {
-        filteredCategories = filteredCategories.filter((cat) => 
-          cat.academies_count >= (fetchOptions.minAcademies || 0)
+        filteredCategories = filteredCategories.filter(
+          (cat) => cat.academies_count >= (fetchOptions.minAcademies || 0)
         )
       }
 
@@ -67,9 +72,15 @@ export function useCategories(options?: UseCategoriesOptions) {
   useEffect(() => {
     fetchCategories({
       ...options,
-      search: debouncedSearch
+      search: debouncedSearch,
     })
-  }, [debouncedSearch, options?.category, options?.sortBy, options?.onlyWithAcademies, options?.minAcademies])
+  }, [
+    debouncedSearch,
+    options?.category,
+    options?.sortBy,
+    options?.onlyWithAcademies,
+    options?.minAcademies,
+  ])
 
   const refetch = () => {
     fetchCategories(options)
@@ -78,9 +89,13 @@ export function useCategories(options?: UseCategoriesOptions) {
   // Calculate stats from categories
   const stats = {
     totalCategories: categories.length,
-    totalAcademies: categories.reduce((sum, cat) => sum + cat.academies_count, 0),
+    totalAcademies: categories.reduce(
+      (sum, cat) => sum + cat.academies_count,
+      0
+    ),
     totalStudents: 0, // Note: enrolled_users_count is not available in the current academy type from this endpoint
-    categoriesWithAcademies: categories.filter((cat) => cat.academies_count > 0).length
+    categoriesWithAcademies: categories.filter((cat) => cat.academies_count > 0)
+      .length,
   }
 
   return {
@@ -88,6 +103,6 @@ export function useCategories(options?: UseCategoriesOptions) {
     loading,
     error,
     refetch,
-    stats
+    stats,
   }
 }

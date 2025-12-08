@@ -11,7 +11,8 @@
  * formatPrice("25000") // "$25k"
  */
 export function formatPrice(priceValue: string | number): string {
-  const price = typeof priceValue === 'string' ? parseFloat(priceValue) : priceValue
+  const price =
+    typeof priceValue === 'string' ? parseFloat(priceValue) : priceValue
   return `$${(price / 1000).toFixed(0)}k`
 }
 
@@ -28,8 +29,9 @@ export function formatFullPrice(
   priceValue: string | number,
   currency: string = 'COP'
 ): string {
-  const price = typeof priceValue === 'string' ? parseFloat(priceValue) : priceValue
-  
+  const price =
+    typeof priceValue === 'string' ? parseFloat(priceValue) : priceValue
+
   return new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: currency,
@@ -43,7 +45,9 @@ export function formatFullPrice(
  * @param price - Price value
  * @returns True if price is 0 or falsy
  */
-export function isFreePrice(price: string | number | null | undefined): boolean {
+export function isFreePrice(
+  price: string | number | null | undefined
+): boolean {
   if (!price) return true
   const numPrice = typeof price === 'string' ? parseFloat(price) : price
   return numPrice === 0

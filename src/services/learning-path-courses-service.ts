@@ -1,5 +1,5 @@
-import apiClient from '@/lib/api-client'
 import type { AddCourseToPathRequest, ReorderCoursesRequest } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Learning Path Courses Service
@@ -13,7 +13,11 @@ class LearningPathCoursesService {
    * @param courseId - Course ID to add
    * @returns Promise that resolves when course is added
    */
-  async addCourse(academySlug: string, learningPathSlug: string, courseId: number): Promise<void> {
+  async addCourse(
+    academySlug: string,
+    learningPathSlug: string,
+    courseId: number
+  ): Promise<void> {
     const data: AddCourseToPathRequest = { course_id: courseId }
     await apiClient.post(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}/courses`,
@@ -28,7 +32,11 @@ class LearningPathCoursesService {
    * @param courseId - Course ID to remove
    * @returns Promise that resolves when course is removed
    */
-  async removeCourse(academySlug: string, learningPathSlug: string, courseId: number): Promise<void> {
+  async removeCourse(
+    academySlug: string,
+    learningPathSlug: string,
+    courseId: number
+  ): Promise<void> {
     await apiClient.delete(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}/courses/${courseId}`
     )

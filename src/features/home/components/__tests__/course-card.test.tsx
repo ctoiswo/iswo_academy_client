@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
 import { CourseCard } from '../course-card'
 
 // Mock framer-motion
@@ -21,10 +21,14 @@ vi.mock('@tanstack/react-router', () => ({
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
   Clock: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="clock-icon">⏰</div>
+    <div className={className} data-testid='clock-icon'>
+      ⏰
+    </div>
   ),
   Users: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="users-icon">👥</div>
+    <div className={className} data-testid='users-icon'>
+      👥
+    </div>
   ),
 }))
 
@@ -33,26 +37,27 @@ vi.mock('@/lib/formatters', () => ({
   formatPrice: (price: number) => `$${price}`,
   formatDifficulty: (difficulty: string) => {
     const map: Record<string, string> = {
-      'beginner': 'Principiante',
-      'intermediate': 'Intermedio',
-      'advanced': 'Avanzado'
+      beginner: 'Principiante',
+      intermediate: 'Intermedio',
+      advanced: 'Avanzado',
     }
     return map[difficulty] || difficulty
-  }
+  },
 }))
 
 // Mock helpers
 vi.mock('@/lib/helpers', () => ({
-  generateCourseSlug: (course: any) => `${course.id}-${course.title.toLowerCase().replace(/\s+/g, '-')}`
+  generateCourseSlug: (course: any) =>
+    `${course.id}-${course.title.toLowerCase().replace(/\s+/g, '-')}`,
 }))
 
 // Mock UI components
 vi.mock('@/components/ui/badge', () => ({
   Badge: ({ children, variant, className, ...props }: any) => (
-    <span 
+    <span
       className={className}
       data-variant={variant}
-      data-testid="badge"
+      data-testid='badge'
       {...props}
     >
       {children}
@@ -62,27 +67,27 @@ vi.mock('@/components/ui/badge', () => ({
 
 vi.mock('@/components/ui/card', () => ({
   Card: ({ children, className, ...props }: any) => (
-    <div className={className} data-testid="card" {...props}>
+    <div className={className} data-testid='card' {...props}>
       {children}
     </div>
   ),
   CardContent: ({ children, className, ...props }: any) => (
-    <div className={className} data-testid="card-content" {...props}>
+    <div className={className} data-testid='card-content' {...props}>
       {children}
     </div>
   ),
   CardDescription: ({ children, className, ...props }: any) => (
-    <div className={className} data-testid="card-description" {...props}>
+    <div className={className} data-testid='card-description' {...props}>
       {children}
     </div>
   ),
   CardHeader: ({ children, className, ...props }: any) => (
-    <div className={className} data-testid="card-header" {...props}>
+    <div className={className} data-testid='card-header' {...props}>
       {children}
     </div>
   ),
   CardTitle: ({ children, className, ...props }: any) => (
-    <h3 className={className} data-testid="card-title" {...props}>
+    <h3 className={className} data-testid='card-title' {...props}>
       {children}
     </h3>
   ),
@@ -101,8 +106,8 @@ const mockCourse = {
   status: 'published',
   creator: {
     id: 1,
-    name: 'Juan Pérez'
-  }
+    name: 'Juan Pérez',
+  },
 }
 
 const mockFreeCourse = {
@@ -112,13 +117,13 @@ const mockFreeCourse = {
   is_free: true,
   price: 0,
   difficulty_level: 'beginner' as const,
-  status: 'draft'
+  status: 'draft',
 }
 
 const mockCourseWithoutThumbnail = {
   ...mockCourse,
   id: 3,
-  thumbnail_url: null
+  thumbnail_url: null,
 }
 
 describe('CourseCard', () => {
@@ -148,8 +153,13 @@ describe('CourseCard', () => {
     it('should render course thumbnail with correct attributes', () => {
       render(<CourseCard course={mockCourse} />)
 
-      const thumbnail = screen.getByRole('img', { name: 'Curso de React Avanzado' })
-      expect(thumbnail).toHaveAttribute('src', 'https://example.com/thumbnail.jpg')
+      const thumbnail = screen.getByRole('img', {
+        name: 'Curso de React Avanzado',
+      })
+      expect(thumbnail).toHaveAttribute(
+        'src',
+        'https://example.com/thumbnail.jpg'
+      )
       expect(thumbnail).toHaveAttribute('alt', 'Curso de React Avanzado')
     })
 
@@ -165,7 +175,7 @@ describe('CourseCard', () => {
 
       const badges = screen.getAllByTestId('badge')
       expect(badges).toHaveLength(2) // Difficulty badge and status badge
-      
+
       // Check difficulty badge
       expect(screen.getByText('Intermedio')).toBeInTheDocument()
       // Check status badge
@@ -200,7 +210,7 @@ describe('CourseCard', () => {
 
       const thumbnail = screen.getByRole('img')
       expect(thumbnail).toHaveAttribute(
-        'src', 
+        'src',
         'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'
       )
     })
@@ -208,9 +218,9 @@ describe('CourseCard', () => {
     it('should handle missing creator name gracefully', () => {
       const courseWithoutCreator = {
         ...mockCourse,
-        creator: { id: 1 }
+        creator: { id: 1 },
       }
-      
+
       render(<CourseCard course={courseWithoutCreator} />)
 
       expect(screen.getByText('Por')).toBeInTheDocument() // Should still render "Por" prefix
@@ -219,9 +229,9 @@ describe('CourseCard', () => {
     it('should handle missing enrollment count', () => {
       const courseWithoutEnrollment = {
         ...mockCourse,
-        enrollment_count: undefined
+        enrollment_count: undefined,
       }
-      
+
       render(<CourseCard course={courseWithoutEnrollment} />)
 
       expect(screen.getByTestId('users-icon')).toBeInTheDocument()
@@ -234,7 +244,10 @@ describe('CourseCard', () => {
       render(<CourseCard course={mockCourse} />)
 
       const link = screen.getByRole('link')
-      expect(link).toHaveAttribute('href', '/courses/$courseSlug/1-curso-de-react-avanzado')
+      expect(link).toHaveAttribute(
+        'href',
+        '/courses/$courseSlug/1-curso-de-react-avanzado'
+      )
     })
 
     it('should make entire card clickable', () => {
@@ -242,7 +255,7 @@ describe('CourseCard', () => {
 
       const link = screen.getByRole('link')
       const card = screen.getByTestId('card')
-      
+
       expect(link).toContainElement(card)
     })
   })
@@ -251,9 +264,9 @@ describe('CourseCard', () => {
     it('should calculate hours correctly from minutes', () => {
       const courseWith120Minutes = {
         ...mockCourse,
-        duration_minutes: 120
+        duration_minutes: 120,
       }
-      
+
       render(<CourseCard course={courseWith120Minutes} />)
 
       expect(screen.getByText('2h')).toBeInTheDocument()
@@ -262,9 +275,9 @@ describe('CourseCard', () => {
     it('should round duration correctly', () => {
       const courseWith150Minutes = {
         ...mockCourse,
-        duration_minutes: 150
+        duration_minutes: 150,
       }
-      
+
       render(<CourseCard course={courseWith150Minutes} />)
 
       expect(screen.getByText('3h')).toBeInTheDocument() // 150/60 = 2.5 -> rounds to 3
@@ -275,9 +288,9 @@ describe('CourseCard', () => {
     it('should display advanced difficulty correctly', () => {
       const advancedCourse = {
         ...mockCourse,
-        difficulty_level: 'advanced' as const
+        difficulty_level: 'advanced' as const,
       }
-      
+
       render(<CourseCard course={advancedCourse} />)
 
       expect(screen.getByText('Avanzado')).toBeInTheDocument()

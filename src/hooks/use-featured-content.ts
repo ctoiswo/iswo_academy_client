@@ -1,5 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { academyService, courseService, academyCategoryService } from '@/services/'
+import {
+  academyService,
+  courseService,
+  academyCategoryService,
+} from '@/services/'
 
 export function useFeaturedAcademies(categoryId?: number) {
   return useQuery({

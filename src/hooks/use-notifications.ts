@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { createConsumer } from '@rails/actioncable'
-import { useAuthStore } from '@/stores/auth-store'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
 
 interface Notification {
   id: number
@@ -45,28 +45,33 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
   const subscriptionRef = useRef<any>(null)
 
   // Manejar nueva notificación recibida
-  const handleNewNotification = useCallback((data: any) => {
+  const handleNewNotification = useCallback(
+    (data: any) => {
+      const newNotification = data.notification
+      if (!newNotification) return
 
-    const newNotification = data.notification
-    if (!newNotification) return
+      // Agregar notificación al estado
+      setNotifications((prev) => [newNotification, ...prev])
+      setUnreadCount((prev) => prev + 1)
 
-    // Agregar notificación al estado
-    setNotifications(prev => [newNotification, ...prev])
-    setUnreadCount(prev => prev + 1)
+      // Mostrar toast si está habilitado
+      if (showToasts) {
+        const emoji = getCategoryEmoji(
+          newNotification.category,
+          newNotification.notification_type
+        )
+        const message = newNotification.title
+        const duration = getPriorityDuration(newNotification.priority)
 
-    // Mostrar toast si está habilitado
-    if (showToasts) {
-      const emoji = getCategoryEmoji(newNotification.category, newNotification.notification_type)
-      const message = newNotification.title
-      const duration = getPriorityDuration(newNotification.priority)
-
-      if (newNotification.priority >= 3) {
-        toast.success(`${emoji} ${message}`, { duration })
-      } else {
-        toast.info(`${emoji} ${message}`, { duration })
+        if (newNotification.priority >= 3) {
+          toast.success(`${emoji} ${message}`, { duration })
+        } else {
+          toast.info(`${emoji} ${message}`, { duration })
+        }
       }
-    }
-  }, [showToasts])
+    },
+    [showToasts]
+  )
 
   // Obtener emoji por categoría
   const getCategoryEmoji = (category: string, type: string) => {
@@ -91,11 +96,16 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
   // Obtener duración del toast por prioridad
   const getPriorityDuration = (priority: number) => {
     switch (priority) {
-      case 4: return 8000  // Crítica - 8s
-      case 3: return 5000  // Alta - 5s  
-      case 2: return 4000  // Normal - 4s
-      case 1: return 3000  // Baja - 3s
-      default: return 4000
+      case 4:
+        return 8000 // Crítica - 8s
+      case 3:
+        return 5000 // Alta - 5s
+      case 2:
+        return 4000 // Normal - 4s
+      case 1:
+        return 3000 // Baja - 3s
+      default:
+        return 4000
     }
   }
 
@@ -104,14 +114,14 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
     switch (data.action) {
       case 'notification_read':
         // Marcar como leída localmente
-        setNotifications(prev =>
-          prev.map(notif =>
+        setNotifications((prev) =>
+          prev.map((notif) =>
             notif.id === data.notification_id
               ? { ...notif, read: true, read_at: data.read_at }
               : notif
           )
         )
-        setUnreadCount(prev => Math.max(0, prev - 1))
+        setUnreadCount((prev) => Math.max(0, prev - 1))
         break
 
       case 'unread_notifications':
@@ -134,14 +144,17 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
     if (!isAuthenticated || !tokens?.access_token || !currentAcademy) return
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/notifications/unread`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${tokens.access_token}`,
-          'Content-Type': 'application/json',
-          'X-Academy-Slug': currentAcademy.slug
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/notifications/unread`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${tokens.access_token}`,
+            'Content-Type': 'application/json',
+            'X-Academy-Slug': currentAcademy.slug,
+          },
         }
-      })
+      )
 
       if (response.ok) {
         const data = await response.json()
@@ -155,33 +168,41 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
   }, [isAuthenticated, tokens, currentAcademy])
 
   // Marcar notificación como leída
-  const markAsRead = useCallback(async (notificationId: number) => {
-    if (!tokens?.access_token || !currentAcademy) return
+  const markAsRead = useCallback(
+    async (notificationId: number) => {
+      if (!tokens?.access_token || !currentAcademy) return
 
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/notifications/${notificationId}/mark_as_read`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${tokens.access_token}`,
-          'Content-Type': 'application/json',
-          'X-Academy-Slug': currentAcademy.slug
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/notifications/${notificationId}/mark_as_read`,
+          {
+            method: 'PATCH',
+            headers: {
+              Authorization: `Bearer ${tokens.access_token}`,
+              'Content-Type': 'application/json',
+              'X-Academy-Slug': currentAcademy.slug,
+            },
+          }
+        )
+
+        if (response.ok) {
+          // El WebSocket nos notificará del cambio
         }
-      })
-
-      if (response.ok) {
-        // El WebSocket nos notificará del cambio
+      } catch (_error) {
+        // console.error('Failed to mark notification as read:', error)
       }
-    } catch (_error) {
-      // console.error('Failed to mark notification as read:', error)
-    }
-  }, [tokens, currentAcademy])
+    },
+    [tokens, currentAcademy]
+  )
 
   // Marcar todas como leídas
   const markAllAsRead = useCallback(async () => {
     // Marcar localmente primero para UX inmediato
-    notifications.filter(n => !n.read).forEach(notification => {
-      markAsRead(notification.id)
-    })
+    notifications
+      .filter((n) => !n.read)
+      .forEach((notification) => {
+        markAsRead(notification.id)
+      })
   }, [notifications, markAsRead])
 
   // Conexión WebSocket
@@ -192,11 +213,16 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
 
     const connectWebSocket = () => {
       try {
-        const wsUrl = import.meta.env.VITE_CABLE_URL ||
-          (import.meta.env.VITE_API_URL?.replace(/^http/, 'ws').replace('/api/v1', '') + '/cable')
+        const wsUrl =
+          import.meta.env.VITE_CABLE_URL ||
+          import.meta.env.VITE_API_URL?.replace(/^http/, 'ws').replace(
+            '/api/v1',
+            ''
+          ) + '/cable'
 
-
-        consumerRef.current = createConsumer(`${wsUrl}?token=${tokens.access_token}`)
+        consumerRef.current = createConsumer(
+          `${wsUrl}?token=${tokens.access_token}`
+        )
 
         subscriptionRef.current = consumerRef.current.subscriptions.create(
           { channel: 'NotificationsChannel' },
@@ -214,13 +240,12 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
             },
 
             received(data) {
-
               if (data.type === 'new_notification') {
                 handleNewNotification(data)
               } else {
                 handleWebSocketMessage(data)
               }
-            }
+            },
           }
         )
       } catch (_error) {
@@ -241,7 +266,16 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
       }
       setIsConnected(false)
     }
-  }, [enabled, autoConnect, isAuthenticated, tokens?.access_token, currentAcademy?.id, loadUnreadNotifications, handleNewNotification, handleWebSocketMessage])
+  }, [
+    enabled,
+    autoConnect,
+    isAuthenticated,
+    tokens?.access_token,
+    currentAcademy?.id,
+    loadUnreadNotifications,
+    handleNewNotification,
+    handleWebSocketMessage,
+  ])
 
   return {
     // Estados
@@ -255,7 +289,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
     markAllAsRead,
     loadUnreadNotifications,
 
-    // Utilidades  
-    hasUnread: unreadCount > 0
+    // Utilidades
+    hasUnread: unreadCount > 0,
   }
 }

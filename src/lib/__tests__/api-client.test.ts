@@ -1,36 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import axios, { type AxiosError } from 'axios'
-
-// Mock axios before importing the module
-vi.mock('axios', () => {
-  const mockAxiosInstance = {
-    interceptors: {
-      request: {
-        use: vi.fn()
-      },
-      response: {
-        use: vi.fn()
-      }
-    },
-    post: vi.fn(),
-    get: vi.fn(),
-    patch: vi.fn(),
-    delete: vi.fn()
-  }
-
-  return {
-    default: {
-      create: vi.fn(() => mockAxiosInstance),
-      post: vi.fn(),
-      get: vi.fn(),
-      patch: vi.fn(),
-      delete: vi.fn()
-    }
-  }
-})
-
-const mockedAxios = vi.mocked(axios)
-
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 // Now import the module after mocking
 import apiClient, {
   createApiError,
@@ -48,8 +17,38 @@ import apiClient, {
   type ApiError,
   type AuthUser,
   type AuthTokens,
-  type AuthResponse
+  type AuthResponse,
 } from '../api-client'
+
+// Mock axios before importing the module
+vi.mock('axios', () => {
+  const mockAxiosInstance = {
+    interceptors: {
+      request: {
+        use: vi.fn(),
+      },
+      response: {
+        use: vi.fn(),
+      },
+    },
+    post: vi.fn(),
+    get: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
+  }
+
+  return {
+    default: {
+      create: vi.fn(() => mockAxiosInstance),
+      post: vi.fn(),
+      get: vi.fn(),
+      patch: vi.fn(),
+      delete: vi.fn(),
+    },
+  }
+})
+
+const mockedAxios = vi.mocked(axios)
 
 // Mock auth store
 const mockAuthStore = {
@@ -59,9 +58,9 @@ const mockAuthStore = {
       refreshToken: 'mock-refresh-token',
       setAccessToken: vi.fn(),
       setRefreshToken: vi.fn(),
-      reset: vi.fn()
-    }
-  }))
+      reset: vi.fn(),
+    },
+  })),
 }
 
 describe('API Client', () => {
@@ -93,10 +92,10 @@ describe('API Client', () => {
                 type: 'ValidationError',
                 message: 'Validation failed',
                 code: 'VALIDATION_ERROR',
-                details: ['Email is required']
-              }
-            }
-          } as any
+                details: ['Email is required'],
+              },
+            },
+          } as any,
         }
 
         const result = createApiError(axiosError as AxiosError)
@@ -106,7 +105,7 @@ describe('API Client', () => {
           message: 'Validation failed',
           code: 'VALIDATION_ERROR',
           details: ['Email is required'],
-          status: 422
+          status: 422,
         })
       })
 
@@ -114,8 +113,8 @@ describe('API Client', () => {
         const axiosError: Partial<AxiosError> = {
           response: {
             status: 401,
-            data: {}
-          } as any
+            data: {},
+          } as any,
         }
 
         const result = createApiError(axiosError as AxiosError)
@@ -124,7 +123,7 @@ describe('API Client', () => {
           type: 'AuthenticationError',
           message: 'Authentication required',
           code: 'AUTHENTICATION_REQUIRED',
-          status: 401
+          status: 401,
         })
       })
 
@@ -132,8 +131,8 @@ describe('API Client', () => {
         const axiosError: Partial<AxiosError> = {
           response: {
             status: 403,
-            data: {}
-          } as any
+            data: {},
+          } as any,
         }
 
         const result = createApiError(axiosError as AxiosError)
@@ -142,7 +141,7 @@ describe('API Client', () => {
           type: 'AuthorizationError',
           message: 'Access forbidden',
           code: 'ACCESS_FORBIDDEN',
-          status: 403
+          status: 403,
         })
       })
 
@@ -150,8 +149,8 @@ describe('API Client', () => {
         const axiosError: Partial<AxiosError> = {
           response: {
             status: 404,
-            data: {}
-          } as any
+            data: {},
+          } as any,
         }
 
         const result = createApiError(axiosError as AxiosError)
@@ -160,7 +159,7 @@ describe('API Client', () => {
           type: 'NotFoundError',
           message: 'Resource not found',
           code: 'RESOURCE_NOT_FOUND',
-          status: 404
+          status: 404,
         })
       })
 
@@ -168,8 +167,8 @@ describe('API Client', () => {
         const axiosError: Partial<AxiosError> = {
           response: {
             status: 429,
-            data: {}
-          } as any
+            data: {},
+          } as any,
         }
 
         const result = createApiError(axiosError as AxiosError)
@@ -178,7 +177,7 @@ describe('API Client', () => {
           type: 'RateLimitError',
           message: 'Too many requests',
           code: 'RATE_LIMIT_EXCEEDED',
-          status: 429
+          status: 429,
         })
       })
 
@@ -186,8 +185,8 @@ describe('API Client', () => {
         const axiosError: Partial<AxiosError> = {
           response: {
             status: 500,
-            data: {}
-          } as any
+            data: {},
+          } as any,
         }
 
         const result = createApiError(axiosError as AxiosError)
@@ -196,14 +195,14 @@ describe('API Client', () => {
           type: 'ServerError',
           message: 'Internal server error',
           code: 'SERVER_ERROR',
-          status: 500
+          status: 500,
         })
       })
 
       it('should handle timeout errors', () => {
         const axiosError: Partial<AxiosError> = {
           code: 'ECONNABORTED',
-          message: 'timeout of 10000ms exceeded'
+          message: 'timeout of 10000ms exceeded',
         }
 
         const result = createApiError(axiosError as AxiosError)
@@ -211,13 +210,13 @@ describe('API Client', () => {
         expect(result).toEqual({
           type: 'TimeoutError',
           message: 'Request timeout',
-          code: 'REQUEST_TIMEOUT'
+          code: 'REQUEST_TIMEOUT',
         })
       })
 
       it('should handle network errors', () => {
         const axiosError: Partial<AxiosError> = {
-          message: 'Network Error'
+          message: 'Network Error',
         }
 
         const result = createApiError(axiosError as AxiosError)
@@ -225,7 +224,7 @@ describe('API Client', () => {
         expect(result).toEqual({
           type: 'NetworkError',
           message: 'Network connection failed',
-          code: 'NETWORK_ERROR'
+          code: 'NETWORK_ERROR',
         })
       })
 
@@ -233,8 +232,8 @@ describe('API Client', () => {
         const axiosError: Partial<AxiosError> = {
           message: 'Something went wrong',
           response: {
-            status: 418 // I'm a teapot - unusual status code
-          } as any
+            status: 418, // I'm a teapot - unusual status code
+          } as any,
         }
 
         const result = createApiError(axiosError as AxiosError)
@@ -242,7 +241,7 @@ describe('API Client', () => {
         expect(result).toEqual({
           type: 'UnknownError',
           message: 'Something went wrong',
-          code: 'UNKNOWN_ERROR'
+          code: 'UNKNOWN_ERROR',
         })
       })
     })
@@ -252,7 +251,7 @@ describe('API Client', () => {
         const error: ApiError = {
           type: 'ValidationError',
           message: 'Validation failed',
-          code: 'VALIDATION_ERROR'
+          code: 'VALIDATION_ERROR',
         }
 
         expect(isApiError(error)).toBe(true)
@@ -275,17 +274,19 @@ describe('API Client', () => {
           type: 'ValidationError',
           message: 'Validation failed',
           code: 'VALIDATION_ERROR',
-          details: ['Email is required', 'Password is too short']
+          details: ['Email is required', 'Password is too short'],
         }
 
-        expect(getErrorMessage(error)).toBe('Email is required, Password is too short')
+        expect(getErrorMessage(error)).toBe(
+          'Email is required, Password is too short'
+        )
       })
 
       it('should return message for API error without details', () => {
         const error: ApiError = {
           type: 'AuthenticationError',
           message: 'Invalid credentials',
-          code: 'INVALID_CREDENTIALS'
+          code: 'INVALID_CREDENTIALS',
         }
 
         expect(getErrorMessage(error)).toBe('Invalid credentials')
@@ -340,7 +341,7 @@ describe('API Client', () => {
     it('should return data for successful response', () => {
       const response = {
         status: 200,
-        data: { message: 'Success' }
+        data: { message: 'Success' },
       } as any
 
       expect(handleApiResponse(response)).toEqual({ message: 'Success' })
@@ -349,7 +350,7 @@ describe('API Client', () => {
     it('should throw error for unsuccessful response', () => {
       const response = {
         status: 400,
-        data: { error: 'Bad request' }
+        data: { error: 'Bad request' },
       } as any
 
       expect(() => handleApiResponse(response)).toThrow()
@@ -364,7 +365,7 @@ describe('API Client', () => {
           last_name: 'Doe',
           email: 'john@example.com',
           password: 'password123',
-          password_confirmation: 'password123'
+          password_confirmation: 'password123',
         }
 
         const mockResponse = {
@@ -381,16 +382,18 @@ describe('API Client', () => {
               confirmed: false,
               is_super_admin: false,
               created_at: '2024-01-01T00:00:00Z',
-              last_login_at: null
-            }
-          }
+              last_login_at: null,
+            },
+          },
         }
 
         vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
         const result = await authApi.register(userData)
 
-        expect(apiClient.post).toHaveBeenCalledWith('/auth/register', { user: userData })
+        expect(apiClient.post).toHaveBeenCalledWith('/auth/register', {
+          user: userData,
+        })
         expect(result).toEqual(mockResponse.data)
       })
     })
@@ -399,7 +402,7 @@ describe('API Client', () => {
       it('should login user successfully', async () => {
         const credentials = {
           email: 'john@example.com',
-          password: 'password123'
+          password: 'password123',
         }
 
         const mockResponse = {
@@ -416,19 +419,21 @@ describe('API Client', () => {
               confirmed: true,
               is_super_admin: false,
               created_at: '2024-01-01T00:00:00Z',
-              last_login_at: '2024-01-01T12:00:00Z'
+              last_login_at: '2024-01-01T12:00:00Z',
             },
             access_token: 'access-token',
             refresh_token: 'refresh-token',
-            expires_in: 3600
-          }
+            expires_in: 3600,
+          },
         }
 
         vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
         const result = await authApi.login(credentials)
 
-        expect(apiClient.post).toHaveBeenCalledWith('/auth/login', { user: credentials })
+        expect(apiClient.post).toHaveBeenCalledWith('/auth/login', {
+          user: credentials,
+        })
         expect(result).toEqual(mockResponse.data)
       })
     })
@@ -438,7 +443,7 @@ describe('API Client', () => {
         const refreshToken = 'refresh-token'
         const mockResponse = {
           status: 200,
-          data: { message: 'Logged out successfully' }
+          data: { message: 'Logged out successfully' },
         }
 
         vi.mocked(apiClient.delete).mockResolvedValue(mockResponse)
@@ -446,7 +451,7 @@ describe('API Client', () => {
         const result = await authApi.logout(refreshToken)
 
         expect(apiClient.delete).toHaveBeenCalledWith('/auth/logout', {
-          data: { refresh_token: refreshToken }
+          data: { refresh_token: refreshToken },
         })
         expect(result).toEqual(mockResponse.data)
       })
@@ -461,15 +466,17 @@ describe('API Client', () => {
             message: 'Tokens refreshed successfully',
             access_token: 'new-access-token',
             refresh_token: 'new-refresh-token',
-            expires_in: 3600
-          }
+            expires_in: 3600,
+          },
         }
 
         vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
         const result = await authApi.refreshTokens(refreshToken)
 
-        expect(apiClient.post).toHaveBeenCalledWith('/auth/refresh', { refresh_token: refreshToken })
+        expect(apiClient.post).toHaveBeenCalledWith('/auth/refresh', {
+          refresh_token: refreshToken,
+        })
         expect(result).toEqual(mockResponse.data)
       })
     })
@@ -479,14 +486,19 @@ describe('API Client', () => {
         const email = 'john@example.com'
         const mockResponse = {
           status: 200,
-          data: { message: 'If an account with that email exists, you will receive password reset instructions.' }
+          data: {
+            message:
+              'If an account with that email exists, you will receive password reset instructions.',
+          },
         }
 
         vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
         const result = await authApi.forgotPassword(email)
 
-        expect(apiClient.post).toHaveBeenCalledWith('/auth/forgot_password', { email })
+        expect(apiClient.post).toHaveBeenCalledWith('/auth/forgot_password', {
+          email,
+        })
         expect(result).toEqual(mockResponse.data)
       })
     })
@@ -498,17 +510,24 @@ describe('API Client', () => {
         const passwordConfirmation = 'newpassword123'
         const mockResponse = {
           status: 200,
-          data: { message: 'Password has been reset successfully. Please log in with your new password.' }
+          data: {
+            message:
+              'Password has been reset successfully. Please log in with your new password.',
+          },
         }
 
         vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
-        const result = await authApi.resetPassword(token, password, passwordConfirmation)
+        const result = await authApi.resetPassword(
+          token,
+          password,
+          passwordConfirmation
+        )
 
         expect(apiClient.post).toHaveBeenCalledWith('/auth/reset_password', {
           token,
           password,
-          password_confirmation: passwordConfirmation
+          password_confirmation: passwordConfirmation,
         })
         expect(result).toEqual(mockResponse.data)
       })
@@ -530,8 +549,8 @@ describe('API Client', () => {
             confirmed: true,
             is_super_admin: false,
             created_at: '2024-01-01T00:00:00Z',
-            last_login_at: '2024-01-01T12:00:00Z'
-          }
+            last_login_at: '2024-01-01T12:00:00Z',
+          },
         }
 
         vi.mocked(apiClient.get).mockResolvedValue(mockResponse)
@@ -547,7 +566,7 @@ describe('API Client', () => {
       it('should update user profile successfully', async () => {
         const userData = {
           first_name: 'Jane',
-          last_name: 'Smith'
+          last_name: 'Smith',
         }
 
         const mockResponse = {
@@ -562,15 +581,17 @@ describe('API Client', () => {
             confirmed: true,
             is_super_admin: false,
             created_at: '2024-01-01T00:00:00Z',
-            last_login_at: '2024-01-01T12:00:00Z'
-          }
+            last_login_at: '2024-01-01T12:00:00Z',
+          },
         }
 
         vi.mocked(apiClient.patch).mockResolvedValue(mockResponse)
 
         const result = await userApi.updateProfile(userData)
 
-        expect(apiClient.patch).toHaveBeenCalledWith('/users/profile', { user: userData })
+        expect(apiClient.patch).toHaveBeenCalledWith('/users/profile', {
+          user: userData,
+        })
         expect(result).toEqual(mockResponse.data)
       })
     })
@@ -580,7 +601,7 @@ describe('API Client', () => {
     it('should return success for successful connection', async () => {
       const mockResponse = {
         status: 200,
-        data: 'OK'
+        data: 'OK',
       }
 
       mockedAxios.get.mockResolvedValue(mockResponse)
@@ -590,7 +611,7 @@ describe('API Client', () => {
       expect(result).toEqual({
         success: true,
         status: 200,
-        message: 'API connection successful'
+        message: 'API connection successful',
       })
     })
 
@@ -603,7 +624,7 @@ describe('API Client', () => {
       expect(result).toEqual({
         success: false,
         error: 'Network Error',
-        message: 'API connection failed'
+        message: 'API connection failed',
       })
     })
   })
@@ -612,7 +633,7 @@ describe('API Client', () => {
     beforeEach(async () => {
       // Import tokenManager after mocks are set up
       const { tokenManager } = await import('../api-client')
-        ; (global as any).tokenManager = tokenManager
+      ;(global as any).tokenManager = tokenManager
     })
 
     it('should provide token management utilities', async () => {

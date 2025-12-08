@@ -1,10 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-
 import {
   enrollmentService,
-  type EnrollmentFilters
+  type EnrollmentFilters,
 } from '@/services/enrollment-service'
+import { toast } from 'sonner'
 
 export function useUserEnrollments(filters?: EnrollmentFilters) {
   return useQuery({
@@ -25,10 +24,17 @@ export function useUpdateEnrollmentProgress() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ enrollmentId, progressData }: {
-      enrollmentId: number;
-      progressData: { progress_percentage?: number; completed_lesson_ids?: number[] }
-    }) => enrollmentService.updateEnrollmentProgress(enrollmentId, progressData),
+    mutationFn: ({
+      enrollmentId,
+      progressData,
+    }: {
+      enrollmentId: number
+      progressData: {
+        progress_percentage?: number
+        completed_lesson_ids?: number[]
+      }
+    }) =>
+      enrollmentService.updateEnrollmentProgress(enrollmentId, progressData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user_enrollments'] })
       queryClient.invalidateQueries({ queryKey: ['enrollment'] })

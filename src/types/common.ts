@@ -50,7 +50,13 @@ export type ApiViewMode = 'minimal' | 'summary' | 'full'
 
 // Helper type to map view modes to their corresponding types
 // Usage: ViewResponse<AcademyCategoryMinimal, AcademyCategorySummary, AcademyCategoryFull, 'minimal'>
-export type ViewResponse<TMinimal, TSummary, TFull, TView extends ApiViewMode> = 
-  TView extends 'minimal' ? TMinimal :
-  TView extends 'summary' ? TSummary :
-  TFull
+export type ViewResponse<
+  TMinimal,
+  TSummary,
+  TFull,
+  TView extends ApiViewMode,
+> = TView extends 'minimal'
+  ? TMinimal
+  : TView extends 'summary'
+    ? TSummary
+    : TFull

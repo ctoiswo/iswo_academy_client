@@ -4,7 +4,7 @@ function Component() {
   const { academySlug, learningPathSlug } = Route.useParams()
   return (
     <Navigate
-      to="/academy/$academySlug/learning-paths/$learningPathSlug/info"
+      to='/academy/$academySlug/learning-paths/$learningPathSlug/info'
       params={{ academySlug, learningPathSlug }}
     />
   )

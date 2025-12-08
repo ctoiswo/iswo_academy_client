@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { UserMenu } from '../user-menu'
 
 // Mock react-i18next
@@ -15,8 +15,8 @@ vi.mock('react-i18next', () => ({
         'navigation.register': 'Registrarse',
       }
       return translations[key] || key
-    }
-  })
+    },
+  }),
 }))
 
 // Mock TanStack Router
@@ -46,42 +46,55 @@ vi.mock('@/stores/auth-store', () => ({
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
   LayoutDashboard: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="dashboard-icon">📊</div>
+    <div className={className} data-testid='dashboard-icon'>
+      📊
+    </div>
   ),
   LogOut: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="logout-icon">🚪</div>
+    <div className={className} data-testid='logout-icon'>
+      🚪
+    </div>
   ),
   Settings: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="settings-icon">⚙️</div>
+    <div className={className} data-testid='settings-icon'>
+      ⚙️
+    </div>
   ),
 }))
 
 // Mock UI components
 vi.mock('@/components/ui/avatar', () => ({
   Avatar: ({ children, className, ...props }: any) => (
-    <div className={className} data-testid="avatar" {...props}>
+    <div className={className} data-testid='avatar' {...props}>
       {children}
     </div>
   ),
   AvatarFallback: ({ children, className, ...props }: any) => (
-    <div className={className} data-testid="avatar-fallback" {...props}>
+    <div className={className} data-testid='avatar-fallback' {...props}>
       {children}
     </div>
   ),
   AvatarImage: ({ src, alt, ...props }: any) => (
-    <img src={src} alt={alt} data-testid="avatar-image" {...props} />
+    <img src={src} alt={alt} data-testid='avatar-image' {...props} />
   ),
 }))
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, variant, asChild, onClick, className, ...props }: any) => {
+  Button: ({
+    children,
+    variant,
+    asChild,
+    onClick,
+    className,
+    ...props
+  }: any) => {
     const Component = asChild ? 'div' : 'button'
     return (
-      <Component 
+      <Component
         onClick={onClick}
         className={className}
         data-variant={variant}
-        data-testid="button"
+        data-testid='button'
         {...props}
       >
         {children}
@@ -91,22 +104,31 @@ vi.mock('@/components/ui/button', () => ({
 }))
 
 vi.mock('@/components/ui/dropdown-menu', () => ({
-  DropdownMenu: ({ children }: any) => <div data-testid="dropdown-menu">{children}</div>,
+  DropdownMenu: ({ children }: any) => (
+    <div data-testid='dropdown-menu'>{children}</div>
+  ),
   DropdownMenuTrigger: ({ children, asChild }: any) => (
-    <div data-testid="dropdown-trigger" data-as-child={asChild}>{children}</div>
+    <div data-testid='dropdown-trigger' data-as-child={asChild}>
+      {children}
+    </div>
   ),
   DropdownMenuContent: ({ children, className, align, forceMount }: any) => (
-    <div data-testid="dropdown-content" className={className} data-align={align} data-force-mount={forceMount}>
+    <div
+      data-testid='dropdown-content'
+      className={className}
+      data-align={align}
+      data-force-mount={forceMount}
+    >
       {children}
     </div>
   ),
   DropdownMenuItem: ({ children, onClick, asChild, className }: any) => {
     const Component = asChild ? 'div' : 'div'
     return (
-      <Component 
-        onClick={onClick} 
+      <Component
+        onClick={onClick}
         className={className}
-        data-testid="dropdown-item"
+        data-testid='dropdown-item'
         data-as-child={asChild}
       >
         {children}
@@ -114,9 +136,11 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
     )
   },
   DropdownMenuLabel: ({ children, className }: any) => (
-    <div className={className} data-testid="dropdown-label">{children}</div>
+    <div className={className} data-testid='dropdown-label'>
+      {children}
+    </div>
   ),
-  DropdownMenuSeparator: () => <hr data-testid="dropdown-separator" />,
+  DropdownMenuSeparator: () => <hr data-testid='dropdown-separator' />,
 }))
 
 const mockAuthenticatedUser = {
@@ -124,7 +148,7 @@ const mockAuthenticatedUser = {
   full_name: 'Juan Pérez',
   email: 'juan@example.com',
   initials: 'JP',
-  avatar_url: 'https://example.com/avatar.jpg'
+  avatar_url: 'https://example.com/avatar.jpg',
 }
 
 const mockAcademyData = {
@@ -133,9 +157,9 @@ const mockAcademyData = {
       id: 1,
       name: 'Mi Academia',
       slug: 'mi-academia',
-      description: 'Mi academia de prueba'
-    }
-  ]
+      description: 'Mi academia de prueba',
+    },
+  ],
 }
 
 describe('UserMenu', () => {
@@ -194,7 +218,10 @@ describe('UserMenu', () => {
       render(<UserMenu />)
 
       const avatarImage = screen.getByTestId('avatar-image')
-      expect(avatarImage).toHaveAttribute('src', 'https://example.com/avatar.jpg')
+      expect(avatarImage).toHaveAttribute(
+        'src',
+        'https://example.com/avatar.jpg'
+      )
       expect(avatarImage).toHaveAttribute('alt', 'Juan Pérez')
     })
 
@@ -230,7 +257,7 @@ describe('UserMenu', () => {
 
     it('should call logout and navigate to home when logout is clicked', async () => {
       const user = userEvent.setup()
-      
+
       render(<UserMenu />)
 
       const logoutItem = screen.getByText('Cerrar Sesión')
@@ -250,7 +277,7 @@ describe('UserMenu', () => {
     it('should navigate to current academy dashboard when currentAcademy exists', async () => {
       const user = userEvent.setup()
       mockAuthStore.currentAcademy = { slug: 'current-academy' }
-      
+
       render(<UserMenu />)
 
       const dashboardItem = screen.getByText('Dashboard')
@@ -265,7 +292,7 @@ describe('UserMenu', () => {
     it('should navigate to first academy when no current academy but has academies', async () => {
       const user = userEvent.setup()
       mockAuthStore.academyData = mockAcademyData
-      
+
       render(<UserMenu />)
 
       const dashboardItem = screen.getByText('Dashboard')
@@ -279,7 +306,7 @@ describe('UserMenu', () => {
 
     it('should navigate to academy selection when no academies', async () => {
       const user = userEvent.setup()
-      
+
       render(<UserMenu />)
 
       const dashboardItem = screen.getByText('Dashboard')
@@ -294,7 +321,7 @@ describe('UserMenu', () => {
       mockAuthStore.isAuthenticated = true
       mockAuthStore.user = {
         ...mockAuthenticatedUser,
-        avatar_url: null
+        avatar_url: null,
       }
     })
 

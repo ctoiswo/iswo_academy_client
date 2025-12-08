@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import CourseManagementDetailPage from '../course-management-detail'
 
 // Mock dependencies
@@ -19,7 +19,9 @@ vi.mock('@/hooks/use-courses', () => ({
 
 vi.mock('@/components/access-codes/access-code-list', () => ({
   AccessCodeList: ({ courseId }: { courseId: string }) => (
-    <div data-testid="access-code-list">Lista de códigos de acceso para curso {courseId}</div>
+    <div data-testid='access-code-list'>
+      Lista de códigos de acceso para curso {courseId}
+    </div>
   ),
 }))
 
@@ -144,14 +146,20 @@ describe('CourseManagementDetailPage', () => {
 
     it('renderiza el botón de volver', () => {
       renderComponent()
-      expect(screen.getByRole('link', { name: /volver a cursos/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('link', { name: /volver a cursos/i })
+      ).toBeInTheDocument()
     })
 
     it('renderiza las pestañas de gestión', () => {
       renderComponent()
-      expect(screen.getByRole('tab', { name: /lecciones/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('tab', { name: /lecciones/i })
+      ).toBeInTheDocument()
       expect(screen.getByRole('tab', { name: /tareas/i })).toBeInTheDocument()
-      expect(screen.getByRole('tab', { name: /estudiantes/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('tab', { name: /estudiantes/i })
+      ).toBeInTheDocument()
     })
 
     it('renderiza la información del curso', () => {
@@ -185,7 +193,9 @@ describe('CourseManagementDetailPage', () => {
 
     it('renderiza el botón para añadir nueva lección', () => {
       renderComponent()
-      expect(screen.getByRole('button', { name: /nueva lección/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /nueva lección/i })
+      ).toBeInTheDocument()
     })
 
     it('permite editar lecciones', () => {
@@ -242,7 +252,9 @@ describe('CourseManagementDetailPage', () => {
       const quizzesTab = screen.getByRole('tab', { name: /quizzes/i })
       await user.click(quizzesTab)
 
-      expect(screen.getByRole('button', { name: /a00f1adir tarea/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /a00f1adir tarea/i })
+      ).toBeInTheDocument()
     })
   })
 
@@ -265,8 +277,12 @@ describe('CourseManagementDetailPage', () => {
       const objectivesTab = screen.getByRole('tab', { name: /tareas/i })
       await user.click(objectivesTab)
 
-      expect(screen.getByText('Utilizar hooks de forma efectiva')).toBeInTheDocument()
-      expect(screen.getByText('Implementar Context API y Redux')).toBeInTheDocument()
+      expect(
+        screen.getByText('Utilizar hooks de forma efectiva')
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText('Implementar Context API y Redux')
+      ).toBeInTheDocument()
     })
 
     it('renderiza el botón para añadir nuevo objetivo', async () => {
@@ -276,7 +292,9 @@ describe('CourseManagementDetailPage', () => {
       const objectivesTab = screen.getByRole('tab', { name: /tareas/i })
       await user.click(objectivesTab)
 
-      expect(screen.getByRole('button', { name: /a00f1adir tarea/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /a00f1adir tarea/i })
+      ).toBeInTheDocument()
     })
   })
 
@@ -324,7 +342,9 @@ describe('CourseManagementDetailPage', () => {
       const studentsTab = screen.getByRole('tab', { name: /estudiantes/i })
       await user.click(studentsTab)
 
-      const viewButtons = screen.getAllByRole('button', { name: /ver an00e1lisis/i })
+      const viewButtons = screen.getAllByRole('button', {
+        name: /ver an00e1lisis/i,
+      })
       expect(viewButtons.length).toBe(3)
     })
   })
@@ -334,7 +354,9 @@ describe('CourseManagementDetailPage', () => {
       const user = userEvent.setup()
       renderComponent()
 
-      const accessCodesTab = screen.getByRole('tab', { name: /códigos de acceso/i })
+      const accessCodesTab = screen.getByRole('tab', {
+        name: /códigos de acceso/i,
+      })
       await user.click(accessCodesTab)
 
       await waitFor(() => {
@@ -346,7 +368,9 @@ describe('CourseManagementDetailPage', () => {
       const user = userEvent.setup()
       renderComponent()
 
-      const accessCodesTab = screen.getByRole('tab', { name: /códigos de acceso/i })
+      const accessCodesTab = screen.getByRole('tab', {
+        name: /códigos de acceso/i,
+      })
       await user.click(accessCodesTab)
 
       await waitFor(() => {
@@ -373,7 +397,9 @@ describe('CourseManagementDetailPage', () => {
       const settingsTab = screen.getByRole('tab', { name: /configuración/i })
       await user.click(settingsTab)
 
-      expect(screen.getByRole('button', { name: /configuraci00f3n del curso/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: /configuraci00f3n del curso/i })
+      ).toBeInTheDocument()
     })
   })
 
@@ -420,7 +446,9 @@ describe('CourseManagementDetailPage', () => {
       })
 
       renderComponent()
-      expect(screen.getByRole('link', { name: /volver a cursos/i })).toBeInTheDocument()
+      expect(
+        screen.getByRole('link', { name: /volver a cursos/i })
+      ).toBeInTheDocument()
     })
   })
 
@@ -510,7 +538,9 @@ describe('CourseManagementDetailPage', () => {
       const studentsTab = screen.getByRole('tab', { name: /estudiantes/i })
       await user.click(studentsTab)
 
-      expect(screen.getByText(/no hay estudiantes inscritos/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/no hay estudiantes inscritos/i)
+      ).toBeInTheDocument()
     })
   })
 })

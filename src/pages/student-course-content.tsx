@@ -1,9 +1,17 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { BookOpen, FileText, Clock, ChevronRight } from 'lucide-react'
+import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { useCourseBySlug } from '@/hooks/use-courses'
 import { useSections } from '@/hooks/use-sections'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -12,16 +20,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Badge } from '@/components/ui/badge'
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion'
 import { Progress } from '@/components/ui/progress'
-import { toast } from 'sonner'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type TabType = 'lessons' | 'assignments'
 
@@ -41,7 +41,7 @@ export default function StudentCourseContentPage() {
     isLoading: courseLoading,
     error: courseError,
   } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
-  
+
   const { data: sectionsData, isLoading: sectionsLoading } = useSections(
     academySlug,
     courseSlug
@@ -73,9 +73,13 @@ export default function StudentCourseContentPage() {
     )
   }
 
-  const totalLessons = sections.reduce((acc, section) => acc + (section.lessons?.length || 0), 0)
+  const totalLessons = sections.reduce(
+    (acc, section) => acc + (section.lessons?.length || 0),
+    0
+  )
   const completedLessons = 0 // TODO: Get from enrollment progress
-  const progressPercentage = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0
+  const progressPercentage =
+    totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0
 
   return (
     <div className='container mx-auto py-8'>
@@ -97,7 +101,9 @@ export default function StudentCourseContentPage() {
           <CardContent>
             <div className='space-y-2'>
               <div className='flex justify-between text-sm'>
-                <span>{completedLessons} de {totalLessons} lecciones completadas</span>
+                <span>
+                  {completedLessons} de {totalLessons} lecciones completadas
+                </span>
                 <span>{Math.round(progressPercentage)}%</span>
               </div>
               <Progress value={progressPercentage} className='h-2' />
@@ -139,9 +145,12 @@ export default function StudentCourseContentPage() {
             <Card>
               <CardContent className='py-12 text-center text-gray-500'>
                 <BookOpen className='mx-auto mb-4 h-12 w-12' />
-                <h3 className='mb-2 text-lg font-medium'>Aún no hay contenido disponible</h3>
+                <h3 className='mb-2 text-lg font-medium'>
+                  Aún no hay contenido disponible
+                </h3>
                 <p>
-                  El instructor está preparando el material del curso. Vuelve pronto para ver las lecciones.
+                  El instructor está preparando el material del curso. Vuelve
+                  pronto para ver las lecciones.
                 </p>
               </CardContent>
             </Card>
@@ -158,7 +167,9 @@ export default function StudentCourseContentPage() {
                       <div>
                         <h3 className='font-semibold'>{section.title}</h3>
                         {section.description && (
-                          <p className='text-sm text-gray-600'>{section.description}</p>
+                          <p className='text-sm text-gray-600'>
+                            {section.description}
+                          </p>
                         )}
                       </div>
                       <Badge variant='outline'>
@@ -174,7 +185,9 @@ export default function StudentCourseContentPage() {
                             key={lesson.id}
                             onClick={() => {
                               // TODO: Navigate to lesson viewer
-                              toast.info(`Navegación a lección no implementada aún (Lección ID: ${lesson.id})`)
+                              toast.info(
+                                `Navegación a lección no implementada aún (Lección ID: ${lesson.id})`
+                              )
                             }}
                             className='flex w-full items-center gap-4 rounded-lg border p-4 transition-colors hover:bg-gray-50'
                           >
@@ -184,7 +197,7 @@ export default function StudentCourseContentPage() {
                             <div className='flex-1 text-left'>
                               <h4 className='font-medium'>{lesson.title}</h4>
                               {lesson.content && (
-                                <p className='text-sm text-gray-600 line-clamp-1'>
+                                <p className='line-clamp-1 text-sm text-gray-600'>
                                   {lesson.content.substring(0, 100)}
                                 </p>
                               )}
@@ -211,7 +224,9 @@ export default function StudentCourseContentPage() {
           <Card>
             <CardContent className='py-12 text-center text-gray-500'>
               <FileText className='mx-auto mb-4 h-12 w-12' />
-              <h3 className='mb-2 text-lg font-medium'>No hay tareas asignadas</h3>
+              <h3 className='mb-2 text-lg font-medium'>
+                No hay tareas asignadas
+              </h3>
               <p>
                 Las tareas aparecerán aquí cuando el instructor las publique.
               </p>

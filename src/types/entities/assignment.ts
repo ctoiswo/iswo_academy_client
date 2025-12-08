@@ -4,7 +4,11 @@
  */
 
 // Submission status types
-export type SubmissionStatus = 'not_started' | 'in_progress' | 'submitted' | 'graded'
+export type SubmissionStatus =
+  | 'not_started'
+  | 'in_progress'
+  | 'submitted'
+  | 'graded'
 
 // Rubric criterion structure
 export interface RubricCriterion {

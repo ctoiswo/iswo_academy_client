@@ -1,23 +1,37 @@
 import { useState, useEffect } from 'react'
 import { useParams } from '@tanstack/react-router'
-import { useLearningPath, useUpdateLearningPath } from '@/hooks/use-learning-paths'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Info, Lock, Unlock, Target } from 'lucide-react'
+import {
+  useLearningPath,
+  useUpdateLearningPath,
+} from '@/hooks/use-learning-paths'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Info, Lock, Unlock, Target } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function LearningPathUnlockConfig() {
   const { academySlug, learningPathSlug } = useParams({
     from: '/_authenticated/academy/$academySlug/learning-paths/$learningPathSlug/unlock-config',
   })
-  const { data: learningPath, isLoading } = useLearningPath(academySlug, learningPathSlug)
+  const { data: learningPath, isLoading } = useLearningPath(
+    academySlug,
+    learningPathSlug
+  )
   const updateMutation = useUpdateLearningPath(academySlug)
-  
-  const [unlockMode, setUnlockMode] = useState<'all_unlocked' | 'sequential' | 'milestone_based'>('all_unlocked')
+
+  const [unlockMode, setUnlockMode] = useState<
+    'all_unlocked' | 'sequential' | 'milestone_based'
+  >('all_unlocked')
   const [milestoneSize, setMilestoneSize] = useState(3)
 
   // Initialize state when learningPath loads
@@ -33,7 +47,8 @@ export function LearningPathUnlockConfig() {
       learningPathSlug,
       data: {
         unlock_mode: unlockMode,
-        milestone_size: unlockMode === 'milestone_based' ? milestoneSize : undefined,
+        milestone_size:
+          unlockMode === 'milestone_based' ? milestoneSize : undefined,
       },
     })
   }
@@ -47,9 +62,9 @@ export function LearningPathUnlockConfig() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="h-96 w-full" />
+      <div className='space-y-6'>
+        <Skeleton className='h-8 w-64' />
+        <Skeleton className='h-96 w-full' />
       </div>
     )
   }
@@ -59,19 +74,20 @@ export function LearningPathUnlockConfig() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       <div>
-        <h1 className="text-3xl font-bold">Configuración de Desbloqueo</h1>
-        <p className="text-muted-foreground">
+        <h1 className='text-3xl font-bold'>Configuración de Desbloqueo</h1>
+        <p className='text-muted-foreground'>
           Define cómo los estudiantes accederán a los cursos de esta ruta
         </p>
       </div>
 
       <Alert>
-        <Info className="h-4 w-4" />
+        <Info className='h-4 w-4' />
         <AlertDescription>
-          Esta configuración determina el orden y la forma en que los estudiantes pueden
-          acceder a los cursos dentro de esta ruta de aprendizaje.
+          Esta configuración determina el orden y la forma en que los
+          estudiantes pueden acceder a los cursos dentro de esta ruta de
+          aprendizaje.
         </AlertDescription>
       </Alert>
 
@@ -82,65 +98,77 @@ export function LearningPathUnlockConfig() {
             Selecciona cómo quieres que los estudiantes accedan a los cursos
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <RadioGroup value={unlockMode} onValueChange={(value) => setUnlockMode(value as typeof unlockMode)} className="space-y-4">
-            <div className="flex items-start space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/50 transition-colors">
-              <RadioGroupItem value="all_unlocked" id="all_unlocked" />
-              <div className="flex-1 space-y-1">
-                <Label htmlFor="all_unlocked" className="flex items-center gap-2 cursor-pointer">
-                  <Unlock className="h-4 w-4" />
-                  <span className="font-semibold">Todos Desbloqueados</span>
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  Los estudiantes pueden acceder a todos los cursos en cualquier orden desde
-                  el inicio.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/50 transition-colors">
-              <RadioGroupItem value="sequential" id="sequential" />
-              <div className="flex-1 space-y-1">
-                <Label htmlFor="sequential" className="flex items-center gap-2 cursor-pointer">
-                  <Lock className="h-4 w-4" />
-                  <span className="font-semibold">Secuencial</span>
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  Los cursos se desbloquean uno por uno. El estudiante debe completar un
-                  curso para acceder al siguiente.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/50 transition-colors">
-              <RadioGroupItem value="milestone_based" id="milestone_based" />
-              <div className="flex-1 space-y-1">
+        <CardContent className='space-y-6'>
+          <RadioGroup
+            value={unlockMode}
+            onValueChange={(value) => setUnlockMode(value as typeof unlockMode)}
+            className='space-y-4'
+          >
+            <div className='hover:bg-accent/50 flex items-start space-y-0 space-x-3 rounded-md border p-4 transition-colors'>
+              <RadioGroupItem value='all_unlocked' id='all_unlocked' />
+              <div className='flex-1 space-y-1'>
                 <Label
-                  htmlFor="milestone_based"
-                  className="flex items-center gap-2 cursor-pointer"
+                  htmlFor='all_unlocked'
+                  className='flex cursor-pointer items-center gap-2'
                 >
-                  <Target className="h-4 w-4" />
-                  <span className="font-semibold">Por Hitos</span>
+                  <Unlock className='h-4 w-4' />
+                  <span className='font-semibold'>Todos Desbloqueados</span>
                 </Label>
-                <p className="text-sm text-muted-foreground">
-                  Los cursos se desbloquean en grupos. Completa cierto número de cursos
-                  para desbloquear el siguiente grupo.
+                <p className='text-muted-foreground text-sm'>
+                  Los estudiantes pueden acceder a todos los cursos en cualquier
+                  orden desde el inicio.
                 </p>
-                <div className="mt-3 space-y-2">
-                  <Label htmlFor="milestone_size" className="text-sm">
+              </div>
+            </div>
+
+            <div className='hover:bg-accent/50 flex items-start space-y-0 space-x-3 rounded-md border p-4 transition-colors'>
+              <RadioGroupItem value='sequential' id='sequential' />
+              <div className='flex-1 space-y-1'>
+                <Label
+                  htmlFor='sequential'
+                  className='flex cursor-pointer items-center gap-2'
+                >
+                  <Lock className='h-4 w-4' />
+                  <span className='font-semibold'>Secuencial</span>
+                </Label>
+                <p className='text-muted-foreground text-sm'>
+                  Los cursos se desbloquean uno por uno. El estudiante debe
+                  completar un curso para acceder al siguiente.
+                </p>
+              </div>
+            </div>
+
+            <div className='hover:bg-accent/50 flex items-start space-y-0 space-x-3 rounded-md border p-4 transition-colors'>
+              <RadioGroupItem value='milestone_based' id='milestone_based' />
+              <div className='flex-1 space-y-1'>
+                <Label
+                  htmlFor='milestone_based'
+                  className='flex cursor-pointer items-center gap-2'
+                >
+                  <Target className='h-4 w-4' />
+                  <span className='font-semibold'>Por Hitos</span>
+                </Label>
+                <p className='text-muted-foreground text-sm'>
+                  Los cursos se desbloquean en grupos. Completa cierto número de
+                  cursos para desbloquear el siguiente grupo.
+                </p>
+                <div className='mt-3 space-y-2'>
+                  <Label htmlFor='milestone_size' className='text-sm'>
                     Tamaño del grupo de hitos
                   </Label>
                   <Input
-                    id="milestone_size"
-                    type="number"
-                    min="1"
-                    max="10"
+                    id='milestone_size'
+                    type='number'
+                    min='1'
+                    max='10'
                     value={milestoneSize}
-                    onChange={(e) => setMilestoneSize(parseInt(e.target.value) || 3)}
+                    onChange={(e) =>
+                      setMilestoneSize(parseInt(e.target.value) || 3)
+                    }
                     disabled={unlockMode !== 'milestone_based'}
-                    className="w-32"
+                    className='w-32'
                   />
-                  <p className="text-xs text-muted-foreground">
+                  <p className='text-muted-foreground text-xs'>
                     Número de cursos que se desbloquean en cada grupo
                   </p>
                 </div>
@@ -148,10 +176,14 @@ export function LearningPathUnlockConfig() {
             </div>
           </RadioGroup>
 
-          <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" onClick={handleCancel}>Cancelar</Button>
+          <div className='flex justify-end gap-2 pt-4'>
+            <Button variant='outline' onClick={handleCancel}>
+              Cancelar
+            </Button>
             <Button onClick={handleSave} disabled={updateMutation.isPending}>
-              {updateMutation.isPending ? 'Guardando...' : 'Guardar Configuración'}
+              {updateMutation.isPending
+                ? 'Guardando...'
+                : 'Guardar Configuración'}
             </Button>
           </div>
         </CardContent>
@@ -165,13 +197,13 @@ export function LearningPathUnlockConfig() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
+          <div className='space-y-2'>
             {(learningPath.courses || []).map((course, index) => {
-              const isUnlocked = 
+              const isUnlocked =
                 unlockMode === 'all_unlocked' ||
                 (unlockMode === 'sequential' && index === 0) ||
                 (unlockMode === 'milestone_based' && index < milestoneSize)
-              
+
               const getUnlockMessage = () => {
                 if (unlockMode === 'all_unlocked') {
                   return 'Disponible desde el inicio'
@@ -181,7 +213,8 @@ export function LearningPathUnlockConfig() {
                 } else {
                   // milestone_based
                   const milestone = Math.floor(index / milestoneSize)
-                  if (milestone === 0) return `Disponible en el primer grupo (1-${milestoneSize})`
+                  if (milestone === 0)
+                    return `Disponible en el primer grupo (1-${milestoneSize})`
                   const previousMilestoneEnd = milestone * milestoneSize
                   return `Se desbloquea al completar ${previousMilestoneEnd} cursos`
                 }
@@ -190,18 +223,18 @@ export function LearningPathUnlockConfig() {
               return (
                 <div
                   key={course.id}
-                  className="flex items-center gap-3 p-3 border rounded-lg"
+                  className='flex items-center gap-3 rounded-lg border p-3'
                 >
-                  <div className="flex-shrink-0">
+                  <div className='flex-shrink-0'>
                     {isUnlocked ? (
-                      <Unlock className="h-5 w-5 text-green-500" />
+                      <Unlock className='h-5 w-5 text-green-500' />
                     ) : (
-                      <Lock className="h-5 w-5 text-muted-foreground" />
+                      <Lock className='text-muted-foreground h-5 w-5' />
                     )}
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium">{course.title}</p>
-                    <p className="text-sm text-muted-foreground">
+                  <div className='flex-1'>
+                    <p className='font-medium'>{course.title}</p>
+                    <p className='text-muted-foreground text-sm'>
                       {getUnlockMessage()}
                     </p>
                   </div>

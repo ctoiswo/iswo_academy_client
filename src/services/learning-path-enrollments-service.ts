@@ -1,9 +1,9 @@
-import apiClient from '@/lib/api-client'
 import type {
   LearningPathEnrollment,
   LearningPathEnrollmentsResponse,
-  LearningPathEnrollmentFilters
+  LearningPathEnrollmentFilters,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Learning Path Enrollments Service

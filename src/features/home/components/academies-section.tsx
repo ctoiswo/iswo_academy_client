@@ -3,13 +3,13 @@
  * Displays featured academies grouped by category
  */
 import { Link } from '@tanstack/react-router'
+import type { FeaturedAcademiesByCategory } from '@/services/academy-service'
 import { motion } from 'framer-motion'
 import { ArrowRight, Loader2, AlertCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { AcademyCard } from './academy-card'
-import type { FeaturedAcademiesByCategory } from '@/services/academy-service'
 
 interface AcademiesSectionProps {
   data: FeaturedAcademiesByCategory[]

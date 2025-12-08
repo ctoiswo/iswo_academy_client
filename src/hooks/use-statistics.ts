@@ -1,6 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
+import type {
+  GeneralStatistics,
+  AcademyStatistics,
+  TrendingStatistics,
+} from '@/types'
 import { apiClient } from '@/lib/api-client'
-import type { GeneralStatistics, AcademyStatistics, TrendingStatistics } from '@/types'
 
 // Re-export types for backward compatibility
 export type { GeneralStatistics, AcademyStatistics, TrendingStatistics }

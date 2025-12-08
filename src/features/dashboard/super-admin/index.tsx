@@ -1,10 +1,13 @@
-
 import { useState, useEffect } from 'react'
-import { DashboardLayout } from '@/components/layout/dashboard-layout'
-import { GlobalStatsOverview } from './components/global-stats-overview'
-import { AcademyManagementPanel } from './components/academy-management-panel'
-import { superAdminApi, type GlobalStats, type AcademyOverview } from '@/lib/api-client'
+import {
+  superAdminApi,
+  type GlobalStats,
+  type AcademyOverview,
+} from '@/lib/api-client'
 import type { DashboardProps } from '@/components/dashboard-router'
+import { DashboardLayout } from '@/components/layout/dashboard-layout'
+import { AcademyManagementPanel } from './components/academy-management-panel'
+import { GlobalStatsOverview } from './components/global-stats-overview'
 
 // Re-export types for component use
 export type { GlobalStats, AcademyOverview }
@@ -21,20 +24,20 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
       try {
         setIsLoading(true)
         setError(null)
-        
+
         // Load global statistics and academies in parallel
         const [statsResponse, academiesResponse] = await Promise.all([
           superAdminApi.getGlobalStats(),
-          superAdminApi.getAcademies({ per_page: 50 }) // Load first 50 academies
+          superAdminApi.getAcademies({ per_page: 50 }), // Load first 50 academies
         ])
-        
+
         setGlobalStats(statsResponse)
         setAcademies(academiesResponse.data)
       } catch (err: any) {
         const errorMessage = err?.message || 'Failed to load dashboard data'
         setError(errorMessage)
         // console.error('Dashboard loading error:', err)
-        
+
         // Fallback to mock data in development if API fails
         if (import.meta.env.DEV) {
           // console.warn('API failed, using mock data for development')
@@ -46,10 +49,10 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
             monthlyGrowth: {
               academies: 8.2,
               users: 15.3,
-              revenue: 12.7
-            }
+              revenue: 12.7,
+            },
           }
-          
+
           const mockAcademies: AcademyOverview[] = [
             {
               id: 1,
@@ -64,8 +67,8 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
               creator: {
                 id: 1,
                 name: 'John Doe',
-                email: 'john@example.com'
-              }
+                email: 'john@example.com',
+              },
             },
             {
               id: 2,
@@ -80,8 +83,8 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
               creator: {
                 id: 2,
                 name: 'Jane Smith',
-                email: 'jane@example.com'
-              }
+                email: 'jane@example.com',
+              },
             },
             {
               id: 3,
@@ -96,11 +99,11 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
               creator: {
                 id: 3,
                 name: 'Bob Johnson',
-                email: 'bob@example.com'
-              }
-            }
+                email: 'bob@example.com',
+              },
+            },
           ]
-          
+
           setGlobalStats(mockStats)
           setAcademies(mockAcademies)
           setError(null)
@@ -109,7 +112,7 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
         setIsLoading(false)
       }
     }
-    
+
     loadDashboardData()
   }, [])
 
@@ -119,26 +122,28 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
     <DashboardLayout
       user={user}
       academy={academy}
-      variant="full"
-      dashboardType="super-admin"
+      variant='full'
+      dashboardType='super-admin'
     >
-      <div className="space-y-6">
+      <div className='space-y-6'>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Super Admin Dashboard</h1>
-          <p className="text-muted-foreground">
+          <h1 className='text-3xl font-bold tracking-tight'>
+            Super Admin Dashboard
+          </h1>
+          <p className='text-muted-foreground'>
             Manage all academies and system-wide settings
           </p>
         </div>
-        
+
         {/* Global Statistics Overview */}
-        <GlobalStatsOverview 
+        <GlobalStatsOverview
           stats={globalStats}
           loading={isLoading}
           error={error}
         />
-        
+
         {/* Academy Management Panel */}
-        <AcademyManagementPanel 
+        <AcademyManagementPanel
           academies={academies}
           loading={isLoading}
           error={error}

@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
 import { Footer } from '../footer'
 
 // Mock react-i18next
@@ -9,11 +9,11 @@ vi.mock('react-i18next', () => ({
       const translations: Record<string, string> = {
         'footer.allRightsReserved': 'Todos los derechos reservados',
         'navigation.login': 'Iniciar Sesión',
-        'navigation.register': 'Registrarse'
+        'navigation.register': 'Registrarse',
       }
       return translations[key] || key
-    }
-  })
+    },
+  }),
 }))
 
 // Mock TanStack Router
@@ -28,7 +28,9 @@ vi.mock('@tanstack/react-router', () => ({
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
   GraduationCap: ({ className }: { className?: string }) => (
-    <div className={className} data-testid="graduation-cap-icon">🎓</div>
+    <div className={className} data-testid='graduation-cap-icon'>
+      🎓
+    </div>
   ),
 }))
 
@@ -37,10 +39,10 @@ vi.mock('@/components/ui/button', () => ({
   Button: ({ children, size, variant, asChild, ...props }: any) => {
     const Component = asChild ? 'div' : 'button'
     return (
-      <Component 
+      <Component
         data-size={size}
         data-variant={variant}
-        data-testid="button"
+        data-testid='button'
         {...props}
       >
         {children}
@@ -99,12 +101,14 @@ describe('Footer', () => {
     it('should group icon and brand name together', () => {
       render(<Footer />)
 
-      const brandContainer = document.querySelector('.flex.items-center.space-x-2')
+      const brandContainer = document.querySelector(
+        '.flex.items-center.space-x-2'
+      )
       expect(brandContainer).toBeInTheDocument()
-      
+
       const icon = screen.getByTestId('graduation-cap-icon')
       const brandName = screen.getByText('ISWO Academy')
-      
+
       expect(brandContainer).toContainElement(icon)
       expect(brandContainer).toContainElement(brandName)
     })
@@ -114,13 +118,17 @@ describe('Footer', () => {
     it('should render copyright text', () => {
       render(<Footer />)
 
-      expect(screen.getByText('© 2025 ISWO Academy. Todos los derechos reservados.')).toBeInTheDocument()
+      expect(
+        screen.getByText('© 2025 ISWO Academy. Todos los derechos reservados.')
+      ).toBeInTheDocument()
     })
 
     it('should have correct styling for copyright', () => {
       render(<Footer />)
 
-      const copyright = screen.getByText('© 2025 ISWO Academy. Todos los derechos reservados.')
+      const copyright = screen.getByText(
+        '© 2025 ISWO Academy. Todos los derechos reservados.'
+      )
       expect(copyright).toHaveClass('text-muted-foreground', 'text-sm')
     })
   })
@@ -138,11 +146,11 @@ describe('Footer', () => {
 
       const buttons = screen.getAllByTestId('button')
       expect(buttons).toHaveLength(2)
-      
+
       // Login button (ghost variant)
       expect(buttons[0]).toHaveAttribute('data-size', 'sm')
       expect(buttons[0]).toHaveAttribute('data-variant', 'ghost')
-      
+
       // Register button (default variant)
       expect(buttons[1]).toHaveAttribute('data-size', 'sm')
     })
@@ -160,12 +168,18 @@ describe('Footer', () => {
     it('should group navigation buttons together', () => {
       render(<Footer />)
 
-      const navContainer = document.querySelector('.flex.items-center.space-x-4')
+      const navContainer = document.querySelector(
+        '.flex.items-center.space-x-4'
+      )
       expect(navContainer).toBeInTheDocument()
-      
-      const loginButton = screen.getByText('Iniciar Sesión').closest('[data-testid="button"]') as HTMLElement
-      const registerButton = screen.getByText('Registrarse').closest('[data-testid="button"]') as HTMLElement
-      
+
+      const loginButton = screen
+        .getByText('Iniciar Sesión')
+        .closest('[data-testid="button"]') as HTMLElement
+      const registerButton = screen
+        .getByText('Registrarse')
+        .closest('[data-testid="button"]') as HTMLElement
+
       expect(navContainer).toContainElement(loginButton)
       expect(navContainer).toContainElement(registerButton)
     })
@@ -175,7 +189,9 @@ describe('Footer', () => {
     it('should have responsive flex classes', () => {
       render(<Footer />)
 
-      const mainContainer = document.querySelector('.flex.flex-col.items-center.justify-between.space-y-4.md\\:flex-row.md\\:space-y-0')
+      const mainContainer = document.querySelector(
+        '.flex.flex-col.items-center.justify-between.space-y-4.md\\:flex-row.md\\:space-y-0'
+      )
       expect(mainContainer).toBeInTheDocument()
     })
 
@@ -211,7 +227,9 @@ describe('Footer', () => {
       render(<Footer />)
 
       // Verify translated content is rendered (text may be split across elements)
-      expect(screen.getByText(/Todos los derechos reservados/)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Todos los derechos reservados/)
+      ).toBeInTheDocument()
       expect(screen.getByText('Iniciar Sesión')).toBeInTheDocument()
       expect(screen.getByText('Registrarse')).toBeInTheDocument()
     })
@@ -223,10 +241,10 @@ describe('Footer', () => {
 
       // Branding section
       expect(screen.getByText('ISWO Academy')).toBeInTheDocument()
-      
+
       // Copyright section
       expect(screen.getByText(/© 2025 ISWO Academy/)).toBeInTheDocument()
-      
+
       // Navigation section
       expect(screen.getByText('Iniciar Sesión')).toBeInTheDocument()
       expect(screen.getByText('Registrarse')).toBeInTheDocument()
@@ -238,7 +256,7 @@ describe('Footer', () => {
       // Brand should be bold
       const brand = screen.getByText('ISWO Academy')
       expect(brand).toHaveClass('font-bold')
-      
+
       // Copyright should be muted
       const copyright = screen.getByText(/© 2025 ISWO Academy/)
       expect(copyright).toHaveClass('text-muted-foreground')

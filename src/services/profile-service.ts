@@ -1,4 +1,3 @@
-import apiClient from '@/lib/api-client'
 import type {
   UserDetail,
   UserAddress,
@@ -10,8 +9,9 @@ import type {
   UserAddressResponse,
   UserAddressesResponse,
   SocialNetworkResponse,
-  SocialNetworksResponse
+  SocialNetworksResponse,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Profile Service
@@ -24,7 +24,8 @@ class ProfileService {
    */
   async getUserDetail(): Promise<UserDetail | null> {
     try {
-      const response = await apiClient.get<UserDetailResponse>('/user_details/me')
+      const response =
+        await apiClient.get<UserDetailResponse>('/user_details/me')
       return response.data.user_detail
     } catch (_error) {
       // If 404, user doesn't have details yet
@@ -38,9 +39,12 @@ class ProfileService {
    * @returns Promise with updated user detail
    */
   async updateUserDetail(data: UserDetailRequest): Promise<UserDetail> {
-    const response = await apiClient.put<UserDetailResponse>('/user_details/me', {
-      user_detail: data,
-    })
+    const response = await apiClient.put<UserDetailResponse>(
+      '/user_details/me',
+      {
+        user_detail: data,
+      }
+    )
     return response.data.user_detail
   }
 
@@ -62,7 +66,8 @@ class ProfileService {
    */
   async getUserAddresses(): Promise<UserAddress[]> {
     try {
-      const response = await apiClient.get<UserAddressesResponse>('/user_addresses')
+      const response =
+        await apiClient.get<UserAddressesResponse>('/user_addresses')
       return response.data.user_addresses
     } catch (_error) {
       return []
@@ -75,9 +80,12 @@ class ProfileService {
    * @returns Promise with created user address
    */
   async createUserAddress(data: UserAddressRequest): Promise<UserAddress> {
-    const response = await apiClient.post<UserAddressResponse>('/user_addresses', {
-      user_address: data,
-    })
+    const response = await apiClient.post<UserAddressResponse>(
+      '/user_addresses',
+      {
+        user_address: data,
+      }
+    )
     return response.data.user_address
   }
 
@@ -87,10 +95,16 @@ class ProfileService {
    * @param data - Address data to update
    * @returns Promise with updated user address
    */
-  async updateUserAddress(id: number, data: UserAddressRequest): Promise<UserAddress> {
-    const response = await apiClient.put<UserAddressResponse>(`/user_addresses/${id}`, {
-      user_address: data,
-    })
+  async updateUserAddress(
+    id: number,
+    data: UserAddressRequest
+  ): Promise<UserAddress> {
+    const response = await apiClient.put<UserAddressResponse>(
+      `/user_addresses/${id}`,
+      {
+        user_address: data,
+      }
+    )
     return response.data.user_address
   }
 
@@ -109,7 +123,8 @@ class ProfileService {
    */
   async getSocialNetworks(): Promise<SocialNetwork[]> {
     try {
-      const response = await apiClient.get<SocialNetworksResponse>('/social_networks')
+      const response =
+        await apiClient.get<SocialNetworksResponse>('/social_networks')
       return response.data.social_networks
     } catch (_error) {
       return []
@@ -121,10 +136,15 @@ class ProfileService {
    * @param data - Social network data to create
    * @returns Promise with created social network
    */
-  async createSocialNetwork(data: SocialNetworkRequest): Promise<SocialNetwork> {
-    const response = await apiClient.post<SocialNetworkResponse>('/social_networks', {
-      social_network: data,
-    })
+  async createSocialNetwork(
+    data: SocialNetworkRequest
+  ): Promise<SocialNetwork> {
+    const response = await apiClient.post<SocialNetworkResponse>(
+      '/social_networks',
+      {
+        social_network: data,
+      }
+    )
     return response.data.social_network
   }
 
@@ -134,10 +154,16 @@ class ProfileService {
    * @param data - Social network data to update
    * @returns Promise with updated social network
    */
-  async updateSocialNetwork(id: number, data: SocialNetworkRequest): Promise<SocialNetwork> {
-    const response = await apiClient.put<SocialNetworkResponse>(`/social_networks/${id}`, {
-      social_network: data,
-    })
+  async updateSocialNetwork(
+    id: number,
+    data: SocialNetworkRequest
+  ): Promise<SocialNetwork> {
+    const response = await apiClient.put<SocialNetworkResponse>(
+      `/social_networks/${id}`,
+      {
+        social_network: data,
+      }
+    )
     return response.data.social_network
   }
 

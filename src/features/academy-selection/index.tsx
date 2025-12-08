@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import type { AcademyMembership } from '@/types'
 import { useAuthStore } from '@/stores/auth-store'
 import {
   LoadingSpinner,
   PageHeader,
   AcademyGrid,
   EmptyState,
-  PageFooter
+  PageFooter,
 } from './components'
-import type { AcademyMembership } from '@/types'
 
 export function AcademySelectionPage() {
   const navigate = useNavigate()
@@ -18,10 +18,10 @@ export function AcademySelectionPage() {
   const handleAcademySelect = async (academy: AcademyMembership) => {
     try {
       setIsSelecting(true)
-      
+
       // Select academy in store
       selectAcademy(academy.id)
-      
+
       // Navigate to authenticated dashboard
       const dashboardPath = `/academy/${academy.slug}/dashboard`
       navigate({ to: dashboardPath })
@@ -39,21 +39,21 @@ export function AcademySelectionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
+    <div className='from-background via-background to-primary/5 min-h-screen bg-gradient-to-br'>
+      <div className='container mx-auto max-w-7xl px-4 py-12'>
         <PageHeader userName={user.first_name} />
-        
+
         {/* Academy Grid or Empty State */}
         {academyData.count === 0 ? (
           <EmptyState />
         ) : (
-          <AcademyGrid 
+          <AcademyGrid
             academyData={academyData}
             onSelect={handleAcademySelect}
             isSelecting={isSelecting}
           />
         )}
-        
+
         <PageFooter />
       </div>
     </div>

@@ -1,11 +1,38 @@
+// ============================================
+// Course Requests
+// ============================================
+import type {
+  DifficultyLevel,
+  CourseStatus,
+  PricingType,
+} from '@/types/entities/course'
+// ============================================
+// Question Requests
+// ============================================
+
+import type { QuestionType } from '../entities/assessment'
+// ============================================
+// Learning Path Requests (Extended)
+// ============================================
+
+import type { LearningPathStatus, UnlockMode } from '../entities/learning-path'
+// ============================================
+// Lesson Requests
+// ============================================
+
+import type { LessonType, VideoProvider } from '../entities/lesson'
+// ============================================
+// User Profile Requests
+// ============================================
+
+import type { AddressType, SocialPlatform } from '../entities/user-profile'
+
 /**
  * API Request types
  * Types for data sent to the API (POST, PATCH, PUT)
  */
 
-// ============================================
 // Auth Requests
-// ============================================
 
 export interface LoginRequest {
   email: string
@@ -30,9 +57,7 @@ export interface ResetPasswordRequest {
   password_confirmation: string
 }
 
-// ============================================
 // Academy Category Requests
-// ============================================
 
 export interface CreateCategoryRequest {
   name: string
@@ -45,12 +70,6 @@ export interface UpdateCategoryRequest {
   description?: string
   slug?: string
 }
-
-// ============================================
-// Course Requests
-// ============================================
-
-import type { DifficultyLevel, CourseStatus, PricingType } from '@/types/entities/course'
 
 export interface CreateCourseRequest {
   title: string
@@ -82,9 +101,7 @@ export interface UpdateCourseRequest extends Partial<CreateCourseRequest> {
   subscription_price_annual?: number
 }
 
-// ============================================
 // Academy Requests
-// ============================================
 
 export interface CreateAcademyRequest {
   name: string
@@ -100,9 +117,7 @@ export interface CreateAcademyRequest {
 
 export interface UpdateAcademyRequest extends Partial<CreateAcademyRequest> {}
 
-// ============================================
 // Section Requests
-// ============================================
 
 export interface CreateSectionRequest {
   title: string
@@ -113,10 +128,8 @@ export interface CreateSectionRequest {
 export interface UpdateSectionRequest extends Partial<CreateSectionRequest> {}
 
 // ============================================
-// Lesson Requests
-// ============================================
 
-import type { LessonType, VideoProvider } from '../entities/lesson'
+// ============================================
 
 export interface CreateLessonRequest {
   title: string
@@ -165,13 +178,12 @@ export interface CreateAssessmentRequest {
   require_all_sections_complete?: boolean
 }
 
-export interface UpdateAssessmentRequest extends Partial<CreateAssessmentRequest> {}
+export interface UpdateAssessmentRequest
+  extends Partial<CreateAssessmentRequest> {}
 
 // ============================================
-// Question Requests
-// ============================================
 
-import type { QuestionType } from '../entities/assessment'
+// ============================================
 
 export interface CreateQuestionRequest {
   question_text: string
@@ -220,7 +232,8 @@ export interface CreateAssignmentRequest {
   }>
 }
 
-export interface UpdateAssignmentRequest extends Partial<CreateAssignmentRequest> {}
+export interface UpdateAssignmentRequest
+  extends Partial<CreateAssignmentRequest> {}
 
 // ============================================
 // Learning Path Requests (Basic)
@@ -233,7 +246,8 @@ export interface CreateLearningPathRequestBasic {
   estimated_duration_hours?: number
 }
 
-export interface UpdateLearningPathRequestBasic extends Partial<CreateLearningPathRequestBasic> {}
+export interface UpdateLearningPathRequestBasic
+  extends Partial<CreateLearningPathRequestBasic> {}
 
 // ============================================
 // Access Code Requests
@@ -294,7 +308,8 @@ export interface CreateSuperAdminBadgeRequest {
   }
 }
 
-export interface UpdateSuperAdminBadgeRequest extends Partial<CreateSuperAdminBadgeRequest> {}
+export interface UpdateSuperAdminBadgeRequest
+  extends Partial<CreateSuperAdminBadgeRequest> {}
 
 export interface ToggleGamificationRequest {
   enabled?: boolean
@@ -334,7 +349,8 @@ export interface CreateCertificateTemplateRequest {
   logo?: File
 }
 
-export interface UpdateCertificateTemplateRequest extends Partial<CreateCertificateTemplateRequest> {}
+export interface UpdateCertificateTemplateRequest
+  extends Partial<CreateCertificateTemplateRequest> {}
 
 // ============================================
 // Enrollment Requests
@@ -358,10 +374,8 @@ export interface ReorderCoursesRequest {
 }
 
 // ============================================
-// Learning Path Requests (Extended)
-// ============================================
 
-import type { LearningPathStatus, UnlockMode } from '../entities/learning-path'
+// ============================================
 
 export interface CreateLearningPathRequest {
   title: string
@@ -371,7 +385,8 @@ export interface CreateLearningPathRequest {
   status?: LearningPathStatus
 }
 
-export interface UpdateLearningPathRequest extends Partial<CreateLearningPathRequest> {
+export interface UpdateLearningPathRequest
+  extends Partial<CreateLearningPathRequest> {
   position?: number
   unlock_mode?: UnlockMode
   milestone_size?: number
@@ -381,10 +396,8 @@ export interface UpdateLearningPathRequest extends Partial<CreateLearningPathReq
 }
 
 // ============================================
-// User Profile Requests
-// ============================================
 
-import type { AddressType, SocialPlatform } from '../entities/user-profile'
+// ============================================
 
 export interface UserDetailRequest {
   birth_date?: string | null

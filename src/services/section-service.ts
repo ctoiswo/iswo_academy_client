@@ -1,9 +1,9 @@
-import { apiClient } from '@/lib/api-client'
 import type {
   Section,
   CreateSectionRequest,
-  UpdateSectionRequest
+  UpdateSectionRequest,
 } from '@/types'
+import { apiClient } from '@/lib/api-client'
 
 /**
  * Section Service
@@ -16,7 +16,10 @@ class SectionService {
    * @param courseSlug - Course slug
    * @returns Promise with sections array
    */
-  async getSections(academySlug: string, courseSlug: string): Promise<Section[]> {
+  async getSections(
+    academySlug: string,
+    courseSlug: string
+  ): Promise<Section[]> {
     const response = await apiClient.get(
       `/academies/${academySlug}/courses/${courseSlug}/sections`
     )

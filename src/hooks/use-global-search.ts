@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { apiClient } from '@/lib/api-client'
 import type { GlobalSearchResponse } from '@/types'
+import { apiClient } from '@/lib/api-client'
 
 /**
  * Hook for global search across academies and courses

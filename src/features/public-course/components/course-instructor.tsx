@@ -1,11 +1,6 @@
 import { motion } from 'framer-motion'
 import { Star, Users, BookOpen } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface CourseInstructorProps {
   instructor: {
@@ -37,9 +32,7 @@ export function CourseInstructor({ instructor }: CourseInstructorProps) {
               className='h-16 w-16 rounded-full'
             />
             <div className='flex-1'>
-              <h4 className='mb-1 text-lg font-medium'>
-                {instructor.name}
-              </h4>
+              <h4 className='mb-1 text-lg font-medium'>{instructor.name}</h4>
               <div className='text-muted-foreground mb-3 flex items-center gap-4 text-sm'>
                 <div className='flex items-center gap-1'>
                   <Star className='h-4 w-4 fill-current text-yellow-500' />

@@ -1,4 +1,3 @@
-import apiClient from '@/lib/api-client'
 import type {
   Badge,
   UserBadge,
@@ -6,9 +5,10 @@ import type {
   LeaderboardEntry,
   LeaderboardType,
   LeaderboardPeriod,
-  BadgeFilters
+  BadgeFilters,
 } from '@/types'
 import { toast } from 'sonner'
+import apiClient from '@/lib/api-client'
 
 /**
  * Gamification Service
@@ -22,7 +22,9 @@ class GamificationService {
    */
   async getBadges(filters?: BadgeFilters): Promise<Badge[]> {
     const response = await apiClient.get('/badges', { params: filters })
-    return Array.isArray(response.data) ? response.data : (response.data?.data || [])
+    return Array.isArray(response.data)
+      ? response.data
+      : response.data?.data || []
   }
 
   /**
@@ -42,7 +44,9 @@ class GamificationService {
    */
   async getEarnedBadges(filters?: BadgeFilters): Promise<UserBadge[]> {
     const response = await apiClient.get('/badges/earned', { params: filters })
-    return Array.isArray(response.data) ? response.data : (response.data?.data || [])
+    return Array.isArray(response.data)
+      ? response.data
+      : response.data?.data || []
   }
 
   /**
@@ -51,8 +55,12 @@ class GamificationService {
    * @returns Promise with available badges array
    */
   async getAvailableBadges(filters?: BadgeFilters): Promise<Badge[]> {
-    const response = await apiClient.get('/badges/available', { params: filters })
-    return Array.isArray(response.data) ? response.data : (response.data?.data || [])
+    const response = await apiClient.get('/badges/available', {
+      params: filters,
+    })
+    return Array.isArray(response.data)
+      ? response.data
+      : response.data?.data || []
   }
 
   /**
@@ -88,9 +96,11 @@ class GamificationService {
     period: LeaderboardPeriod = 'all_time'
   ): Promise<LeaderboardEntry[]> {
     const response = await apiClient.get('/gamification_profiles/leaderboard', {
-      params: { type, period }
+      params: { type, period },
     })
-    return Array.isArray(response.data) ? response.data : (response.data?.data || [])
+    return Array.isArray(response.data)
+      ? response.data
+      : response.data?.data || []
   }
 
   /**
@@ -109,7 +119,7 @@ class GamificationService {
   async checkNewBadges(): Promise<UserBadge[]> {
     try {
       const earnedBadges = await this.getEarnedBadges()
-      const newBadges = earnedBadges.filter(ub => !ub.viewed)
+      const newBadges = earnedBadges.filter((ub) => !ub.viewed)
       return newBadges
     } catch (_error) {
       // console.error('Error checking new badges:', error)

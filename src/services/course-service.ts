@@ -1,11 +1,11 @@
-import apiClient from '@/lib/api-client'
 import type {
   Course,
   CategoryWithCourses,
   CreateCourseRequest,
   UpdateCourseRequest,
-  CourseFilters
+  CourseFilters,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Course Service
@@ -20,15 +20,20 @@ class CourseService {
    * @param filters - Optional filters
    * @returns Promise with paginated courses
    */
-  async getCourses(academySlug: string | number, filters?: CourseFilters): Promise<Course[]> {
+  async getCourses(
+    academySlug: string | number,
+    filters?: CourseFilters
+  ): Promise<Course[]> {
     const params = {
       academy_slug: academySlug,
-      ...filters
+      ...filters,
     }
     const response = await apiClient.get('/courses', { params })
 
     // Handle both array response and object with data property
-    return Array.isArray(response.data) ? response.data : (response.data?.data || [])
+    return Array.isArray(response.data)
+      ? response.data
+      : response.data?.data || []
   }
 
   /**
@@ -38,7 +43,9 @@ class CourseService {
    */
   async getAllCourses(filters?: CourseFilters): Promise<Course[]> {
     const response = await apiClient.get('/courses', { params: filters })
-    return Array.isArray(response.data) ? response.data : (response.data?.data || [])
+    return Array.isArray(response.data)
+      ? response.data
+      : response.data?.data || []
   }
 
   /**
@@ -46,7 +53,9 @@ class CourseService {
    * @param categoryId - Optional category ID to filter by
    * @returns Promise with array of categories containing courses
    */
-  async getFeaturedCourses(categoryId?: number): Promise<CategoryWithCourses[]> {
+  async getFeaturedCourses(
+    categoryId?: number
+  ): Promise<CategoryWithCourses[]> {
     const params = categoryId ? { academy_category_id: categoryId } : {}
     const response = await apiClient.get('/courses/featured', { params })
     return response.data
@@ -81,9 +90,12 @@ class CourseService {
    * @param data - Course creation data
    * @returns Promise with created course
    */
-  async createCourse(academySlug: string | number, data: CreateCourseRequest): Promise<Course> {
+  async createCourse(
+    academySlug: string | number,
+    data: CreateCourseRequest
+  ): Promise<Course> {
     const response = await apiClient.post(`/academies/${academySlug}/courses`, {
-      course: data
+      course: data,
     })
     return response.data
   }
@@ -96,10 +108,17 @@ class CourseService {
    * @param data - Course update data
    * @returns Promise with updated course
    */
-  async updateCourse(academySlug: string | number, courseSlug: string | number, data: UpdateCourseRequest): Promise<Course> {
-    const response = await apiClient.put(`/academies/${academySlug}/courses/${courseSlug}`, {
-      course: data
-    })
+  async updateCourse(
+    academySlug: string | number,
+    courseSlug: string | number,
+    data: UpdateCourseRequest
+  ): Promise<Course> {
+    const response = await apiClient.put(
+      `/academies/${academySlug}/courses/${courseSlug}`,
+      {
+        course: data,
+      }
+    )
     return response.data
   }
 
@@ -110,8 +129,13 @@ class CourseService {
    * @param courseSlug - Course slug or ID
    * @returns Promise with deletion confirmation
    */
-  async deleteCourse(academySlug: string | number, courseSlug: string | number): Promise<void> {
-    const response = await apiClient.delete(`/academies/${academySlug}/courses/${courseSlug}`)
+  async deleteCourse(
+    academySlug: string | number,
+    courseSlug: string | number
+  ): Promise<void> {
+    const response = await apiClient.delete(
+      `/academies/${academySlug}/courses/${courseSlug}`
+    )
     return response.data
   }
 
@@ -121,9 +145,16 @@ class CourseService {
    * @param filters - Optional filters
    * @returns Promise with paginated courses
    */
-  async getCoursesByAcademy(academySlug: string, filters?: CourseFilters): Promise<Course[]> {
-    const response = await apiClient.get(`/academies/${academySlug}/courses`, { params: filters })
-    return Array.isArray(response.data) ? response.data : (response.data?.data || [])
+  async getCoursesByAcademy(
+    academySlug: string,
+    filters?: CourseFilters
+  ): Promise<Course[]> {
+    const response = await apiClient.get(`/academies/${academySlug}/courses`, {
+      params: filters,
+    })
+    return Array.isArray(response.data)
+      ? response.data
+      : response.data?.data || []
   }
 }
 

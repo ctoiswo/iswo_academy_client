@@ -1,8 +1,8 @@
 import { useAuthStore } from '@/stores/auth-store'
 import { AdminDashboard } from '@/features/dashboard/admin'
 import { StudentDashboard } from '@/features/dashboard/student'
-import { TeacherDashboard } from '@/features/dashboard/teacher'
 import { SuperAdminDashboard } from '@/features/dashboard/super-admin'
+import { TeacherDashboard } from '@/features/dashboard/teacher'
 
 /**
  * Hook that returns the appropriate dashboard component based on user's role in the academy

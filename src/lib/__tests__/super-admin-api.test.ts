@@ -12,8 +12,8 @@ describe('Super Admin API Types', () => {
         monthlyGrowth: {
           academies: 8.2,
           users: 15.3,
-          revenue: 12.7
-        }
+          revenue: 12.7,
+        },
       }
 
       expect(mockStats.totalAcademies).toBe(12)
@@ -41,8 +41,8 @@ describe('Super Admin API Types', () => {
         creator: {
           id: 1,
           name: 'John Doe',
-          email: 'john@example.com'
-        }
+          email: 'john@example.com',
+        },
       }
 
       expect(mockAcademy.id).toBe(1)
@@ -56,10 +56,13 @@ describe('Super Admin API Types', () => {
 
     it('should support all status values', () => {
       const statuses: Array<'active' | 'inactive' | 'suspended' | 'pending'> = [
-        'active', 'inactive', 'suspended', 'pending'
+        'active',
+        'inactive',
+        'suspended',
+        'pending',
       ]
 
-      statuses.forEach(status => {
+      statuses.forEach((status) => {
         const academy: AcademyOverview = {
           id: 1,
           name: 'Test Academy',
@@ -73,8 +76,8 @@ describe('Super Admin API Types', () => {
           creator: {
             id: 1,
             name: 'Test User',
-            email: 'test@example.com'
-          }
+            email: 'test@example.com',
+          },
         }
 
         expect(academy.status).toBe(status)
@@ -87,22 +90,22 @@ describe('Super Admin API Types', () => {
       const mockHealth: SystemHealth = {
         database_status: {
           status: 'healthy',
-          response_time: 15.2
+          response_time: 15.2,
         },
         redis_status: {
-          status: 'healthy'
+          status: 'healthy',
         },
         storage_status: {
           status: 'healthy',
-          service: 'local'
+          service: 'local',
         },
         active_users_24h: 42,
         recent_errors: [],
         system_load: {
           memory_usage: 65.4,
           cpu_usage: 23.1,
-          disk_usage: 45.8
-        }
+          disk_usage: 45.8,
+        },
       }
 
       expect(mockHealth.database_status.status).toBe('healthy')
@@ -119,24 +122,24 @@ describe('Super Admin API Types', () => {
       const mockHealth: SystemHealth = {
         database_status: {
           status: 'unhealthy',
-          error: 'Connection timeout'
+          error: 'Connection timeout',
         },
         redis_status: {
-          status: 'not_configured'
+          status: 'not_configured',
         },
         storage_status: {
           status: 'unhealthy',
-          error: 'Disk full'
+          error: 'Disk full',
         },
         active_users_24h: 0,
         recent_errors: [
-          { message: 'Database error', timestamp: '2024-02-10T10:00:00Z' }
+          { message: 'Database error', timestamp: '2024-02-10T10:00:00Z' },
         ],
         system_load: {
           memory_usage: 95.2,
           cpu_usage: 87.3,
-          disk_usage: 92.1
-        }
+          disk_usage: 92.1,
+        },
       }
 
       expect(mockHealth.database_status.status).toBe('unhealthy')
@@ -146,5 +149,4 @@ describe('Super Admin API Types', () => {
       expect(mockHealth.recent_errors).toHaveLength(1)
     })
   })
-
 })

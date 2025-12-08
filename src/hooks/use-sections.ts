@@ -1,10 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
 import {
   sectionService,
   type CreateSectionData,
   type UpdateSectionData,
 } from '@/services/section-service'
+import { toast } from 'sonner'
 
 export function useSections(academySlug: string, courseSlug: string) {
   return useQuery({
@@ -21,7 +21,8 @@ export function useSection(
 ) {
   return useQuery({
     queryKey: ['section', academySlug, courseSlug, sectionId],
-    queryFn: () => sectionService.getSection(academySlug, courseSlug, sectionId),
+    queryFn: () =>
+      sectionService.getSection(academySlug, courseSlug, sectionId),
     enabled: !!academySlug && !!courseSlug && !!sectionId,
   })
 }
@@ -33,7 +34,9 @@ export function useCreateSection(academySlug: string, courseSlug: string) {
     mutationFn: (data: CreateSectionData) =>
       sectionService.createSection(academySlug, courseSlug, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sections', academySlug, courseSlug] })
+      queryClient.invalidateQueries({
+        queryKey: ['sections', academySlug, courseSlug],
+      })
       queryClient.invalidateQueries({ queryKey: ['courses'] })
       toast.success('Sección creada exitosamente')
     },
@@ -53,9 +56,12 @@ export function useUpdateSection(academySlug: string, courseSlug: string) {
     }: {
       sectionId: number
       data: UpdateSectionData
-    }) => sectionService.updateSection(academySlug, courseSlug, sectionId, data),
+    }) =>
+      sectionService.updateSection(academySlug, courseSlug, sectionId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sections', academySlug, courseSlug] })
+      queryClient.invalidateQueries({
+        queryKey: ['sections', academySlug, courseSlug],
+      })
       queryClient.invalidateQueries({ queryKey: ['courses'] })
       toast.success('Sección actualizada exitosamente')
     },
@@ -72,7 +78,9 @@ export function useDeleteSection(academySlug: string, courseSlug: string) {
     mutationFn: (sectionId: number) =>
       sectionService.deleteSection(academySlug, courseSlug, sectionId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sections', academySlug, courseSlug] })
+      queryClient.invalidateQueries({
+        queryKey: ['sections', academySlug, courseSlug],
+      })
       queryClient.invalidateQueries({ queryKey: ['courses'] })
       toast.success('Sección eliminada exitosamente')
     },
@@ -92,9 +100,17 @@ export function useReorderSection(academySlug: string, courseSlug: string) {
     }: {
       sectionId: number
       position: number
-    }) => sectionService.reorderSection(academySlug, courseSlug, sectionId, position),
+    }) =>
+      sectionService.reorderSection(
+        academySlug,
+        courseSlug,
+        sectionId,
+        position
+      ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sections', academySlug, courseSlug] })
+      queryClient.invalidateQueries({
+        queryKey: ['sections', academySlug, courseSlug],
+      })
     },
     onError: (error: any) => {
       toast.error(`Error al reordenar la sección: ${error.message}`)

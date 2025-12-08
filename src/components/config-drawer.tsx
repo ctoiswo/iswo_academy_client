@@ -305,7 +305,8 @@ function LayoutConfig() {
         ))}
       </Radio>
       <div id='layout-description' className='sr-only'>
-        Elige entre modo predeterminado expandido, compacto solo iconos o diseño completo
+        Elige entre modo predeterminado expandido, compacto solo iconos o diseño
+        completo
       </div>
     </div>
   )
@@ -347,7 +348,8 @@ function DirConfig() {
         ))}
       </Radio>
       <div id='direction-description' className='sr-only'>
-        Elige entre dirección del sitio de izquierda a derecha o de derecha a izquierda
+        Elige entre dirección del sitio de izquierda a derecha o de derecha a
+        izquierda
       </div>
     </div>
   )

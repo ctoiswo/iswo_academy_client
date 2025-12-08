@@ -12,7 +12,9 @@ import { type SidebarData } from '../types'
  * Sidebar para usuarios Student
  * Enfocado en aprendizaje y progreso personal
  */
-export function getStudentSidebar(academySlug: string): SidebarData['navGroups'] {
+export function getStudentSidebar(
+  academySlug: string
+): SidebarData['navGroups'] {
   return [
     {
       title: 'General',

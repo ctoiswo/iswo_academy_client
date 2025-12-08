@@ -1,7 +1,7 @@
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 
 export interface StatsWidgetProps {
   title: string
@@ -24,16 +24,16 @@ export function StatsWidget({
   loading = false,
   className,
   description,
-  format = 'number'
+  format = 'number',
 }: StatsWidgetProps) {
   const formatValue = (val: string | number) => {
     if (typeof val === 'string') return val
-    
+
     switch (format) {
       case 'currency':
         return new Intl.NumberFormat('en-US', {
           style: 'currency',
-          currency: 'USD'
+          currency: 'USD',
         }).format(val)
       case 'percentage':
         return `${val}%`
@@ -46,12 +46,12 @@ export function StatsWidget({
   const getTrendIcon = () => {
     switch (changeType) {
       case 'increase':
-        return <TrendingUp className="h-4 w-4 text-green-600" />
+        return <TrendingUp className='h-4 w-4 text-green-600' />
       case 'decrease':
-        return <TrendingDown className="h-4 w-4 text-red-600" />
+        return <TrendingDown className='h-4 w-4 text-red-600' />
       case 'neutral':
       default:
-        return <Minus className="h-4 w-4 text-gray-500" />
+        return <Minus className='h-4 w-4 text-gray-500' />
     }
   }
 
@@ -70,19 +70,19 @@ export function StatsWidget({
   if (loading) {
     return (
       <Card className={cn('p-6', className)}>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <Skeleton className="h-4 w-24" />
-          {Icon && <Skeleton className="h-4 w-4" />}
+        <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+          <Skeleton className='h-4 w-24' />
+          {Icon && <Skeleton className='h-4 w-4' />}
         </CardHeader>
-        <CardContent className="p-0">
-          <Skeleton className="h-8 w-32 mb-2" />
+        <CardContent className='p-0'>
+          <Skeleton className='mb-2 h-8 w-32' />
           {change !== undefined && (
-            <div className="flex items-center space-x-1">
-              <Skeleton className="h-4 w-4" />
-              <Skeleton className="h-4 w-16" />
+            <div className='flex items-center space-x-1'>
+              <Skeleton className='h-4 w-4' />
+              <Skeleton className='h-4 w-16' />
             </div>
           )}
-          {description && <Skeleton className="h-4 w-full mt-2" />}
+          {description && <Skeleton className='mt-2 h-4 w-full' />}
         </CardContent>
       </Card>
     )
@@ -90,25 +90,26 @@ export function StatsWidget({
 
   return (
     <Card className={cn('p-6', className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+      <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+        <CardTitle className='text-muted-foreground text-sm font-medium'>
           {title}
         </CardTitle>
-        {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
+        {Icon && <Icon className='text-muted-foreground h-4 w-4' />}
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="text-2xl font-bold">{formatValue(value)}</div>
+      <CardContent className='p-0'>
+        <div className='text-2xl font-bold'>{formatValue(value)}</div>
         {change !== undefined && (
-          <div className="flex items-center space-x-1 text-xs">
+          <div className='flex items-center space-x-1 text-xs'>
             {getTrendIcon()}
             <span className={cn('font-medium', getChangeColor())}>
-              {change > 0 ? '+' : ''}{change}%
+              {change > 0 ? '+' : ''}
+              {change}%
             </span>
-            <span className="text-muted-foreground">from last period</span>
+            <span className='text-muted-foreground'>from last period</span>
           </div>
         )}
         {description && (
-          <p className="text-xs text-muted-foreground mt-2">{description}</p>
+          <p className='text-muted-foreground mt-2 text-xs'>{description}</p>
         )}
       </CardContent>
     </Card>

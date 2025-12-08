@@ -1,8 +1,8 @@
+import type { Course } from '@/types'
 import { motion } from 'framer-motion'
 import { Play, Heart, Share2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import type { Course } from '@/types'
 
 interface CourseSidebarProps {
   course: Course & {
@@ -26,7 +26,7 @@ export function CourseSidebar({
   onSaveClick,
   onShareClick,
   formatPrice,
-  formatDifficulty
+  formatDifficulty,
 }: CourseSidebarProps) {
   return (
     <div className='lg:col-span-1'>
@@ -88,9 +88,7 @@ export function CourseSidebar({
               </div>
               <div className='flex items-center justify-between'>
                 <span className='text-muted-foreground'>Duración:</span>
-                <span>
-                  {Math.round(course.duration_minutes / 60)} horas
-                </span>
+                <span>{Math.round(course.duration_minutes / 60)} horas</span>
               </div>
               <div className='flex items-center justify-between'>
                 <span className='text-muted-foreground'>Lecciones:</span>

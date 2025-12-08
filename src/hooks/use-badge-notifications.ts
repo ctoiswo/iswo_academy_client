@@ -1,13 +1,15 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { type UserBadge } from '@/services/gamification-service'
-import { useAuthStore } from '@/stores/auth-store'
 import { createConsumer } from '@rails/actioncable'
+import { useAuthStore } from '@/stores/auth-store'
 
 interface UseBadgeNotificationsOptions {
   enabled?: boolean
 }
 
-export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}) {
+export function useBadgeNotifications(
+  options: UseBadgeNotificationsOptions = {}
+) {
   const { enabled = true } = options
 
   const { isAuthenticated, user, tokens, currentAcademy } = useAuthStore()
@@ -17,19 +19,21 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
   const subscriptionRef = useRef<any>(null)
   const consumerRef = useRef<any>(null)
 
-  const handleBadgeEarned = useCallback((data: any) => {
+  const handleBadgeEarned = useCallback(
+    (data: any) => {
+      if (data.type === 'badge_earned' && data.data) {
+        const newBadge = data.data as UserBadge
 
-    if (data.type === 'badge_earned' && data.data) {
-      const newBadge = data.data as UserBadge
+        setNewBadges((prev) => [...prev, newBadge])
 
-      setNewBadges((prev) => [...prev, newBadge])
-
-      // Show the badge if no badge is currently displayed
-      if (!currentBadge) {
-        setCurrentBadge(newBadge)
+        // Show the badge if no badge is currently displayed
+        if (!currentBadge) {
+          setCurrentBadge(newBadge)
+        }
       }
-    }
-  }, [currentBadge])
+    },
+    [currentBadge]
+  )
 
   const showNextBadge = useCallback(() => {
     if (newBadges.length === 0) {
@@ -51,23 +55,27 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
     }
   }, [newBadges, currentBadge])
 
-  const markBadgeViewed = useCallback(async (badgeId: number) => {
-    if (!tokens?.access_token || !currentAcademy) return
+  const markBadgeViewed = useCallback(
+    async (badgeId: number) => {
+      if (!tokens?.access_token || !currentAcademy) return
 
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
-      await fetch(`${apiUrl}/badges/${badgeId}/mark_viewed`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${tokens.access_token}`,
-          'Content-Type': 'application/json',
-          'X-Academy-Slug': currentAcademy.slug
-        }
-      })
-    } catch (_error) {
-      // console.error('Failed to mark badge as viewed:', error)
-    }
-  }, [tokens, currentAcademy])
+      try {
+        const apiUrl =
+          import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
+        await fetch(`${apiUrl}/badges/${badgeId}/mark_viewed`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${tokens.access_token}`,
+            'Content-Type': 'application/json',
+            'X-Academy-Slug': currentAcademy.slug,
+          },
+        })
+      } catch (_error) {
+        // console.error('Failed to mark badge as viewed:', error)
+      }
+    },
+    [tokens, currentAcademy]
+  )
 
   const dismissCurrentBadge = useCallback(() => {
     if (currentBadge?.badge?.id) {
@@ -97,15 +105,16 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
+      const apiUrl =
+        import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
       const academySlug = currentAcademy.slug
 
       const response = await fetch(`${apiUrl}/badges/unviewed`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${tokens.access_token}`,
-          'X-Academy-Slug': academySlug
-        }
+          Authorization: `Bearer ${tokens.access_token}`,
+          'X-Academy-Slug': academySlug,
+        },
       })
 
       if (response.ok) {
@@ -126,17 +135,29 @@ export function useBadgeNotifications(options: UseBadgeNotificationsOptions = {}
 
   // Connect to WebSocket when authenticated and academy is selected
   useEffect(() => {
-    if (!isAuthenticated || !user || !tokens?.access_token || !enabled || !currentAcademy) {
+    if (
+      !isAuthenticated ||
+      !user ||
+      !tokens?.access_token ||
+      !enabled ||
+      !currentAcademy
+    ) {
       return
     }
 
     // Get WebSocket URL from environment or construct it
     // Cable endpoint is at /cable (not under /api/v1)
-    const wsUrl = import.meta.env.VITE_CABLE_URL ||
-      (import.meta.env.VITE_API_URL?.replace(/^http/, 'ws').replace('/api/v1', '') + '/cable')
+    const wsUrl =
+      import.meta.env.VITE_CABLE_URL ||
+      import.meta.env.VITE_API_URL?.replace(/^http/, 'ws').replace(
+        '/api/v1',
+        ''
+      ) + '/cable'
 
     // Create ActionCable consumer with authentication
-    consumerRef.current = createConsumer(`${wsUrl}?token=${tokens.access_token}`)
+    consumerRef.current = createConsumer(
+      `${wsUrl}?token=${tokens.access_token}`
+    )
 
     // Subscribe to GamificationChannel
     subscriptionRef.current = consumerRef.current.subscriptions.create(

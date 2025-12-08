@@ -1,121 +1,121 @@
-import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
 import { ContentManagement } from '../components/content-management'
 import type { LessonContent, Assignment, TeacherCourse } from '../types'
 
 const mockCourses: TeacherCourse[] = [
   {
     id: 1,
-    title: "Introduction to React",
-    description: "Learn React fundamentals",
-    status: "published",
+    title: 'Introduction to React',
+    description: 'Learn React fundamentals',
+    status: 'published',
     enrollments: 45,
     completionRate: 82,
     totalLessons: 12,
     completedLessons: 10,
-    createdAt: "2024-01-15T00:00:00Z",
-    updatedAt: "2024-02-01T00:00:00Z",
+    createdAt: '2024-01-15T00:00:00Z',
+    updatedAt: '2024-02-01T00:00:00Z',
     price: 99,
-    duration: "8 weeks",
-    academy: { id: 1, name: "Tech Academy" }
+    duration: '8 weeks',
+    academy: { id: 1, name: 'Tech Academy' },
   },
   {
     id: 2,
-    title: "Advanced JavaScript",
-    description: "Master JavaScript concepts",
-    status: "published",
+    title: 'Advanced JavaScript',
+    description: 'Master JavaScript concepts',
+    status: 'published',
     enrollments: 32,
     completionRate: 75,
     totalLessons: 15,
     completedLessons: 12,
-    createdAt: "2024-01-20T00:00:00Z",
-    updatedAt: "2024-02-05T00:00:00Z",
+    createdAt: '2024-01-20T00:00:00Z',
+    updatedAt: '2024-02-05T00:00:00Z',
     price: 149,
-    duration: "10 weeks",
-    academy: { id: 1, name: "Tech Academy" }
-  }
+    duration: '10 weeks',
+    academy: { id: 1, name: 'Tech Academy' },
+  },
 ]
 
 const mockLessons: LessonContent[] = [
   {
     id: 1,
-    title: "React Components Basics",
-    description: "Learn how to create and use React components",
-    type: "video",
+    title: 'React Components Basics',
+    description: 'Learn how to create and use React components',
+    type: 'video',
     duration: 45,
-    content: "Video content here...",
+    content: 'Video content here...',
     order: 1,
     isPublished: true,
-    createdAt: "2024-01-15T00:00:00Z",
-    updatedAt: "2024-01-20T00:00:00Z"
+    createdAt: '2024-01-15T00:00:00Z',
+    updatedAt: '2024-01-20T00:00:00Z',
   },
   {
     id: 2,
-    title: "State Management Guide",
-    description: "Understanding state in React applications",
-    type: "text",
+    title: 'State Management Guide',
+    description: 'Understanding state in React applications',
+    type: 'text',
     duration: 30,
-    content: "Text content here...",
+    content: 'Text content here...',
     order: 2,
     isPublished: true,
-    createdAt: "2024-01-16T00:00:00Z",
-    updatedAt: "2024-01-21T00:00:00Z"
+    createdAt: '2024-01-16T00:00:00Z',
+    updatedAt: '2024-01-21T00:00:00Z',
   },
   {
     id: 3,
-    title: "React Hooks Quiz",
-    description: "Test your knowledge of React hooks",
-    type: "quiz",
+    title: 'React Hooks Quiz',
+    description: 'Test your knowledge of React hooks',
+    type: 'quiz',
     duration: 15,
-    content: "Quiz content here...",
+    content: 'Quiz content here...',
     order: 3,
     isPublished: false,
-    createdAt: "2024-01-17T00:00:00Z",
-    updatedAt: "2024-02-01T00:00:00Z"
-  }
+    createdAt: '2024-01-17T00:00:00Z',
+    updatedAt: '2024-02-01T00:00:00Z',
+  },
 ]
 
 const mockAssignments: Assignment[] = [
   {
     id: 1,
-    title: "Build a Todo App",
-    description: "Create a fully functional todo application using React",
-    dueDate: "2024-02-15T23:59:00Z",
-    course: { id: 1, title: "Introduction to React" },
+    title: 'Build a Todo App',
+    description: 'Create a fully functional todo application using React',
+    dueDate: '2024-02-15T23:59:00Z',
+    course: { id: 1, title: 'Introduction to React' },
     submissions: 38,
     totalStudents: 45,
-    status: "active",
-    createdAt: "2024-01-25T00:00:00Z"
+    status: 'active',
+    createdAt: '2024-01-25T00:00:00Z',
   },
   {
     id: 2,
-    title: "JavaScript Patterns Quiz",
-    description: "Test your knowledge of JavaScript design patterns",
-    dueDate: "2024-02-01T23:59:00Z", // Overdue
-    course: { id: 2, title: "Advanced JavaScript" },
+    title: 'JavaScript Patterns Quiz',
+    description: 'Test your knowledge of JavaScript design patterns',
+    dueDate: '2024-02-01T23:59:00Z', // Overdue
+    course: { id: 2, title: 'Advanced JavaScript' },
     submissions: 28,
     totalStudents: 32,
-    status: "active",
-    createdAt: "2024-01-20T00:00:00Z"
+    status: 'active',
+    createdAt: '2024-01-20T00:00:00Z',
   },
   {
     id: 3,
-    title: "Component Architecture",
-    description: "Design a scalable component architecture",
-    dueDate: "2024-03-01T23:59:00Z",
-    course: { id: 1, title: "Introduction to React" },
+    title: 'Component Architecture',
+    description: 'Design a scalable component architecture',
+    dueDate: '2024-03-01T23:59:00Z',
+    course: { id: 1, title: 'Introduction to React' },
     submissions: 0,
     totalStudents: 45,
-    status: "draft",
-    createdAt: "2024-02-01T00:00:00Z"
-  }
+    status: 'draft',
+    createdAt: '2024-02-01T00:00:00Z',
+  },
 ]
 
 describe('ContentManagement', () => {
   describe('Basic Rendering', () => {
     it('renders content statistics correctly', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -138,7 +138,7 @@ describe('ContentManagement', () => {
 
     it('renders lesson list with correct information', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -160,7 +160,7 @@ describe('ContentManagement', () => {
 
     it('renders assignment list with correct information', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -178,7 +178,7 @@ describe('ContentManagement', () => {
 
     it('renders content type badges correctly', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -192,7 +192,7 @@ describe('ContentManagement', () => {
 
     it('renders assignment status badges correctly', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -208,7 +208,7 @@ describe('ContentManagement', () => {
   describe('Content Type Filtering', () => {
     it('shows all content by default', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -221,7 +221,7 @@ describe('ContentManagement', () => {
 
     it('filters to show only lessons', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -236,7 +236,7 @@ describe('ContentManagement', () => {
 
     it('filters to show only assignments', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -253,7 +253,7 @@ describe('ContentManagement', () => {
   describe('Course Filtering', () => {
     it('filters assignments by selected course', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -267,7 +267,9 @@ describe('ContentManagement', () => {
       // Should show assignments for React course only
       expect(screen.getByText('Build a Todo App')).toBeInTheDocument()
       expect(screen.getByText('Component Architecture')).toBeInTheDocument()
-      expect(screen.queryByText('JavaScript Patterns Quiz')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText('JavaScript Patterns Quiz')
+      ).not.toBeInTheDocument()
     })
   })
 
@@ -275,7 +277,7 @@ describe('ContentManagement', () => {
     it('calls onCreateLesson when New Lesson button is clicked', () => {
       const onCreateLesson = vi.fn()
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -290,7 +292,7 @@ describe('ContentManagement', () => {
     it('calls onCreateAssignment when New Assignment button is clicked', () => {
       const onCreateAssignment = vi.fn()
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -305,7 +307,7 @@ describe('ContentManagement', () => {
     it('calls onEditLesson when Edit Content is clicked', () => {
       const onEditLesson = vi.fn()
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -324,7 +326,7 @@ describe('ContentManagement', () => {
     it('calls onViewLesson when Preview is clicked', () => {
       const onViewLesson = vi.fn()
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -343,7 +345,7 @@ describe('ContentManagement', () => {
     it('calls onDeleteLesson when Delete is clicked', () => {
       const onDeleteLesson = vi.fn()
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -364,7 +366,7 @@ describe('ContentManagement', () => {
     it('calls onEditAssignment when Edit Assignment is clicked', () => {
       const onEditAssignment = vi.fn()
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -379,7 +381,7 @@ describe('ContentManagement', () => {
 
       // Look for Edit Assignment text more specifically
       const editButtons = screen.getAllByText(/Edit/)
-      const editAssignmentButton = editButtons.find(button => 
+      const editAssignmentButton = editButtons.find((button) =>
         button.textContent?.includes('Assignment')
       )
       if (editAssignmentButton) {
@@ -394,7 +396,7 @@ describe('ContentManagement', () => {
     it('calls onDeleteAssignment when Delete is clicked on assignment', () => {
       const onDeleteAssignment = vi.fn()
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -424,7 +426,7 @@ describe('ContentManagement', () => {
   describe('Loading State', () => {
     it('shows loading state when loading prop is true', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={[]}
           lessons={[]}
           assignments={[]}
@@ -440,31 +442,37 @@ describe('ContentManagement', () => {
   describe('Empty State', () => {
     it('shows empty message when no lessons', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={[]}
           assignments={mockAssignments}
         />
       )
 
-      expect(screen.getByText('No lessons found. Create your first lesson to get started.')).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'No lessons found. Create your first lesson to get started.'
+        )
+      ).toBeInTheDocument()
     })
 
     it('shows empty message when no assignments', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={[]}
         />
       )
 
-      expect(screen.getByText('No assignments found. Create your first assignment.')).toBeInTheDocument()
+      expect(
+        screen.getByText('No assignments found. Create your first assignment.')
+      ).toBeInTheDocument()
     })
 
     it('disables create buttons when no courses', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={[]}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -473,7 +481,7 @@ describe('ContentManagement', () => {
 
       const newLessonButton = screen.getByText('New Lesson')
       const newAssignmentButton = screen.getByText('New Assignment')
-      
+
       expect(newLessonButton).toBeDisabled()
       expect(newAssignmentButton).toBeDisabled()
     })
@@ -485,11 +493,11 @@ describe('ContentManagement', () => {
         { ...mockLessons[0], duration: 30 }, // 30 minutes
         { ...mockLessons[1], duration: 90 }, // 1h 30m
         { ...mockLessons[2], duration: 120 }, // 2h
-        { ...mockLessons[2], id: 4, duration: undefined } // No duration
+        { ...mockLessons[2], id: 4, duration: undefined }, // No duration
       ]
 
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={lessonsWithDifferentDurations}
           assignments={[]}
@@ -506,7 +514,7 @@ describe('ContentManagement', () => {
   describe('Date Formatting', () => {
     it('formats dates correctly', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}
@@ -516,7 +524,7 @@ describe('ContentManagement', () => {
       // Check that dates are formatted (exact format may vary)
       const updatedElements = screen.getAllByText(/Updated/)
       expect(updatedElements.length).toBeGreaterThan(0)
-      
+
       const dueElements = screen.getAllByText(/Due:/)
       expect(dueElements.length).toBeGreaterThan(0)
     })
@@ -525,7 +533,7 @@ describe('ContentManagement', () => {
   describe('Statistics Calculations', () => {
     it('calculates statistics correctly with empty content', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={[]}
           assignments={[]}
@@ -540,12 +548,14 @@ describe('ContentManagement', () => {
       const currentDate = new Date()
       const overdueAssignment: Assignment = {
         ...mockAssignments[0],
-        dueDate: new Date(currentDate.getTime() - 24 * 60 * 60 * 1000).toISOString(), // Yesterday
-        status: "active"
+        dueDate: new Date(
+          currentDate.getTime() - 24 * 60 * 60 * 1000
+        ).toISOString(), // Yesterday
+        status: 'active',
       }
 
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={[overdueAssignment]}
@@ -560,7 +570,7 @@ describe('ContentManagement', () => {
   describe('Content Icons', () => {
     it('renders appropriate icons for different content types', () => {
       render(
-        <ContentManagement 
+        <ContentManagement
           courses={mockCourses}
           lessons={mockLessons}
           assignments={mockAssignments}

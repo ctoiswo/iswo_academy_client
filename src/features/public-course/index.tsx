@@ -81,7 +81,10 @@ export function PublicCoursePage() {
       courseData.thumbnail_url ||
       'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=400&dpr=2',
     rating: 4.8,
-    total_ratings: Math.max(Math.floor((courseData.enrollment_count || 0) * 0.3), 10),
+    total_ratings: Math.max(
+      Math.floor((courseData.enrollment_count || 0) * 0.3),
+      10
+    ),
     tags: ['Desarrollo', 'Programación'],
     requirements: [
       'Conocimientos básicos del tema',

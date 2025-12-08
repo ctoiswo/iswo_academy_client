@@ -1,39 +1,42 @@
-import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
 import { StudentProgress } from '../components/student-progress'
-import type { StudentProgress as StudentProgressType, TeacherCourse } from '../types'
+import type {
+  StudentProgress as StudentProgressType,
+  TeacherCourse,
+} from '../types'
 
 const mockCourses: TeacherCourse[] = [
   {
     id: 1,
-    title: "Introduction to React",
-    description: "Learn React fundamentals",
-    status: "published",
+    title: 'Introduction to React',
+    description: 'Learn React fundamentals',
+    status: 'published',
     enrollments: 45,
     completionRate: 82,
     totalLessons: 12,
     completedLessons: 10,
-    createdAt: "2024-01-15T00:00:00Z",
-    updatedAt: "2024-02-01T00:00:00Z",
+    createdAt: '2024-01-15T00:00:00Z',
+    updatedAt: '2024-02-01T00:00:00Z',
     price: 99,
-    duration: "8 weeks",
-    academy: { id: 1, name: "Tech Academy" }
+    duration: '8 weeks',
+    academy: { id: 1, name: 'Tech Academy' },
   },
   {
     id: 2,
-    title: "Advanced JavaScript",
-    description: "Master JavaScript concepts",
-    status: "published",
+    title: 'Advanced JavaScript',
+    description: 'Master JavaScript concepts',
+    status: 'published',
     enrollments: 32,
     completionRate: 75,
     totalLessons: 15,
     completedLessons: 12,
-    createdAt: "2024-01-20T00:00:00Z",
-    updatedAt: "2024-02-05T00:00:00Z",
+    createdAt: '2024-01-20T00:00:00Z',
+    updatedAt: '2024-02-05T00:00:00Z',
     price: 149,
-    duration: "10 weeks",
-    academy: { id: 1, name: "Tech Academy" }
-  }
+    duration: '10 weeks',
+    academy: { id: 1, name: 'Tech Academy' },
+  },
 ]
 
 const mockStudents: StudentProgressType[] = [
@@ -41,67 +44,67 @@ const mockStudents: StudentProgressType[] = [
     id: 1,
     student: {
       id: 101,
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      avatar: undefined
+      name: 'Alice Johnson',
+      email: 'alice@example.com',
+      avatar: undefined,
     },
-    course: { id: 1, title: "Introduction to React" },
+    course: { id: 1, title: 'Introduction to React' },
     progress: 85,
     completedLessons: 10,
     totalLessons: 12,
-    lastActivity: "2024-02-09T14:30:00Z",
-    enrolledAt: "2024-01-20T00:00:00Z",
-    status: "active"
+    lastActivity: '2024-02-09T14:30:00Z',
+    enrolledAt: '2024-01-20T00:00:00Z',
+    status: 'active',
   },
   {
     id: 2,
     student: {
       id: 102,
-      name: "Bob Smith",
-      email: "bob@example.com",
-      avatar: undefined
+      name: 'Bob Smith',
+      email: 'bob@example.com',
+      avatar: undefined,
     },
-    course: { id: 1, title: "Introduction to React" },
+    course: { id: 1, title: 'Introduction to React' },
     progress: 100,
     completedLessons: 12,
     totalLessons: 12,
-    lastActivity: "2024-02-08T16:45:00Z",
-    enrolledAt: "2024-01-18T00:00:00Z",
-    completedAt: "2024-02-08T16:45:00Z",
-    status: "completed"
+    lastActivity: '2024-02-08T16:45:00Z',
+    enrolledAt: '2024-01-18T00:00:00Z',
+    completedAt: '2024-02-08T16:45:00Z',
+    status: 'completed',
   },
   {
     id: 3,
     student: {
       id: 103,
-      name: "Carol Davis",
-      email: "carol@example.com",
-      avatar: undefined
+      name: 'Carol Davis',
+      email: 'carol@example.com',
+      avatar: undefined,
     },
-    course: { id: 2, title: "Advanced JavaScript" },
+    course: { id: 2, title: 'Advanced JavaScript' },
     progress: 45,
     completedLessons: 7,
     totalLessons: 15,
-    lastActivity: "2024-01-25T10:20:00Z", // Old activity - at risk
-    enrolledAt: "2024-01-25T00:00:00Z",
-    status: "active"
+    lastActivity: '2024-01-25T10:20:00Z', // Old activity - at risk
+    enrolledAt: '2024-01-25T00:00:00Z',
+    status: 'active',
   },
   {
     id: 4,
     student: {
       id: 104,
-      name: "David Wilson",
-      email: "david@example.com",
-      avatar: undefined
+      name: 'David Wilson',
+      email: 'david@example.com',
+      avatar: undefined,
     },
-    course: { id: 1, title: "Introduction to React" },
+    course: { id: 1, title: 'Introduction to React' },
     progress: 15,
     completedLessons: 2,
     totalLessons: 12,
-    lastActivity: "2024-02-07T09:15:00Z",
-    enrolledAt: "2024-02-01T00:00:00Z",
-    status: "dropped"
-  }
+    lastActivity: '2024-02-07T09:15:00Z',
+    enrolledAt: '2024-02-01T00:00:00Z',
+    status: 'dropped',
+  },
 ]
 
 describe('StudentProgress', () => {
@@ -164,7 +167,7 @@ describe('StudentProgress', () => {
       expect(screen.getByText('Alice Johnson')).toBeInTheDocument()
       expect(screen.getByText('Bob Smith')).toBeInTheDocument()
       expect(screen.getByText('David Wilson')).toBeInTheDocument()
-      
+
       // Should not show Carol (in JavaScript course)
       expect(screen.queryByText('Carol Davis')).not.toBeInTheDocument()
     })
@@ -217,10 +220,10 @@ describe('StudentProgress', () => {
     it('calls onViewProgress when View Progress is clicked', () => {
       const onViewProgress = vi.fn()
       render(
-        <StudentProgress 
-          students={mockStudents} 
-          courses={mockCourses} 
-          onViewProgress={onViewProgress} 
+        <StudentProgress
+          students={mockStudents}
+          courses={mockCourses}
+          onViewProgress={onViewProgress}
         />
       )
 
@@ -236,10 +239,10 @@ describe('StudentProgress', () => {
     it('calls onViewStudent when View Profile is clicked', () => {
       const onViewStudent = vi.fn()
       render(
-        <StudentProgress 
-          students={mockStudents} 
-          courses={mockCourses} 
-          onViewStudent={onViewStudent} 
+        <StudentProgress
+          students={mockStudents}
+          courses={mockCourses}
+          onViewStudent={onViewStudent}
         />
       )
 
@@ -255,10 +258,10 @@ describe('StudentProgress', () => {
     it('calls onMessageStudent when Send Message is clicked', () => {
       const onMessageStudent = vi.fn()
       render(
-        <StudentProgress 
-          students={mockStudents} 
-          courses={mockCourses} 
-          onMessageStudent={onMessageStudent} 
+        <StudentProgress
+          students={mockStudents}
+          courses={mockCourses}
+          onMessageStudent={onMessageStudent}
         />
       )
 
@@ -285,7 +288,9 @@ describe('StudentProgress', () => {
     it('shows empty message when no students', () => {
       render(<StudentProgress students={[]} courses={mockCourses} />)
 
-      expect(screen.getByText('No students enrolled in your courses yet.')).toBeInTheDocument()
+      expect(
+        screen.getByText('No students enrolled in your courses yet.')
+      ).toBeInTheDocument()
     })
 
     it('shows filtered empty message when filters have no results', () => {
@@ -294,11 +299,13 @@ describe('StudentProgress', () => {
       // Filter by a course that has no students
       fireEvent.click(screen.getByRole('combobox'))
       fireEvent.click(screen.getByText('Advanced JavaScript'))
-      
+
       // Then filter by completed status (Carol is active, not completed)
       fireEvent.click(screen.getByText('Completed'))
 
-      expect(screen.getByText('No students match the selected filters.')).toBeInTheDocument()
+      expect(
+        screen.getByText('No students match the selected filters.')
+      ).toBeInTheDocument()
     })
   })
 
@@ -315,18 +322,20 @@ describe('StudentProgress', () => {
       const atRiskStudents: StudentProgressType[] = [
         {
           ...mockStudents[0],
-          lastActivity: "2024-01-01T00:00:00Z", // Very old activity
-          progress: 10 // Low progress
+          lastActivity: '2024-01-01T00:00:00Z', // Very old activity
+          progress: 10, // Low progress
         },
         {
           ...mockStudents[1],
-          lastActivity: "2024-01-01T00:00:00Z", // Very old activity
+          lastActivity: '2024-01-01T00:00:00Z', // Very old activity
           progress: 50,
-          status: "active"
-        }
+          status: 'active',
+        },
       ]
 
-      render(<StudentProgress students={atRiskStudents} courses={mockCourses} />)
+      render(
+        <StudentProgress students={atRiskStudents} courses={mockCourses} />
+      )
 
       // Both students should be at risk (old activity or low progress)
       expect(screen.getByText('At Risk')).toBeInTheDocument()
@@ -338,10 +347,12 @@ describe('StudentProgress', () => {
     it('formats recent activity correctly', () => {
       const recentStudent: StudentProgressType = {
         ...mockStudents[0],
-        lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString() // 2 hours ago
+        lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
       }
 
-      render(<StudentProgress students={[recentStudent]} courses={mockCourses} />)
+      render(
+        <StudentProgress students={[recentStudent]} courses={mockCourses} />
+      )
 
       expect(screen.getByText('Last active 2h ago')).toBeInTheDocument()
     })
@@ -349,7 +360,9 @@ describe('StudentProgress', () => {
     it('formats old activity correctly', () => {
       const oldStudent: StudentProgressType = {
         ...mockStudents[0],
-        lastActivity: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() // 10 days ago
+        lastActivity: new Date(
+          Date.now() - 10 * 24 * 60 * 60 * 1000
+        ).toISOString(), // 10 days ago
       }
 
       render(<StudentProgress students={[oldStudent]} courses={mockCourses} />)

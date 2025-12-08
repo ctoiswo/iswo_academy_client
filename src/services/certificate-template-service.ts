@@ -1,9 +1,9 @@
-import apiClient from '@/lib/api-client'
 import type {
   CertificateTemplate,
   CreateCertificateTemplateRequest,
-  UpdateCertificateTemplateRequest
+  UpdateCertificateTemplateRequest,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Certificate Template Service
@@ -15,8 +15,12 @@ class CertificateTemplateService {
    * @param academySlug - Academy slug
    * @returns Promise with array of certificate templates
    */
-  async getAcademyTemplates(academySlug: string): Promise<CertificateTemplate[]> {
-    const response = await apiClient.get(`/academies/${academySlug}/certificate_templates`)
+  async getAcademyTemplates(
+    academySlug: string
+  ): Promise<CertificateTemplate[]> {
+    const response = await apiClient.get(
+      `/academies/${academySlug}/certificate_templates`
+    )
     return response.data.data || response.data.certificate_templates || []
   }
 
@@ -26,8 +30,13 @@ class CertificateTemplateService {
    * @param templateId - Template ID
    * @returns Promise with certificate template details
    */
-  async getTemplate(academySlug: string, templateId: number): Promise<CertificateTemplate> {
-    const response = await apiClient.get(`/academies/${academySlug}/certificate_templates/${templateId}`)
+  async getTemplate(
+    academySlug: string,
+    templateId: number
+  ): Promise<CertificateTemplate> {
+    const response = await apiClient.get(
+      `/academies/${academySlug}/certificate_templates/${templateId}`
+    )
     return response.data.data || response.data.certificate_template
   }
 
@@ -42,27 +51,40 @@ class CertificateTemplateService {
     data: CreateCertificateTemplateRequest
   ): Promise<CertificateTemplate> {
     const formData = new FormData()
-    
+
     formData.append('certificate_template[name]', data.name)
-    if (data.description) formData.append('certificate_template[description]', data.description)
+    if (data.description)
+      formData.append('certificate_template[description]', data.description)
     if (data.is_default !== undefined) {
-      formData.append('certificate_template[is_default]', String(data.is_default))
+      formData.append(
+        'certificate_template[is_default]',
+        String(data.is_default)
+      )
     }
-    
+
     // Design
     formData.append('certificate_template[design]', JSON.stringify(data.design))
-    
+
     // Content
-    formData.append('certificate_template[content]', JSON.stringify(data.content))
-    
+    formData.append(
+      'certificate_template[content]',
+      JSON.stringify(data.content)
+    )
+
     // Requirements
     if (data.requirements) {
-      formData.append('certificate_template[requirements]', JSON.stringify(data.requirements))
+      formData.append(
+        'certificate_template[requirements]',
+        JSON.stringify(data.requirements)
+      )
     }
-    
+
     // Files
     if (data.background_image) {
-      formData.append('certificate_template[background_image]', data.background_image)
+      formData.append(
+        'certificate_template[background_image]',
+        data.background_image
+      )
     }
     if (data.logo) {
       formData.append('certificate_template[logo]', data.logo)
@@ -93,27 +115,43 @@ class CertificateTemplateService {
     data: UpdateCertificateTemplateRequest
   ): Promise<CertificateTemplate> {
     const formData = new FormData()
-    
+
     if (data.name) formData.append('certificate_template[name]', data.name)
-    if (data.description) formData.append('certificate_template[description]', data.description)
+    if (data.description)
+      formData.append('certificate_template[description]', data.description)
     if (data.is_default !== undefined) {
-      formData.append('certificate_template[is_default]', String(data.is_default))
+      formData.append(
+        'certificate_template[is_default]',
+        String(data.is_default)
+      )
     }
-    
+
     if (data.design) {
-      formData.append('certificate_template[design]', JSON.stringify(data.design))
+      formData.append(
+        'certificate_template[design]',
+        JSON.stringify(data.design)
+      )
     }
-    
+
     if (data.content) {
-      formData.append('certificate_template[content]', JSON.stringify(data.content))
+      formData.append(
+        'certificate_template[content]',
+        JSON.stringify(data.content)
+      )
     }
-    
+
     if (data.requirements) {
-      formData.append('certificate_template[requirements]', JSON.stringify(data.requirements))
+      formData.append(
+        'certificate_template[requirements]',
+        JSON.stringify(data.requirements)
+      )
     }
-    
+
     if (data.background_image) {
-      formData.append('certificate_template[background_image]', data.background_image)
+      formData.append(
+        'certificate_template[background_image]',
+        data.background_image
+      )
     }
     if (data.logo) {
       formData.append('certificate_template[logo]', data.logo)
@@ -138,7 +176,9 @@ class CertificateTemplateService {
    * @returns Promise that resolves when template is deleted
    */
   async deleteTemplate(academySlug: string, templateId: number): Promise<void> {
-    await apiClient.delete(`/academies/${academySlug}/certificate_templates/${templateId}`)
+    await apiClient.delete(
+      `/academies/${academySlug}/certificate_templates/${templateId}`
+    )
   }
 
   /**
@@ -147,7 +187,10 @@ class CertificateTemplateService {
    * @param templateId - Template ID
    * @returns Promise with updated template
    */
-  async setAsDefault(academySlug: string, templateId: number): Promise<CertificateTemplate> {
+  async setAsDefault(
+    academySlug: string,
+    templateId: number
+  ): Promise<CertificateTemplate> {
     const response = await apiClient.post(
       `/academies/${academySlug}/certificate_templates/${templateId}/set_default`
     )
@@ -160,7 +203,10 @@ class CertificateTemplateService {
    * @param templateId - Template ID
    * @returns Promise with HTML preview
    */
-  async getPreview(academySlug: string, templateId: number): Promise<{ html: string }> {
+  async getPreview(
+    academySlug: string,
+    templateId: number
+  ): Promise<{ html: string }> {
     const response = await apiClient.get(
       `/academies/${academySlug}/certificate_templates/${templateId}/preview`
     )

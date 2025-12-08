@@ -29,7 +29,8 @@ describe('CourseSidebar', () => {
     onSaveClick: vi.fn(),
     onShareClick: vi.fn(),
     formatPrice: (price: string) => `$${price}`,
-    formatDifficulty: (level: string) => level.charAt(0).toUpperCase() + level.slice(1),
+    formatDifficulty: (level: string) =>
+      level.charAt(0).toUpperCase() + level.slice(1),
   }
 
   it('renders course pricing information correctly', () => {

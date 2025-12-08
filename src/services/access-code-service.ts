@@ -1,4 +1,3 @@
-import apiClient from '@/lib/api-client'
 import type {
   AccessCode,
   AccessCodeBase,
@@ -9,8 +8,9 @@ import type {
   UpdateAccessCodeRequest,
   RedeemAccessCodeRequest,
   AccessCodeRedemptionResponse,
-  AccessCodeValidationResponse
+  AccessCodeValidationResponse,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Access Code Service
@@ -29,15 +29,19 @@ class AccessCodeService {
     filters?: AccessCodeFilters,
     view?: TView
   ): Promise<
-    (TView extends 'basic' ? AccessCodeBase :
-     TView extends 'public' ? AccessCodePublic :
-     AccessCodeAdmin)[]
+    (TView extends 'basic'
+      ? AccessCodeBase
+      : TView extends 'public'
+        ? AccessCodePublic
+        : AccessCodeAdmin)[]
   > {
     const params = {
       ...filters,
-      ...(view && { view })
+      ...(view && { view }),
     }
-    const response = await apiClient.get(`/courses/${courseId}/access_codes`, { params })
+    const response = await apiClient.get(`/courses/${courseId}/access_codes`, {
+      params,
+    })
     return response.data
   }
 
@@ -53,12 +57,17 @@ class AccessCodeService {
     accessCodeId: number,
     view?: TView
   ): Promise<
-    TView extends 'basic' ? AccessCodeBase :
-    TView extends 'public' ? AccessCodePublic :
-    AccessCodeAdmin
+    TView extends 'basic'
+      ? AccessCodeBase
+      : TView extends 'public'
+        ? AccessCodePublic
+        : AccessCodeAdmin
   > {
     const params = view ? { view } : {}
-    const response = await apiClient.get(`/courses/${courseId}/access_codes/${accessCodeId}`, { params })
+    const response = await apiClient.get(
+      `/courses/${courseId}/access_codes/${accessCodeId}`,
+      { params }
+    )
     return response.data.data
   }
 
@@ -73,7 +82,7 @@ class AccessCodeService {
     data: CreateAccessCodeRequest
   ): Promise<AccessCode> {
     const response = await apiClient.post(`/courses/${courseId}/access_codes`, {
-      access_code: data
+      access_code: data,
     })
     return response.data.data
   }
@@ -90,9 +99,12 @@ class AccessCodeService {
     accessCodeId: number,
     data: UpdateAccessCodeRequest
   ): Promise<AccessCode> {
-    const response = await apiClient.patch(`/courses/${courseId}/access_codes/${accessCodeId}`, {
-      access_code: data
-    })
+    const response = await apiClient.patch(
+      `/courses/${courseId}/access_codes/${accessCodeId}`,
+      {
+        access_code: data,
+      }
+    )
     return response.data.data
   }
 
@@ -106,7 +118,9 @@ class AccessCodeService {
     courseId: number | string,
     accessCodeId: number
   ): Promise<{ message: string }> {
-    const response = await apiClient.delete(`/courses/${courseId}/access_codes/${accessCodeId}`)
+    const response = await apiClient.delete(
+      `/courses/${courseId}/access_codes/${accessCodeId}`
+    )
     return response.data
   }
 
@@ -120,7 +134,9 @@ class AccessCodeService {
     courseId: number | string,
     accessCodeId: number
   ): Promise<AccessCode> {
-    const response = await apiClient.post(`/courses/${courseId}/access_codes/${accessCodeId}/toggle_status`)
+    const response = await apiClient.post(
+      `/courses/${courseId}/access_codes/${accessCodeId}/toggle_status`
+    )
     return response.data.data
   }
 
@@ -129,7 +145,9 @@ class AccessCodeService {
    * @param data - Redemption request with code
    * @returns Promise with redemption response (enrollment + course info)
    */
-  async redeemAccessCode(data: RedeemAccessCodeRequest): Promise<AccessCodeRedemptionResponse> {
+  async redeemAccessCode(
+    data: RedeemAccessCodeRequest
+  ): Promise<AccessCodeRedemptionResponse> {
     const response = await apiClient.post('/courses/redeem_access_code', data)
     return response.data
   }
@@ -139,8 +157,12 @@ class AccessCodeService {
    * @param code - Access code to validate
    * @returns Promise with validation response
    */
-  async validateAccessCode(code: string): Promise<AccessCodeValidationResponse> {
-    const response = await apiClient.get(`/courses/validate_access_code/${code}`)
+  async validateAccessCode(
+    code: string
+  ): Promise<AccessCodeValidationResponse> {
+    const response = await apiClient.get(
+      `/courses/validate_access_code/${code}`
+    )
     return response.data
   }
 }

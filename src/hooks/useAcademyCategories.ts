@@ -2,24 +2,22 @@ import { useQuery } from '@tanstack/react-query'
 import academyCategoriesService, {
   type AcademyCategory,
   type AcademyCategoryMinimal,
-  type AcademyCategorySummary
+  type AcademyCategorySummary,
 } from '@/services/academy-categories'
 import type { ViewMode } from '@/lib/api-view-modes'
 
 /**
  * Hook for fetching academy categories with view mode support
- * 
+ *
  * @param options - Query options including view mode
  * @returns Query object with academy categories data, loading and error states
  */
-export function useAcademyCategories<T extends ViewMode = 'minimal'>(
-  options?: {
-    search?: string
-    category?: string
-    sortBy?: string
-    view?: T
-  }
-) {
+export function useAcademyCategories<T extends ViewMode = 'minimal'>(options?: {
+  search?: string
+  category?: string
+  sortBy?: string
+  view?: T
+}) {
   // Default to 'minimal' view for list displays
   const view = options?.view || ('minimal' as T)
 
@@ -33,7 +31,7 @@ export function useAcademyCategories<T extends ViewMode = 'minimal'>(
 
 /**
  * Hook for fetching a specific academy category by slug
- * 
+ *
  * @param slug - The category slug to fetch
  * @param view - View mode (default: 'full' for detail pages)
  * @returns Query object with academy category data, loading and error states

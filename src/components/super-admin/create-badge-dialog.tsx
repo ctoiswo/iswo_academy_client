@@ -1,4 +1,9 @@
 import { useState } from 'react'
+import superAdminGamificationService, {
+  type CreateBadgeData,
+} from '@/services/super-admin-gamification-service'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -7,9 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import {
   Select,
@@ -19,8 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { toast } from 'sonner'
-import superAdminGamificationService, { type CreateBadgeData } from '@/services/super-admin-gamification-service'
+import { Textarea } from '@/components/ui/textarea'
 
 interface BadgeFormData {
   name?: string
@@ -112,7 +114,8 @@ export function CreateBadgeDialog({
     if (!formData.slug || formData.slug.length < 3) {
       newErrors.slug = 'El slug debe tener al menos 3 caracteres'
     } else if (!/^[a-z0-9-]+$/.test(formData.slug)) {
-      newErrors.slug = 'El slug solo puede contener letras minúsculas, números y guiones'
+      newErrors.slug =
+        'El slug solo puede contener letras minúsculas, números y guiones'
     }
 
     if (!formData.description || formData.description.length < 10) {
@@ -168,7 +171,7 @@ export function CreateBadgeDialog({
       toast.success('Badge creado correctamente')
       onSuccess()
       onOpenChange(false)
-      
+
       // Reset form
       setFormData({
         category: 'milestone',
@@ -181,9 +184,7 @@ export function CreateBadgeDialog({
       setErrors({})
     } catch (error: any) {
       // console.error('Error creating badge:', error)
-      toast.error(
-        error.response?.data?.message || 'No se pudo crear el badge'
-      )
+      toast.error(error.response?.data?.message || 'No se pudo crear el badge')
     } finally {
       setIsSubmitting(false)
     }
@@ -191,7 +192,7 @@ export function CreateBadgeDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className='max-h-[90vh] max-w-2xl overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>Crear Nuevo Badge</DialogTitle>
           <DialogDescription>
@@ -199,68 +200,71 @@ export function CreateBadgeDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className='space-y-4'>
           {/* Name */}
-          <div className="space-y-2">
-            <Label htmlFor="name">
-              Nombre <span className="text-destructive">*</span>
+          <div className='space-y-2'>
+            <Label htmlFor='name'>
+              Nombre <span className='text-destructive'>*</span>
             </Label>
             <Input
-              id="name"
-              placeholder="Ejemplo: Primer Curso Completado"
+              id='name'
+              placeholder='Ejemplo: Primer Curso Completado'
               value={formData.name || ''}
               onChange={(e) => handleNameChange(e.target.value)}
             />
             {errors.name && (
-              <p className="text-sm text-destructive">{errors.name}</p>
+              <p className='text-destructive text-sm'>{errors.name}</p>
             )}
           </div>
 
           {/* Slug */}
-          <div className="space-y-2">
-            <Label htmlFor="slug">
-              Slug <span className="text-destructive">*</span>
+          <div className='space-y-2'>
+            <Label htmlFor='slug'>
+              Slug <span className='text-destructive'>*</span>
             </Label>
             <Input
-              id="slug"
-              placeholder="primer-curso-completado"
+              id='slug'
+              placeholder='primer-curso-completado'
               value={formData.slug || ''}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, slug: e.target.value }))
               }
             />
-            <p className="text-xs text-muted-foreground">
+            <p className='text-muted-foreground text-xs'>
               Identificador único (solo letras minúsculas, números y guiones)
             </p>
             {errors.slug && (
-              <p className="text-sm text-destructive">{errors.slug}</p>
+              <p className='text-destructive text-sm'>{errors.slug}</p>
             )}
           </div>
 
           {/* Description */}
-          <div className="space-y-2">
-            <Label htmlFor="description">
-              Descripción <span className="text-destructive">*</span>
+          <div className='space-y-2'>
+            <Label htmlFor='description'>
+              Descripción <span className='text-destructive'>*</span>
             </Label>
             <Textarea
-              id="description"
-              placeholder="Describe qué logro representa este badge..."
+              id='description'
+              placeholder='Describe qué logro representa este badge...'
               value={formData.description || ''}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, description: e.target.value }))
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
               }
               rows={3}
             />
             {errors.description && (
-              <p className="text-sm text-destructive">{errors.description}</p>
+              <p className='text-destructive text-sm'>{errors.description}</p>
             )}
           </div>
 
           {/* Category, Tier, Rarity */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="category">
-                Categoría <span className="text-destructive">*</span>
+          <div className='grid grid-cols-3 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='category'>
+                Categoría <span className='text-destructive'>*</span>
               </Label>
               <Select
                 value={formData.category}
@@ -268,7 +272,7 @@ export function CreateBadgeDialog({
                   setFormData((prev) => ({ ...prev, category: value }))
                 }
               >
-                <SelectTrigger id="category">
+                <SelectTrigger id='category'>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -280,13 +284,13 @@ export function CreateBadgeDialog({
                 </SelectContent>
               </Select>
               {errors.category && (
-                <p className="text-sm text-destructive">{errors.category}</p>
+                <p className='text-destructive text-sm'>{errors.category}</p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="tier">
-                Nivel <span className="text-destructive">*</span>
+            <div className='space-y-2'>
+              <Label htmlFor='tier'>
+                Nivel <span className='text-destructive'>*</span>
               </Label>
               <Select
                 value={formData.tier}
@@ -294,7 +298,7 @@ export function CreateBadgeDialog({
                   setFormData((prev) => ({ ...prev, tier: value }))
                 }
               >
-                <SelectTrigger id="tier">
+                <SelectTrigger id='tier'>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -306,13 +310,13 @@ export function CreateBadgeDialog({
                 </SelectContent>
               </Select>
               {errors.tier && (
-                <p className="text-sm text-destructive">{errors.tier}</p>
+                <p className='text-destructive text-sm'>{errors.tier}</p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="rarity">
-                Rareza <span className="text-destructive">*</span>
+            <div className='space-y-2'>
+              <Label htmlFor='rarity'>
+                Rareza <span className='text-destructive'>*</span>
               </Label>
               <Select
                 value={formData.rarity}
@@ -320,7 +324,7 @@ export function CreateBadgeDialog({
                   setFormData((prev) => ({ ...prev, rarity: value }))
                 }
               >
-                <SelectTrigger id="rarity">
+                <SelectTrigger id='rarity'>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -332,21 +336,21 @@ export function CreateBadgeDialog({
                 </SelectContent>
               </Select>
               {errors.rarity && (
-                <p className="text-sm text-destructive">{errors.rarity}</p>
+                <p className='text-destructive text-sm'>{errors.rarity}</p>
               )}
             </div>
           </div>
 
           {/* Points and Display Order */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="points_reward">
-                Puntos de Recompensa <span className="text-destructive">*</span>
+          <div className='grid grid-cols-2 gap-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='points_reward'>
+                Puntos de Recompensa <span className='text-destructive'>*</span>
               </Label>
               <Input
-                id="points_reward"
-                type="number"
-                min="0"
+                id='points_reward'
+                type='number'
+                min='0'
                 value={formData.points_reward || 0}
                 onChange={(e) =>
                   setFormData((prev) => ({
@@ -356,22 +360,26 @@ export function CreateBadgeDialog({
                 }
               />
               {errors.points_reward && (
-                <p className="text-sm text-destructive">{errors.points_reward}</p>
+                <p className='text-destructive text-sm'>
+                  {errors.points_reward}
+                </p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="display_order">Orden de Visualización</Label>
+            <div className='space-y-2'>
+              <Label htmlFor='display_order'>Orden de Visualización</Label>
               <Input
-                id="display_order"
-                type="number"
-                min="0"
-                placeholder="Opcional"
+                id='display_order'
+                type='number'
+                min='0'
+                placeholder='Opcional'
                 value={formData.display_order || ''}
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    display_order: e.target.value ? parseInt(e.target.value) : undefined,
+                    display_order: e.target.value
+                      ? parseInt(e.target.value)
+                      : undefined,
                   }))
                 }
               />
@@ -379,33 +387,33 @@ export function CreateBadgeDialog({
           </div>
 
           {/* Icon URL */}
-          <div className="space-y-2">
-            <Label htmlFor="icon_url">URL del Icono</Label>
+          <div className='space-y-2'>
+            <Label htmlFor='icon_url'>URL del Icono</Label>
             <Input
-              id="icon_url"
-              type="url"
-              placeholder="https://ejemplo.com/icono.png"
+              id='icon_url'
+              type='url'
+              placeholder='https://ejemplo.com/icono.png'
               value={formData.icon_url || ''}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, icon_url: e.target.value }))
               }
             />
-            <p className="text-xs text-muted-foreground">
+            <p className='text-muted-foreground text-xs'>
               Opcional: URL de la imagen del badge
             </p>
           </div>
 
           {/* Switches */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="is_secret">Badge Secreto</Label>
-                <p className="text-sm text-muted-foreground">
+          <div className='space-y-4'>
+            <div className='flex items-center justify-between'>
+              <div className='space-y-0.5'>
+                <Label htmlFor='is_secret'>Badge Secreto</Label>
+                <p className='text-muted-foreground text-sm'>
                   Los badges secretos solo se revelan cuando se ganan
                 </p>
               </div>
               <Switch
-                id="is_secret"
+                id='is_secret'
                 checked={formData.is_secret}
                 onCheckedChange={(checked) =>
                   setFormData((prev) => ({ ...prev, is_secret: checked }))
@@ -413,15 +421,15 @@ export function CreateBadgeDialog({
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="is_active">Badge Activo</Label>
-                <p className="text-sm text-muted-foreground">
+            <div className='flex items-center justify-between'>
+              <div className='space-y-0.5'>
+                <Label htmlFor='is_active'>Badge Activo</Label>
+                <p className='text-muted-foreground text-sm'>
                   Solo los badges activos pueden ser ganados
                 </p>
               </div>
               <Switch
-                id="is_active"
+                id='is_active'
                 checked={formData.is_active}
                 onCheckedChange={(checked) =>
                   setFormData((prev) => ({ ...prev, is_active: checked }))
@@ -432,14 +440,14 @@ export function CreateBadgeDialog({
 
           <DialogFooter>
             <Button
-              type="button"
-              variant="outline"
+              type='button'
+              variant='outline'
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type='submit' disabled={isSubmitting}>
               {isSubmitting ? 'Creando...' : 'Crear Badge'}
             </Button>
           </DialogFooter>

@@ -2,17 +2,17 @@
  * API Client Base
  * Cliente Axios configurado con autenticación, interceptores y manejo de tokens
  */
-
-import axios, { 
-  type AxiosInstance, 
-  type AxiosRequestConfig, 
+import axios, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
   type AxiosResponse,
-  type InternalAxiosRequestConfig 
+  type InternalAxiosRequestConfig,
 } from 'axios'
 import type { AuthTokens } from '@/stores/auth-store'
 
 // Get API base URL from environment
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1'
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1'
 
 // Interface para el store de autenticación
 interface AuthStore {
@@ -56,7 +56,7 @@ export class TokenManager {
     if (tokenFromState) {
       return tokenFromState
     }
-    
+
     // Si no está en memoria, buscar en localStorage
     // Esto es necesario durante la inicialización cuando el estado aún está vacío
     if (typeof localStorage !== 'undefined') {
@@ -70,7 +70,7 @@ export class TokenManager {
         // console.error('[TokenManager] Error reading refresh token from localStorage:', error)
       }
     }
-    
+
     return null
   }
 
@@ -107,7 +107,7 @@ export class TokenManager {
     }
 
     const refreshToken = this.getRefreshToken()
-    
+
     if (!refreshToken) {
       this.clearTokens()
       throw new Error('No refresh token available')
@@ -120,10 +120,10 @@ export class TokenManager {
           `${API_BASE_URL}/auth/refresh`,
           { refresh_token: refreshToken }
         )
-        
+
         const newTokens = response.data
         this.setTokens(newTokens)
-        
+
         return newTokens
       } catch (_error) {
         // Si el refresh falla, limpiar tokens y lanzar error
@@ -173,7 +173,7 @@ class APIClient {
       timeout: 30000, // 30 segundos
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
     })
 
@@ -205,14 +205,18 @@ class APIClient {
         }
 
         // No añadir token a endpoints públicos
-        const publicEndpoints = ['/auth/login', '/auth/register', '/auth/forgot-password']
-        const isPublicEndpoint = publicEndpoints.some(endpoint => 
+        const publicEndpoints = [
+          '/auth/login',
+          '/auth/register',
+          '/auth/forgot-password',
+        ]
+        const isPublicEndpoint = publicEndpoints.some((endpoint) =>
           config.url?.includes(endpoint)
         )
 
         if (!isPublicEndpoint) {
           const token = tokenManager.getAccessToken()
-          
+
           if (token) {
             config.headers.Authorization = `Bearer ${token}`
           }
@@ -260,13 +264,15 @@ class APIClient {
             status: backendError.status || error.response.status,
             details: backendError.details,
             metadata: backendError.metadata,
-            timestamp: backendError.timestamp
+            timestamp: backendError.timestamp,
           }
           // Reemplazar el error con nuestro ApiError
           return Promise.reject(apiError)
         }
 
-        const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
+        const originalRequest = error.config as InternalAxiosRequestConfig & {
+          _retry?: boolean
+        }
 
         // Si el error no es 401 o ya intentamos refrescar, rechazar
         if (error.response?.status !== 401 || originalRequest._retry) {
@@ -288,7 +294,7 @@ class APIClient {
 
           try {
             const newTokens = await tokenManager.refreshAccessToken()
-            
+
             // Procesar todas las peticiones en cola
             this.failedRequestsQueue.forEach(({ resolve }) => {
               resolve(newTokens.access_token)
@@ -304,7 +310,7 @@ class APIClient {
               reject(new Error('Failed to refresh token'))
             })
             this.failedRequestsQueue = []
-            
+
             return Promise.reject(refreshError)
           } finally {
             this.isRefreshing = false
@@ -320,7 +326,7 @@ class APIClient {
             },
             reject: (error: Error) => {
               reject(error)
-            }
+            },
           })
         })
       }
@@ -330,35 +336,53 @@ class APIClient {
   /**
    * Método GET
    */
-  async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  async get<T = any>(
+    url: string,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> {
     return this.client.get<T>(url, config)
   }
 
   /**
    * Método POST
    */
-  async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  async post<T = any>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> {
     return this.client.post<T>(url, data, config)
   }
 
   /**
    * Método PUT
    */
-  async put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  async put<T = any>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> {
     return this.client.put<T>(url, data, config)
   }
 
   /**
    * Método PATCH
    */
-  async patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  async patch<T = any>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> {
     return this.client.patch<T>(url, data, config)
   }
 
   /**
    * Método DELETE
    */
-  async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  async delete<T = any>(
+    url: string,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> {
     return this.client.delete<T>(url, config)
   }
 
@@ -420,28 +444,28 @@ export function getErrorMessage(error: unknown): string {
   // Si es un error de Axios, extraer el ApiError del response
   if (axios.isAxiosError(error) && error.response?.data) {
     const apiError = error.response.data as ApiError
-    
+
     // Priorizar user_message del backend
     if (apiError.user_message) {
       return apiError.user_message
     }
-    
+
     // Si tiene mensaje normal del backend
     if (apiError.message) {
       return apiError.message
     }
   }
-  
+
   // Si es nuestro ApiError custom
   if (isApiError(error)) {
     return error.user_message || error.message
   }
-  
+
   // Si es un Error estándar
   if (error instanceof Error) {
     return error.message
   }
-  
+
   // Fallback
   return 'Ha ocurrido un error inesperado'
 }

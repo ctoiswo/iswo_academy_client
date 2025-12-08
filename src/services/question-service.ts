@@ -1,9 +1,9 @@
-import apiClient from '@/lib/api-client'
 import type {
   Question,
   CreateQuestionRequest,
-  UpdateQuestionRequest
+  UpdateQuestionRequest,
 } from '@/types'
+import apiClient from '@/lib/api-client'
 
 /**
  * Question Service

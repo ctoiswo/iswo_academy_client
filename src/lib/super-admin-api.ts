@@ -2,7 +2,6 @@
  * Super Admin API
  * API client específico para operaciones de super administrador
  */
-
 import { apiClient } from './api-client-base'
 
 export interface GlobalStats {
@@ -66,7 +65,9 @@ export const superAdminApi = {
    * Get list of academies with pagination and filters
    */
   async getAcademies(params?: GetAcademiesParams): Promise<AcademiesResponse> {
-    const response = await apiClient.get('/api/v1/super_admin/academies', { params })
+    const response = await apiClient.get('/api/v1/super_admin/academies', {
+      params,
+    })
     return response.data
   },
 
@@ -81,8 +82,14 @@ export const superAdminApi = {
   /**
    * Update academy status
    */
-  async updateAcademyStatus(id: number, status: 'active' | 'inactive'): Promise<AcademyOverview> {
-    const response = await apiClient.patch(`/api/v1/super_admin/academies/${id}`, { status })
+  async updateAcademyStatus(
+    id: number,
+    status: 'active' | 'inactive'
+  ): Promise<AcademyOverview> {
+    const response = await apiClient.patch(
+      `/api/v1/super_admin/academies/${id}`,
+      { status }
+    )
     return response.data
-  }
+  },
 }

@@ -3,10 +3,10 @@ import type { AcademyFormData } from '@/types'
 /**
  * Converts AcademyFormData to FormData for multipart/form-data uploads
  * Used when creating or updating academies with file attachments (logo, banner)
- * 
+ *
  * @param data - Academy form data including File objects
  * @returns FormData ready to send to API
- * 
+ *
  * @example
  * ```typescript
  * const formData = academyToFormData({
@@ -15,7 +15,7 @@ import type { AcademyFormData } from '@/types'
  *   banner: bannerFile,
  *   logo: logoFile
  * })
- * 
+ *
  * await fetch('/api/v1/academies', {
  *   method: 'POST',
  *   body: formData
@@ -27,20 +27,28 @@ export function academyToFormData(data: AcademyFormData): FormData {
 
   // Text fields
   if (data.name) formData.append('academy[name]', data.name)
-  if (data.description) formData.append('academy[description]', data.description)
+  if (data.description)
+    formData.append('academy[description]', data.description)
   if (data.slug) formData.append('academy[slug]', data.slug)
-  if (data.website_url) formData.append('academy[website_url]', data.website_url)
+  if (data.website_url)
+    formData.append('academy[website_url]', data.website_url)
   if (data.mission) formData.append('academy[mission]', data.mission)
   if (data.vision) formData.append('academy[vision]', data.vision)
 
   // Boolean fields
   formData.append('academy[is_public]', String(data.is_public))
-  formData.append('academy[subscription_required]', String(data.subscription_required))
+  formData.append(
+    'academy[subscription_required]',
+    String(data.subscription_required)
+  )
 
   // Numeric fields
   formData.append('academy[monthly_price]', String(data.monthly_price))
   if (data.academy_category_id) {
-    formData.append('academy[academy_category_id]', String(data.academy_category_id))
+    formData.append(
+      'academy[academy_category_id]',
+      String(data.academy_category_id)
+    )
   }
 
   // File uploads
