@@ -23,7 +23,9 @@ class SectionService {
     const response = await apiClient.get(
       `/academies/${academySlug}/courses/${courseSlug}/sections`
     )
-    return response.data?.sections || []
+    // Backend returns { data: [...] } - axios already unwraps response.data
+    // so we need to access response.data.data
+    return response.data?.data || []
   }
 
   /**

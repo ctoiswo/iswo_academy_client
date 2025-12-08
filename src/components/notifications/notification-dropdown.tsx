@@ -3,6 +3,8 @@ import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Bell, ExternalLink } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
+import { getCategoryEmoji, getPriorityColor } from '@/lib/notification-utils'
 import { useNotifications } from '@/hooks/use-notifications'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -14,6 +16,7 @@ interface NotificationDropdownProps {
 
 export function NotificationDropdown({ className }: NotificationDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const { currentAcademy } = useAuthStore()
   const {
     notifications,
     unreadCount,
@@ -33,40 +36,6 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
     }
 
     setIsOpen(false)
-  }
-
-  const getCategoryEmoji = (category: string, type: string) => {
-    switch (category) {
-      case 'academic':
-        if (type.includes('assignment')) return '📋'
-        if (type.includes('lesson')) return '📚'
-        if (type.includes('certificate')) return '🎓'
-        if (type.includes('course')) return '📖'
-        return '📚'
-      case 'social':
-        return '💬'
-      case 'administrative':
-        return '📢'
-      case 'system':
-        return '⚙️'
-      default:
-        return '🔔'
-    }
-  }
-
-  const getPriorityColor = (priority: number) => {
-    switch (priority) {
-      case 4:
-        return 'bg-red-500'
-      case 3:
-        return 'bg-orange-500'
-      case 2:
-        return 'bg-blue-500'
-      case 1:
-        return 'bg-gray-500'
-      default:
-        return 'bg-gray-500'
-    }
   }
 
   return (
@@ -156,7 +125,8 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                             <span className='text-sm'>
                               {getCategoryEmoji(
                                 notification.category,
-                                notification.notification_type
+                                (notification as any).type ||
+                                  notification.notification_type
                               )}
                             </span>
                           </div>
@@ -225,7 +195,10 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                     variant='ghost'
                     size='sm'
                     onClick={() => {
-                      window.location.href = '/notifications'
+                      const notificationsUrl = currentAcademy
+                        ? `/academy/${currentAcademy.slug}/notifications`
+                        : '/notifications'
+                      window.location.href = notificationsUrl
                       setIsOpen(false)
                     }}
                     className='text-xs'

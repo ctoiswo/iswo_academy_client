@@ -75,6 +75,7 @@ class CourseService {
 
   /**
    * Get a single course by slug (public endpoint)
+   * Returns minimal view with all landing page data (objectives, promotional media, etc.)
    * @param slug - Course slug
    * @returns Promise with course details
    */
@@ -87,15 +88,18 @@ class CourseService {
    * Create a new course
    * Authorization handled by Pundit in backend
    * @param academySlug - Academy slug
-   * @param data - Course creation data
+   * @param data - Course creation data (can be FormData or object)
    * @returns Promise with created course
    */
-  async createCourse(
-    academySlug: string | number,
-    data: CreateCourseRequest
-  ): Promise<Course> {
-    const response = await apiClient.post(`/academies/${academySlug}/courses`, {
-      course: data,
+  async createCourse(academySlug: string | number, data: CreateCourseRequest | FormData): Promise<Course> {
+    // Si es FormData, enviarlo directamente (ya tiene la estructura course[field])
+    // Si es objeto, envolverlo en { course: data }
+    const payload = data instanceof FormData ? data : { course: data }
+    
+    const response = await apiClient.post(`/academies/${academySlug}/courses`, payload, {
+      headers: data instanceof FormData ? {
+        'Content-Type': 'multipart/form-data'
+      } : undefined
     })
     return response.data
   }
@@ -105,20 +109,19 @@ class CourseService {
    * Authorization handled by Pundit in backend
    * @param academySlug - Academy slug
    * @param courseSlug - Course slug or ID
-   * @param data - Course update data
+   * @param data - Course update data (can be FormData or object)
    * @returns Promise with updated course
    */
-  async updateCourse(
-    academySlug: string | number,
-    courseSlug: string | number,
-    data: UpdateCourseRequest
-  ): Promise<Course> {
-    const response = await apiClient.put(
-      `/academies/${academySlug}/courses/${courseSlug}`,
-      {
-        course: data,
-      }
-    )
+  async updateCourse(academySlug: string | number, courseSlug: string | number, data: UpdateCourseRequest | FormData): Promise<Course> {
+    // Si es FormData, enviarlo directamente (ya tiene la estructura course[field])
+    // Si es objeto, envolverlo en { course: data }
+    const payload = data instanceof FormData ? data : { course: data }
+    
+    const response = await apiClient.put(`/academies/${academySlug}/courses/${courseSlug}`, payload, {
+      headers: data instanceof FormData ? {
+        'Content-Type': 'multipart/form-data'
+      } : undefined
+    })
     return response.data
   }
 

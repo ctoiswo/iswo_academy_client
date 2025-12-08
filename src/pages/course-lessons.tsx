@@ -153,7 +153,7 @@ export default function CourseLessonsPage() {
   }
 
   return (
-    <div className='container mx-auto py-8'>
+    <div className='container pb-8'>
       <div className='mb-6'>
         <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
         <p className='text-gray-600'>

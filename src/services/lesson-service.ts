@@ -26,7 +26,8 @@ class LessonService {
     const response = await apiClient.get(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}/lessons`
     )
-    return response.data?.lessons || []
+    // Backend returns { data: [...] }
+    return response.data?.data || []
   }
 
   /**
@@ -61,13 +62,17 @@ class LessonService {
     academySlug: string,
     courseSlug: string,
     sectionId: number,
-    data: CreateLessonRequest
+    data: CreateLessonRequest | FormData
   ): Promise<Lesson> {
+    // Si es FormData, enviar directamente (ya tiene lesson[campo] en cada key)
+    // Si es objeto, envolverlo en { lesson: data }
+    const payload = data instanceof FormData ? data : { lesson: data }
+    
     const response = await apiClient.post(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}/lessons`,
-      { lesson: data }
+      payload
     )
-    return response.data.lesson
+    return response.data.data || response.data.lesson
   }
 
   /**
@@ -84,13 +89,17 @@ class LessonService {
     courseSlug: string,
     sectionId: number,
     lessonId: number,
-    data: UpdateLessonRequest
+    data: UpdateLessonRequest | FormData
   ): Promise<Lesson> {
+    // Si es FormData, enviar directamente (ya tiene lesson[campo] en cada key)
+    // Si es objeto, envolverlo en { lesson: data }
+    const payload = data instanceof FormData ? data : { lesson: data }
+    
     const response = await apiClient.patch(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}`,
-      { lesson: data }
+      payload
     )
-    return response.data.lesson
+    return response.data.data || response.data.lesson
   }
 
   /**

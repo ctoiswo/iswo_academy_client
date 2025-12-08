@@ -48,6 +48,30 @@ export interface Course {
   meta_description: string | null
   thumbnail_url?: string | null
 
+  // Promotional materials
+  promotional_image_url?: string | null
+  promotional_video_url?: string | null
+  promotional_video_embedded_url?: string | null
+
+  // Course objectives
+  course_objectives?: Array<{
+    id: number
+    title: string
+    objective_type: 'learning' | 'skill' | 'knowledge' | 'competency'
+    is_measurable: boolean
+    formatted_title: string
+  }>
+
+  // Sections summary (for public landing page)
+  sections_summary?: Array<{
+    id: number
+    title: string
+    description: string | null
+    position: number
+    lessons_count: number
+    duration_minutes: number
+  }>
+
   // Relations
   creator_id: number
   learning_path_id: number | null
@@ -57,6 +81,7 @@ export interface Course {
   enrollment_count?: number
   sections_count?: number
   lessons_count?: number
+  is_published?: boolean
 
   // Relations data
   creator?: {

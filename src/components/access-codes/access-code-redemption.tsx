@@ -4,6 +4,7 @@ import type {
   AccessCodeRedemptionResponse,
 } from '@/types'
 import { CheckCircle, AlertCircle, Loader2, Key } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import {
   useValidateAccessCode,
   useRedeemAccessCode,
@@ -26,8 +27,10 @@ interface AccessCodeRedemptionProps {
 }
 
 export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
+  const { t } = useTranslation()
   const [code, setCode] = useState('')
-  const [validation, setValidation] = useState<AccessCodeValidationResponse | null>(null)
+  const [validation, setValidation] =
+    useState<AccessCodeValidationResponse | null>(null)
   const [redemptionResult, setRedemptionResult] =
     useState<AccessCodeRedemptionResponse | null>(null)
 
@@ -43,6 +46,11 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
       const result = await validateCode.mutateAsync(code.trim().toUpperCase())
       setValidation(result)
       setRedemptionResult(null)
+
+      // If code is valid and user is not already enrolled, automatically redeem it
+      if (result.valid && !result.already_enrolled) {
+        await handleRedeem()
+      }
     } catch (_error) {
       setValidation(null)
     }
@@ -80,13 +88,13 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
         <CardHeader>
           <CardTitle className='flex items-center gap-2 text-green-600'>
             <CheckCircle className='h-5 w-5' />
-            Successfully Enrolled!
+            {t('accessCode.redeem.successTitle')}
           </CardTitle>
         </CardHeader>
         <CardContent className='space-y-4'>
           <Alert>
             <CheckCircle className='h-4 w-4' />
-            <AlertTitle>Welcome to the course!</AlertTitle>
+            <AlertTitle>{t('accessCode.redeem.welcomeTitle')}</AlertTitle>
             <AlertDescription>{redemptionResult.message}</AlertDescription>
           </Alert>
 
@@ -104,6 +112,13 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
               </Badge>
               <span>{redemptionResult.course.total_lessons} lessons</span>
               <span className='text-green-600'>Free with access code</span>
+              <span>
+                {redemptionResult.course.total_lessons}{' '}
+                {t('accessCode.redeem.lessons')}
+              </span>
+              <span className='text-green-600'>
+                {t('accessCode.redeem.freeWithCode')}
+              </span>
             </div>
           </div>
 
@@ -113,6 +128,16 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
             <p>
               Code expires in: {redemptionResult.access_code.days_until_expiry}{' '}
               days
+            </p>
+            <p>
+              {t('accessCode.redeem.remainingUses', {
+                count: redemptionResult.access_code.remaining_uses,
+              })}
+            </p>
+            <p>
+              {t('accessCode.redeem.expiresIn', {
+                days: redemptionResult.access_code.days_until_expiry,
+              })}
             </p>
           </div>
 
@@ -125,7 +150,7 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
             variant='outline'
             className='w-full'
           >
-            Redeem Another Code
+            {t('accessCode.redeem.redeemAnotherButton')}
           </Button>
         </CardContent>
       </Card>
@@ -138,21 +163,25 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
         <CardTitle className='flex items-center gap-2'>
           <Key className='h-5 w-5' />
           Redeem Access Code
+          {t('accessCode.redeem.cardTitle')}
         </CardTitle>
         <CardDescription>
-          Enter your access code to get free enrollment in a course
+          {t('accessCode.redeem.cardDescription')}
         </CardDescription>
       </CardHeader>
       <CardContent className='space-y-4'>
         <form onSubmit={handleValidate} className='space-y-4'>
           <div className='space-y-2'>
             <Label htmlFor='access-code'>Access Code</Label>
+            <Label htmlFor='access-code'>
+              {t('accessCode.redeem.inputLabel')}
+            </Label>
             <Input
               id='access-code'
               type='text'
               value={code}
               onChange={(e) => handleCodeChange(e.target.value)}
-              placeholder='Enter your access code'
+              placeholder={t('accessCode.redeem.inputPlaceholder')}
               className='font-mono uppercase'
               maxLength={20}
             />
@@ -168,9 +197,10 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
                 <>
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                   Validating...
+                  {t('accessCode.redeem.validating')}
                 </>
               ) : (
-                'Check Code'
+                t('accessCode.redeem.checkCodeButton')
               )}
             </Button>
           )}
@@ -184,17 +214,22 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
                 {validation.already_enrolled ? (
                   <Alert>
                     <AlertCircle className='h-4 w-4' />
-                    <AlertTitle>Already Enrolled</AlertTitle>
+                    <AlertTitle>
+                      {t('accessCode.redeem.alreadyEnrolledTitle')}
+                    </AlertTitle>
                     <AlertDescription>
-                      You are already enrolled in this course:{' '}
-                      {validation.course?.title}
+                      {t('accessCode.redeem.alreadyEnrolledDescription', {
+                        courseTitle: validation.course?.title,
+                      })}
                     </AlertDescription>
                   </Alert>
                 ) : (
                   <>
                     <Alert>
                       <CheckCircle className='h-4 w-4' />
-                      <AlertTitle>Valid Access Code!</AlertTitle>
+                      <AlertTitle>
+                        {t('accessCode.redeem.validCodeTitle')}
+                      </AlertTitle>
                       <AlertDescription>{validation.message}</AlertDescription>
                     </Alert>
 
@@ -211,7 +246,10 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
                           <Badge variant='secondary'>
                             {validation.course.difficulty_level}
                           </Badge>
-                          <span>{validation.course.total_lessons} lessons</span>
+                          <span>
+                            {validation.course.total_lessons}{' '}
+                            {t('accessCode.redeem.lessons')}
+                          </span>
                         </div>
                       </div>
                     )}
@@ -229,6 +267,20 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
                         Usage:{' '}
                         {validation.access_code.usage_percentage.toFixed(1)}%
                         used
+                        {t('accessCode.redeem.remainingUses', {
+                          count: validation.access_code.remaining_uses,
+                        })}
+                      </p>
+                      <p>
+                        {t('accessCode.redeem.expiresIn', {
+                          days: validation.access_code.days_until_expiry,
+                        })}
+                      </p>
+                      <p>
+                        {t('accessCode.redeem.usagePercent', {
+                          percent:
+                            validation.access_code.usage_percentage.toFixed(1),
+                        })}
                       </p>
                     </div>
 
@@ -241,9 +293,10 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
                         <>
                           <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                           Enrolling...
+                          {t('accessCode.redeem.enrolling')}
                         </>
                       ) : (
-                        'Enroll Now (Free)'
+                        t('accessCode.redeem.enrollButton')
                       )}
                     </Button>
                   </>
@@ -253,6 +306,9 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
               <Alert variant='destructive'>
                 <AlertCircle className='h-4 w-4' />
                 <AlertTitle>Invalid Access Code</AlertTitle>
+                <AlertTitle>
+                  {t('accessCode.redeem.invalidCodeTitle')}
+                </AlertTitle>
                 <AlertDescription>{validation.message}</AlertDescription>
               </Alert>
             )}

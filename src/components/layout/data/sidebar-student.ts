@@ -5,6 +5,7 @@ import {
   ClipboardList,
   Award,
   Key,
+  Bell,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -23,6 +24,11 @@ export function getStudentSidebar(
           title: 'Panel Principal',
           url: `/academy/${academySlug}/dashboard`,
           icon: LayoutDashboard,
+        },
+        {
+          title: 'Notificaciones',
+          url: `/academy/${academySlug}/notifications`,
+          icon: Bell,
         },
         {
           title: 'Mis Cursos',

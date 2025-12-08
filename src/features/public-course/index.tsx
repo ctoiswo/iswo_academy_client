@@ -2,6 +2,11 @@ import { useParams, useNavigate } from '@tanstack/react-router'
 import { Loader2, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
+import {
+  formatPrice,
+  formatDifficulty,
+  getDifficultyColor,
+} from '@/lib/formatters'
 import { useCourseBySlug } from '@/hooks/use-featured-content'
 import { useWishlist } from '@/hooks/use-wishlist'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -63,98 +68,61 @@ export function PublicCoursePage() {
     )
   }
 
-  // Enhanced course data with mock data for missing fields
+  // Enhanced course data with real backend data
   const enhancedCourse = {
     ...courseData,
-    // Mock data for UI until backend provides these fields
-    longDescription: courseData.description,
     instructor: {
       name: courseData.creator?.name || 'Instructor',
-      bio: 'Instructor experto con amplia experiencia en la industria.',
+      bio: 'Instructor experto con amplia experiencia en la industria educativa. Dedicado a crear contenido de calidad que transforme la vida de los estudiantes.',
       avatar:
         'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
       rating: 4.8,
       courses: 5,
-      students: courseData.enrollment_count || 100,
+      students: courseData.enrollment_count || 0,
     },
+    // Use real promotional image or fallback
     thumbnail_url:
       courseData.thumbnail_url ||
       'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=400&dpr=2',
+    // Use promotional media from backend
+    promotional_image_url: courseData.promotional_image_url || undefined,
+    promotional_video_url: courseData.promotional_video_url || undefined,
+    promotional_video_embedded_url:
+      courseData.promotional_video_embedded_url || undefined,
     rating: 4.8,
     total_ratings: Math.max(
       Math.floor((courseData.enrollment_count || 0) * 0.3),
       10
     ),
-    tags: ['Desarrollo', 'Programación'],
-    requirements: [
-      'Conocimientos básicos del tema',
-      'Ganas de aprender',
-      'Computadora con acceso a internet',
-    ],
-    whatYoullLearn: [
-      'Fundamentos del tema',
-      'Técnicas avanzadas',
-      'Aplicaciones prácticas',
-      'Mejores prácticas de la industria',
-    ],
+    // Use real tags from backend
+    tags: Array.isArray(courseData.tags)
+      ? courseData.tags
+      : courseData.tags
+        ? String(courseData.tags)
+            .split(',')
+            .map((t: string) => t.trim())
+        : [],
+    // Use real prerequisites if available
+    requirements: Array.isArray(courseData.prerequisites)
+      ? courseData.prerequisites.filter((r: string) => r && r.trim())
+      : courseData.prerequisites
+        ? String(courseData.prerequisites)
+            .split('\n')
+            .filter((r: string) => r.trim())
+        : [],
+    // Use real course objectives only
+    whatYoullLearn:
+      courseData.course_objectives?.map(
+        (obj: any) => obj.formatted_title || obj.title
+      ) || [],
+    // Use real sections from backend only
     sections:
-      courseData.duration_minutes > 0
-        ? [
-            {
-              id: 1,
-              title: 'Introducción',
-              lessons: 5,
-              duration: Math.round(courseData.duration_minutes * 0.2),
-            },
-            {
-              id: 2,
-              title: 'Contenido Principal',
-              lessons: 10,
-              duration: Math.round(courseData.duration_minutes * 0.5),
-            },
-            {
-              id: 3,
-              title: 'Proyectos Prácticos',
-              lessons: 8,
-              duration: Math.round(courseData.duration_minutes * 0.3),
-            },
-          ]
-        : [
-            {
-              id: 1,
-              title: 'Próximamente',
-              lessons: 0,
-              duration: 0,
-            },
-          ],
-  }
-
-  // Utility functions
-  const formatPrice = (priceString: string) => {
-    const price = parseFloat(priceString)
-    return `$${(price / 1000).toFixed(0)}k`
-  }
-
-  const formatDifficulty = (level: string) => {
-    const levels = {
-      beginner: 'Principiante',
-      intermediate: 'Intermedio',
-      advanced: 'Avanzado',
-    }
-    return levels[level as keyof typeof levels] || level
-  }
-
-  const getDifficultyColor = (level: string) => {
-    switch (level) {
-      case 'beginner':
-        return 'bg-green-100 text-green-800 border-green-200'
-      case 'intermediate':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
-      case 'advanced':
-        return 'bg-red-100 text-red-800 border-red-200'
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200'
-    }
+      courseData.sections_summary?.map((section: any) => ({
+        id: section.id,
+        title: section.title,
+        lessons: section.lessons_count || 0,
+        duration: section.duration_minutes || 0,
+      })) || [],
   }
 
   // Check if course is in wishlist
@@ -205,6 +173,11 @@ export function PublicCoursePage() {
     }
   }
 
+  // Handle enroll button click
+  const handleEnrollClick = () => {
+    navigate({ to: `/courses/${courseSlug}/enroll` })
+  }
+
   return (
     <div className='bg-background min-h-screen'>
       <Header />
@@ -222,8 +195,8 @@ export function PublicCoursePage() {
         formatDifficulty={formatDifficulty}
       />
 
-      <div className='container pb-8'>
-        <div className='grid gap-8 lg:grid-cols-3'>
+      <div className='container py-8'>
+        <div className='grid gap-8 lg:grid-cols-3 lg:gap-12'>
           <div className='space-y-8 lg:col-span-2'>
             <CourseContent course={enhancedCourse} />
             <CourseInstructor instructor={enhancedCourse.instructor} />
@@ -234,6 +207,7 @@ export function PublicCoursePage() {
             isSaved={isSaved}
             onSaveClick={handleSaveClick}
             onShareClick={handleShareClick}
+            onEnrollClick={handleEnrollClick}
             formatPrice={formatPrice}
             formatDifficulty={formatDifficulty}
           />

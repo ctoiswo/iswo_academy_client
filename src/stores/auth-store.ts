@@ -338,7 +338,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       // Fetch user profile if we have valid tokens
       try {
         const user = await authService.getCurrentUser()
-        set({ user, isLoading: false, isInitialized: true })
+        set({ user, isAuthenticated: true, isLoading: false, isInitialized: true })
 
         // Refresh academy data after successful profile fetch
         await get().refreshAcademies()

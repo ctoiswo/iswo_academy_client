@@ -14,6 +14,7 @@ import {
   FileQuestion,
   Layers,
   ShoppingCart,
+  Bell,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -105,7 +106,7 @@ export function getAdminSidebar(
           },
           {
             title: 'Volver a Cursos',
-            url: `/academy/${academySlug}/courses`,
+            url: `/academy/${academySlug}/admin/courses`,
             icon: GraduationCap,
           },
         ],
@@ -163,6 +164,11 @@ export function getAdminSidebar(
           url: `/academy/${academySlug}/dashboard`,
           icon: LayoutDashboard,
         },
+        {
+          title: 'Notificaciones',
+          url: `/academy/${academySlug}/notifications`,
+          icon: Bell,
+        },
       ],
     },
     {
@@ -170,7 +176,7 @@ export function getAdminSidebar(
       items: [
         {
           title: 'Cursos',
-          url: `/academy/${academySlug}/courses`,
+          url: `/academy/${academySlug}/admin/courses`,
           icon: GraduationCap,
         },
         {

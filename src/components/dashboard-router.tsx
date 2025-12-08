@@ -1,4 +1,9 @@
 import { useMemo } from 'react'
+/**
+ * Get dashboard configuration for a specific dashboard type
+ */
+// Import dashboard components directly for now (can be made lazy later)
+
 import {
   useAuthStore,
   type AcademyMembership,
@@ -128,6 +133,7 @@ export function DashboardRouter({
 
   return <DashboardComponent user={user} academy={currentAcademy} />
 }
+
 
 function getDashboardConfig(dashboardType: DashboardType): DashboardConfig {
   const configs: Record<DashboardType, DashboardConfig> = {

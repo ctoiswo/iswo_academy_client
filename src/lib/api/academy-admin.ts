@@ -62,13 +62,11 @@ export class AcademyAdminApi {
   /**
    * Get academy statistics for admin dashboard
    */
-  static async getStats(
-    academyIdentifier: number | string
-  ): Promise<AcademyStats> {
-    const response = await apiClient.get<AcademyAdminApiResponse<AcademyStats>>(
+  static async getStats(academyIdentifier: number | string): Promise<AcademyStats> {
+    const response = await apiClient.get<AcademyStats>(
       `/academies/${academyIdentifier}/admin/stats`
     )
-    return response.data.data
+    return response.data
   }
 
   /**

@@ -58,7 +58,6 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
   const navigate = useNavigate()
 
   // State management
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [editingCourse, setEditingCourse] = useState<Course | null>(null)
   const [courseToDelete, setCourseToDelete] = useState<Course | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -127,7 +126,6 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
 
   // Handle success callbacks
   const handleFormSuccess = () => {
-    setIsCreateModalOpen(false)
     setEditingCourse(null)
   }
 
@@ -238,7 +236,13 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
             Crea y gestiona cursos para tu academia
           </p>
         </div>
-        <Button onClick={() => setIsCreateModalOpen(true)}>
+        <Button
+          onClick={() =>
+            navigate({
+              to: `/academy/${academy.slug || academy.id}/admin/course-new`,
+            })
+          }
+        >
           <Plus className='mr-2 h-4 w-4' />
           Crear Curso
         </Button>
@@ -311,7 +315,13 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
             <p className='mb-6 text-gray-500'>
               Crea tu primer curso para comenzar
             </p>
-            <Button onClick={() => setIsCreateModalOpen(true)}>
+            <Button
+              onClick={() =>
+                navigate({
+                  to: `/academy/${academy.slug || academy.id}/admin/course-new`,
+                })
+              }
+            >
               <Plus className='mr-2 h-4 w-4' />
               Crear Curso
             </Button>
@@ -342,62 +352,116 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
           {courses.map((course: Course) => (
             <Card
               key={course.id}
-              className='flex flex-col transition-shadow hover:shadow-lg'
+              className='group cursor-pointer overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl'
+              onClick={() => handleManageCourse(course)}
             >
-              <CardHeader className='flex flex-1 flex-col'>
-                <div className='mb-3 flex items-start justify-between'>
-                  <div className='flex-1'>
-                    <CardTitle className='mb-3 text-lg'>
-                      {course.title}
-                    </CardTitle>
-                    <div className='my-3 flex gap-2'>
-                      {getStatusBadge(course.status)}
-                      {getDifficultyBadge(course.difficulty_level)}
-                    </div>
-                    <CardDescription className='line-clamp-2'>
-                      {course.description}
-                    </CardDescription>
+              {/* Imagen Promocional */}
+              <div className='relative h-48 w-full overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100'>
+                {course.promotional_image_url ? (
+                  <img
+                    src={course.promotional_image_url}
+                    alt={course.title}
+                    className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                  />
+                ) : (
+                  <div className='flex h-full items-center justify-center'>
+                    <BookOpen className='h-16 w-16 text-gray-400' />
                   </div>
-                  <div className='ml-2 flex gap-1'>
+                )}
+
+                {/* Badges en overlay */}
+                <div className='absolute top-3 left-3 flex flex-col gap-2'>
+                  {getStatusBadge(course.status)}
+                  {getDifficultyBadge(course.difficulty_level)}
+                </div>
+
+                {/* Botones de acción en overlay */}
+                <div className='absolute top-3 right-3 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
+                  <Button
+                    variant='secondary'
+                    size='icon'
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleManageCourse(course)
+                    }}
+                    title='Ver detalles del curso'
+                    className='backdrop-blur-sm'
+                  >
+                    <Eye className='h-4 w-4' />
+                  </Button>
+                  <Button
+                    variant='secondary'
+                    size='icon'
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setCourseToDelete(course)
+                    }}
+                    className='text-red-600 backdrop-blur-sm hover:bg-red-50 hover:text-red-800'
+                    title='Eliminar curso'
+                  >
+                    <Trash2 className='h-4 w-4' />
+                  </Button>
+                </div>
+              </div>
+
+              <CardHeader className='pb-3'>
+                <CardTitle className='line-clamp-2 text-lg leading-tight'>
+                  {course.title}
+                </CardTitle>
+                <CardDescription className='line-clamp-2 min-h-[40px]'>
+                  {course.description || 'Sin descripción'}
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className='space-y-3'>
+                {/* Estadísticas del curso */}
+                <div className='flex items-center justify-between text-sm text-gray-600'>
+                  <div className='flex items-center gap-1'>
+                    <Clock className='h-4 w-4' />
+                    <span>{formatDuration(course.duration_minutes)}</span>
+                  </div>
+                  <div className='flex items-center gap-1'>
+                    <Users className='h-4 w-4' />
+                    <span>{course.enrollment_count || 0} inscritos</span>
+                  </div>
+                </div>
+
+                {/* Contenido del curso */}
+                <div className='text-sm text-gray-600'>
+                  <span>
+                    {course.sections_count || 0} secciones •{' '}
+                    {course.lessons_count || 0} lecciones
+                  </span>
+                </div>
+
+                {/* Precio y acción */}
+                <div className='flex items-center justify-between border-t pt-3'>
+                  <div className='flex items-center gap-2'>
+                    <DollarSign className='h-4 w-4 text-gray-500' />
+                    {formatPrice(course.price, course.is_free)}
+                  </div>
+                  <div className='flex gap-2'>
                     <Button
-                      variant='ghost'
                       size='sm'
-                      onClick={() => handleManageCourse(course)}
-                      title='Ver detalles del curso'
+                      variant='outline'
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleManageCourse(course)
+                      }}
                     >
-                      <Eye className='h-4 w-4' />
+                      Gestionar
                     </Button>
                     <Button
-                      variant='ghost'
                       size='sm'
-                      onClick={() => setCourseToDelete(course)}
-                      className='text-red-600 hover:text-red-800'
+                      variant='destructive'
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setCourseToDelete(course)
+                      }}
                       title='Eliminar curso'
                     >
                       <Trash2 className='h-4 w-4' />
                     </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className='mb-4 flex items-center justify-between text-sm text-gray-500'>
-                  <div className='flex items-center gap-1'>
-                    <Clock className='h-4 w-4' />
-                    {formatDuration(course.duration_minutes)}
-                  </div>
-                  <div className='flex items-center gap-1'>
-                    <Users className='h-4 w-4' />
-                    {course.enrollment_count} inscritos
-                  </div>
-                </div>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-2'>
-                    <DollarSign className='h-4 w-4' />
-                    {formatPrice(course.price, course.is_free)}
-                  </div>
-                  <div className='text-sm text-gray-500'>
-                    {course.sections_count || 0} secciones,{' '}
-                    {course.lessons_count || 0} lecciones
                   </div>
                 </div>
               </CardContent>
@@ -405,23 +469,6 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
           ))}
         </div>
       )}
-
-      {/* Create Course Modal */}
-      <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-        <DialogContent className='max-h-[90vh] max-w-3xl overflow-y-auto'>
-          <DialogHeader>
-            <DialogTitle>Crear Nuevo Curso</DialogTitle>
-            <DialogDescription>
-              Añade un nuevo curso a tu academia
-            </DialogDescription>
-          </DialogHeader>
-          <CourseForm
-            academySlug={academySlug}
-            onSuccess={handleFormSuccess}
-            onCancel={() => setIsCreateModalOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
 
       {/* Edit Course Modal */}
       <Dialog

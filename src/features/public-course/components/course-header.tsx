@@ -2,7 +2,7 @@ import { Link, useRouter } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 
 interface CourseHeaderProps {
-  academy: {
+  academy?: {
     name: string
     slug: string
   }
@@ -24,14 +24,18 @@ export function CourseHeader({ academy, courseTitle }: CourseHeaderProps) {
             >
               Cursos
             </Link>
-            <span className='text-muted-foreground'>•</span>
-            <Link
-              to='/academies/$slug'
-              params={{ slug: academy.slug }}
-              className='text-muted-foreground hover:text-foreground'
-            >
-              {academy.name}
-            </Link>
+            {academy && (
+              <>
+                <span className='text-muted-foreground'>•</span>
+                <Link
+                  to='/academies/$slug'
+                  params={{ slug: academy.slug }}
+                  className='text-muted-foreground hover:text-foreground'
+                >
+                  {academy.name}
+                </Link>
+              </>
+            )}
             <span className='text-muted-foreground'>•</span>
             <span className='text-muted-foreground'>{courseTitle}</span>
           </div>

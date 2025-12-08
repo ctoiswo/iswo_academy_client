@@ -82,7 +82,7 @@ class GamificationService {
       ? `/gamification_profiles/${userId}`
       : '/gamification_profiles/me'
     const response = await apiClient.get(endpoint)
-    return response.data
+    return response.data.data || response.data
   }
 
   /**

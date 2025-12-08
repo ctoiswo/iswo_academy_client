@@ -75,7 +75,7 @@ export default function CourseStudentsPage() {
             Curso no encontrado o no tienes permiso para acceder
           </p>
           <Link
-            to='/academy/$academySlug/courses'
+            to='/academy/$academySlug/admin/courses'
             params={{ academySlug }}
             className='mt-4 inline-block'
           >

@@ -45,42 +45,44 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
   const subscriptionRef = useRef<any>(null)
 
   // Manejar nueva notificación recibida
-  const handleNewNotification = useCallback(
-    (data: any) => {
-      const newNotification = data.notification
-      if (!newNotification) return
+  const handleNewNotification = useCallback((data: any) => {
+    console.log('🔔 [useNotifications] Received notification data:', data)
 
-      // Agregar notificación al estado
-      setNotifications((prev) => [newNotification, ...prev])
-      setUnreadCount((prev) => prev + 1)
+    const newNotification = data.notification
+    if (!newNotification) {
+      console.warn('⚠️ [useNotifications] No notification in data')
+      return
+    }
 
-      // Mostrar toast si está habilitado
-      if (showToasts) {
-        const emoji = getCategoryEmoji(
-          newNotification.category,
-          newNotification.notification_type
-        )
-        const message = newNotification.title
-        const duration = getPriorityDuration(newNotification.priority)
+    console.log('✅ [useNotifications] Adding notification:', newNotification)
+    
+    // Agregar notificación al estado
+    setNotifications(prev => [newNotification, ...prev])
+    setUnreadCount(prev => prev + 1)
 
-        if (newNotification.priority >= 3) {
-          toast.success(`${emoji} ${message}`, { duration })
-        } else {
-          toast.info(`${emoji} ${message}`, { duration })
-        }
+    // Mostrar toast si está habilitado
+    if (showToasts) {
+      const emoji = getCategoryEmoji(newNotification.category, newNotification.type || newNotification.notification_type)
+      const message = newNotification.title
+      const duration = getPriorityDuration(newNotification.priority)
+
+      if (newNotification.priority >= 3) {
+        toast.success(`${emoji} ${message}`, { duration })
+      } else {
+        toast.info(`${emoji} ${message}`, { duration })
       }
     },
     [showToasts]
   )
 
   // Obtener emoji por categoría
-  const getCategoryEmoji = (category: string, type: string) => {
+  const getCategoryEmoji = (category: string, type?: string) => {
     switch (category) {
       case 'academic':
-        if (type.includes('assignment')) return '📋'
-        if (type.includes('lesson')) return '📚'
-        if (type.includes('certificate')) return '🎓'
-        if (type.includes('course')) return '📖'
+        if (type?.includes('assignment')) return '📋'
+        if (type?.includes('lesson')) return '📚'
+        if (type?.includes('certificate')) return '🎓'
+        if (type?.includes('course')) return '📖'
         return '📚'
       case 'social':
         return '💬'
@@ -228,6 +230,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
           { channel: 'NotificationsChannel' },
           {
             connected() {
+              console.log('✅ [NotificationsChannel] Connected successfully')
               setIsConnected(true)
               setConnectionError(null)
 
@@ -239,10 +242,14 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
               setIsConnected(false)
             },
 
-            received(data: any) {
-              if (data.type === 'new_notification') {
+            received(data) {
+              console.log('📡 [NotificationsChannel] Received data:', data)
+
+              if (data.type === 'notification_created' || data.type === 'new_notification') {
+                console.log('🎯 [NotificationsChannel] Handling as new notification')
                 handleNewNotification(data)
               } else {
+                console.log('📋 [NotificationsChannel] Handling as WebSocket message')
                 handleWebSocketMessage(data)
               }
             },

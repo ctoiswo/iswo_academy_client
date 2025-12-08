@@ -180,12 +180,89 @@ pnpm test:ui
 
 ## Token Management
 
-The API client automatically handles token management:
+The API client automatically handles token management with a sophisticated refresh mechanism:
 
-1. **Request Interceptor**: Adds Bearer token to all authenticated requests
-2. **Response Interceptor**: Handles 401 errors by attempting token refresh
-3. **Token Refresh**: Automatically refreshes expired tokens using refresh token
-4. **Fallback**: Redirects to login page when refresh fails
+### Automatic Token Refresh Flow
+
+1. **Proactive Refresh**: Before tokens expire (< 5 minutes remaining), the client proactively refreshes them
+2. **401 Response Handling**: When a request fails with 401 Unauthorized:
+   - The client automatically attempts to refresh the access token using the refresh token
+   - The failed request is queued and retried with the new token
+   - Multiple concurrent 401s are handled efficiently (only one refresh request is made)
+3. **Session Expiration**: When the refresh token also expires:
+   - All tokens are cleared from storage
+   - The user is automatically logged out
+   - Redirected to the login page
+   - All queued requests are rejected with a clear error message
+
+### Token Lifecycle
+
+```
+┌─────────────────┐
+│ User Logs In    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────────────────────┐
+│ Access Token + Refresh Token    │
+│ Stored in Memory & localStorage │
+└────────┬────────────────────────┘
+         │
+         ▼
+┌─────────────────────────────────┐
+│ Make API Request                │
+└────────┬────────────────────────┘
+         │
+         ├──────── Token Valid ─────────► Request Succeeds
+         │
+         ├──── Token Expiring Soon ─────► Proactive Refresh → Retry Request
+         │
+         └──────── 401 Error ───────────► Attempt Refresh
+                                                │
+                                                ├── Refresh Success ──► Retry Request
+                                                │
+                                                └── Refresh Fails ────► Logout → Login Page
+```
+
+### Request Queueing
+
+When multiple requests fail with 401 simultaneously:
+
+- Only one refresh request is made to the backend
+- All failed requests are queued
+- Once refresh succeeds, all queued requests are retried with the new token
+- If refresh fails, all queued requests are rejected
+
+### Implementation Details
+
+```typescript
+// The token manager handles all token operations
+export class TokenManager {
+  async refreshAccessToken(): Promise<AuthTokens> {
+    const refreshToken = this.getRefreshToken()
+
+    if (!refreshToken) {
+      throw new Error('No refresh token available')
+    }
+
+    const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+      refresh_token: refreshToken,
+    })
+
+    const newTokens = response.data
+    this.setTokens(newTokens)
+
+    return newTokens
+  }
+}
+```
+
+### Session Persistence
+
+- **Access Token**: Stored in memory (Zustand store) for security
+- **Refresh Token**: Stored in localStorage for session persistence across page refreshes
+- **Automatic Rehydration**: On page load, tokens are restored from localStorage
+- **Secure Cleanup**: All tokens are cleared on logout or refresh failure
 
 ## Integration with Auth Store
 

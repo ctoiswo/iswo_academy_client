@@ -1,5 +1,6 @@
-import { useState } from 'react'
 import type { CreateLessonRequest } from '@/types'
+import { useState, useEffect } from 'react'
+import { Upload, Link as LinkIcon, Video } from 'lucide-react'
 import { useCreateLesson } from '@/hooks/use-lessons'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,6 +13,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
   SelectContent,
@@ -47,7 +49,37 @@ export function CreateLessonDialog({
     is_free: false,
   })
 
+  const [videoType, setVideoType] = useState<'file' | 'url'>('url')
+  const [videoFile, setVideoFile] = useState<File | null>(null)
+  const [videoUrl, setVideoUrl] = useState('')
+  const [videoUrlPreview, setVideoUrlPreview] = useState<string | null>(null)
+
   const createLesson = useCreateLesson(academySlug, courseSlug, sectionId)
+
+  // Convert URL to embed format for preview
+  useEffect(() => {
+    if (videoType === 'url' && videoUrl) {
+      setVideoUrlPreview(convertToEmbedUrl(videoUrl))
+    } else {
+      setVideoUrlPreview(null)
+    }
+  }, [videoUrl, videoType])
+
+  const convertToEmbedUrl = (url: string): string => {
+    // YouTube
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      const videoId =
+        new URL(url).searchParams.get('v') ||
+        url.split('youtu.be/')[1]?.split('?')[0]
+      if (videoId) return `https://www.youtube.com/embed/${videoId}`
+    }
+    // Vimeo
+    if (url.includes('vimeo.com')) {
+      const videoId = url.split('vimeo.com/')[1]?.split('?')[0]
+      if (videoId) return `https://player.vimeo.com/video/${videoId}`
+    }
+    return url
+  }
 
   const extractVideoId = (identifier: string, provider: string): string => {
     const cleaned = identifier.trim()
@@ -79,7 +111,7 @@ export function CreateLessonDialog({
     return cleaned
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!formData.title.trim()) return
@@ -89,51 +121,90 @@ export function CreateLessonDialog({
       lesson_type: formData.lesson_type,
       is_free: formData.is_free,
     }
+    // Validar video si es tipo video
+    if (formData.lesson_type === 'video') {
+      if (videoType === 'file' && !videoFile) {
+        alert('Por favor sube un archivo de video')
+        return
+      }
+      if (videoType === 'url' && !videoUrl.trim()) {
+        alert('Por favor ingresa una URL de video')
+        return
+      }
+    }
 
-    if (formData.lesson_type === 'video' && formData.video_identifier) {
-      dataToSubmit.video_provider = formData.video_provider
-      dataToSubmit.video_identifier = extractVideoId(
-        formData.video_identifier,
-        formData.video_provider || 'youtube'
+    const formDataToSend = new FormData()
+
+    // Datos básicos
+    formDataToSend.append('lesson[title]', formData.title.trim())
+    formDataToSend.append('lesson[lesson_type]', formData.lesson_type)
+    formDataToSend.append('lesson[is_free]', String(formData.is_free))
+
+    if (formData.duration_minutes && formData.duration_minutes > 0) {
+      formDataToSend.append(
+        'lesson[duration_minutes]',
+        String(formData.duration_minutes)
       )
     }
 
+    // Video
+    if (formData.lesson_type === 'video') {
+      if (videoType === 'file' && videoFile) {
+        // Subir video directo (S3/GCS)
+        formDataToSend.append('lesson[video_provider]', 's3_direct')
+        formDataToSend.append('lesson[video_file]', videoFile)
+      } else if (videoType === 'url' && videoUrl.trim()) {
+        // URL de video (YouTube/Vimeo)
+        const provider = detectProvider(videoUrl)
+        const videoId = extractVideoId(videoUrl, provider)
+
+        formDataToSend.append('lesson[video_provider]', provider)
+        formDataToSend.append('lesson[video_identifier]', videoId)
+        formDataToSend.append('lesson[video_url]', videoUrl.trim())
+      }
+    }
+
+    // Contenido de texto
     if (formData.lesson_type === 'text' && formData.content) {
-      // Convert plain text content to structured JSON format for the backend
-      dataToSubmit.content_json = {
+      const contentJson = {
         type: 'doc',
         content: [
           {
             type: 'paragraph',
-            content: [
-              {
-                type: 'text',
-                text: formData.content.trim(),
-              },
-            ],
+            content: [{ type: 'text', text: formData.content.trim() }],
           },
         ],
       }
+      formDataToSend.append('lesson[content_json]', JSON.stringify(contentJson))
     }
 
-    if (formData.duration_minutes && formData.duration_minutes > 0) {
-      dataToSubmit.duration_minutes = formData.duration_minutes
-    }
+    try {
+      await createLesson.mutateAsync(formDataToSend as any)
 
-    createLesson.mutate(dataToSubmit, {
-      onSuccess: () => {
-        setFormData({
-          title: '',
-          lesson_type: 'video',
-          content: '',
-          video_provider: 'youtube',
-          video_identifier: '',
-          duration_minutes: 0,
-          is_free: false,
-        })
-        onOpenChange(false)
-      },
-    })
+      // Reset form
+      setFormData({
+        title: '',
+        lesson_type: 'video',
+        content: '',
+        video_provider: 'youtube',
+        video_identifier: '',
+        duration_minutes: 0,
+        is_free: false,
+      })
+      setVideoFile(null)
+      setVideoUrl('')
+      setVideoType('url')
+      onOpenChange(false)
+    } catch (error) {
+      console.error('Error creating lesson:', error)
+    }
+  }
+
+  const detectProvider = (url: string): string => {
+    if (url.includes('youtube.com') || url.includes('youtu.be'))
+      return 'youtube'
+    if (url.includes('vimeo.com')) return 'vimeo'
+    return 'youtube'
   }
 
   return (
@@ -184,54 +255,106 @@ export function CreateLessonDialog({
 
           {formData.lesson_type === 'video' && (
             <>
-              <div className='space-y-2'>
-                <Label htmlFor='video_provider'>Proveedor de Video</Label>
-                <Select
-                  value={formData.video_provider}
-                  onValueChange={(value: any) =>
-                    setFormData({ ...formData, video_provider: value })
-                  }
+              <div className='space-y-3'>
+                <Label>Tipo de Video</Label>
+                <RadioGroup
+                  value={videoType}
+                  onValueChange={(v: any) => setVideoType(v)}
                 >
-                  <SelectTrigger id='video_provider'>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='youtube'>YouTube</SelectItem>
-                    <SelectItem value='vimeo'>Vimeo</SelectItem>
-                    <SelectItem value='google_drive'>Google Drive</SelectItem>
-                    <SelectItem value='bunny_cdn'>Bunny CDN</SelectItem>
-                  </SelectContent>
-                </Select>
+                  <div className='flex items-center space-x-2'>
+                    <RadioGroupItem value='url' id='url' />
+                    <Label
+                      htmlFor='url'
+                      className='flex cursor-pointer items-center gap-2 font-normal'
+                    >
+                      <LinkIcon className='h-4 w-4' />
+                      URL (YouTube, Vimeo, etc.)
+                    </Label>
+                  </div>
+                  <div className='flex items-center space-x-2'>
+                    <RadioGroupItem value='file' id='file' />
+                    <Label
+                      htmlFor='file'
+                      className='flex cursor-pointer items-center gap-2 font-normal'
+                    >
+                      <Upload className='h-4 w-4' />
+                      Subir Video Directamente
+                    </Label>
+                  </div>
+                </RadioGroup>
               </div>
 
-              <div className='space-y-2'>
-                <Label htmlFor='video_identifier'>URL o ID del Video</Label>
-                <Input
-                  id='video_identifier'
-                  value={formData.video_identifier}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      video_identifier: e.target.value,
-                    })
-                  }
-                  placeholder={
-                    formData.video_provider === 'youtube'
-                      ? 'ej. https://www.youtube.com/watch?v=dQw4w9WgXcQ o dQw4w9WgXcQ'
-                      : formData.video_provider === 'vimeo'
-                        ? 'ej. https://vimeo.com/123456789 o 123456789'
-                        : 'URL o ID del video'
-                  }
-                />
-                <p className='text-muted-foreground text-xs'>
-                  {formData.video_provider === 'youtube' &&
-                    'Puedes pegar la URL completa de YouTube o solo el ID del video'}
-                  {formData.video_provider === 'vimeo' &&
-                    'Puedes pegar la URL completa de Vimeo o solo el ID numérico'}
-                  {formData.video_provider === 'google_drive' &&
-                    'Pega la URL de compartir de Google Drive o el ID del archivo'}
-                </p>
-              </div>
+              {videoType === 'url' ? (
+                <>
+                  <div className='space-y-2'>
+                    <Label htmlFor='video_url'>
+                      URL del Video <span className='text-destructive'>*</span>
+                    </Label>
+                    <Input
+                      id='video_url'
+                      value={videoUrl}
+                      onChange={(e) => setVideoUrl(e.target.value)}
+                      placeholder='https://www.youtube.com/watch?v=...'
+                    />
+                    <p className='text-muted-foreground text-sm'>
+                      Soporta YouTube y Vimeo
+                    </p>
+                  </div>
+
+                  {videoUrlPreview && (
+                    <div className='space-y-2'>
+                      <Label>Vista Previa</Label>
+                      <div className='bg-muted aspect-video w-full overflow-hidden rounded-lg border'>
+                        <iframe
+                          src={videoUrlPreview}
+                          className='h-full w-full'
+                          allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                          allowFullScreen
+                        />
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className='space-y-2'>
+                  <Label htmlFor='video_file'>
+                    Archivo de Video <span className='text-destructive'>*</span>
+                  </Label>
+                  <div className='flex items-center gap-2'>
+                    <Input
+                      id='video_file'
+                      type='file'
+                      accept='video/*'
+                      onChange={(e) =>
+                        setVideoFile(e.target.files?.[0] || null)
+                      }
+                      className='cursor-pointer'
+                    />
+                    {videoFile && (
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        size='sm'
+                        onClick={() => setVideoFile(null)}
+                      >
+                        Limpiar
+                      </Button>
+                    )}
+                  </div>
+                  {videoFile && (
+                    <div className='bg-muted flex items-center gap-2 rounded-lg border p-3'>
+                      <Video className='text-muted-foreground h-4 w-4' />
+                      <span className='text-sm'>{videoFile.name}</span>
+                      <span className='text-muted-foreground text-sm'>
+                        ({(videoFile.size / 1024 / 1024).toFixed(2)} MB)
+                      </span>
+                    </div>
+                  )}
+                  <p className='text-muted-foreground text-sm'>
+                    El video se subirá a Google Cloud Storage
+                  </p>
+                </div>
+              )}
             </>
           )}
 
@@ -245,7 +368,7 @@ export function CreateLessonDialog({
                   setFormData({ ...formData, content: e.target.value })
                 }
                 placeholder='Escribe el contenido de la lección...'
-                rows={6}
+                rows={8}
               />
             </div>
           )}
@@ -256,13 +379,14 @@ export function CreateLessonDialog({
               id='duration_minutes'
               type='number'
               min='0'
-              value={formData.duration_minutes}
+              value={formData.duration_minutes || ''}
               onChange={(e) =>
                 setFormData({
                   ...formData,
                   duration_minutes: parseInt(e.target.value) || 0,
                 })
               }
+              placeholder='ej. 30'
             />
           </div>
 

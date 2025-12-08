@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { useParams, Link } from '@tanstack/react-router'
+import { useParams, Link, useNavigate } from '@tanstack/react-router'
 import {
   ArrowLeft,
   Settings,
@@ -19,15 +18,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AccessCodeList } from '@/components/access-codes/access-code-list'
-import { CourseForm } from '@/components/courses/course-form'
 
 export default function CourseInfoPage() {
   const params = useParams({ strict: false }) as {
@@ -36,7 +28,7 @@ export default function CourseInfoPage() {
   }
   const { academySlug, courseSlug } = params
   const { currentAcademy } = useAuthStore()
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const navigate = useNavigate()
 
   const academyId = currentAcademy?.id
   const {
@@ -68,7 +60,7 @@ export default function CourseInfoPage() {
             Curso no encontrado o no tienes permiso para acceder
           </p>
           <Link
-            to='/academy/$academySlug/courses'
+            to='/academy/$academySlug/admin/courses'
             params={{ academySlug }}
             className='mt-4 inline-block'
           >
@@ -90,7 +82,14 @@ export default function CourseInfoPage() {
             <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
             <p className='text-gray-600'>{course.description}</p>
           </div>
-          <Button onClick={() => setIsEditDialogOpen(true)}>
+          <Button
+            onClick={() =>
+              navigate({
+                to: '/academy/$academySlug/courses/$courseSlug/edit',
+                params: { academySlug, courseSlug },
+              })
+            }
+          >
             <Settings className='mr-2 h-4 w-4' />
             Editar Curso
           </Button>
@@ -216,21 +215,6 @@ export default function CourseInfoPage() {
         </Card>
         <AccessCodeList courseSlug={course.slug} />
       </div>
-
-      {/* Dialog para editar curso */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className='max-h-[90vh] max-w-2xl overflow-y-auto'>
-          <DialogHeader>
-            <DialogTitle>Editar Curso</DialogTitle>
-          </DialogHeader>
-          <CourseForm
-            academySlug={academySlug}
-            course={course}
-            onSuccess={() => setIsEditDialogOpen(false)}
-            onCancel={() => setIsEditDialogOpen(false)}
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

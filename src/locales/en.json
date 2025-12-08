@@ -553,5 +553,66 @@
     "error": "Error",
     "tryAgain": "Try again",
     "noAvailable": "No academies available"
+  },
+  "accessCode": {
+    "redeem": {
+      "title": "Redeem Access Code",
+      "description": "Have an access code? Enter it below to get free enrollment in a course.",
+      "helpText": "Access codes are provided by course creators or academy administrators.",
+      "browseCourses": "available courses",
+      "cardTitle": "Redeem Access Code",
+      "cardDescription": "Enter your access code to get free enrollment in a course",
+      "inputLabel": "Access Code",
+      "inputPlaceholder": "Enter your access code",
+      "checkCodeButton": "Check Code",
+      "validating": "Validating...",
+      "enrolling": "Enrolling...",
+      "enrollButton": "Enroll Now (Free)",
+      "successTitle": "Successfully Enrolled!",
+      "welcomeTitle": "Welcome to the course!",
+      "alreadyEnrolledTitle": "Already Enrolled",
+      "alreadyEnrolledDescription": "You are already enrolled in this course: {{courseTitle}}",
+      "validCodeTitle": "Valid Access Code!",
+      "invalidCodeTitle": "Invalid Access Code",
+      "freeWithCode": "Free with access code",
+      "remainingUses": "Remaining uses: {{count}}",
+      "expiresIn": "Code expires in: {{days}} days",
+      "usagePercent": "Usage: {{percent}}% used",
+      "lessons": "lessons",
+      "redeemAnotherButton": "Redeem Another Code"
+    }
+  },
+  "myCourses": {
+    "title": "My Courses",
+    "subtitle": "Track your learning progress and continue where you left off",
+    "redeemCode": "Redeem Code",
+    "searchPlaceholder": "Search courses...",
+    "allStatuses": "All Statuses",
+    "active": "Active",
+    "completed": "Completed",
+    "suspended": "Suspended",
+    "progress": "Progress",
+    "duration": "Duration",
+    "enrolled": "Enrolled",
+    "continueButton": "Continue Learning",
+    "certificateButton": "View Certificate",
+    "noCoursesTitle": "No courses found",
+    "noCoursesDescription": "There are no courses that match your current filters.",
+    "notEnrolledYet": "You haven't enrolled in any courses yet.",
+    "exploreCourses": "Explore Courses",
+    "errorTitle": "Error Loading Courses",
+    "errorDescription": "Could not load your courses. Please try again.",
+    "wishlist": {
+      "title": "No saved courses",
+      "description": "Explore our catalog and save the courses that interest you",
+      "saved": "Saved",
+      "addedOn": "Added on",
+      "viewDetails": "View Details"
+    },
+    "difficulty": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    }
   }
 }

@@ -553,5 +553,66 @@
     "error": "Error",
     "tryAgain": "Intentar de nuevo",
     "noAvailable": "No hay academias disponibles"
+  },
+  "accessCode": {
+    "redeem": {
+      "title": "Canjear Código de Acceso",
+      "description": "¿Tienes un código de acceso? Ingrésalo a continuación para obtener inscripción gratuita en un curso.",
+      "helpText": "Los códigos de acceso son proporcionados por los creadores de cursos o administradores de academias.",
+      "browseCourses": "cursos disponibles",
+      "cardTitle": "Canjear Código de Acceso",
+      "cardDescription": "Ingresa tu código de acceso para obtener inscripción gratuita en un curso",
+      "inputLabel": "Código de Acceso",
+      "inputPlaceholder": "Ingresa tu código de acceso",
+      "checkCodeButton": "Verificar Código",
+      "validating": "Validando...",
+      "enrolling": "Inscribiendo...",
+      "enrollButton": "Inscribirse Ahora (Gratis)",
+      "successTitle": "¡Inscrito Exitosamente!",
+      "welcomeTitle": "¡Bienvenido al curso!",
+      "alreadyEnrolledTitle": "Ya Inscrito",
+      "alreadyEnrolledDescription": "Ya estás inscrito en este curso: {{courseTitle}}",
+      "validCodeTitle": "¡Código de Acceso Válido!",
+      "invalidCodeTitle": "Código de Acceso Inválido",
+      "freeWithCode": "Gratis con código de acceso",
+      "remainingUses": "Usos restantes: {{count}}",
+      "expiresIn": "El código expira en: {{days}} días",
+      "usagePercent": "Uso: {{percent}}% usado",
+      "lessons": "lecciones",
+      "redeemAnotherButton": "Canjear Otro Código"
+    }
+  },
+  "myCourses": {
+    "title": "Mis Cursos",
+    "subtitle": "Sigue tu progreso de aprendizaje y continúa donde lo dejaste",
+    "redeemCode": "Canjear Código",
+    "searchPlaceholder": "Buscar cursos...",
+    "allStatuses": "Todos los Estados",
+    "active": "Activo",
+    "completed": "Completado",
+    "suspended": "Suspendido",
+    "progress": "Progreso",
+    "duration": "Duración",
+    "enrolled": "Inscrito",
+    "continueButton": "Continuar Aprendiendo",
+    "certificateButton": "Ver Certificado",
+    "noCoursesTitle": "No se encontraron cursos",
+    "noCoursesDescription": "No hay cursos que coincidan con tus filtros actuales.",
+    "notEnrolledYet": "Aún no te has inscrito en ningún curso.",
+    "exploreCourses": "Explorar Cursos",
+    "errorTitle": "Error al Cargar Cursos",
+    "errorDescription": "No se pudieron cargar tus cursos. Por favor, inténtalo de nuevo.",
+    "wishlist": {
+      "title": "No tienes cursos guardados",
+      "description": "Explora nuestro catálogo y guarda los cursos que te interesen",
+      "saved": "Guardado",
+      "addedOn": "Añadido el",
+      "viewDetails": "Ver Detalles"
+    },
+    "difficulty": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado"
+    }
   }
 }

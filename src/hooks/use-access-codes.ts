@@ -95,10 +95,15 @@ export function useToggleAccessCodeStatus(courseId: number | string) {
 }
 
 export function useRedeemAccessCode() {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (data: RedeemAccessCodeRequest) =>
       accessCodeService.redeemAccessCode(data),
     onSuccess: (response) => {
+      // Invalidate enrollments queries to refresh the user's course list
+      queryClient.invalidateQueries({ queryKey: ['user_enrollments'] })
+      queryClient.invalidateQueries({ queryKey: ['enrollments'] })
       toast.success(response.message)
     },
     onError: (error) => {

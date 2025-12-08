@@ -34,6 +34,11 @@ export function getTeacherSidebar(
           icon: LayoutDashboard,
         },
         {
+          title: 'Notificaciones',
+          url: `/academy/${academySlug}/notifications`,
+          icon: Bell,
+        },
+        {
           title: 'Analíticas',
           url: `/academy/${academySlug}/analytics`,
           icon: BarChart3,
