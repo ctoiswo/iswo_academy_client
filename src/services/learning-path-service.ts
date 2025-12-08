@@ -111,7 +111,7 @@ class LearningPathService {
     academySlug: string,
     learningPathSlug: string
   ): Promise<void> {
-    const response = await apiClient.delete(
+    await apiClient.delete(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}`
     )
   }

@@ -227,7 +227,7 @@ export function MyCourses({
             New Course
           </Button>
         }
-        items={courseItems}
+        items={courseItems as any}
         emptyMessage={
           filter === 'all'
             ? 'No courses found. Create your first course to get started.'

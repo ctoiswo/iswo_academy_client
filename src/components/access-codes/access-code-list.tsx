@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { AccessCodeAdmin } from '@/types'
 import { Plus, Key, Filter } from 'lucide-react'
 import { useAccessCodes } from '@/hooks/use-access-codes'
 import { Button } from '@/components/ui/button'
@@ -67,13 +68,11 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
     )
   }
 
-  // Handle different response structures
-  const allAccessCodes = Array.isArray(accessCodesData)
-    ? accessCodesData
-    : accessCodesData?.data || []
+  // Handle response structure
+  const allAccessCodes: AccessCodeAdmin[] = accessCodesData || []
 
   // Apply client-side filtering
-  const accessCodes = allAccessCodes.filter((code: { status: string }) => {
+  const accessCodes = allAccessCodes.filter((code: AccessCodeAdmin) => {
     if (statusFilter === 'all') return true
     return code.status === statusFilter
   })
@@ -146,7 +145,7 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
             </div>
           ) : (
             <div className='space-y-4'>
-              {accessCodes.map((accessCode: { id: number }) => (
+              {accessCodes.map((accessCode: AccessCodeAdmin) => (
                 <AccessCodeCard
                   key={accessCode.id}
                   accessCode={accessCode}

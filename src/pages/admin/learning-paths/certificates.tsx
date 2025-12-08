@@ -275,7 +275,7 @@ export function LearningPathCertificates() {
                         {format(new Date(certificate.issued_at), 'dd/MM/yyyy')}
                       </TableCell>
                       <TableCell>
-                        {certificate.is_active ? (
+                        {!certificate.revoked_at ? (
                           <Badge variant='default'>Activo</Badge>
                         ) : (
                           <Badge variant='destructive'>Revocado</Badge>

@@ -117,7 +117,8 @@ export default function CourseCertificatesPage() {
             Curso no encontrado o no tienes permiso para acceder
           </p>
           <Link
-            to={`/academy/${academySlug}/courses`}
+            to='/academy/$academySlug/courses'
+            params={{ academySlug }}
             className='mt-4 inline-block'
           >
             <Button variant='outline'>
@@ -136,7 +137,10 @@ export default function CourseCertificatesPage() {
   return (
     <div className='container mx-auto py-8'>
       <div className='mb-6'>
-        <Link to={`/academy/${academySlug}/courses/${courseSlug}`}>
+        <Link
+          to='/academy/$academySlug/courses/$courseSlug'
+          params={{ academySlug, courseSlug }}
+        >
           <Button variant='ghost' size='sm' className='mb-4'>
             <ArrowLeft className='mr-2 h-4 w-4' />
             Volver al Curso

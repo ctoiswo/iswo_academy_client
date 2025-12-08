@@ -86,7 +86,7 @@ export function LearningPathPricing() {
 
   const courses = learningPath.courses || []
   const totalIndividualPrice = courses.reduce(
-    (acc, course) => acc + parseFloat(course.price),
+    (acc, course) => acc + parseFloat(course.price.toString()),
     0
   )
 

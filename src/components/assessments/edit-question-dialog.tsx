@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
-import type { Question, UpdateQuestionData } from '@/services/question-service'
+import type { Question, UpdateQuestionRequest } from '@/types'
 import { Plus, X } from 'lucide-react'
 import { useUpdateQuestion } from '@/hooks/use-questions'
 import { Button } from '@/components/ui/button'
@@ -39,7 +39,7 @@ export function EditQuestionDialog({
   )
 
   const { register, handleSubmit, reset, control, watch } =
-    useForm<UpdateQuestionData>()
+    useForm<UpdateQuestionRequest>()
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -58,10 +58,10 @@ export function EditQuestionDialog({
     }
   }, [question, reset])
 
-  const onSubmit = (data: UpdateQuestionData) => {
+  const onSubmit = (data: UpdateQuestionRequest) => {
     // Filtrar respuestas vacías
     const validAnswers =
-      data.answers?.filter((a) => a.answer_text.trim() !== '') || []
+      data.answers?.filter((a: { answer_text: string }) => a.answer_text.trim() !== '') || []
 
     updateQuestion.mutate(
       { ...data, answers: validAnswers },
@@ -144,7 +144,7 @@ export function EditQuestionDialog({
                         const answers = watch('answers') || []
                         // Si es multiple_choice, solo una puede ser correcta
                         if (questionType === 'multiple_choice' && checked) {
-                          answers.forEach((_, i) => {
+                          answers.forEach((_: unknown, i: number) => {
                             if (i !== index) {
                               answers[i].is_correct = false
                             }

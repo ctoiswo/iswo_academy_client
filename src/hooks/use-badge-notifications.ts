@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { type UserBadge } from '@/services/gamification-service'
+import { type UserBadge } from '@/types'
 import { createConsumer } from '@rails/actioncable'
 import { useAuthStore } from '@/stores/auth-store'
 

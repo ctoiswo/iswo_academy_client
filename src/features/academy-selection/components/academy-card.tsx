@@ -10,7 +10,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { AcademyMembership } from '../types'
+import type { AcademyMembership } from '@/types'
 
 interface AcademyCardProps {
   academy: AcademyMembership

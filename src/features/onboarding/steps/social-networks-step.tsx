@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
-import profileService, {
-  type SocialNetworkInput,
-  type SocialPlatform,
-} from '@/services/profile-service'
+import profileService from '@/services/profile-service'
+import type { SocialNetworkRequest, SocialPlatform } from '@/types'
 import {
   Loader2,
   ArrowLeft,
@@ -158,7 +156,7 @@ export function SocialNetworksStep({
 
       // Save each network
       for (const network of validNetworks) {
-        const data: SocialNetworkInput = {
+        const data: SocialNetworkRequest = {
           platform: network.platform,
           username: network.username || null,
           profile_url: network.profile_url,

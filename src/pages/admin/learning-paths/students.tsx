@@ -42,7 +42,7 @@ export function LearningPathStudents() {
     from: '/_authenticated/academy/$academySlug/learning-paths/$learningPathSlug/students',
   })
   const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string | undefined>(
+  const [statusFilter, _setStatusFilter] = useState<'active' | 'completed' | 'suspended' | undefined>(
     undefined
   )
   const [enrollmentToDelete, setEnrollmentToDelete] = useState<number | null>(

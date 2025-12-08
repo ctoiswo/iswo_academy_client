@@ -32,7 +32,7 @@ interface UseNotificationsOptions {
 
 export function useNotifications(options: UseNotificationsOptions = {}) {
   const { enabled = true, autoConnect = true, showToasts = true } = options
-  const { isAuthenticated, tokens, currentAcademy, user } = useAuthStore()
+  const { isAuthenticated, tokens, currentAcademy } = useAuthStore()
 
   // Estados del hook
   const [notifications, setNotifications] = useState<Notification[]>([])
@@ -239,7 +239,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
               setIsConnected(false)
             },
 
-            received(data) {
+            received(data: any) {
               if (data.type === 'new_notification') {
                 handleNewNotification(data)
               } else {

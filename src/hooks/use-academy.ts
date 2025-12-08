@@ -23,10 +23,10 @@ export function useAcademy(slug: string) {
 
         const academyData = await academyService.getAcademyBySlug(decodedSlug)
         setAcademy(academyData)
-      } catch (_err) {
-        // console.error('❌ Error fetching academy:', err)
+      } catch (error) {
+        // console.error('❌ Error fetching academy:', error)
         setError(
-          err instanceof Error ? err.message : 'Error al cargar la academia'
+          error instanceof Error ? error.message : 'Error al cargar la academia'
         )
         setAcademy(null)
       } finally {
@@ -44,9 +44,9 @@ export function useAcademy(slug: string) {
           setLoading(true)
           const academyData = await academyService.getAcademyBySlug(slug)
           setAcademy(academyData)
-        } catch (_err) {
+        } catch (error) {
           setError(
-            err instanceof Error ? err.message : 'Error al cargar la academia'
+            error instanceof Error ? error.message : 'Error al cargar la academia'
           )
         } finally {
           setLoading(false)

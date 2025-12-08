@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type { Section, UpdateSectionData } from '@/services/section-service'
+import type { Section, UpdateSectionRequest } from '@/types'
 import { useUpdateSection } from '@/hooks/use-sections'
 import { Button } from '@/components/ui/button'
 import {
@@ -47,7 +47,7 @@ export function EditSectionDialog({
 
     if (!section || !title.trim()) return
 
-    const data: UpdateSectionData = {
+    const data: UpdateSectionRequest = {
       title: title.trim(),
     }
 

@@ -51,7 +51,7 @@ export function AcademyManagementPanel({
   const filteredAcademies = academies.filter((academy) => {
     const matchesSearch =
       academy.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      academy.description.toLowerCase().includes(searchTerm.toLowerCase())
+      academy.description?.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus =
       statusFilter === 'all' || academy.status === statusFilter
     return matchesSearch && matchesStatus

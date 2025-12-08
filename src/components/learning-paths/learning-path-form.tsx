@@ -2,12 +2,12 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import {
-  learningPathService,
-  type LearningPath,
-  type CreateLearningPathData,
-  type UpdateLearningPathData,
-} from '@/services/learning-path-service'
+import { learningPathService } from '@/services/learning-path-service'
+import type {
+  LearningPath,
+  CreateLearningPathRequest,
+  UpdateLearningPathRequest,
+} from '@/types'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { DialogFooter } from '@/components/ui/dialog'
@@ -81,7 +81,7 @@ export function LearningPathForm({
 
   // Create mutation
   const createMutation = useMutation({
-    mutationFn: (data: CreateLearningPathData) =>
+    mutationFn: (data: CreateLearningPathRequest) =>
       learningPathService.createLearningPath(academySlug, data),
     onSuccess: () => {
       toast.success('Learning Path created successfully')
@@ -94,7 +94,7 @@ export function LearningPathForm({
 
   // Update mutation
   const updateMutation = useMutation({
-    mutationFn: (data: UpdateLearningPathData) =>
+    mutationFn: (data: UpdateLearningPathRequest) =>
       learningPathService.updateLearningPath(
         academySlug,
         learningPath!.slug,

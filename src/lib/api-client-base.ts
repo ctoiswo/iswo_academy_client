@@ -125,7 +125,7 @@ export class TokenManager {
         this.setTokens(newTokens)
 
         return newTokens
-      } catch (_error) {
+      } catch (error) {
         // Si el refresh falla, limpiar tokens y lanzar error
         this.clearTokens()
         throw error

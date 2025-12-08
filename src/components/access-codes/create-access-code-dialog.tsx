@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
-import { type CreateAccessCodeData } from '@/services/access-code-service'
+import type { CreateAccessCodeRequest } from '@/types'
 import { es } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -49,7 +49,7 @@ export function CreateAccessCodeDialog({
       return
     }
 
-    const data: CreateAccessCodeData = {
+    const data: CreateAccessCodeRequest = {
       usage_limit: parseInt(usageLimit),
       expires_at: expiresAt.toISOString(),
       description: description.trim() || undefined,

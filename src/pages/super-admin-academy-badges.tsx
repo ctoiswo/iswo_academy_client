@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import superAdminGamificationService, {
-  type BadgeDetail,
-} from '@/services/super-admin-gamification-service'
+import superAdminGamificationService from '@/services/super-admin-gamification-service'
+import type { BadgeDetail } from '@/types'
 import {
   Award,
   Filter,

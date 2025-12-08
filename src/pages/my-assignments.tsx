@@ -1,11 +1,8 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useParams, Link } from '@tanstack/react-router'
-import {
-  studentAssignmentService,
-  type CourseAssignments,
-  type StudentAssignment,
-} from '@/services/student-assignment-service'
+import { studentAssignmentService } from '@/services/student-assignment-service'
+import type { CourseAssignments, StudentAssignment } from '@/types'
 import { motion } from 'framer-motion'
 import {
   ClipboardList,
@@ -120,8 +117,10 @@ export default function MyAssignmentsPage() {
     })
   }
 
+  const { currentAcademy } = useAuthStore()
+
   return (
-    <DashboardLayout title='Mis Tareas' showSearch={false}>
+    <DashboardLayout user={user} academy={currentAcademy} variant='sidebar' dashboardType='student'>
       <div className='space-y-6'>
         {/* Header with stats */}
         <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>

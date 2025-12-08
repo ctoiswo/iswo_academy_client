@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import certificateTemplateService, {
-  type CertificateTemplate,
-  type CreateCertificateTemplateData,
-  type UpdateCertificateTemplateData,
-} from '@/services/certificate-template-service'
+import certificateTemplateService from '@/services/certificate-template-service'
+import type {
+  CreateCertificateTemplateRequest,
+  UpdateCertificateTemplateRequest,
+} from '@/types'
 import { toast } from 'sonner'
 
 export const useCertificateTemplates = (academySlug: string) => {
@@ -30,7 +30,7 @@ export const useCreateCertificateTemplate = (academySlug: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: CreateCertificateTemplateData) =>
+    mutationFn: (data: CreateCertificateTemplateRequest) =>
       certificateTemplateService.createTemplate(academySlug, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -53,7 +53,7 @@ export const useUpdateCertificateTemplate = (
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: UpdateCertificateTemplateData) =>
+    mutationFn: (data: UpdateCertificateTemplateRequest) =>
       certificateTemplateService.updateTemplate(academySlug, templateId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({

@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import profileService, {
-  type UserAddressInput,
-} from '@/services/profile-service'
+import profileService from '@/services/profile-service'
+import type { UserAddressRequest } from '@/types'
 import { Loader2, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -115,7 +114,7 @@ export function AddressStep({ onNext, onBack, onSkip }: AddressStepProps) {
         return
       }
 
-      const addressData: UserAddressInput = {
+      const addressData: UserAddressRequest = {
         street: data.street || undefined,
         city: data.city || undefined,
         state: data.state || undefined,

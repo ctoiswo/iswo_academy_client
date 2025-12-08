@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
-import profileService, {
-  type UserDetail,
-  type UserAddress,
-  type SocialNetwork,
-} from '@/services/profile-service'
+import profileService from '@/services/profile-service'
+import type { UserDetail, UserAddress, SocialNetwork } from '@/types'
 import { es } from 'date-fns/locale'
 import {
   Loader2,

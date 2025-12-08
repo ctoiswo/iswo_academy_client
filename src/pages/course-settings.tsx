@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useParams, Link, useNavigate } from '@tanstack/react-router'
+import { useParams, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Save, Trash2, Archive } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import {
@@ -145,15 +145,15 @@ export default function CourseSettingsPage() {
           <p className='text-gray-600'>
             Curso no encontrado o no tienes permiso para acceder
           </p>
-          <Link
-            to={`/academy/${academySlug}/courses`}
+          <a
+            href={`/academy/${academySlug}/courses`}
             className='mt-4 inline-block'
           >
             <Button variant='outline'>
               <ArrowLeft className='mr-2 h-4 w-4' />
               Volver a Cursos
             </Button>
-          </Link>
+          </a>
         </div>
       </div>
     )
@@ -162,12 +162,12 @@ export default function CourseSettingsPage() {
   return (
     <div className='container mx-auto py-8'>
       <div className='mb-6'>
-        <Link to={`/academy/${academySlug}/courses/${courseSlug}`}>
+        <a href={`/academy/${academySlug}/courses/${courseSlug}`}>
           <Button variant='ghost' size='sm' className='mb-4'>
             <ArrowLeft className='mr-2 h-4 w-4' />
             Volver al Curso
           </Button>
-        </Link>
+        </a>
         <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
         <p className='text-gray-600'>
           Ajustes avanzados y configuración del curso

@@ -32,7 +32,6 @@ export function getGuestSidebar(
       title: 'Completa tu Perfil',
       url: '/onboarding',
       icon: Sparkles,
-      badge: '¡Nuevo!',
     })
   }
 

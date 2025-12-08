@@ -3,9 +3,8 @@ import * as z from 'zod'
 import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import profileService, {
-  type UserDetailInput,
-} from '@/services/profile-service'
+import profileService from '@/services/profile-service'
+import type { UserDetailRequest } from '@/types'
 import { es } from 'date-fns/locale'
 import { CalendarIcon, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -113,7 +112,7 @@ export function PersonalDetailsStep({
       setIsLoading(true)
 
       // Convert empty strings to null
-      const cleanData: UserDetailInput = {
+      const cleanData: UserDetailRequest = {
         birth_date: data.birth_date || null,
         gender: data.gender || null,
         phone: data.phone || null,

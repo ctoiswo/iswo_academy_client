@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import type { Lesson } from '@/services/lesson-service'
-import type { Section } from '@/services/section-service'
+import type { Lesson } from '@/types'
+import type { Section } from '@/types'
 import {
   DndContext,
   closestCenter,
@@ -165,12 +165,17 @@ export function SectionCard({
                   {lessonsList.length} lección
                   {lessonsList.length !== 1 ? 'es' : ''}
                 </Badge>
-                {section.duration_minutes && section.duration_minutes > 0 && (
-                  <Badge variant='secondary'>
-                    {Math.floor(section.duration_minutes / 60)}h{' '}
-                    {section.duration_minutes % 60}m
-                  </Badge>
-                )}
+                {(() => {
+                  const totalDuration = lessonsList.reduce(
+                    (sum, lesson) => sum + (lesson.duration_minutes || 0),
+                    0
+                  )
+                  return totalDuration > 0 ? (
+                    <Badge variant='secondary'>
+                      {Math.floor(totalDuration / 60)}h {totalDuration % 60}m
+                    </Badge>
+                  ) : null
+                })()}
               </div>
             </div>
 

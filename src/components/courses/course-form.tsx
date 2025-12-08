@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type Course } from '@/services/course-service'
+import type { Course } from '@/types'
 import { useCreateCourse, useUpdateCourse } from '@/hooks/use-courses'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -99,9 +99,9 @@ export function CourseForm({
       if (!course?.slug && !course?.id) {
         return
       }
-      const courseId = Number(course.slug || course.id)
+      const courseSlug = Number(course.slug || course.id)
       updateMutation.mutate(
-        { courseId, data: courseData },
+        { courseSlug, data: courseData },
         {
           onSuccess: () => onSuccess(),
         }

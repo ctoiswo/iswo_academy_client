@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import type {
-  CreateQuestionData,
+  CreateQuestionRequest,
   QuestionType,
-} from '@/services/question-service'
+} from '@/types'
 import { Plus, X } from 'lucide-react'
 import { useCreateQuestion } from '@/hooks/use-questions'
 import { Button } from '@/components/ui/button'
@@ -52,7 +52,7 @@ export function CreateQuestionDialog({
   )
 
   const { register, handleSubmit, reset, control, watch } =
-    useForm<CreateQuestionData>({
+    useForm<CreateQuestionRequest>({
       defaultValues: {
         question_text: '',
         question_type: 'multiple_choice',
@@ -91,9 +91,9 @@ export function CreateQuestionDialog({
     }
   }, [open])
 
-  const onSubmit = (data: CreateQuestionData) => {
+  const onSubmit = (data: CreateQuestionRequest) => {
     // Filtrar respuestas vacías
-    const validAnswers = data.answers.filter((a) => a.answer_text.trim() !== '')
+    const validAnswers = data.answers.filter((a: { answer_text: string }) => a.answer_text.trim() !== '')
 
     createQuestion.mutate(
       { ...data, answers: validAnswers },
@@ -220,7 +220,7 @@ export function CreateQuestionDialog({
                         const answers = watch('answers')
                         // Si es multiple_choice, solo una puede ser correcta
                         if (questionType === 'multiple_choice' && checked) {
-                          answers.forEach((_, i) => {
+                          answers.forEach((_: unknown, i: number) => {
                             if (i !== index) {
                               answers[i].is_correct = false
                             }

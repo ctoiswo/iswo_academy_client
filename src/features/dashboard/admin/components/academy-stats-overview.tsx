@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import {
   Users,
-  GraduationCap,
   BookOpen,
   DollarSign,
-  TrendingUp,
   UserCheck,
 } from 'lucide-react'
 import type { AcademyMembership } from '@/stores/auth-store'
@@ -130,7 +128,7 @@ export function AcademyStatsOverview({
         >
           {stats?.enrollmentTrends && (
             <div className='space-y-3'>
-              {stats.enrollmentTrends.slice(-3).map((trend, index) => (
+              {stats.enrollmentTrends.slice(-3).map((trend, _index) => (
                 <div
                   key={trend.month}
                   className='flex items-center justify-between'

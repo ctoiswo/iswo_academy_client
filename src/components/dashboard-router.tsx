@@ -5,7 +5,7 @@ import {
   type AuthUser,
 } from '@/stores/auth-store'
 import { useAcademyPermissions } from '@/hooks/use-academy-permissions'
-import { AcademyAdminDashboard } from '@/features/dashboard/admin/index'
+import { AdminDashboard } from '@/features/dashboard/admin/index'
 import { StudentDashboard } from '@/features/dashboard/student/index'
 /**
  * Get dashboard configuration for a specific dashboard type
@@ -137,7 +137,7 @@ function getDashboardConfig(dashboardType: DashboardType): DashboardConfig {
       permissions: ['manage_system'],
     },
     'academy-admin': {
-      component: AcademyAdminDashboard,
+      component: AdminDashboard,
       layout: 'sidebar',
       permissions: ['manage_users', 'manage_courses', 'manage_payments'],
     },

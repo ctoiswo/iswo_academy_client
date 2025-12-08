@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
-import type { Assignment } from '@/services/assignment-service'
+import type { Assignment } from '@/types'
 import { es } from 'date-fns/locale'
 import {
   MoreVertical,

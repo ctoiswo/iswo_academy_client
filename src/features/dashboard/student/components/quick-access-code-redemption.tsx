@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { type RedemptionResponse } from '@/services/access-code-service'
+import type { AccessCodeRedemptionResponse } from '@/types'
 import { Key, ArrowRight, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AccessCodeRedemption } from '@/components/access-codes/access-code-redemption'
 
 interface QuickAccessCodeRedemptionProps {
-  onSuccess?: (response: RedemptionResponse) => void
+  onSuccess?: (response: AccessCodeRedemptionResponse) => void
 }
 
 export function QuickAccessCodeRedemption({
@@ -16,7 +16,7 @@ export function QuickAccessCodeRedemption({
   const [showFullRedemption, setShowFullRedemption] = useState(false)
   const navigate = useNavigate()
 
-  const handleSuccess = (response: RedemptionResponse) => {
+  const handleSuccess = (response: AccessCodeRedemptionResponse) => {
     onSuccess?.(response)
     // Optionally refresh the page or update the local state
     window.location.reload()

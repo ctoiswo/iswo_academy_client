@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { type LearningPath } from '@/services'
+import type { LearningPath } from '@/types'
 import { Plus, Edit, Trash2, Book, Clock, Users } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import {

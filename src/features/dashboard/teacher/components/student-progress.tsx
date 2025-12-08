@@ -84,12 +84,6 @@ export function StudentProgress({
     return <Badge variant={variants[status]}>{labels[status]}</Badge>
   }
 
-  const getProgressColor = (progress: number) => {
-    if (progress >= 80) return 'bg-green-500'
-    if (progress >= 50) return 'bg-yellow-500'
-    return 'bg-red-500'
-  }
-
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString)
     const now = new Date()
@@ -305,7 +299,7 @@ export function StudentProgress({
       <ListCard
         title='Student Progress'
         description="Track your students' learning journey"
-        items={studentItems}
+        items={studentItems as any}
         emptyMessage={
           selectedCourse !== 'all' || statusFilter !== 'all'
             ? 'No students match the selected filters.'

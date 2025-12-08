@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import {
-  type ValidationResponse,
-  type RedemptionResponse,
-} from '@/services/access-code-service'
+import type {
+  AccessCodeValidationResponse,
+  AccessCodeRedemptionResponse,
+} from '@/types'
 import { CheckCircle, AlertCircle, Loader2, Key } from 'lucide-react'
 import {
   useValidateAccessCode,
@@ -22,14 +22,14 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 interface AccessCodeRedemptionProps {
-  onSuccess?: (response: RedemptionResponse) => void
+  onSuccess?: (response: AccessCodeRedemptionResponse) => void
 }
 
 export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
   const [code, setCode] = useState('')
-  const [validation, setValidation] = useState<ValidationResponse | null>(null)
+  const [validation, setValidation] = useState<AccessCodeValidationResponse | null>(null)
   const [redemptionResult, setRedemptionResult] =
-    useState<RedemptionResponse | null>(null)
+    useState<AccessCodeRedemptionResponse | null>(null)
 
   const validateCode = useValidateAccessCode()
   const redeemCode = useRedeemAccessCode()

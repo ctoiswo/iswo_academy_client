@@ -1,10 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  learningPathService,
-  type LearningPathFilters,
-  type CreateLearningPathData,
-  type UpdateLearningPathData,
-} from '@/services'
+import { learningPathService } from '@/services'
+import type {
+  LearningPathFilters,
+  CreateLearningPathRequest,
+  UpdateLearningPathRequest,
+} from '@/types'
 import { toast } from 'sonner'
 
 export function useLearningPaths(
@@ -34,7 +34,7 @@ export function useCreateLearningPath(academySlug: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: CreateLearningPathData) =>
+    mutationFn: (data: CreateLearningPathRequest) =>
       learningPathService.createLearningPath(academySlug, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -57,7 +57,7 @@ export function useUpdateLearningPath(academySlug: string) {
       data,
     }: {
       learningPathSlug: string
-      data: UpdateLearningPathData
+      data: UpdateLearningPathRequest
     }) =>
       learningPathService.updateLearningPath(
         academySlug,
@@ -114,7 +114,7 @@ export function useUpdateLearningPathSettings(
       learningPathService.updateLearningPath(
         academySlug,
         learningPathSlug,
-        data
+        data as UpdateLearningPathRequest
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({

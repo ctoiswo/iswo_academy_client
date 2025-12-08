@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import type { Assessment } from '@/services/assessment-service'
+import type { Assessment } from '@/types'
 import {
   MoreVertical,
   Edit,

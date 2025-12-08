@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { type Course } from '@/services/course-service'
+import type { Course } from '@/types'
 import {
   Plus,
   Trash2,

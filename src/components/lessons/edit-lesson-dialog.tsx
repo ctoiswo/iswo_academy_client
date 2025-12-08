@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type { Lesson, UpdateLessonData } from '@/services/lesson-service'
+import type { Lesson, UpdateLessonRequest } from '@/types'
 import { useUpdateLesson } from '@/hooks/use-lessons'
 import { Button } from '@/components/ui/button'
 import {
@@ -39,7 +39,7 @@ export function EditLessonDialog({
   sectionId,
   lesson,
 }: EditLessonDialogProps) {
-  const [formData, setFormData] = useState<UpdateLessonData>({
+  const [formData, setFormData] = useState<UpdateLessonRequest>({
     title: '',
     lesson_type: 'video',
     content: '',
@@ -94,7 +94,7 @@ export function EditLessonDialog({
 
     if (!lesson || !formData.title?.trim()) return
 
-    const dataToSubmit: UpdateLessonData = {
+    const dataToSubmit: UpdateLessonRequest = {
       title: formData.title.trim(),
       lesson_type: formData.lesson_type,
       is_free: formData.is_free,

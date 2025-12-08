@@ -74,7 +74,7 @@ export function CreateCertificateTemplateDialog({
   const [logo, setLogo] = useState<File | null>(null)
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       name: '',
       description: '',
@@ -95,7 +95,7 @@ export function CreateCertificateTemplateDialog({
   })
 
   const onSubmit = async (values: FormValues) => {
-    const data = {
+    const data: any = {
       name: values.name,
       description: values.description,
       is_default: values.is_default,
@@ -167,7 +167,7 @@ export function CreateCertificateTemplateDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+          <form onSubmit={form.handleSubmit(onSubmit as any)} className='space-y-6'>
             <Tabs defaultValue='basic' className='w-full'>
               <TabsList className='grid w-full grid-cols-4'>
                 <TabsTrigger value='basic'>Básico</TabsTrigger>
@@ -178,7 +178,7 @@ export function CreateCertificateTemplateDialog({
 
               <TabsContent value='basic' className='space-y-4'>
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='name'
                   render={({ field }) => (
                     <FormItem>
@@ -192,7 +192,7 @@ export function CreateCertificateTemplateDialog({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='description'
                   render={({ field }) => (
                     <FormItem>
@@ -209,7 +209,7 @@ export function CreateCertificateTemplateDialog({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='is_default'
                   render={({ field }) => (
                     <FormItem className='flex items-center justify-between rounded-lg border p-4'>
@@ -235,7 +235,7 @@ export function CreateCertificateTemplateDialog({
 
               <TabsContent value='design' className='space-y-4'>
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='layout'
                   render={({ field }) => (
                     <FormItem>
@@ -267,7 +267,7 @@ export function CreateCertificateTemplateDialog({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='background_color'
                   render={({ field }) => (
                     <FormItem>
@@ -297,7 +297,7 @@ export function CreateCertificateTemplateDialog({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='border_style'
                   render={({ field }) => (
                     <FormItem>
@@ -324,7 +324,7 @@ export function CreateCertificateTemplateDialog({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='font_family'
                   render={({ field }) => (
                     <FormItem>
@@ -359,7 +359,7 @@ export function CreateCertificateTemplateDialog({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='logo_position'
                   render={({ field }) => (
                     <FormItem>
@@ -429,7 +429,7 @@ export function CreateCertificateTemplateDialog({
 
               <TabsContent value='content' className='space-y-4'>
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='title'
                   render={({ field }) => (
                     <FormItem>
@@ -446,7 +446,7 @@ export function CreateCertificateTemplateDialog({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='subtitle'
                   render={({ field }) => (
                     <FormItem>
@@ -460,7 +460,7 @@ export function CreateCertificateTemplateDialog({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='body'
                   render={({ field }) => (
                     <FormItem>
@@ -483,7 +483,7 @@ export function CreateCertificateTemplateDialog({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='footer'
                   render={({ field }) => (
                     <FormItem>
@@ -561,7 +561,7 @@ export function CreateCertificateTemplateDialog({
                 </div>
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='lessons_completion'
                   render={({ field }) => (
                     <FormItem>
@@ -590,7 +590,7 @@ export function CreateCertificateTemplateDialog({
                 />
 
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name='minimum_score'
                   render={({ field }) => (
                     <FormItem>

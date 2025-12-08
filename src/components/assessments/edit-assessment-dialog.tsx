@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import type {
   Assessment,
-  UpdateAssessmentData,
-} from '@/services/assessment-service'
+  UpdateAssessmentRequest,
+} from '@/types'
 import { useUpdateAssessment } from '@/hooks/use-assessments'
 import { Button } from '@/components/ui/button'
 import {
@@ -48,7 +48,7 @@ export function EditAssessmentDialog({
   const isQuiz = assessment?.type === 'Quiz'
 
   const { register, handleSubmit, reset, setValue, watch } =
-    useForm<UpdateAssessmentData>({
+    useForm<UpdateAssessmentRequest>({
       defaultValues: {
         title: assessment?.title || '',
         description: assessment?.description || '',
@@ -85,7 +85,7 @@ export function EditAssessmentDialog({
     }
   }, [assessment, reset])
 
-  const onSubmit = (data: UpdateAssessmentData) => {
+  const onSubmit = (data: UpdateAssessmentRequest) => {
     if (!assessment) return
     updateAssessment.mutate(data, {
       onSuccess: () => {

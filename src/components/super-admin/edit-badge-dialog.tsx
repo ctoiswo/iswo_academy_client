@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import superAdminGamificationService, {
-  type BadgeDetail,
-  type UpdateBadgeData,
-} from '@/services/super-admin-gamification-service'
+import superAdminGamificationService from '@/services/super-admin-gamification-service'
+import type {
+  BadgeDetail,
+  UpdateSuperAdminBadgeRequest,
+} from '@/types'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
@@ -136,7 +137,7 @@ export function EditBadgeDialog({
     setIsSubmitting(true)
 
     try {
-      const updateData: UpdateBadgeData = {
+      const updateData: UpdateSuperAdminBadgeRequest = {
         name: formData.name,
         slug: formData.slug,
         description: formData.description,

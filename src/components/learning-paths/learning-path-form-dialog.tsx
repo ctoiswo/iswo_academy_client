@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import type { LearningPath } from '@/services/learning-path-service'
+import type { LearningPath } from '@/types'
 import { useAuthStore } from '@/stores/auth-store'
 import {
   useCreateLearningPath,

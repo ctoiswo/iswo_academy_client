@@ -1,9 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  sectionService,
-  type CreateSectionData,
-  type UpdateSectionData,
-} from '@/services/section-service'
+import { sectionService } from '@/services/section-service'
+import type { CreateSectionRequest, UpdateSectionRequest } from '@/types'
 import { toast } from 'sonner'
 
 export function useSections(academySlug: string, courseSlug: string) {
@@ -31,7 +28,7 @@ export function useCreateSection(academySlug: string, courseSlug: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: CreateSectionData) =>
+    mutationFn: (data: CreateSectionRequest) =>
       sectionService.createSection(academySlug, courseSlug, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -55,7 +52,7 @@ export function useUpdateSection(academySlug: string, courseSlug: string) {
       data,
     }: {
       sectionId: number
-      data: UpdateSectionData
+      data: UpdateSectionRequest
     }) =>
       sectionService.updateSection(academySlug, courseSlug, sectionId, data),
     onSuccess: () => {

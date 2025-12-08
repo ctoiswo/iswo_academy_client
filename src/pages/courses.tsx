@@ -36,10 +36,6 @@ export function CoursesPage() {
   )
 
   // Helper functions
-  const formatPrice = (priceString: string) => {
-    const price = parseFloat(priceString)
-    return `$${(price / 1000).toFixed(0)}k`
-  }
 
   const formatDifficulty = (level: string) => {
     const levels = {
@@ -56,7 +52,7 @@ export function CoursesPage() {
     if (
       searchQuery &&
       !course.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      !course.creator.name.toLowerCase().includes(searchQuery.toLowerCase())
+      !course.creator?.name.toLowerCase().includes(searchQuery.toLowerCase())
     ) {
       return false
     }
@@ -86,11 +82,11 @@ export function CoursesPage() {
       case 'duration':
         return b.duration_minutes - a.duration_minutes
       case 'price':
-        return parseFloat(b.price) - parseFloat(a.price)
+        return b.price - a.price
       case 'enrollments':
-        return b.enrollment_count - a.enrollment_count
+        return (b.enrollment_count || 0) - (a.enrollment_count || 0)
       default: // popular
-        return b.enrollment_count - a.enrollment_count
+        return (b.enrollment_count || 0) - (a.enrollment_count || 0)
     }
   })
 
@@ -400,7 +396,7 @@ export function CoursesPage() {
                           <div className='rounded bg-black/70 px-2 py-1 text-xs font-medium text-white'>
                             {course.is_free
                               ? 'Gratis'
-                              : formatPrice(course.price)}
+                              : `$${course.price.toLocaleString()}`}
                           </div>
                         </div>
                         <div className='bg-background/95 absolute right-3 bottom-3 flex items-center gap-1 rounded-full border px-3 py-1.5 shadow-sm backdrop-blur-sm'>
@@ -416,7 +412,7 @@ export function CoursesPage() {
                           {course.title}
                         </CardTitle>
                         <p className='text-muted-foreground line-clamp-1 text-sm'>
-                          Por {course.creator.name}
+                          Por {course.creator?.name}
                         </p>
                       </CardHeader>
 
@@ -437,7 +433,7 @@ export function CoursesPage() {
                             </div>
                           </div>
                           <Badge variant='outline' className='text-xs'>
-                            {course.is_published
+                            {course.status === 'published'
                               ? 'Disponible'
                               : 'Próximamente'}
                           </Badge>

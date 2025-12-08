@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams, Link } from '@tanstack/react-router'
+import { useParams } from '@tanstack/react-router'
 import {
   ArrowLeft,
   BookOpen,
@@ -11,12 +11,6 @@ import {
   PlayCircle,
   Clock,
   Target,
-  Key,
-  Copy,
-  Eye,
-  EyeOff,
-  Calendar,
-  Ticket,
   FileQuestion,
   Info,
 } from 'lucide-react'
@@ -76,15 +70,15 @@ export default function CourseManagementDetailPage() {
           <p className='text-gray-600'>
             Curso no encontrado o no tienes permiso para acceder
           </p>
-          <Link
-            to={`/academy/${academySlug}/courses`}
+          <a
+            href={`/academy/${academySlug}/courses`}
             className='mt-4 inline-block'
           >
             <Button variant='outline'>
               <ArrowLeft className='mr-2 h-4 w-4' />
               Volver a Cursos
             </Button>
-          </Link>
+          </a>
         </div>
       </div>
     )
@@ -95,12 +89,12 @@ export default function CourseManagementDetailPage() {
       {/* Header */}
       <div className='mb-8'>
         <div className='mb-6 flex items-center gap-4'>
-          <Link to={`/academy/${academySlug}/courses`}>
+          <a href={`/academy/${academySlug}/courses`}>
             <Button variant='ghost' size='sm'>
               <ArrowLeft className='mr-2 h-4 w-4' />
               Volver a Cursos
             </Button>
-          </Link>
+          </a>
         </div>
 
         <Card>
@@ -380,10 +374,15 @@ export default function CourseManagementDetailPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <AccessCodeList courseId={course.id} />
+                <AccessCodeList courseSlug={course.slug} />
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        {/* Access Codes Tab */}
+        <TabsContent value='access-codes'>
+          <AccessCodeList courseSlug={course.slug} />
         </TabsContent>
 
         {/* Lessons Tab */}
@@ -636,7 +635,7 @@ export default function CourseManagementDetailPage() {
                         </p>
                       </div>
                       <Badge variant='outline'>
-                        {course.has_certificate ? 'Activado' : 'Desactivado'}
+                        {course.certificate_enabled ? 'Activado' : 'Desactivado'}
                       </Badge>
                     </div>
                     <div className='flex items-center justify-between rounded-lg border p-3'>
@@ -647,7 +646,7 @@ export default function CourseManagementDetailPage() {
                         </p>
                       </div>
                       <Badge variant='outline'>
-                        {course.enrollment_enabled !== false
+                        {course.status === 'published'
                           ? 'Abierta'
                           : 'Cerrada'}
                       </Badge>

@@ -1,9 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  lessonService,
-  type CreateLessonData,
-  type UpdateLessonData,
-} from '@/services/lesson-service'
+import { lessonService } from '@/services/lesson-service'
+import type { CreateLessonRequest, UpdateLessonRequest } from '@/types'
 import { toast } from 'sonner'
 
 export function useLessons(
@@ -40,7 +37,7 @@ export function useCreateLesson(
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: CreateLessonData) =>
+    mutationFn: (data: CreateLessonRequest) =>
       lessonService.createLesson(academySlug, courseSlug, sectionId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -71,7 +68,7 @@ export function useUpdateLesson(
       data,
     }: {
       lessonId: number
-      data: UpdateLessonData
+      data: UpdateLessonRequest
     }) =>
       lessonService.updateLesson(
         academySlug,

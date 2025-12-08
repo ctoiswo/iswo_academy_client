@@ -19,6 +19,7 @@ import type { AuthUser, AcademyMembership } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'
 import { useAcademyPermissions } from '@/hooks/use-academy-permissions'
 import type { DashboardType } from '@/components/dashboard-router'
+import type { Permission } from '@/lib/permissions'
 
 export interface NavigationItem {
   label: string
@@ -54,7 +55,7 @@ export function RoleNavigation({
   const { checkAccess, helpers } = useAcademyPermissions(academy?.id)
 
   // Get navigation items based on dashboard type
-  const navigationItems = getNavigationItems(dashboardType, academy?.id)
+  const navigationItems = getNavigationItems(dashboardType)
 
   // Filter items based on user permissions with enhanced navigation guards
   const filteredItems = useNavigationGuards(navigationItems, {
@@ -116,7 +117,7 @@ function useNavigationGuards(
       // Check if user has required permissions
       if (item.permissions && item.permissions.length > 0) {
         const hasPermission = item.permissions.some((permission) =>
-          checkAccess.permission(permission as string)
+          checkAccess.permission(permission as Permission)
         )
         if (!hasPermission) return false
       }
@@ -141,7 +142,7 @@ function useNavigationGuards(
 
           if (child.permissions && child.permissions.length > 0) {
             const hasPermission = child.permissions.some((permission) =>
-              checkAccess.permission(permission as string)
+              checkAccess.permission(permission as Permission)
             )
             if (!hasPermission) return false
           }
@@ -221,8 +222,7 @@ function NavigationLink({
  * Get navigation items based on dashboard type with enhanced role-based configuration
  */
 function getNavigationItems(
-  dashboardType: DashboardType,
-  academyId?: number
+  dashboardType: DashboardType
 ): NavigationItem[] {
   const baseItems: Record<DashboardType, NavigationItem[]> = {
     'super-admin': [

@@ -85,7 +85,7 @@ export function hasPermission(
 export function canPerformAction(
   academyMembership: { user_role: string } | null,
   action: Permission,
-  context?: PermissionContext
+  _context?: PermissionContext
 ): boolean {
   if (!academyMembership) return false
 

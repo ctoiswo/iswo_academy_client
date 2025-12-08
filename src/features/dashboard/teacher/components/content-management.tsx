@@ -129,7 +129,7 @@ export function ContentManagement({
   }
 
   // Filter lessons by course
-  const filteredLessons = lessons.filter((lesson) => {
+  const filteredLessons = lessons.filter((_lesson) => {
     if (selectedCourse === 'all') return true
     // Note: In a real implementation, lessons would have a courseId field
     return true // Placeholder logic
@@ -361,7 +361,7 @@ export function ContentManagement({
                 New Lesson
               </Button>
             }
-            items={lessonItems}
+            items={lessonItems as any}
             emptyMessage='No lessons found. Create your first lesson to get started.'
             loading={loading}
           />
@@ -381,7 +381,7 @@ export function ContentManagement({
                 New Assignment
               </Button>
             }
-            items={assignmentItems}
+            items={assignmentItems as any}
             emptyMessage='No assignments found. Create your first assignment.'
             loading={loading}
           />

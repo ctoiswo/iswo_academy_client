@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from '@tanstack/react-router'
-import { type LearningPath, type Course } from '@/services'
+import type { LearningPath, Course } from '@/types'
 import {
   DndContext,
   closestCenter,
@@ -192,7 +192,7 @@ export function LearningPathCourses({
   }, [learningPath.courses])
 
   // Filter available courses (exclude already added ones and ensure same academy)
-  const assignedCourseIds = new Set(courses.map((c) => c.id))
+  const assignedCourseIds = new Set(courses.map((c: Course) => c.id))
   const allCourses = allCoursesData || []
   const availableCourses = allCourses
     .filter((course) => !assignedCourseIds.has(course.id))
@@ -205,13 +205,13 @@ export function LearningPathCourses({
     const { active, over } = event
 
     if (over && active.id !== over.id) {
-      setCourses((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id)
-        const newIndex = items.findIndex((item) => item.id === over.id)
+      setCourses((items: Course[]) => {
+        const oldIndex = items.findIndex((item: Course) => item.id === active.id)
+        const newIndex = items.findIndex((item: Course) => item.id === over.id)
         const newOrder = arrayMove(items, oldIndex, newIndex)
 
         // Save new order to backend
-        reorderMutation.mutate(newOrder.map((c) => c.id))
+        reorderMutation.mutate(newOrder.map((c: Course) => c.id))
 
         return newOrder
       })
@@ -226,7 +226,7 @@ export function LearningPathCourses({
 
   const handleRemoveCourse = async (courseId: number) => {
     await removeCourseMutation.mutateAsync(courseId)
-    setCourses((prev) => prev.filter((c) => c.id !== courseId))
+    setCourses((prev: Course[]) => prev.filter((c: Course) => c.id !== courseId))
   }
 
   const getDifficultyBadge = (difficulty: string) => {
@@ -358,11 +358,11 @@ export function LearningPathCourses({
             onDragEnd={handleDragEnd}
           >
             <SortableContext
-              items={courses.map((c) => c.id)}
+              items={courses.map((c: Course) => c.id)}
               strategy={verticalListSortingStrategy}
             >
               <div className='space-y-3'>
-                {courses.map((course, index) => (
+                {courses.map((course: Course, index: number) => (
                   <SortableCourseItem
                     key={course.id}
                     course={course}

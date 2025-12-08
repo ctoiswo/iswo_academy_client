@@ -81,7 +81,7 @@ export interface AcademyFull extends AcademyBase {
 // Default export - Full view (backward compatibility)
 export type Academy = AcademyFull
 
-export interface AcademyMembership {
+export interface AcademyMembershipDetail {
   id: number
   role: 'owner' | 'admin' | 'teacher' | 'student'
   joined_at: string

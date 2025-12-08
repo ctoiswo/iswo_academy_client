@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import type { UserBadge } from '@/services/gamification-service'
+import type { UserBadge } from '@/types'
 import { Award, Sparkles, Trophy } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'

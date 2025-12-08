@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
-import type { Enrollment } from '@/services/enrollment-service'
+import type { Enrollment } from '@/types'
 import {
   ArrowLeft,
   Users,

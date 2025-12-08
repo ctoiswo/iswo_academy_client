@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import gamificationService, {
-  type GamificationProfile,
-} from '@/services/gamification-service'
+import gamificationService from '@/services/gamification-service'
+import type { GamificationProfile } from '@/types'
 import { Flame, TrendingUp } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'

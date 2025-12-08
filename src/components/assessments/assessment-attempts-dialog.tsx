@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Assessment } from '@/services/assessment-service'
+import type { Assessment } from '@/types'
 import { CheckCircle2, XCircle, Clock, User } from 'lucide-react'
 import { useAssessmentAttempts } from '@/hooks/use-assessments'
 import { Badge } from '@/components/ui/badge'

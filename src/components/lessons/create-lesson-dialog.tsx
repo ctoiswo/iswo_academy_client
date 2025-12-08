@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { CreateLessonData } from '@/services/lesson-service'
+import type { CreateLessonRequest } from '@/types'
 import { useCreateLesson } from '@/hooks/use-lessons'
 import { Button } from '@/components/ui/button'
 import {
@@ -37,7 +37,7 @@ export function CreateLessonDialog({
   courseSlug,
   sectionId,
 }: CreateLessonDialogProps) {
-  const [formData, setFormData] = useState<CreateLessonData>({
+  const [formData, setFormData] = useState<CreateLessonRequest>({
     title: '',
     lesson_type: 'video',
     content: '',
@@ -84,7 +84,7 @@ export function CreateLessonDialog({
 
     if (!formData.title.trim()) return
 
-    const dataToSubmit: CreateLessonData = {
+    const dataToSubmit: CreateLessonRequest = {
       title: formData.title.trim(),
       lesson_type: formData.lesson_type,
       is_free: formData.is_free,

@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
-import { type RedemptionResponse } from '@/services/access-code-service'
+import type { AccessCodeRedemptionResponse } from '@/types'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AccessCodeRedemption } from '@/components/access-codes/access-code-redemption'
@@ -7,7 +7,7 @@ import { AccessCodeRedemption } from '@/components/access-codes/access-code-rede
 export default function RedeemAccessCodePage() {
   const navigate = useNavigate()
 
-  const handleSuccess = (_response: RedemptionResponse) => {
+  const handleSuccess = (_response: AccessCodeRedemptionResponse) => {
     // After successful redemption, we could navigate to the course or dashboard
     setTimeout(() => {
       navigate({ to: '/dashboard' })

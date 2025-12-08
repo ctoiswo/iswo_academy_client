@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Lesson } from '@/services/lesson-service'
+import type { Lesson } from '@/types'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import {

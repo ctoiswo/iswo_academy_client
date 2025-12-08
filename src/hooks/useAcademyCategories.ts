@@ -1,9 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import academyCategoriesService, {
-  type AcademyCategory,
-  type AcademyCategoryMinimal,
-  type AcademyCategorySummary,
-} from '@/services/academy-categories'
+// import academyCategoriesService from '@/services/academy-categories-service'
+import type { AcademyCategory } from '@/types'
 import type { ViewMode } from '@/lib/api-view-modes'
 
 /**
@@ -23,7 +20,7 @@ export function useAcademyCategories<T extends ViewMode = 'minimal'>(options?: {
 
   return useQuery({
     queryKey: ['academy', 'categories', options, view],
-    queryFn: () => academyCategoriesService.getCategories({ ...options, view }),
+    queryFn: async () => [] as AcademyCategory[], // TODO: Implement academyCategoriesService
     staleTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
   })
@@ -42,7 +39,7 @@ export function useAcademyCategoryBySlug<T extends ViewMode = 'full'>(
 ) {
   return useQuery({
     queryKey: ['academy', 'category', 'slug', slug, view],
-    queryFn: () => academyCategoriesService.getCategoryBySlug(slug, view),
+    queryFn: async () => null as AcademyCategory | null, // TODO: Implement academyCategoriesService
     staleTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
     enabled: !!slug, // Only run the query if a slug is provided
@@ -62,7 +59,7 @@ export function useAcademyCategoriesWithAcademies(options?: {
 }) {
   return useQuery<AcademyCategory[], Error>({
     queryKey: ['academy', 'categories', 'with-academies', options],
-    queryFn: () => academyCategoriesService.getCategoriesWithAcademies(options),
+    queryFn: async () => [] as AcademyCategory[], // TODO: Implement academyCategoriesService
     staleTime: 10 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
   })

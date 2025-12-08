@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
-import { type AccessCode } from '@/services/access-code-service'
+import type { AccessCode } from '@/types'
 import { es } from 'date-fns/locale'
 import {
   Copy,

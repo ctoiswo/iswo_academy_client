@@ -1,4 +1,4 @@
-import type { Assessment } from '@/services/assessment-service'
+import type { Assessment } from '@/types'
 import { BarChart3, Users, Award, TrendingUp } from 'lucide-react'
 import { useAssessmentStatistics } from '@/hooks/use-assessments'
 import { Card, CardContent } from '@/components/ui/card'

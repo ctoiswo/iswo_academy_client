@@ -209,10 +209,12 @@ export function PublicCoursePage() {
     <div className='bg-background min-h-screen'>
       <Header />
 
-      <CourseHeader
-        academy={courseData.academy}
-        courseTitle={courseData.title}
-      />
+      {courseData.academy && (
+        <CourseHeader
+          academy={courseData.academy}
+          courseTitle={courseData.title}
+        />
+      )}
 
       <CourseHero
         course={enhancedCourse}

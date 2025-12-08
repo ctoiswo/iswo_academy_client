@@ -1,6 +1,5 @@
 import { useParams } from '@tanstack/react-router'
-import type { Lesson } from '@/services/lesson-service'
-import type { Section } from '@/services/section-service'
+import type { Lesson, Section } from '@/types'
 import { BookOpen, FileText, Clock, Lock } from 'lucide-react'
 import { useCourseBySlug } from '@/hooks/use-courses'
 import { useSections } from '@/hooks/use-sections'

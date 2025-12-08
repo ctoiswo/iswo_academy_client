@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import type {
-  CreateAssessmentData,
+  CreateAssessmentRequest,
   AssessmentType,
-} from '@/services/assessment-service'
+} from '@/types'
 import { Plus } from 'lucide-react'
 import { useCreateAssessment } from '@/hooks/use-assessments'
 import { Button } from '@/components/ui/button'
@@ -54,7 +54,7 @@ export function CreateAssessmentDialog({
   const createAssessment = useCreateAssessment(academySlug, courseSlug)
 
   const { register, handleSubmit, reset, setValue, watch } =
-    useForm<CreateAssessmentData>({
+    useForm<CreateAssessmentRequest>({
       defaultValues: {
         type: 'Quiz',
         passing_score: 70,
@@ -92,7 +92,7 @@ export function CreateAssessmentDialog({
     }
   }
 
-  const onSubmit = async (data: CreateAssessmentData) => {
+  const onSubmit = async (data: CreateAssessmentRequest) => {
     createAssessment.mutate(data, {
       onSuccess: () => {
         setOpen(false)

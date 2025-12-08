@@ -1,8 +1,11 @@
-import academyService from '@/services/academy-service'
+import academyService, {
+  type UserAcademiesResponse,
+} from '@/services/academy-service'
 import authService from '@/services/auth-service'
 import type {
   AuthUser,
   AcademyMembership,
+  AcademySummaryLight,
   AcademyData,
   AuthTokens,
   LoginRequest,
@@ -55,7 +58,7 @@ export interface AuthState {
   selectAcademy: (academyId: number) => void
   switchAcademy: () => void
   refreshAcademies: () => Promise<void>
-  setAcademyData: (academyData: AcademyData | null) => void
+  setAcademyData: (academyData: UserAcademiesResponse | null) => void
   setCurrentAcademy: (academy: AcademyMembership | null) => void
 
   // Legacy methods for backward compatibility
@@ -260,8 +263,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       set({ user })
       await get().refreshAcademies()
     } catch (_error) {
-      // console.error('Failed to refresh user:', error)
-      throw error
+      // console.error('Failed to refresh user:', _error)
+      throw _error
     }
   },
 
@@ -366,7 +369,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       (academy: AcademyMembership) => academy.id === academyId
     )
     if (selectedAcademy) {
-      set({ currentAcademy: selectedAcademy })
+      set({ currentAcademy: selectedAcademy as AcademyMembership })
       localStorage.setItem('currentAcademyId', academyId.toString())
     }
   },
@@ -380,26 +383,26 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       const { isAuthenticated } = get()
       if (!isAuthenticated) return
 
-      const academyData = await academyService.getUserAcademies()
-      set({ academyData })
+      const academyData = (await academyService.getUserAcademies()) as unknown as UserAcademiesResponse
+      set({ academyData: academyData as unknown as AcademyData })
 
       // If user had a currentAcademy stored, try to restore it
       const storedAcademyId = localStorage.getItem('currentAcademyId')
       if (storedAcademyId && academyData.academies.length > 0) {
         const academy = academyData.academies.find(
-          (a: AcademyMembership) => a.id === parseInt(storedAcademyId)
+          (a: AcademySummaryLight) => a.id === parseInt(storedAcademyId)
         )
         if (academy) {
-          set({ currentAcademy: academy })
+          set({ currentAcademy: academy as unknown as AcademyMembership })
         } else if (academyData.count === 1) {
-          set({ currentAcademy: academyData.academies[0] })
+          set({ currentAcademy: academyData.academies[0] as unknown as AcademyMembership })
           localStorage.setItem(
-            'currentAcademyId',
+            'currentAcademy Id',
             academyData.academies[0].id.toString()
           )
         }
       } else if (academyData.count === 1) {
-        set({ currentAcademy: academyData.academies[0] })
+        set({ currentAcademy: academyData.academies[0] as unknown as AcademyMembership })
         localStorage.setItem(
           'currentAcademyId',
           academyData.academies[0].id.toString()
@@ -411,12 +414,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     }
   },
 
-  setAcademyData: (academyData: AcademyData | null) => {
-    set({ academyData })
+  setAcademyData: (academyData: UserAcademiesResponse | null) => {
+    set({ academyData: academyData as unknown as AcademyData | null })
   },
 
-  setCurrentAcademy: (academy: AcademyMembership | null) => {
-    set({ currentAcademy: academy })
+  setCurrentAcademy: (academy: AcademyMembership | AcademySummaryLight | null) => {
+    set({ currentAcademy: academy as AcademyMembership | null })
   },
 
   // Legacy auth object for backward compatibility

@@ -1,9 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  questionService,
-  type CreateQuestionData,
-  type UpdateQuestionData,
-} from '@/services/question-service'
+import { questionService } from '@/services/question-service'
+import type { CreateQuestionRequest, UpdateQuestionRequest } from '@/types'
 import { toast } from 'sonner'
 
 // Query keys
@@ -76,7 +73,7 @@ export function useCreateQuestion(
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: CreateQuestionData) =>
+    mutationFn: (data: CreateQuestionRequest) =>
       questionService.createQuestion(
         academySlug,
         courseSlug,
@@ -105,7 +102,7 @@ export function useUpdateQuestion(
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: UpdateQuestionData) =>
+    mutationFn: (data: UpdateQuestionRequest) =>
       questionService.updateQuestion(
         academySlug,
         courseSlug,

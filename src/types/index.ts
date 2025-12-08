@@ -3,14 +3,23 @@
  * Import types from here: import { Academy, Course, User } from '@/types'
  */
 
-// Common types
-export * from './common'
-
 // Entity types
 export * from './entities/user'
 export * from './entities/category'
 export * from './entities/academy'
-export * from './entities/course'
+
+// Export Course types (except DifficultyLevel to avoid conflict with common.ts)
+export type {
+  Course,
+  CourseStatus,
+  PricingType,
+  FeaturedCourse,
+  CategoryWithCourses,
+  CourseEnrollment,
+} from './entities/course'
+
+// Common types (after entities to avoid conflicts)
+export * from './common'
 export * from './entities/lesson'
 export * from './entities/assignment'
 export * from './entities/assessment'

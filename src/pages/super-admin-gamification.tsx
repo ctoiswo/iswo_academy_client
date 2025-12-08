@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import academyService from '@/services/academy-service'
-import superAdminGamificationService, {
-  type GamificationOverview,
-} from '@/services/super-admin-gamification-service'
+import superAdminGamificationService from '@/services/super-admin-gamification-service'
+import type { GamificationOverview } from '@/types'
 import {
   Award,
   TrendingUp,
@@ -92,7 +91,6 @@ export default function SuperAdminGamification() {
           per_page: 15,
           search: search || undefined,
           gamification: filterStatus !== 'all' ? filterStatus : undefined,
-          view: 'light', // Always use light view to avoid loading courses
         }),
       ])
       setOverview(overviewData)

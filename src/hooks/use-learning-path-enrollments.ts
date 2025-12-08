@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import learningPathEnrollmentsService, {
-  type EnrollmentFilters,
-} from '@/services/learning-path-enrollments-service'
+import learningPathEnrollmentsService from '@/services/learning-path-enrollments-service'
+import type { EnrollmentFilters } from '@/types'
 import { toast } from 'sonner'
 
 export function useLearningPathEnrollments(

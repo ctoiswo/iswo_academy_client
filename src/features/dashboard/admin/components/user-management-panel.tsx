@@ -77,15 +77,6 @@ export function UserManagementPanel({
     },
   })
 
-  const updateRoleMutation = useMutation({
-    ...academyAdminMutations.updateUserRole,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['academy-admin', 'users', academyIdentifier],
-      })
-    },
-  })
-
   const users = usersResponse?.data || []
   const usersByRole = usersResponse?.meta?.role_counts || {
     admin: 0,
@@ -142,14 +133,12 @@ export function UserManagementPanel({
     // TODO: Implement user invitation
   }
 
-  const handleEditUser = (userId: number) => {
+  const handleEditUser = (_userId: number) => {
     // TODO: Implement user editing
-    // console.log('Edit user:', userId)
   }
 
-  const handleViewUser = (userId: number) => {
+  const handleViewUser = (_userId: number) => {
     // TODO: Implement user viewing
-    // console.log('View user:', userId)
   }
 
   const handleDeleteUser = async (userId: number) => {
@@ -324,7 +313,7 @@ export function UserManagementPanel({
             Invite User
           </Button>
         }
-        items={userItems}
+        items={userItems as any}
         emptyMessage={`No ${selectedRole === 'all' ? 'users' : `${selectedRole}s`} found.`}
         loading={isLoading}
       />

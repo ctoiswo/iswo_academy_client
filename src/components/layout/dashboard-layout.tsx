@@ -42,7 +42,7 @@ interface DashboardSidebarProps {
 interface TopNavLink {
   title: string
   href: string
-  isActive?: boolean
+  isActive: boolean
   disabled?: boolean
 }
 
@@ -120,7 +120,7 @@ function FullLayout({
   children,
   user,
   academy,
-  topNavLinks,
+  topNavLinks = [],
   showSearch,
   showConfigDrawer,
   className,
@@ -169,7 +169,7 @@ function CompactLayout({
   children,
   user,
   academy,
-  topNavLinks,
+  topNavLinks = [],
   showSearch,
   className,
 }: Omit<DashboardLayoutProps, 'variant' | 'sidebar' | 'dashboardType'>) {
@@ -226,12 +226,12 @@ function SidebarLayout({
   academy,
   dashboardType,
   sidebar: SidebarComponent,
-  topNavLinks,
+  topNavLinks = [],
   showSearch,
   showConfigDrawer,
   defaultOpen,
   className,
-}: DashboardLayoutProps & { defaultOpen: boolean }) {
+}: Omit<DashboardLayoutProps, 'variant'> & { defaultOpen: boolean }) {
   if (!user) return null
   return (
     <SearchProvider>

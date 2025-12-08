@@ -9,28 +9,6 @@ import { apiClient } from '@/lib/api-client'
 // Re-export types for backward compatibility
 export type { GeneralStatistics, AcademyStatistics, TrendingStatistics }
 
-// Local interface for extended academy statistics
-interface ExtendedAcademyStatistics {
-  academies: Array<{
-    id: number
-    name: string
-    slug: string
-    recent_enrollments: number
-  }>
-  courses: Array<{
-    id: number
-    title: string
-    slug: string
-    recent_enrollments: number
-  }>
-  categories: Array<{
-    id: number
-    name: string
-    slug: string
-    recent_activity: number
-  }>
-}
-
 /**
  * Hook para obtener estadísticas generales de la plataforma
  * Endpoint público, no requiere autenticación

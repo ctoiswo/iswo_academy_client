@@ -65,7 +65,7 @@ export function ConfirmEmail() {
           setMessage(errorMessage)
           setErrorCode(data.error?.code || null)
         }
-      } catch (_error) {
+      } catch (error) {
         // console.error('Error confirming email:', error)
         setStatus('error')
         setMessage(getErrorMessage(error))

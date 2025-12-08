@@ -1,8 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  enrollmentService,
-  type EnrollmentFilters,
-} from '@/services/enrollment-service'
+import { enrollmentService } from '@/services/enrollment-service'
+import type { EnrollmentFilters } from '@/types'
 import { toast } from 'sonner'
 
 export function useUserEnrollments(filters?: EnrollmentFilters) {

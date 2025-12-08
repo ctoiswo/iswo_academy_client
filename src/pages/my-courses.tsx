@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router'
-import {
-  type EnrollmentFilters,
-  type Enrollment,
-} from '@/services/enrollment-service'
+import type { EnrollmentFilters, Enrollment } from '@/types'
 import { BookOpen, Filter, Grid, List, Search, Plus } from 'lucide-react'
 import { useUserEnrollments } from '@/hooks/use-enrollments'
 import { useWishlist } from '@/hooks/use-wishlist'
@@ -420,7 +417,7 @@ export default function MyCoursesPage() {
                       onClick={() =>
                         handleContinueCourse(
                           enrollment.course.slug,
-                          enrollment.course.academy_slug!
+                          academySlug || 'default'
                         )
                       }
                       className='flex-1'
@@ -435,10 +432,7 @@ export default function MyCoursesPage() {
                       navigate({
                         to: '/academy/$academySlug/courses/$courseSlug/info',
                         params: {
-                          academySlug:
-                            enrollment.course.academy_slug ||
-                            academySlug ||
-                            'default',
+                          academySlug: academySlug || 'default',
                           courseSlug: enrollment.course.slug,
                         },
                       })

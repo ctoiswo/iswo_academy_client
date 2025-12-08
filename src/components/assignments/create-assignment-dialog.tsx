@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import type { CreateAssignmentData } from '@/services/assignment-service'
+import type { CreateAssignmentRequest } from '@/types'
 import { Plus, X } from 'lucide-react'
 import { useCreateAssignment } from '@/hooks/use-assignments'
 import { Button } from '@/components/ui/button'
@@ -52,7 +52,7 @@ export function CreateAssignmentDialog({
   const createAssignment = useCreateAssignment(academySlug, courseSlug)
 
   const { register, handleSubmit, reset, watch, setValue } =
-    useForm<CreateAssignmentData>({
+    useForm<CreateAssignmentRequest>({
       defaultValues: {
         max_points: 100,
         passing_score: 70,
@@ -99,7 +99,7 @@ export function CreateAssignmentDialog({
     )
   }
 
-  const onSubmit = async (data: CreateAssignmentData) => {
+  const onSubmit = async (data: CreateAssignmentRequest) => {
     const payload = {
       ...data,
       section_id: selectedSection ? Number(selectedSection) : undefined,

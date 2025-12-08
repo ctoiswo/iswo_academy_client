@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from '@tanstack/react-router'
-import type { Lesson } from '@/services/lesson-service'
-import type { Section } from '@/services/section-service'
+import type { Lesson, Section } from '@/types'
 import {
   DndContext,
   closestCenter,

@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import superAdminGamificationService, {
-  type CreateBadgeData,
-} from '@/services/super-admin-gamification-service'
+import superAdminGamificationService from '@/services/super-admin-gamification-service'
+import type { CreateSuperAdminBadgeRequest } from '@/types'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
@@ -152,7 +151,7 @@ export function CreateBadgeDialog({
     setIsSubmitting(true)
 
     try {
-      const badgeData: CreateBadgeData = {
+      const badgeData: CreateSuperAdminBadgeRequest = {
         name: formData.name!,
         slug: formData.slug!,
         description: formData.description!,

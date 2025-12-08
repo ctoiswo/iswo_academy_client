@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
-import type { AssessmentType, Assessment } from '@/services/assessment-service'
+import type { AssessmentType, Assessment, AssessmentFull } from '@/types'
 import { ArrowLeft, FileQuestion } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { useAssessments } from '@/hooks/use-assessments'
@@ -199,7 +199,7 @@ export default function CourseExamsPage() {
           {filteredAssessments.map((assessment) => (
             <AssessmentCard
               key={assessment.id}
-              assessment={assessment}
+              assessment={assessment as AssessmentFull}
               academySlug={academySlug}
               courseSlug={courseSlug}
               onEdit={handleEdit}

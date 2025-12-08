@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
-import type { Question } from '@/services/question-service'
+import type { Question } from '@/types'
 import { ArrowLeft, Plus, GripVertical, Edit, Trash2 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { useAssessments } from '@/hooks/use-assessments'

@@ -58,7 +58,7 @@ export function LearningPathCourses() {
             <label className='text-sm font-medium'>Lecciones Totales</label>
             <p className='text-2xl font-bold'>
               {learningPath.courses?.reduce(
-                (acc, course) => acc + course.lessons_count,
+                (acc, course) => acc + (course.lessons_count || 0),
                 0
               ) || 0}
             </p>

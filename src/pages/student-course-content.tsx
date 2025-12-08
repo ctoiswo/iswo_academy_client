@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams, useNavigate } from '@tanstack/react-router'
+import { useParams } from '@tanstack/react-router'
 import { BookOpen, FileText, Clock, ChevronRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
@@ -12,11 +12,9 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -31,7 +29,6 @@ export default function StudentCourseContentPage() {
     courseSlug: string
   }
   const { academySlug, courseSlug } = params
-  const navigate = useNavigate()
   const { currentAcademy } = useAuthStore()
   const [activeTab, setActiveTab] = useState<TabType>('lessons')
 

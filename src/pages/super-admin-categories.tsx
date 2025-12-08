@@ -163,8 +163,8 @@ export default function SuperAdminCategories() {
     setSelectedCategory(category)
     setFormData({
       name: category.name,
-      description: category.description,
-      slug: category.slug,
+      description: category.description || '',
+      slug: category.slug || '',
     })
     setIsEditDialogOpen(true)
   }

@@ -1,10 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  courseService,
-  type CourseFilters,
-  type CreateCourseData,
-  type UpdateCourseData,
-} from '@/services/course-service'
+import { courseService } from '@/services/course-service'
+import type {
+  CourseFilters,
+  CreateCourseRequest,
+  UpdateCourseRequest,
+} from '@/types'
 import { toast } from 'sonner'
 
 export function useCourses(
@@ -48,7 +48,7 @@ export function useCreateCourse(academySlug: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: CreateCourseData) =>
+    mutationFn: (data: CreateCourseRequest) =>
       courseService.createCourse(academySlug, data),
     onSuccess: () => {
       // Invalidate all course queries for this academy (with any filters)
@@ -73,7 +73,7 @@ export function useUpdateCourse(academySlug: string | number) {
       data,
     }: {
       courseSlug: string | number
-      data: UpdateCourseData
+      data: UpdateCourseRequest
     }) => courseService.updateCourse(academySlug, courseSlug, data),
     onSuccess: () => {
       // Invalidate all course queries for this academy (with any filters)
