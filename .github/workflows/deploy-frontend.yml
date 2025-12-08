@@ -75,10 +75,10 @@ jobs:
     - name: Deploy to Cloud Storage
       run: |
         # Sync files to bucket
-        gsutil -m rsync -r -d ./dist gs://iswo-academy-frontend-bucket
+        gsutil -m rsync -r -d ./dist gs://app-iswo-academy
         
         # Set public read permissions
-        gsutil -m acl ch -r -u AllUsers:R gs://iswo-academy-frontend-bucket
+        gsutil -m acl ch -r -u AllUsers:R gs://app-iswo-academy
 
     - name: Invalidate CDN cache (optional)
       run: |
