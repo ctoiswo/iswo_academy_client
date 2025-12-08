@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import type { Lesson } from '@/types'
-import type { Section } from '@/types'
+import type { Lesson, Section } from '@/types'
 import {
   DndContext,
   closestCenter,

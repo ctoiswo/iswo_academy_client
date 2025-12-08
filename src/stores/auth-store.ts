@@ -215,7 +215,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         academyData: null,
         currentAcademy: null,
       })
-    } catch (error: any) {
+    } catch (_error: any) {
       // Even if logout fails, clear local state
       tokenStorage.clearTokens()
       set({
@@ -258,14 +258,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   },
 
   refreshUser: async (): Promise<void> => {
-    try {
-      const user = await authService.getCurrentUser()
-      set({ user })
-      await get().refreshAcademies()
-    } catch (_error) {
-      // console.error('Failed to refresh user:', _error)
-      throw _error
-    }
+    const user = await authService.getCurrentUser()
+    set({ user })
+    await get().refreshAcademies()
   },
 
   setUser: (user: AuthUser | null) => {

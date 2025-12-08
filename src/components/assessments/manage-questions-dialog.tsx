@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import type { Assessment } from '@/types'
-import type { Question } from '@/types'
+import type { Assessment, Question } from '@/types'
 import { Plus, Edit, Trash2, GripVertical } from 'lucide-react'
 import { useQuestions, useDeleteQuestion } from '@/hooks/use-questions'
 import {
