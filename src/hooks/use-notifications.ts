@@ -46,15 +46,10 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
 
   // Manejar nueva notificación recibida
   const handleNewNotification = useCallback((data: any) => {
-    console.log('🔔 [useNotifications] Received notification data:', data)
-
     const newNotification = data.notification
     if (!newNotification) {
-      console.warn('⚠️ [useNotifications] No notification in data')
       return
     }
-
-    console.log('✅ [useNotifications] Adding notification:', newNotification)
 
     // Agregar notificación al estado
     setNotifications(prev => [newNotification, ...prev])
@@ -229,7 +224,6 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
           { channel: 'NotificationsChannel' },
           {
             connected() {
-              console.log('✅ [NotificationsChannel] Connected successfully')
               setIsConnected(true)
               setConnectionError(null)
 
@@ -242,13 +236,9 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
             },
 
             received(data: any) {
-              console.log('📡 [NotificationsChannel] Received data:', data)
-
               if (data.type === 'notification_created' || data.type === 'new_notification') {
-                console.log('🎯 [NotificationsChannel] Handling as new notification')
                 handleNewNotification(data)
               } else {
-                console.log('📋 [NotificationsChannel] Handling as WebSocket message')
                 handleWebSocketMessage(data)
               }
             },

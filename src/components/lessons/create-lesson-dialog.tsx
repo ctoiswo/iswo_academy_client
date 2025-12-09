@@ -190,8 +190,8 @@ export function CreateLessonDialog({
       setVideoUrl('')
       setVideoType('url')
       onOpenChange(false)
-    } catch (error) {
-      console.error('Error creating lesson:', error)
+    } catch (_error) {
+      // Error handled by mutation
     }
   }
 

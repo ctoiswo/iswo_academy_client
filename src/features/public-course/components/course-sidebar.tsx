@@ -7,7 +7,7 @@ import {
   Clock,
   BookOpen,
   Globe,
-  Infinity,
+  Infinity as InfinityIcon,
   Download,
   TrendingUp,
   Shield,
@@ -208,7 +208,7 @@ export function CourseSidebar({
 
                   <div className='flex items-center gap-3'>
                     <div className='bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full'>
-                      <Infinity className='text-primary h-4 w-4' />
+                      <InfinityIcon className='text-primary h-4 w-4' />
                     </div>
                     <div className='flex-1'>
                       <div className='font-medium'>Acceso completo</div>
