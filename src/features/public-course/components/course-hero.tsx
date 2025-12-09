@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import type { Course, DifficultyLevel } from '@/types'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Clock, Users, Star, X } from 'lucide-react'
@@ -26,15 +25,17 @@ interface CourseHeroProps {
   }
   getDifficultyColor: (level: DifficultyLevel) => string
   formatDifficulty: (level: DifficultyLevel) => string
+  showVideoModal: boolean
+  setShowVideoModal: (show: boolean) => void
 }
 
 export function CourseHero({
   course,
   getDifficultyColor,
   formatDifficulty,
+  showVideoModal,
+  setShowVideoModal,
 }: CourseHeroProps) {
-  const [showVideoModal, setShowVideoModal] = useState(false)
-
   const hasPromoVideo =
     course.promotional_video_embedded_url || course.promotional_video_url
 

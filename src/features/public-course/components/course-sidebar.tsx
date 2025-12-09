@@ -26,11 +26,15 @@ interface CourseSidebarProps {
       lessons: number
       duration: number
     }>
+    promotional_video_url?: string
+    promotional_video_embedded_url?: string
+    promotional_image_url?: string
   }
   isSaved: boolean
   onSaveClick: () => void
   onShareClick: () => void
   onEnrollClick: () => void
+  onVideoClick?: () => void
   formatPrice: (price: string) => string
   formatDifficulty: (level: DifficultyLevel) => string
 }
@@ -41,10 +45,12 @@ export function CourseSidebar({
   onSaveClick,
   onShareClick,
   onEnrollClick,
+  onVideoClick,
   formatPrice,
   formatDifficulty,
 }: CourseSidebarProps) {
   const totalLessons = course.sections.reduce((sum, s) => sum + s.lessons, 0)
+  const hasPromoVideo = course.promotional_video_embedded_url || course.promotional_video_url
 
   return (
     <div className='lg:col-span-1'>
@@ -65,6 +71,29 @@ export function CourseSidebar({
                 className='h-full w-full object-cover'
               />
               <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent' />
+              
+              {/* Video Play Button Overlay */}
+              {hasPromoVideo && onVideoClick && (
+                <button
+                  onClick={onVideoClick}
+                  className='absolute inset-0 flex items-center justify-center transition-all hover:bg-black/20'
+                  aria-label='Reproducir video de vista previa'
+                >
+                  <motion.div
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className='flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-2xl backdrop-blur-sm transition-all hover:bg-white'
+                  >
+                    <Play className='ml-1 h-8 w-8 fill-current text-gray-900' />
+                  </motion.div>
+                  
+                  {/* Preview Badge */}
+                  <div className='absolute bottom-4 left-4 rounded-lg bg-black/80 px-3 py-1.5 backdrop-blur-sm'>
+                    <p className='text-xs font-medium text-white'>Vista previa del curso</p>
+                  </div>
+                </button>
+              )}
             </div>
 
             <div className='p-6'>

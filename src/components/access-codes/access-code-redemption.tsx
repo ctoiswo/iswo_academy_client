@@ -110,8 +110,6 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
               <Badge variant='secondary'>
                 {redemptionResult.course.difficulty_level}
               </Badge>
-              <span>{redemptionResult.course.total_lessons} lessons</span>
-              <span className='text-green-600'>Free with access code</span>
               <span>
                 {redemptionResult.course.total_lessons}{' '}
                 {t('accessCode.redeem.lessons')}
@@ -124,11 +122,6 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
 
           {/* Access code info */}
           <div className='text-sm text-gray-600'>
-            <p>Remaining uses: {redemptionResult.access_code.remaining_uses}</p>
-            <p>
-              Code expires in: {redemptionResult.access_code.days_until_expiry}{' '}
-              days
-            </p>
             <p>
               {t('accessCode.redeem.remainingUses', {
                 count: redemptionResult.access_code.remaining_uses,
@@ -162,7 +155,6 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
       <CardHeader>
         <CardTitle className='flex items-center gap-2'>
           <Key className='h-5 w-5' />
-          Redeem Access Code
           {t('accessCode.redeem.cardTitle')}
         </CardTitle>
         <CardDescription>
@@ -172,7 +164,6 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
       <CardContent className='space-y-4'>
         <form onSubmit={handleValidate} className='space-y-4'>
           <div className='space-y-2'>
-            <Label htmlFor='access-code'>Access Code</Label>
             <Label htmlFor='access-code'>
               {t('accessCode.redeem.inputLabel')}
             </Label>
@@ -196,7 +187,6 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
               {validateCode.isPending ? (
                 <>
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                  Validating...
                   {t('accessCode.redeem.validating')}
                 </>
               ) : (
@@ -257,16 +247,6 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
                     {/* Code usage info */}
                     <div className='rounded-lg bg-blue-50 p-3 text-sm'>
                       <p>
-                        Remaining uses: {validation.access_code.remaining_uses}
-                      </p>
-                      <p>
-                        Code expires in:{' '}
-                        {validation.access_code.days_until_expiry} days
-                      </p>
-                      <p>
-                        Usage:{' '}
-                        {validation.access_code.usage_percentage.toFixed(1)}%
-                        used
                         {t('accessCode.redeem.remainingUses', {
                           count: validation.access_code.remaining_uses,
                         })}
@@ -292,7 +272,6 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
                       {redeemCode.isPending ? (
                         <>
                           <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                          Enrolling...
                           {t('accessCode.redeem.enrolling')}
                         </>
                       ) : (
@@ -305,7 +284,6 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
             ) : (
               <Alert variant='destructive'>
                 <AlertCircle className='h-4 w-4' />
-                <AlertTitle>Invalid Access Code</AlertTitle>
                 <AlertTitle>
                   {t('accessCode.redeem.invalidCodeTitle')}
                 </AlertTitle>

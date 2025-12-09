@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { Loader2, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
@@ -25,6 +26,7 @@ export function PublicCoursePage() {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuthStore()
   const { isInWishlist, toggleWishlist } = useWishlist()
+  const [showVideoModal, setShowVideoModal] = useState(false)
 
   const {
     data: courseData,
@@ -193,6 +195,8 @@ export function PublicCoursePage() {
         course={enhancedCourse}
         getDifficultyColor={getDifficultyColor}
         formatDifficulty={formatDifficulty}
+        showVideoModal={showVideoModal}
+        setShowVideoModal={setShowVideoModal}
       />
 
       <div className='container py-8'>
@@ -208,6 +212,7 @@ export function PublicCoursePage() {
             onSaveClick={handleSaveClick}
             onShareClick={handleShareClick}
             onEnrollClick={handleEnrollClick}
+            onVideoClick={() => setShowVideoModal(true)}
             formatPrice={formatPrice}
             formatDifficulty={formatDifficulty}
           />
