@@ -1,23 +1,22 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import CourseManagementDetailPage from '../course-management-detail'
 
 // Mock dependencies
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   useParams: () => ({ courseId: '1' }),
   Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
     <a href={to}>{children}</a>
   ),
 }))
 
-const mockUseCourse = vi.fn()
-vi.mock('@/hooks/use-courses', () => ({
+const mockUseCourse = jest.fn()
+jest.mock('@/hooks/use-courses', () => ({
   useCourse: (courseId: string) => mockUseCourse(courseId),
 }))
 
-vi.mock('@/components/access-codes/access-code-list', () => ({
+jest.mock('@/components/access-codes/access-code-list', () => ({
   AccessCodeList: ({ courseId }: { courseId: string }) => (
     <div data-testid='access-code-list'>
       Lista de códigos de acceso para curso {courseId}
@@ -117,7 +116,7 @@ describe('CourseManagementDetailPage', () => {
   }
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     mockUseCourse.mockReturnValue({
       data: mockCourse,
       isLoading: false,

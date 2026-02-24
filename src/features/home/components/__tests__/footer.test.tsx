@@ -1,9 +1,8 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { Footer } from '../footer'
 
 // Mock react-i18next
-vi.mock('react-i18next', () => ({
+jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
@@ -17,7 +16,7 @@ vi.mock('react-i18next', () => ({
 }))
 
 // Mock TanStack Router
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   Link: ({ children, to, ...props }: any) => (
     <a href={to} {...props}>
       {children}
@@ -26,7 +25,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Mock lucide-react icons
-vi.mock('lucide-react', () => ({
+jest.mock('lucide-react', () => ({
   GraduationCap: ({ className }: { className?: string }) => (
     <div className={className} data-testid='graduation-cap-icon'>
       🎓
@@ -35,7 +34,7 @@ vi.mock('lucide-react', () => ({
 }))
 
 // Mock UI components
-vi.mock('@/components/ui/button', () => ({
+jest.mock('@/components/ui/button', () => ({
   Button: ({ children, size, variant, asChild, ...props }: any) => {
     const Component = asChild ? 'div' : 'button'
     return (

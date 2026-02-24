@@ -2,7 +2,7 @@ import i18n from '@/i18n'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-export type Locale = 'en' | 'es'
+export type Locale = 'en' | 'es' | 'fr' | 'it'
 
 interface LocaleState {
   locale: Locale
@@ -44,3 +44,12 @@ export const useLocaleStore = create<LocaleState>()(
     }
   )
 )
+
+/**
+ * Get current locale outside of React components.
+ * Use this in API clients, interceptors, etc. to avoid coupling
+ * those modules to Zustand's internal persist storage format.
+ */
+export const getLocale = (): Locale => {
+  return useLocaleStore.getState().locale
+}

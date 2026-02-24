@@ -1,17 +1,16 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { AuthUser, AcademyMembership } from '@/stores/auth-store'
 import { SuperAdminDashboard } from '../index'
 
 // Mock the layout component
-vi.mock('@/components/layout/dashboard-layout', () => ({
+jest.mock('@/components/layout/dashboard-layout', () => ({
   DashboardLayout: ({ children }: { children: React.ReactNode }) => (
     <div data-testid='dashboard-layout'>{children}</div>
   ),
 }))
 
 // Mock the child components
-vi.mock('../components/global-stats-overview', () => ({
+jest.mock('../components/global-stats-overview', () => ({
   GlobalStatsOverview: ({ stats, loading, error }: any) => (
     <div data-testid='global-stats-overview'>
       {loading && <div>Loading stats...</div>}
@@ -21,7 +20,7 @@ vi.mock('../components/global-stats-overview', () => ({
   ),
 }))
 
-vi.mock('../components/academy-management-panel', () => ({
+jest.mock('../components/academy-management-panel', () => ({
   AcademyManagementPanel: ({ academies, loading, error }: any) => (
     <div data-testid='academy-management-panel'>
       {loading && <div>Loading academies...</div>}
@@ -57,7 +56,7 @@ describe('SuperAdminDashboard', () => {
   }
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   describe('Basic Rendering', () => {

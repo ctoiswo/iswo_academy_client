@@ -9,6 +9,8 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from 'axios'
 import type { AuthTokens } from '@/stores/auth-store'
+import { tokenStorage } from '@/lib/token-storage'
+import { getLocale } from '@/stores/locale-store'
 
 // Get API base URL from environment
 const API_BASE_URL =
@@ -48,7 +50,7 @@ export class TokenManager {
 
   /**
    * Obtiene el token de refresco actual
-   * Primero intenta desde el estado en memoria, luego desde localStorage
+   * Primero intenta desde el estado en memoria, luego delega a TokenStorage
    */
   getRefreshToken(): string | null {
     // Intentar obtener desde el estado en memoria primero
@@ -57,21 +59,9 @@ export class TokenManager {
       return tokenFromState
     }
 
-    // Si no está en memoria, buscar en localStorage
+    // Si no está en memoria, delegar a TokenStorage (fuente de verdad persistida)
     // Esto es necesario durante la inicialización cuando el estado aún está vacío
-    if (typeof localStorage !== 'undefined') {
-      try {
-        const storedData = localStorage.getItem('iswo_refresh_token')
-        if (storedData) {
-          const tokenData = JSON.parse(storedData)
-          return tokenData.refresh_token || null
-        }
-      } catch (_error) {
-        // console.error('[TokenManager] Error reading refresh token from localStorage:', error)
-      }
-    }
-
-    return null
+    return tokenStorage.getRefreshToken()
   }
 
   /**
@@ -140,14 +130,11 @@ export class TokenManager {
 
   /**
    * Verifica si el token está próximo a expirar (menos de 5 minutos)
+   * Usa TokenStorage.willExpireSoon() que calcula el tiempo restante
+   * correctamente desde expires_at, no desde expires_in (duración total).
    */
   isTokenExpiringSoon(): boolean {
-    const tokens = this.authStore?.getState().tokens
-    if (!tokens?.expires_in) return false
-
-    // Considerar que expira si quedan menos de 5 minutos
-    const EXPIRATION_THRESHOLD = 5 * 60 // 5 minutos en segundos
-    return tokens.expires_in < EXPIRATION_THRESHOLD
+    return tokenStorage.willExpireSoon(5 * 60 * 1000) // 5 minutos
   }
 }
 
@@ -196,21 +183,8 @@ class APIClient {
   private setupRequestInterceptor() {
     this.client.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
-        // Añadir locale header a todas las peticiones
-        const locale = localStorage.getItem('iswo-locale-storage')
-        if (locale) {
-          try {
-            const localeData = JSON.parse(locale)
-            if (localeData.state?.locale) {
-              config.headers['X-Locale'] = localeData.state.locale
-            }
-          } catch (e) {
-            // Si falla el parse, usar español por defecto
-            config.headers['X-Locale'] = 'es'
-          }
-        } else {
-          config.headers['X-Locale'] = 'es'
-        }
+        // Añadir locale header — delegado al locale store (fuente única de verdad)
+        config.headers['X-Locale'] = getLocale()
 
         // No añadir token a endpoints públicos
         const publicEndpoints = [

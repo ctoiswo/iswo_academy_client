@@ -1,5 +1,8 @@
+import { PlatformStats, StatItem } from '@/types'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { Users, BookOpen, Award } from 'lucide-react'
+import { Course } from '@/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -57,4 +60,37 @@ export function getPageNumbers(currentPage: number, totalPages: number) {
   }
 
   return rangeWithDots
+}
+
+// Home Utils – Shared functions for home page components
+export function formatStat(value: number): string {
+  return value.toLocaleString('es-ES') + '+'
+}
+
+
+export function buildStatItems(stats: PlatformStats): StatItem[] {
+  return [
+    { icon: Users,     value: formatStat(stats.total_students),  label: 'Estudiantes activos' },
+    { icon: BookOpen,  value: formatStat(stats.total_courses),    label: 'Cursos disponibles' },
+    { icon: Award,     value: formatStat(stats.total_academies),  label: 'Academias creadas' },
+  ]
+}
+
+
+export function formatDuration(minutes?: number | null): string {
+  if (!minutes) return ''
+  const h = Math.floor(minutes / 60)
+  const m = minutes % 60
+  if (h === 0) return `${m}m`
+  return m === 0 ? `${h}h` : `${h}h ${m}m`
+}
+
+export function formatPrice(course: Course): string {
+  if (course.is_free) return 'Gratis'
+  if (!course.price) return 'Gratis'
+  return new Intl.NumberFormat('es', {
+    style: 'currency',
+    currency: course.currency || 'USD',
+    maximumFractionDigits: 0,
+  }).format(Number(course.price))
 }

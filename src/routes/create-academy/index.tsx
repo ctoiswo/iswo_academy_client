@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { ComingSoon } from '@/components/coming-soon'
+import { CreateAcademyPage } from '@/features/create-academy'
 import { AuthGuard } from '@/components/route-guards'
 
 function CreateAcademyRoute() {
   return (
     <AuthGuard>
-      <ComingSoon feature='Academy Creation' />
+      <CreateAcademyPage />
     </AuthGuard>
   )
 }

@@ -1,10 +1,9 @@
 import type { AcademyMembership, AcademyData } from '@/types'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { vi, beforeEach, describe, it, expect } from 'vitest'
 import { AcademySelectionPage } from '../../features/academy-selection/index'
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
     header: ({ children, ...props }: any) => (
@@ -18,20 +17,20 @@ vi.mock('framer-motion', () => ({
 }))
 
 // Mock TanStack Router
-const mockNavigate = vi.fn()
+const mockNavigate = jest.fn()
 
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
 }))
 
 // Mock auth store
-const mockUseAuthStore = vi.fn()
-vi.mock('@/stores/auth-store', () => ({
+const mockUseAuthStore = jest.fn()
+jest.mock('@/stores/auth-store', () => ({
   useAuthStore: () => mockUseAuthStore(),
 }))
 
 // Mock UI components
-vi.mock('@/components/ui/card', () => ({
+jest.mock('@/components/ui/card', () => ({
   Card: ({ children, onClick, ...props }: any) => (
     <div onClick={onClick} {...props}>
       {children}
@@ -44,11 +43,11 @@ vi.mock('@/components/ui/card', () => ({
   CardTitle: ({ children, ...props }: any) => <h3 {...props}>{children}</h3>,
 }))
 
-vi.mock('@/components/ui/badge', () => ({
+jest.mock('@/components/ui/badge', () => ({
   Badge: ({ children, ...props }: any) => <span {...props}>{children}</span>,
 }))
 
-vi.mock('@/components/ui/button', () => ({
+jest.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, ...props }: any) => (
     <button onClick={onClick} {...props}>
       {children}
@@ -57,7 +56,7 @@ vi.mock('@/components/ui/button', () => ({
 }))
 
 // Mock Lucide React icons
-vi.mock('lucide-react', () => {
+jest.mock('lucide-react', () => {
   const MockIcon = ({ ...props }) => <span {...props} />
   return {
     Building: MockIcon,
@@ -124,10 +123,10 @@ describe('AcademySelectionPage', () => {
     academies: mockAcademies,
   }
 
-  const mockSelectAcademy = vi.fn()
+  const mockSelectAcademy = jest.fn()
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   describe('Loading State', () => {
@@ -304,7 +303,7 @@ describe('AcademySelectionPage', () => {
     })
 
     it('should handle errors during academy selection gracefully', async () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
       const errorMessage = 'Selection failed'
       mockSelectAcademy.mockImplementation(() => {
         throw new Error(errorMessage)

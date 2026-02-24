@@ -1,31 +1,31 @@
 import axios from 'axios'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import apiClient, { setAuthStore, authApi } from '../api-client'
 
 // Mock axios
-vi.mock('axios', () => {
+jest.mock('axios', () => {
   const mockAxiosInstance = {
     interceptors: {
       request: {
-        use: vi.fn(),
+        use: jest.fn(),
       },
       response: {
-        use: vi.fn(),
+        use: jest.fn(),
       },
     },
-    post: vi.fn(),
-    get: vi.fn(),
-    patch: vi.fn(),
-    delete: vi.fn(),
+    post: jest.fn(),
+    get: jest.fn(),
+    patch: jest.fn(),
+    delete: jest.fn(),
   }
 
   return {
+    __esModule: true,
     default: {
-      create: vi.fn(() => mockAxiosInstance),
-      post: vi.fn(),
-      get: vi.fn(),
-      patch: vi.fn(),
-      delete: vi.fn(),
+      create: jest.fn(() => mockAxiosInstance),
+      post: jest.fn(),
+      get: jest.fn(),
+      patch: jest.fn(),
+      delete: jest.fn(),
     },
   }
 })
@@ -34,17 +34,17 @@ describe('API Client Integration', () => {
   let mockAuthStore: any
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
 
     // Create a mock auth store
     mockAuthStore = {
-      getState: vi.fn(() => ({
+      getState: jest.fn(() => ({
         auth: {
           accessToken: 'test-access-token',
           refreshToken: 'test-refresh-token',
-          setAccessToken: vi.fn(),
-          setRefreshToken: vi.fn(),
-          reset: vi.fn(),
+          setAccessToken: jest.fn(),
+          setRefreshToken: jest.fn(),
+          reset: jest.fn(),
         },
       })),
     }
@@ -53,7 +53,7 @@ describe('API Client Integration', () => {
   })
 
   afterEach(() => {
-    vi.resetAllMocks()
+    jest.resetAllMocks()
   })
 
   describe('Auth Store Integration', () => {
@@ -80,7 +80,7 @@ describe('API Client Integration', () => {
         },
       }
 
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
+      jest.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
       const credentials = {
         email: 'john@example.com',
@@ -107,13 +107,13 @@ describe('API Client Integration', () => {
 
     it('should handle missing tokens in auth store', () => {
       const emptyAuthStore = {
-        getState: vi.fn(() => ({
+        getState: jest.fn(() => ({
           auth: {
             accessToken: null,
             refreshToken: null,
-            setAccessToken: vi.fn(),
-            setRefreshToken: vi.fn(),
-            reset: vi.fn(),
+            setAccessToken: jest.fn(),
+            setRefreshToken: jest.fn(),
+            reset: jest.fn(),
           },
         })),
       }
@@ -134,7 +134,7 @@ describe('API Client Integration', () => {
         data: { message: 'Success' },
       }
 
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
+      jest.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
       // Test register
       await authApi.register({
@@ -168,7 +168,7 @@ describe('API Client Integration', () => {
         },
       }
 
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
+      jest.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
       const result = await authApi.login({
         email: 'john@example.com',

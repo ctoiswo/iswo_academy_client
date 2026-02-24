@@ -1,11 +1,10 @@
 import type { AcademySummary } from '@/types'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { toast } from 'sonner'
-import { vi, beforeEach, describe, it, expect } from 'vitest'
 import { PublicAcademyPage } from '../../features/public-academy/index'
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
     section: ({ children, ...props }: any) => (
@@ -17,10 +16,10 @@ vi.mock('framer-motion', () => ({
 }))
 
 // Mock TanStack Router
-const mockUseParams = vi.fn()
-const mockNavigate = vi.fn()
+const mockUseParams = jest.fn()
+const mockNavigate = jest.fn()
 
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   useParams: () => mockUseParams(),
   useNavigate: () => mockNavigate,
   Link: ({ children, to, ...props }: any) => (
@@ -31,34 +30,34 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Mock useAcademy hook
-const mockUseAcademy = vi.fn()
-vi.mock('@/hooks/use-academy', () => ({
+const mockUseAcademy = jest.fn()
+jest.mock('@/hooks/use-academy', () => ({
   useAcademy: (slug: string) => mockUseAcademy(slug),
 }))
 
 // Mock useWishlist hook
-const mockUseWishlist = vi.fn()
-vi.mock('@/hooks/use-wishlist', () => ({
+const mockUseWishlist = jest.fn()
+jest.mock('@/hooks/use-wishlist', () => ({
   useWishlist: () => mockUseWishlist(),
 }))
 
 // Mock auth store
-const mockUseAuthStore = vi.fn()
-vi.mock('@/stores/auth-store', () => ({
+const mockUseAuthStore = jest.fn()
+jest.mock('@/stores/auth-store', () => ({
   useAuthStore: () => mockUseAuthStore(),
 }))
 
 // Mock sonner toast
-vi.mock('sonner', () => ({
+jest.mock('sonner', () => ({
   toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-    info: vi.fn(),
+    success: jest.fn(),
+    error: jest.fn(),
+    info: jest.fn(),
   },
 }))
 
 // Mock UI components
-vi.mock('@/components/ui/alert', () => ({
+jest.mock('@/components/ui/alert', () => ({
   Alert: ({ children, variant, ...props }: any) => (
     <div data-testid={`alert-${variant}`} {...props}>
       {children}
@@ -69,7 +68,7 @@ vi.mock('@/components/ui/alert', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/button', () => ({
+jest.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, variant, size, ...props }: any) => (
     <button
       onClick={onClick}
@@ -83,7 +82,7 @@ vi.mock('@/components/ui/button', () => ({
 }))
 
 // Mock Lucide React icons
-vi.mock('lucide-react', () => {
+jest.mock('lucide-react', () => {
   const MockIcon = ({ className, ...props }: any) => (
     <span className={className} {...props} />
   )
@@ -94,15 +93,15 @@ vi.mock('lucide-react', () => {
 })
 
 // Mock components
-vi.mock('./components/page-header', () => ({
+jest.mock('./components/page-header', () => ({
   PageHeader: () => <header data-testid='page-header'>Header</header>,
 }))
 
-vi.mock('./components/page-footer', () => ({
+jest.mock('./components/page-footer', () => ({
   PageFooter: () => <footer data-testid='page-footer'>Footer</footer>,
 }))
 
-vi.mock('./components/academy-hero', () => ({
+jest.mock('./components/academy-hero', () => ({
   AcademyHero: ({ academy, isSaved, onSave, onShare }: any) => (
     <div data-testid='academy-hero'>
       <h1>{academy.name}</h1>
@@ -117,7 +116,7 @@ vi.mock('./components/academy-hero', () => ({
   ),
 }))
 
-vi.mock('./components/academy-info', () => ({
+jest.mock('./components/academy-info', () => ({
   AcademyInfo: ({ academy }: any) => (
     <div data-testid='academy-info'>
       <span>Cursos: {academy.courses_count}</span>
@@ -126,7 +125,7 @@ vi.mock('./components/academy-info', () => ({
   ),
 }))
 
-vi.mock('./components/courses-section', () => ({
+jest.mock('./components/courses-section', () => ({
   CoursesSection: ({ courses, academyName }: any) => (
     <div data-testid='courses-section'>
       <h2>Cursos de {academyName}</h2>
@@ -209,12 +208,12 @@ describe('PublicAcademyPage', () => {
     ],
   }
 
-  const mockRefetch = vi.fn()
-  const mockToggleWishlist = vi.fn()
-  const mockIsInWishlist = vi.fn()
+  const mockRefetch = jest.fn()
+  const mockToggleWishlist = jest.fn()
+  const mockIsInWishlist = jest.fn()
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
 
     // Default mocks
     mockUseParams.mockReturnValue({ slug: 'react-avanzado' })
@@ -229,9 +228,9 @@ describe('PublicAcademyPage', () => {
     // Mock clipboard and share APIs
     Object.assign(navigator, {
       clipboard: {
-        writeText: vi.fn().mockResolvedValue(undefined),
+        writeText: jest.fn().mockResolvedValue(undefined),
       },
-      share: vi.fn().mockResolvedValue(undefined),
+      share: jest.fn().mockResolvedValue(undefined),
     })
   })
 
@@ -376,7 +375,7 @@ describe('PublicAcademyPage', () => {
         mockAcademy.slug,
         mockAcademy.name
       )
-      expect(vi.mocked(toast.success)).toHaveBeenCalledWith(
+      expect(jest.mocked(toast.success)).toHaveBeenCalledWith(
         `${mockAcademy.name} guardada en tu lista`
       )
     })
@@ -390,7 +389,7 @@ describe('PublicAcademyPage', () => {
       const saveButton = screen.getByTestId('save-button')
       fireEvent.click(saveButton)
 
-      expect(vi.mocked(toast.info)).toHaveBeenCalledWith(
+      expect(jest.mocked(toast.info)).toHaveBeenCalledWith(
         `${mockAcademy.name} removida de tu lista`
       )
     })
@@ -403,7 +402,7 @@ describe('PublicAcademyPage', () => {
       const saveButton = screen.getByTestId('save-button')
       fireEvent.click(saveButton)
 
-      expect(vi.mocked(toast.info)).toHaveBeenCalledWith(
+      expect(jest.mocked(toast.info)).toHaveBeenCalledWith(
         'Inicia sesión para guardar academias'
       )
       expect(mockNavigate).toHaveBeenCalledWith({ to: '/sign-in' })
@@ -421,7 +420,7 @@ describe('PublicAcademyPage', () => {
     })
 
     it('should use native share API when available', async () => {
-      const mockShare = vi.fn().mockResolvedValue(undefined)
+      const mockShare = jest.fn().mockResolvedValue(undefined)
       Object.assign(navigator, { share: mockShare })
 
       render(<PublicAcademyPage />)
@@ -441,7 +440,7 @@ describe('PublicAcademyPage', () => {
     it('should copy to clipboard when native share is not available', async () => {
       // Remove native share API
       Object.assign(navigator, { share: undefined })
-      const mockWriteText = vi.fn().mockResolvedValue(undefined)
+      const mockWriteText = jest.fn().mockResolvedValue(undefined)
       Object.assign(navigator, {
         clipboard: { writeText: mockWriteText },
       })
@@ -453,7 +452,7 @@ describe('PublicAcademyPage', () => {
 
       await waitFor(() => {
         expect(mockWriteText).toHaveBeenCalledWith(window.location.href)
-        expect(vi.mocked(toast.success)).toHaveBeenCalledWith(
+        expect(jest.mocked(toast.success)).toHaveBeenCalledWith(
           'Enlace copiado al portapapeles'
         )
       })
@@ -461,7 +460,7 @@ describe('PublicAcademyPage', () => {
 
     it('should handle clipboard error', async () => {
       Object.assign(navigator, { share: undefined })
-      const mockWriteText = vi
+      const mockWriteText = jest
         .fn()
         .mockRejectedValue(new Error('Clipboard error'))
       Object.assign(navigator, {
@@ -474,14 +473,14 @@ describe('PublicAcademyPage', () => {
       fireEvent.click(shareButton)
 
       await waitFor(() => {
-        expect(vi.mocked(toast.error)).toHaveBeenCalledWith(
+        expect(jest.mocked(toast.error)).toHaveBeenCalledWith(
           'No se pudo copiar el enlace'
         )
       })
     })
 
     it('should handle native share cancellation silently', async () => {
-      const mockShare = vi.fn().mockRejectedValue(new Error('User cancelled'))
+      const mockShare = jest.fn().mockRejectedValue(new Error('User cancelled'))
       Object.assign(navigator, { share: mockShare })
 
       render(<PublicAcademyPage />)
@@ -492,7 +491,7 @@ describe('PublicAcademyPage', () => {
       await waitFor(() => {
         expect(mockShare).toHaveBeenCalled()
         // Should not show any error toast
-        expect(vi.mocked(toast.error)).not.toHaveBeenCalled()
+        expect(jest.mocked(toast.error)).not.toHaveBeenCalled()
       })
     })
   })

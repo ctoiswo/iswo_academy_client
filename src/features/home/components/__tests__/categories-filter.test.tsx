@@ -1,11 +1,10 @@
 import type { AcademyCategoryMinimal } from '@/types/entities/category'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { CategoriesFilter } from '../categories-filter'
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
     button: ({ children, ...props }: any) => (
@@ -15,7 +14,7 @@ vi.mock('framer-motion', () => ({
 }))
 
 // Mock react-i18next
-vi.mock('react-i18next', () => ({
+jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
@@ -28,7 +27,7 @@ vi.mock('react-i18next', () => ({
 }))
 
 // Mock lucide-react
-vi.mock('lucide-react', () => ({
+jest.mock('lucide-react', () => ({
   Loader2: ({ className }: { className?: string }) => (
     <div className={className} data-testid='loader-icon'>
       Loading...
@@ -43,10 +42,10 @@ const mockCategories: AcademyCategoryMinimal[] = [
 ]
 
 describe('CategoriesFilter', () => {
-  const mockOnCategoryChange = vi.fn()
+  const mockOnCategoryChange = jest.fn()
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   describe('Loading state', () => {

@@ -1,0 +1,384 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "actions": "Actions",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "open": "Ouvrir",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "dashboard": "Tableau de bord",
+    "courses": "Cours",
+    "explore": "Explorer les cours",
+    "exploreAcademies": "Explorer les académies",
+    "createAcademy": "Créer votre académie",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "testimonials": "Témoignages",
+    "settings": "Paramètres",
+    "profile": "Profil",
+    "logout": "Se déconnecter",
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "backToHome": "Retour à l'accueil"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Se connecter",
+      "subtitle": "Entrez votre e-mail et votre mot de passe pour accéder à votre compte.",
+      "welcome": "Bon retour !",
+      "description": "Continuez votre parcours d'apprentissage et découvrez de nouvelles opportunités chez ISWO Academy",
+      "email": "E-mail",
+      "emailPlaceholder": "nom@exemple.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "********",
+      "forgotPassword": "Mot de passe oublié ?",
+      "button": "Se connecter",
+      "noAccount": "Vous n'avez pas de compte ?",
+      "signUp": "Inscrivez-vous ici",
+      "orContinueWith": "Ou continuer avec",
+      "terms": "En cliquant sur se connecter, vous acceptez nos",
+      "termsLink": "Conditions d'utilisation",
+      "and": "et",
+      "privacyLink": "Politique de confidentialité",
+      "successMessage": "Bon retour, {{email}} !",
+      "github": "GitHub",
+      "facebook": "Facebook",
+      "validation": {
+        "emailRequired": "Veuillez entrer votre e-mail",
+        "emailInvalid": "Veuillez entrer une adresse e-mail valide",
+        "passwordRequired": "Veuillez entrer votre mot de passe",
+        "passwordMin": "Le mot de passe doit contenir au moins 7 caractères"
+      },
+      "continueWithGoogle": "Continuer avec Google",
+      "continueWithGithub": "Continuer avec GitHub",
+      "orContinueWithEmail": "ou continuer avec l'email",
+      "rememberMe": "Se souvenir de ma session",
+      "signUpFree": "Inscrivez-vous ici, c'est gratuit",
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe",
+      "errorMessage": "Erreur de connexion. Veuillez réessayer."
+    },
+    "signUp": {
+      "title": "Créer un compte",
+      "subtitle": "Créez votre compte pour commencer votre parcours d'apprentissage",
+      "welcome": "Rejoignez ISWO Academy !",
+      "description": "La plateforme où vos connaissances prennent vie",
+      "firstName": "Prénom",
+      "firstNamePlaceholder": "Jean",
+      "lastName": "Nom",
+      "lastNamePlaceholder": "Dupont",
+      "email": "E-mail",
+      "emailPlaceholder": "nom@exemple.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "********",
+      "passwordConfirmation": "Confirmer le mot de passe",
+      "button": "Créer un compte",
+      "hasAccount": "Vous avez déjà un compte ?",
+      "signIn": "Connectez-vous ici",
+      "orContinueWith": "Ou continuer avec",
+      "terms": "En créant un compte, vous acceptez nos",
+      "termsLink": "Conditions d'utilisation",
+      "and": "et",
+      "privacyLink": "Politique de confidentialité"
+    },
+    "forgotPassword": {
+      "title": "Récupérer le mot de passe",
+      "subtitle": "Entrez votre e-mail et nous vous enverrons des instructions",
+      "description": "Entrez votre adresse e-mail enregistrée et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+      "email": "E-mail",
+      "emailPlaceholder": "nom@exemple.com",
+      "button": "Envoyer le lien de récupération",
+      "sending": "Envoi de l'e-mail...",
+      "backToLogin": "Retour à la connexion",
+      "backToSignIn": "Retour à la connexion",
+      "rememberPassword": "Vous vous souvenez de votre mot de passe ?",
+      "signIn": "Retour à la connexion",
+      "noAccount": "Vous n'avez pas de compte ?",
+      "signUp": "S'inscrire",
+      "successMessage": "Les instructions de réinitialisation du mot de passe ont été envoyées à votre adresse e-mail.",
+      "checkEmailTitle": "Vérifiez votre boîte de réception",
+      "checkEmailDesc": "Nous avons envoyé un lien de récupération à",
+      "checkEmailInstructions": "Vérifiez votre boîte de réception et cliquez sur le lien pour réinitialiser votre mot de passe.",
+      "checkSpam": "N'oubliez pas de vérifier votre dossier spam si vous ne le trouvez pas.",
+      "linkExpiry": "Le lien expire dans 1 heure.",
+      "resendEmail": "Renvoyer l'e-mail",
+      "validation": {
+        "emailRequired": "Veuillez entrer votre e-mail",
+        "emailInvalid": "Veuillez entrer une adresse e-mail valide"
+      }
+    },
+    "confirmEmail": {
+      "title": "Confirmation d'e-mail",
+      "subtitle": "Nous vérifions votre adresse e-mail pour activer votre compte ISWO Academy",
+      "loading": "Confirmation de votre e-mail...",
+      "successTitle": "E-mail confirmé avec succès",
+      "errorTitle": "Erreur de confirmation",
+      "success": "Votre e-mail a été confirmé avec succès ! Vous pouvez maintenant vous connecter.",
+      "successDesc": "Votre compte est entièrement actif. Vous pouvez maintenant vous connecter et commencer votre parcours d'apprentissage.",
+      "verifiedBadge": "E-mail vérifié",
+      "rocketTitle": "Prêt pour le décollage",
+      "rocketDesc": "Votre compte a été vérifié. Connectez-vous pour explorer des académies et commencer à apprendre.",
+      "nowYouCan": "Vous pouvez maintenant",
+      "featureExplore": "Explorer les cours",
+      "featureExploreDesc": "500+ cours d'experts",
+      "featureJoin": "Rejoindre des académies",
+      "featureJoinDesc": "Communautés d'apprentissage",
+      "featureCertify": "Gagner des certificats",
+      "featureCertifyDesc": "Validez vos connaissances",
+      "goToLogin": "Se connecter maintenant",
+      "goHome": "Retour à l'accueil",
+      "retry": "Réessayer",
+      "errors": {
+        "noToken": "Jeton de confirmation introuvable."
+      }
+    },
+    "resetPassword": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Saisissez votre nouveau mot de passe ci-dessous.",
+      "password": "Nouveau mot de passe",
+      "passwordPlaceholder": "Saisissez votre nouveau mot de passe",
+      "passwordConfirmation": "Confirmer le nouveau mot de passe",
+      "passwordConfirmationPlaceholder": "Confirmez votre nouveau mot de passe",
+      "button": "Réinitialiser le mot de passe",
+      "resetting": "Réinitialisation...",
+      "signIn": "Retour à la connexion",
+      "invalidLink": {
+        "title": "Lien invalide",
+        "description": "Le lien de réinitialisation est invalide ou a expiré. Veuillez en demander un nouveau.",
+        "requestNew": "Demander un nouveau lien"
+      },
+      "validation": {
+        "passwordMin": "Le mot de passe doit contenir au moins 8 caractères",
+        "passwordUppercase": "Le mot de passe doit contenir au moins une majuscule",
+        "passwordLowercase": "Le mot de passe doit contenir au moins une minuscule",
+        "passwordNumber": "Le mot de passe doit contenir au moins un chiffre",
+        "passwordConfirmationRequired": "Veuillez confirmer votre mot de passe",
+        "passwordsMismatch": "Les mots de passe ne correspondent pas"
+      }
+    },
+    "passwordChanged": {
+      "securityBadge": "Sécurité mise à jour",
+      "title": "Mot de passe modifié avec succès",
+      "desc": "Votre mot de passe a été réinitialisé. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
+      "protectedTitle": "Compte protégé",
+      "protectedDesc": "Toutes les sessions précédentes ont été fermées pour des raisons de sécurité.",
+      "tipsLabel": "Conseils de sécurité",
+      "tipSecureTitle": "Mot de passe sécurisé",
+      "tipSecureDesc": "Utilisez des combinaisons uniques",
+      "tip2FATitle": "Authentification 2FA",
+      "tip2FADesc": "Activez la double vérification",
+      "tipSessionsTitle": "Sessions actives",
+      "tipSessionsDesc": "Vérifiez vos appareils",
+      "signInNow": "Se connecter maintenant",
+      "goHome": "Retour à l'accueil"
+    },
+    "layout": {
+      "features": {
+        "createAcademy": "Créez votre propre académie en ligne",
+        "qualityCourses": "Accédez à des cours de qualité",
+        "certifications": "Certifications reconnues"
+      },
+      "welcomeBack": "Bienvenue",
+      "joinCommunity": "Rejoignez la communauté",
+      "titleSignin": "Le savoir vous attend",
+      "titleSignup": "Commencez votre parcours d'apprentissage",
+      "descSignin": "Accédez à vos cours, vérifiez vos progrès et continuez à apprendre avec les meilleurs experts.",
+      "descSignup": "Des milliers d'étudiants ont déjà transformé leur carrière. Créez votre compte et accédez à des cours de classe mondiale.",
+      "statsStudents": "{{n}}+ étudiants",
+      "statsCourses": "{{n}}+ cours",
+      "statsAcademies": "{{n}}+ académies",
+      "testimonial1": {
+        "quote": "ISWO Academy a transformé la façon dont je partage mes connaissances avec la communauté.",
+        "author": "Carlos M.",
+        "role": "Créateur d'académie"
+      },
+      "testimonial2": {
+        "quote": "Les cours sont d'une qualité exceptionnelle. J'ai appris plus en 3 mois qu'en un an à l'université.",
+        "author": "Laura S.",
+        "role": "Étudiante"
+      },
+      "testimonial3": {
+        "quote": "Créer ma propre académie a été incroyablement facile. J'ai déjà plus de 2 000 étudiants.",
+        "author": "Miguel R.",
+        "role": "Instructeur"
+      },
+      "testimonialDot": "Témoignage {{index}}"
+    },
+    "signUpSuccess": {
+      "title": "Bienvenue sur ISWO Academy!",
+      "subtitle": "Votre compte a été créé avec succès. Préparez-vous à une expérience d'apprentissage extraordinaire.",
+      "successTitle": "Inscription réussie!",
+      "successDescription": "Votre compte a été créé avec succès.",
+      "confirmationSent": "Nous vous avons envoyé un e-mail de confirmation.",
+      "verifyEmail": "Vérifiez votre e-mail",
+      "verifyEmailDescription": "Consultez votre boîte de réception et cliquez sur le lien de confirmation.",
+      "whatAwaits": "Ce qui vous attend sur ISWO Academy :",
+      "feature1": "Accès à des cours interactifs et du contenu exclusif",
+      "feature2": "Système de récompenses et certifications",
+      "feature3": "Communauté d'apprentissage collaboratif",
+      "signInButton": "Se connecter",
+      "registerAnotherButton": "Créer un autre compte",
+      "funFact": "Le saviez-vous :",
+      "funFactText": "Les utilisateurs vérifiés ont accès au contenu premium dès le premier jour.",
+      "checkEmail": "Veuillez vérifier votre e-mail et suivre les instructions pour réinitialiser votre mot de passe.",
+      "linkExpires": "Le lien expire dans 24 heures",
+      "featureCoursesTitle": "500+ cours",
+      "featureCoursesDesc": "D'experts réels",
+      "featureCertsTitle": "Certificats",
+      "featureCertsDesc": "À la fin des cours",
+      "featureAccessTitle": "Accès complet",
+      "featureAccessDesc": "À toutes les académies",
+      "backToHome": "Retour à l'accueil",
+      "noEmail": "Vous n'avez pas reçu l'e-mail ?",
+      "resendVerification": "Renvoyer la vérification"
+    }
+  },
+  "pages": {
+    "home": {
+      "hero": {
+        "badge": "Plateforme d'apprentissage n°1 hispanophone",
+        "headline": "Transformez",
+        "headlineSuffix": "avec les meilleurs cours",
+        "rotatingWords": [
+          "votre carrière",
+          "votre avenir",
+          "vos compétences",
+          "votre potentiel"
+        ],
+        "subtitle": "Accédez à des centaines de cours d'experts ou créez votre propre académie et partagez les connaissances que vous avez accumulées avec le monde.",
+        "exploreCourses": "Explorer les cours",
+        "createAcademy": "Créez votre académie"
+      },
+      "academies": {
+        "eyebrow": "Académies en vedette",
+        "title": "Apprenez des meilleurs créateurs",
+        "subtitle": "Explorez des académies sélectionnées par des experts dans chaque catégorie. Inscrivez-vous à une académie complète ou choisissez les cours dont vous avez besoin.",
+        "viewAll": "Voir toutes les académies",
+        "countLabel": "{{count}} académies"
+      },
+      "courses": {
+        "eyebrow": "Cours en vedette",
+        "title": "Boostez votre apprentissage",
+        "subtitle": "Cours créés par des professionnels avec une expérience réelle. Achetez-en un ou inscrivez-vous à une académie complète.",
+        "viewAll": "Voir tous les cours",
+        "prevLabel": "Précédent",
+        "nextLabel": "Suivant",
+        "card": {
+          "by": "par",
+          "lessons": "leçons",
+          "viewCourse": "Voir le cours"
+        }
+      },
+      "features": {
+        "eyebrow": "Pourquoi ISWO Academy",
+        "title": "Tout ce dont vous avez besoin pour apprendre et enseigner",
+        "subtitle": "Une plateforme complète pour les étudiants qui veulent progresser et les experts qui veulent partager.",
+        "items": {
+          "qualityCourses": {
+            "title": "Cours de qualité",
+            "description": "Contenu sélectionné par des experts ayant une expérience réelle de l'industrie."
+          },
+          "learnAtYourPace": {
+            "title": "Apprenez à votre rythme",
+            "description": "Accès à vie à vos cours. Sans pression, sans délais."
+          },
+          "verifiedCerts": {
+            "title": "Certificats vérifiés",
+            "description": "Obtenez des certificats qui valident vos connaissances auprès des employeurs."
+          },
+          "createAcademy": {
+            "title": "Créez votre académie",
+            "description": "Partagez ce que vous savez. Montez votre propre académie et monétisez votre expertise."
+          },
+          "analytics": {
+            "title": "Analytics en temps réel",
+            "description": "Surveillez vos progrès ou ceux de vos étudiants avec des tableaux de bord détaillés."
+          },
+          "community": {
+            "title": "Communauté active",
+            "description": "Connectez-vous avec des milliers d'étudiants et de créateurs de contenu."
+          }
+        }
+      },
+      "cta": {
+        "title": "Prêt à partager vos connaissances ?",
+        "subtitle": "Créez votre propre académie, téléchargez vos cours et atteignez des milliers d'étudiants. Commencez aujourd'hui et transformez votre expérience en revenus.",
+        "createAcademy": "Créer mon académie",
+        "exploreCourses": "Explorer les cours"
+      }
+    }
+  },
+  "myCourses": {
+    "difficulty": {
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "advanced": "Avancé"
+    }
+  },
+  "coursesLanding": {
+    "hero": {
+      "badge": "{{count}}+ cours disponibles",
+      "title": "Explorez tous nos",
+      "titleHighlight": "cours",
+      "subtitle": "Apprenez avec les meilleurs professionnels. Des fondamentaux aux niveaux avancés, trouvez le cours parfait pour vous.",
+      "searchPlaceholder": "Rechercher des cours, des instructeurs..."
+    },
+    "card": {
+      "by": "par",
+      "lessons": "leçons",
+      "enrolled": "Inscrit",
+      "continueCourse": "Continuer le cours",
+      "viewCourse": "Voir le cours",
+      "certificate": "Certificat",
+      "free": "Gratuit",
+      "general": "Général"
+    }
+  },
+  "academiesLanding": {
+    "hero": {
+      "badge": "{{count}}+ académies disponibles",
+      "title": "Trouvez votre",
+      "titleHighlight": "académie idéale",
+      "subtitle": "Des académies créées par des experts dans chaque domaine. Apprenez des meilleurs et accélérez votre carrière professionnelle.",
+      "searchPlaceholder": "Rechercher des académies, des instructeurs..."
+    },
+    "filter": {
+      "all": "Toutes »",
+      "allAcademies": "Toutes les académies",
+      "resultsCount_one": "{{count}} académie",
+      "resultsCount_other": "{{count}} académies"
+    },
+    "card": {
+      "by": "par",
+      "courses": "cours",
+      "viewAcademy": "Voir l'académie"
+    },
+    "emptyState": {
+      "title": "Aucun résultat",
+      "description": "Nous n'avons trouvé aucune académie correspondant à ce critère. Essayez un autre mot-clé ou catégorie.",
+      "clearFilters": "Effacer les filtres"
+    },
+    "cta": {
+      "title": "Vous voulez créer votre propre académie ?",
+      "description": "Rejoignez plus de 120 créateurs qui partagent déjà leurs connaissances.",
+      "button": "Créer mon académie"
+    }
+  }
+}

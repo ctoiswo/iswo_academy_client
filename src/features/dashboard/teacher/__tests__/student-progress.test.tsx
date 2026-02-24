@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { StudentProgress } from '../components/student-progress'
 import type {
   StudentProgress as StudentProgressType,
@@ -218,7 +217,7 @@ describe('StudentProgress', () => {
 
   describe('Event Handlers', () => {
     it('calls onViewProgress when View Progress is clicked', () => {
-      const onViewProgress = vi.fn()
+      const onViewProgress = jest.fn()
       render(
         <StudentProgress
           students={mockStudents}
@@ -237,7 +236,7 @@ describe('StudentProgress', () => {
     })
 
     it('calls onViewStudent when View Profile is clicked', () => {
-      const onViewStudent = vi.fn()
+      const onViewStudent = jest.fn()
       render(
         <StudentProgress
           students={mockStudents}
@@ -256,7 +255,7 @@ describe('StudentProgress', () => {
     })
 
     it('calls onMessageStudent when Send Message is clicked', () => {
-      const onMessageStudent = vi.fn()
+      const onMessageStudent = jest.fn()
       render(
         <StudentProgress
           students={mockStudents}

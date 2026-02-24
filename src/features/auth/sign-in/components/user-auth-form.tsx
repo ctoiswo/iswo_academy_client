@@ -1,11 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate } from '@tanstack/react-router'
-import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
-import { IconGmail, IconGithub } from '@/assets/brand-icons'
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react'
 import { useAuthStore, type LoginCredentials } from '@/stores/auth-store'
 import { isApiError } from '@/lib/api-client'
 import {
@@ -17,30 +16,23 @@ import {
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/hooks/use-translation'
 import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
+import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Separator } from '@/components/ui/separator'
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
+interface UserAuthFormProps {
   redirectTo?: string
 }
 
-export function UserAuthForm({
-  className,
-  redirectTo,
-  ...props
-}: UserAuthFormProps) {
+interface FormValues {
+  email: string
+  password: string
+}
+
+export function UserAuthForm({ redirectTo }: UserAuthFormProps) {
   const { t } = useTranslation()
-  const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
-  const { login, logout, error, setError } = useAuthStore()
+  const [showPassword, setShowPassword] = useState(false)
 
   const formSchema = z.object({
     email: z
@@ -52,171 +44,247 @@ export function UserAuthForm({
       .min(1, t('auth.signIn.validation.passwordRequired'))
       .min(7, t('auth.signIn.validation.passwordMin')),
   })
+  const [mounted, setMounted] = useState(false)
+  const [focusedField, setFocusedField] = useState<string | null>(null)
+  const navigate = useNavigate()
+  const { login, logout, setError } = useAuthStore()
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 200)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+    defaultValues: { email: '', password: '' },
   })
 
-  function handleOAuthLogin(provider: 'github' | 'google_oauth2') {
-    // OAuth routes are at the root level, not under /api/v1
-    const baseUrl =
-      import.meta.env.VITE_API_URL?.replace('/api/v1', '') ||
-      'http://localhost:3001'
-    const oauthUrl = `${baseUrl}/auth/${provider}`
+  const emailField = register('email')
+  const passwordField = register('password')
 
-    // Redirect to OAuth provider
-    window.location.href = oauthUrl
+  function handleOAuthLogin(provider: 'github' | 'google_oauth2') {
+    const baseUrl =
+      import.meta.env.VITE_API_URL?.replace('/api/v1', '') || 'http://localhost:3001'
+    window.location.href = `${baseUrl}/auth/${provider}`
   }
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
-      setIsLoading(true)
-      setError(null) // Clear any previous errors
-
-      const credentials: LoginCredentials = {
-        email: data.email,
-        password: data.password,
-      }
-
+      setError(null)
+      const credentials: LoginCredentials = { email: data.email, password: data.password }
       const result = await login(credentials)
-
-      // Show success message
       toast.success(t('auth.signIn.successMessage', { email: data.email }))
-
-      // Redirect based on login result
       if (result.shouldRedirect && result.redirectPath) {
         navigate({ to: result.redirectPath, replace: true })
       } else {
-        // Fallback to redirectTo prop or academies if no path specified
-        const targetPath = redirectTo || '/academies'
-        navigate({ to: targetPath, replace: true })
+        navigate({ to: redirectTo || '/academies', replace: true })
       }
     } catch (error: unknown) {
-      // console.error('Login error:', error)
-
-      // Usar el error handler centralizado
-      const errorMessage = getErrorMessage(error)
-
-      toast.error(errorMessage)
-      setError(errorMessage)
-
-      // Si es error de validación, asignar mensajes a campos específicos
-      if (isApiError(error) && isValidationError(error)) {
-        const validationDetails = getValidationDetails(error)
-
-        // Asignar errores a los campos correspondientes
-        Object.entries(validationDetails).forEach(([field, message]) => {
-          if (field === 'email' || field === 'password') {
-            form.setError(field, { message })
-          }
-        })
+      if (isApiError(error)) {
+        if (isValidationError(error)) {
+          const details = getValidationDetails(error)
+          Object.entries(details).forEach(([field, message]) => {
+            toast.error(`${field}: ${message}`)
+          })
+        } else if (shouldLogout(error)) {
+          logout()
+        } else {
+          toast.error(getErrorMessage(error))
+        }
+      } else {
+        toast.error(t('auth.signIn.errorMessage'))
       }
-
-      // Si el error requiere logout, cerrar sesión
-      if (shouldLogout(error)) {
-        logout()
-      }
-    } finally {
-      setIsLoading(false)
     }
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('grid gap-3', className)}
-        {...props}
-      >
-        {error && (
-          <div className='bg-destructive/15 text-destructive rounded-md p-3 text-sm'>
-            {error}
-          </div>
+    <div className='flex flex-col gap-8'>
+      {/* Header */}
+      <div
+        className={cn(
+          'flex flex-col gap-2 transition-all duration-500',
+          mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         )}
+      >
+        <h1
+          className='text-2xl sm:text-3xl font-bold text-foreground tracking-tight'
+          style={{ fontFamily: 'var(--font-heading)' }}
+        >
+          {t('auth.signIn.title')}
+        </h1>
+        <p className='text-sm text-muted-foreground leading-relaxed'>
+          {t('auth.signIn.subtitle')}
+        </p>
+      </div>
 
-        <FormField
-          control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='text-black'>
-                {t('auth.signIn.email')}
-              </FormLabel>
-              <FormControl>
-                <Input
-                  className='text-black'
-                  placeholder={t('auth.signIn.emailPlaceholder')}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='password'
-          render={({ field }) => (
-            <FormItem className='relative'>
-              <FormLabel className='text-black'>
-                {t('auth.signIn.password')}
-              </FormLabel>
-              <FormControl>
-                <PasswordInput
-                  className='text-black'
-                  placeholder={t('auth.signIn.passwordPlaceholder')}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-              <Link
-                to='/forgot-password'
-                className='text-muted-foreground absolute end-0 -top-0.5 text-sm font-medium hover:opacity-75'
-              >
-                {t('auth.signIn.forgotPassword')}
-              </Link>
-            </FormItem>
-          )}
-        />
-        <Button className='mt-2' disabled={isLoading}>
-          {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
-          {t('auth.signIn.button')}
+      {/* Social buttons */}
+      <div
+        className={cn(
+          'flex flex-col gap-3 transition-all duration-500 delay-100',
+          mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        )}
+      >
+        <Button
+          type='button'
+          variant='outline'
+          onClick={() => handleOAuthLogin('google_oauth2')}
+          className='w-full h-11 gap-3 text-sm font-medium border-border/60 bg-card/50 hover:bg-secondary/50 hover:border-border transition-all duration-200'
+        >
+          <svg className='size-4' viewBox='0 0 24 24' aria-hidden='true'>
+            <path fill='#4285F4' d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z' />
+            <path fill='#34A853' d='M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z' />
+            <path fill='#FBBC05' d='M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z' />
+            <path fill='#EA4335' d='M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z' />
+          </svg>
+          {t('auth.signIn.continueWithGoogle')}
         </Button>
+        <Button
+          type='button'
+          variant='outline'
+          onClick={() => handleOAuthLogin('github')}
+          className='w-full h-11 gap-3 text-sm font-medium border-border/60 bg-card/50 hover:bg-secondary/50 hover:border-border transition-all duration-200'
+        >
+          <svg className='size-4 fill-foreground' viewBox='0 0 24 24' aria-hidden='true'>
+            <path d='M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z' />
+          </svg>
+          {t('auth.signIn.continueWithGithub')}
+        </Button>
+      </div>
 
-        <div className='relative my-2'>
-          <div className='absolute inset-0 flex items-center'>
-            <span className='w-full border-t' />
+      {/* Divider */}
+      <div
+        className={cn(
+          'flex items-center gap-3 transition-all duration-500 delay-150',
+          mounted ? 'opacity-100' : 'opacity-0'
+        )}
+      >
+        <Separator className='flex-1' />
+        <span className='text-xs text-muted-foreground'>{t('auth.signIn.orContinueWithEmail')}</span>
+        <Separator className='flex-1' />
+      </div>
+
+      {/* Form */}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={cn(
+          'flex flex-col gap-5 transition-all duration-500 delay-200',
+          mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        )}
+      >
+        {/* Email */}
+        <div className='flex flex-col gap-2'>
+          <Label htmlFor='email' className='text-sm text-foreground/80'>
+            {t('auth.signIn.email')}
+          </Label>
+          <div className='relative'>
+            <Mail
+              className={cn(
+                'absolute left-3 top-1/2 -translate-y-1/2 size-4 transition-colors duration-200',
+                focusedField === 'email' ? 'text-primary' : 'text-muted-foreground/50'
+              )}
+            />
+            <Input
+              id='email'
+              type='email'
+              placeholder={t('auth.signIn.emailPlaceholder')}
+              className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
+              {...emailField}
+              onFocus={() => setFocusedField('email')}
+              onBlur={(e) => { void emailField.onBlur(e); setFocusedField(null) }}
+            />
           </div>
-          <div className='relative flex justify-center text-xs uppercase'>
-            <span className='px-2 text-black'>
-              {t('auth.signIn.orContinueWith')}
-            </span>
-          </div>
+          {errors.email && (
+            <p className='text-xs text-destructive'>{errors.email.message}</p>
+          )}
         </div>
 
-        <div className='grid grid-cols-2 gap-2'>
-          <Button
-            variant='default'
-            type='button'
-            disabled={isLoading}
-            onClick={() => handleOAuthLogin('github')}
-          >
-            <IconGithub className='h-4 w-4' /> {t('auth.signIn.github')}
-          </Button>
-          <Button
-            variant='default'
-            type='button'
-            disabled={isLoading}
-            onClick={() => handleOAuthLogin('google_oauth2')}
-          >
-            <IconGmail className='h-4 w-4' /> Google
-          </Button>
+        {/* Password */}
+        <div className='flex flex-col gap-2'>
+          <div className='flex items-center justify-between'>
+            <Label htmlFor='password' className='text-sm text-foreground/80'>
+              {t('auth.signIn.password')}
+            </Label>
+            <Link
+              to='/forgot-password'
+              className='text-xs text-primary/80 hover:text-primary transition-colors'
+            >
+              {t('auth.signIn.forgotPassword')}
+            </Link>
+          </div>
+          <div className='relative'>
+            <Lock
+              className={cn(
+                'absolute left-3 top-1/2 -translate-y-1/2 size-4 transition-colors duration-200',
+                focusedField === 'password' ? 'text-primary' : 'text-muted-foreground/50'
+              )}
+            />
+            <Input
+              id='password'
+              type={showPassword ? 'text' : 'password'}
+              placeholder={t('auth.signIn.passwordPlaceholder')}
+              className='pl-10 pr-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
+              {...passwordField}
+              onFocus={() => setFocusedField('password')}
+              onBlur={(e) => { void passwordField.onBlur(e); setFocusedField(null) }}
+            />
+            <button
+              type='button'
+              onClick={() => setShowPassword(!showPassword)}
+              className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-foreground transition-colors'
+              aria-label={showPassword ? t('auth.signIn.hidePassword') : t('auth.signIn.showPassword')}
+            >
+              {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
+            </button>
+          </div>
+          {errors.password && (
+            <p className='text-xs text-destructive'>{errors.password.message}</p>
+          )}
         </div>
+
+        {/* Remember me */}
+        <div className='flex items-center gap-2'>
+          <Checkbox id='remember' />
+          <label htmlFor='remember' className='text-xs text-muted-foreground cursor-pointer'>
+            {t('auth.signIn.rememberMe')}
+          </label>
+        </div>
+
+        {/* Submit */}
+        <Button
+          type='submit'
+          disabled={isSubmitting}
+          className='w-full h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:shadow-[0_0_28px_rgba(99,102,241,0.35)] transition-all duration-300 disabled:shadow-none'
+        >
+          {isSubmitting ? (
+            <Loader2 className='size-4 animate-spin' />
+          ) : (
+            <>
+              {t('auth.signIn.button')}
+              <ArrowRight className='size-4 ml-2' />
+            </>
+          )}
+        </Button>
       </form>
-    </Form>
+
+      {/* Footer */}
+      <p
+        className={cn(
+          'text-center text-sm text-muted-foreground transition-all duration-500 delay-300',
+          mounted ? 'opacity-100' : 'opacity-0'
+        )}
+      >
+        {t('auth.signIn.noAccount')}{' '}
+        <Link
+          to='/sign-up'
+          className='text-primary font-medium hover:text-primary/80 transition-colors'
+        >
+          {t('auth.signIn.signUpFree')}
+        </Link>
+      </p>
+    </div>
   )
 }

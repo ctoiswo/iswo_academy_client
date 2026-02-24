@@ -1,17 +1,16 @@
 import type { AcademyFull as Academy } from '@/types/entities/academy'
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { AcademyCard } from '../academy-card'
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
 }))
 
 // Mock TanStack Router
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   Link: ({ children, to, params, ...props }: any) => (
     <a href={`${to}/${params?.slug}`} {...props}>
       {children}
@@ -20,7 +19,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Mock lucide-react
-vi.mock('lucide-react', () => ({
+jest.mock('lucide-react', () => ({
   BookOpen: ({ className }: { className?: string }) => (
     <div className={className} data-testid='book-icon'>
       📚
@@ -34,7 +33,7 @@ vi.mock('lucide-react', () => ({
 }))
 
 // Mock UI components
-vi.mock('@/components/ui/card', () => ({
+jest.mock('@/components/ui/card', () => ({
   Card: ({ children, className, ...props }: any) => (
     <div className={className} data-testid='card' {...props}>
       {children}
@@ -63,7 +62,7 @@ vi.mock('@/components/ui/card', () => ({
 }))
 
 // Mock formatters
-vi.mock('@/lib/formatters', () => ({
+jest.mock('@/lib/formatters', () => ({
   formatPrice: (price: string | number) => {
     const numPrice = typeof price === 'string' ? parseInt(price) : price
     return `$${numPrice.toLocaleString()}`

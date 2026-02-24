@@ -1,18 +1,17 @@
 import type { FeaturedAcademiesByCategory } from '@/services/academy-service'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { AcademiesSection } from '../academies-section'
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
 }))
 
 // Mock react-i18next
-vi.mock('react-i18next', () => ({
+jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
@@ -31,7 +30,7 @@ vi.mock('react-i18next', () => ({
 }))
 
 // Mock TanStack Router
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   Link: ({ children, to, ...props }: any) => (
     <a href={to} {...props}>
       {children}
@@ -40,7 +39,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Mock lucide-react
-vi.mock('lucide-react', () => ({
+jest.mock('lucide-react', () => ({
   Loader2: ({ className }: { className?: string }) => (
     <div className={className} data-testid='loader-icon'>
       Loading...
@@ -59,7 +58,7 @@ vi.mock('lucide-react', () => ({
 }))
 
 // Mock UI components
-vi.mock('@/components/ui/alert', () => ({
+jest.mock('@/components/ui/alert', () => ({
   Alert: ({ children, variant, ...props }: any) => (
     <div data-testid='alert' data-variant={variant} {...props}>
       {children}
@@ -72,7 +71,7 @@ vi.mock('@/components/ui/alert', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/button', () => ({
+jest.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, variant, size, ...props }: any) => (
     <button
       onClick={onClick}
@@ -86,7 +85,7 @@ vi.mock('@/components/ui/button', () => ({
 }))
 
 // Mock AcademyCard component
-vi.mock('../academy-card', () => ({
+jest.mock('../academy-card', () => ({
   AcademyCard: ({ academy }: any) => (
     <div data-testid={`academy-card-${academy.id}`}>
       <h3>{academy.name}</h3>
@@ -196,10 +195,10 @@ const mockData: FeaturedAcademiesByCategory[] = [
 ]
 
 describe('AcademiesSection', () => {
-  const mockOnRetry = vi.fn()
+  const mockOnRetry = jest.fn()
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   describe('Loading state', () => {

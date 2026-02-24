@@ -1,17 +1,16 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { useAuthStore } from '@/stores/auth-store'
 import { SignIn } from '../index'
 
 // Create mock functions first
-const mockNavigate = vi.fn()
-const mockUseSearch = vi.fn(() => ({ redirect: undefined }))
+const mockNavigate = jest.fn()
+const mockUseSearch = jest.fn(() => ({ redirect: undefined }))
 
 // Mock dependencies
-vi.mock('@/lib/api-client')
-vi.mock('@/stores/auth-store')
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@/lib/api-client')
+jest.mock('@/stores/auth-store')
+jest.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
   useSearch: () => mockUseSearch(),
   Link: ({ children, to, ...props }: any) => (
@@ -20,41 +19,41 @@ vi.mock('@tanstack/react-router', () => ({
     </a>
   ),
 }))
-vi.mock('sonner', () => ({
+jest.mock('sonner', () => ({
   toast: {
-    success: vi.fn(),
-    error: vi.fn(),
+    success: jest.fn(),
+    error: jest.fn(),
   },
 }))
 
-const mockUseAuthStore = vi.mocked(useAuthStore)
+const mockUseAuthStore = jest.mocked(useAuthStore)
 
 // Default mock store configuration
 const defaultMockStore = {
-  login: vi.fn(),
-  register: vi.fn(),
+  login: jest.fn(),
+  register: jest.fn(),
   user: null,
   tokens: null,
   isAuthenticated: false,
   isLoading: false,
   error: null,
-  logout: vi.fn(),
-  refreshTokens: vi.fn(),
-  setUser: vi.fn(),
-  setTokens: vi.fn(),
-  setLoading: vi.fn(),
-  setError: vi.fn(),
-  reset: vi.fn(),
-  initialize: vi.fn(),
+  logout: jest.fn(),
+  refreshTokens: jest.fn(),
+  setUser: jest.fn(),
+  setTokens: jest.fn(),
+  setLoading: jest.fn(),
+  setError: jest.fn(),
+  reset: jest.fn(),
+  initialize: jest.fn(),
   auth: {
     user: null,
-    setUser: vi.fn(),
+    setUser: jest.fn(),
     accessToken: '',
-    setAccessToken: vi.fn(),
+    setAccessToken: jest.fn(),
     refreshToken: '',
-    setRefreshToken: vi.fn(),
-    resetAccessToken: vi.fn(),
-    reset: vi.fn(),
+    setRefreshToken: jest.fn(),
+    resetAccessToken: jest.fn(),
+    reset: jest.fn(),
   },
 }
 
@@ -69,7 +68,7 @@ describe('Login Flow Integration', () => {
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('renders the complete sign-in page', () => {
@@ -95,12 +94,12 @@ describe('Login Flow Integration', () => {
     const user = userEvent.setup()
 
     // Mock successful login
-    const mockLogin = vi.fn().mockResolvedValue(undefined)
+    const mockLogin = jest.fn().mockResolvedValue(undefined)
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       login: mockLogin,
       error: null,
-      setError: vi.fn(),
+      setError: jest.fn(),
     })
 
     render(<SignIn />)
@@ -141,8 +140,8 @@ describe('Login Flow Integration', () => {
       code: 'INVALID_CREDENTIALS',
     }
 
-    const mockLogin = vi.fn().mockRejectedValue(mockError)
-    const mockSetError = vi.fn()
+    const mockLogin = jest.fn().mockRejectedValue(mockError)
+    const mockSetError = jest.fn()
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       login: mockLogin,
@@ -182,8 +181,8 @@ describe('Login Flow Integration', () => {
       code: 'ACCOUNT_NOT_CONFIRMED',
     }
 
-    const mockLogin = vi.fn().mockRejectedValue(mockError)
-    const mockSetError = vi.fn()
+    const mockLogin = jest.fn().mockRejectedValue(mockError)
+    const mockSetError = jest.fn()
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       login: mockLogin,
@@ -224,8 +223,8 @@ describe('Login Flow Integration', () => {
       details: ['Email is invalid', 'Password is too short'],
     }
 
-    const mockLogin = vi.fn().mockRejectedValue(mockError)
-    const mockSetError = vi.fn()
+    const mockLogin = jest.fn().mockRejectedValue(mockError)
+    const mockSetError = jest.fn()
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       login: mockLogin,
@@ -262,8 +261,8 @@ describe('Login Flow Integration', () => {
       code: 'NETWORK_ERROR',
     }
 
-    const mockLogin = vi.fn().mockRejectedValue(mockError)
-    const mockSetError = vi.fn()
+    const mockLogin = jest.fn().mockRejectedValue(mockError)
+    const mockSetError = jest.fn()
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       login: mockLogin,
@@ -300,8 +299,8 @@ describe('Login Flow Integration', () => {
       code: 'RATE_LIMIT_EXCEEDED',
     }
 
-    const mockLogin = vi.fn().mockRejectedValue(mockError)
-    const mockSetError = vi.fn()
+    const mockLogin = jest.fn().mockRejectedValue(mockError)
+    const mockSetError = jest.fn()
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       login: mockLogin,
@@ -413,7 +412,7 @@ describe('Login Flow Integration', () => {
     const user = userEvent.setup()
 
     // Mock login that takes time to resolve
-    const mockLogin = vi
+    const mockLogin = jest
       .fn()
       .mockImplementation(
         () => new Promise((resolve) => setTimeout(resolve, 100))
@@ -422,7 +421,7 @@ describe('Login Flow Integration', () => {
       ...defaultMockStore,
       login: mockLogin,
       error: null,
-      setError: vi.fn(),
+      setError: jest.fn(),
     })
 
     render(<SignIn />)
@@ -468,12 +467,12 @@ describe('Login Flow Integration', () => {
     const redirectUrl = '/dashboard/settings'
 
     // Mock successful login
-    const mockLogin = vi.fn().mockResolvedValue(undefined)
+    const mockLogin = jest.fn().mockResolvedValue(undefined)
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       login: mockLogin,
       error: null,
-      setError: vi.fn(),
+      setError: jest.fn(),
     })
 
     // Mock search with redirect

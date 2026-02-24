@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest'
 import type { GlobalStats, AcademyOverview, SystemHealth } from '../api-client'
 
 describe('Super Admin API Types', () => {

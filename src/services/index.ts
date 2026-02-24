@@ -80,3 +80,8 @@ export type {
   FeaturedAcademiesByCategory,
   UserAcademiesResponse,
 } from './academy-service'
+
+export {
+  default as statsService,
+  statsService as statsApi,
+} from './stats-service'

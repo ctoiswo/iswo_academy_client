@@ -1,14 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { useAcademies } from '@/hooks/use-academies'
 import { useCategories } from '@/hooks/use-categories'
 import { useGeneralStatistics } from '@/hooks/use-statistics'
 import { PublicAcademiesPage } from '@/features/public-academies'
 
 // Mock the entire public-academies feature
-vi.mock('@/features/public-academies', () => ({
+jest.mock('@/features/public-academies', () => ({
   PublicAcademiesPage: () => {
     // Mock functions will be injected via global variables set up in beforeEach
     const academiesData = (global as any).__mockUseAcademies?.() || {
@@ -114,7 +113,7 @@ vi.mock('@/features/public-academies', () => ({
 }))
 
 // Mock lucide-react
-vi.mock('lucide-react', () => ({
+jest.mock('lucide-react', () => ({
   Loader2: ({ className, ...props }: any) => (
     <div className={className} {...props}>
       Loading...
@@ -138,12 +137,12 @@ vi.mock('lucide-react', () => ({
 }))
 
 // Mock hooks
-vi.mock('@/hooks/use-academies')
-vi.mock('@/hooks/use-categories')
-vi.mock('@/hooks/use-statistics')
+jest.mock('@/hooks/use-academies')
+jest.mock('@/hooks/use-categories')
+jest.mock('@/hooks/use-statistics')
 
 // Mock react-i18next
-vi.mock('react-i18next', () => ({
+jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
@@ -181,8 +180,8 @@ vi.mock('react-i18next', () => ({
 }))
 
 // Mock TanStack Router
-vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => vi.fn(),
+jest.mock('@tanstack/react-router', () => ({
+  useNavigate: () => jest.fn(),
   useSearch: () => ({}),
   Link: ({ children, to, ...props }: any) => (
     <a href={to} {...props}>
@@ -192,7 +191,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
@@ -204,9 +203,9 @@ vi.mock('framer-motion', () => ({
   },
 }))
 
-const mockUseAcademies = vi.mocked(useAcademies)
-const mockUseCategories = vi.mocked(useCategories)
-const mockUseGeneralStatistics = vi.mocked(useGeneralStatistics)
+const mockUseAcademies = jest.mocked(useAcademies)
+const mockUseCategories = jest.mocked(useCategories)
+const mockUseGeneralStatistics = jest.mocked(useGeneralStatistics)
 
 describe('PublicAcademiesPage', () => {
   let queryClient: QueryClient
@@ -259,17 +258,17 @@ describe('PublicAcademiesPage', () => {
     })
 
     // Setup mock functions for the component
-    ;(global as any).__mockUseAcademies = vi.fn().mockReturnValue({
+    ;(global as any).__mockUseAcademies = jest.fn().mockReturnValue({
       data: mockAcademies,
       isLoading: false,
       error: null,
     })
-    ;(global as any).__mockUseCategories = vi.fn().mockReturnValue({
+    ;(global as any).__mockUseCategories = jest.fn().mockReturnValue({
       categories: mockCategories,
       loading: false,
       error: null,
     })
-    ;(global as any).__mockUseGeneralStatistics = vi.fn().mockReturnValue({
+    ;(global as any).__mockUseGeneralStatistics = jest.fn().mockReturnValue({
       data: mockStats,
       isLoading: false,
       error: null,
@@ -296,7 +295,7 @@ describe('PublicAcademiesPage', () => {
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     delete (global as any).__mockUseAcademies
     delete (global as any).__mockUseCategories
     delete (global as any).__mockUseGeneralStatistics
@@ -329,12 +328,12 @@ describe('PublicAcademiesPage', () => {
   })
 
   it('muestra loader durante la carga inicial', () => {
-    ;(global as any).__mockUseAcademies = vi.fn().mockReturnValue({
+    ;(global as any).__mockUseAcademies = jest.fn().mockReturnValue({
       data: undefined,
       isLoading: true,
       error: null,
     })
-    ;(global as any).__mockUseCategories = vi.fn().mockReturnValue({
+    ;(global as any).__mockUseCategories = jest.fn().mockReturnValue({
       categories: [],
       loading: true,
       error: null,
@@ -347,7 +346,7 @@ describe('PublicAcademiesPage', () => {
 
   it('muestra error cuando falla la carga de datos', () => {
     const error = new Error('Error al cargar academias')
-    ;(global as any).__mockUseAcademies = vi.fn().mockReturnValue({
+    ;(global as any).__mockUseAcademies = jest.fn().mockReturnValue({
       data: undefined,
       isLoading: false,
       error,
@@ -426,7 +425,7 @@ describe('PublicAcademiesPage', () => {
 
   it('muestra mensaje cuando no hay resultados', async () => {
     // Configure global mock for empty data
-    ;(global as any).__mockUseAcademies = vi.fn().mockReturnValue({
+    ;(global as any).__mockUseAcademies = jest.fn().mockReturnValue({
       data: [],
       isLoading: false,
       error: null,
@@ -466,7 +465,7 @@ describe('PublicAcademiesPage', () => {
     const error = new Error('Error de red')
 
     // Configure global mock for error state
-    ;(global as any).__mockUseAcademies = vi.fn().mockReturnValue({
+    ;(global as any).__mockUseAcademies = jest.fn().mockReturnValue({
       data: undefined,
       isLoading: false,
       error,
@@ -510,7 +509,7 @@ describe('PublicAcademiesPage', () => {
 
   it('muestra mensaje apropiado cuando no hay academias sin filtros', () => {
     // Configure global mock for empty data
-    ;(global as any).__mockUseAcademies = vi.fn().mockReturnValue({
+    ;(global as any).__mockUseAcademies = jest.fn().mockReturnValue({
       data: [],
       isLoading: false,
       error: null,

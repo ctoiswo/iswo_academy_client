@@ -46,3 +46,36 @@ export interface CategoryFilters {
   sort_by?: 'name' | 'academies_count' | 'courses_count'
   sort_direction?: 'asc' | 'desc'
 }
+
+// ---
+// Featured categories endpoint shapes (GET /api/v1/academy_categories/featured)
+// Used by landing page carousels
+// ---
+
+/**
+ * Academy shape returned inside the featured categories endpoint.
+ * Matches AcademySerializer#landing_hash
+ */
+export interface FeaturedAcademy {
+  id: number
+  name: string
+  description: string | null
+  slug: string
+  /** banner_url ?? logo_url from the backend */
+  cover_image: string | null
+  courses_count: number
+  students_count: number
+  instructor: string | null
+}
+
+/**
+ * Category shape returned by GET /api/v1/academy_categories/featured.
+ * Matches AcademyCategorySerializer#featured_hash
+ */
+export interface FeaturedCategory {
+  id: number
+  name: string
+  slug: string
+  description: string | null
+  academies: FeaturedAcademy[]
+}

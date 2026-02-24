@@ -79,6 +79,8 @@ export interface Course {
 
   // Computed/Stats
   enrollment_count?: number
+  average_rating?: number
+  total_lessons?: number
   sections_count?: number
   lessons_count?: number
   is_published?: boolean
@@ -101,6 +103,13 @@ export interface Course {
     total_lessons: number
     is_completed: boolean
   }
+
+  // Enrollment context — present in :summary and :full views for authenticated users.
+  // null  → user is authenticated but not enrolled
+  // true  → user is enrolled
+  // undefined → guest (not included in :minimal response)
+  enrolled?: boolean | null
+  progress_percentage?: number | null
 
   // Timestamps
   created_at: string

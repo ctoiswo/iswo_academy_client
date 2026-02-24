@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { BookOpen, GraduationCap, Award } from 'lucide-react'
+import { BookOpen, GraduationCap, PlayCircle, Bookmark } from 'lucide-react'
 import { useUserEnrollments } from '@/hooks/use-enrollments'
 import { useWishlist } from '@/hooks/use-wishlist'
 import type { DashboardProps } from '@/components/dashboard-router'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
+import { StatCard } from '@/components/dashboard/stat-card'
 
 export function StudentDashboard({ user, academy }: DashboardProps) {
   const navigate = useNavigate()
@@ -57,10 +58,14 @@ export function StudentDashboard({ user, academy }: DashboardProps) {
           </p>
         </div>
 
-        {/* Learning Categories Grid - 2 columns x 2 rows */}
-        <div className='grid gap-6 md:grid-cols-2'>
-          {/* Cursos en Progreso */}
-          <button
+        {/* Learning Categories Grid */}
+        <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
+          <StatCard
+            label='En progreso'
+            value={isLoading ? '—' : stats.activeCount}
+            icon={PlayCircle}
+            iconBg='bg-primary/10'
+            iconColor='text-primary'
             onClick={() =>
               navigate({
                 to: '/academy/$academySlug/my-courses',
@@ -68,31 +73,14 @@ export function StudentDashboard({ user, academy }: DashboardProps) {
                 search: { status: 'active' },
               })
             }
-            className='group relative overflow-hidden rounded-lg border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 p-8 text-left transition-all hover:scale-[1.02] hover:border-blue-300 hover:shadow-lg active:scale-[0.98]'
-          >
-            <div className='relative z-10'>
-              <div className='mb-4 flex items-center justify-between'>
-                <div className='rounded-lg bg-blue-500 p-3 text-white'>
-                  <BookOpen className='h-8 w-8' />
-                </div>
-                {!isLoading && (
-                  <span className='text-4xl font-bold text-blue-600'>
-                    {stats.activeCount}
-                  </span>
-                )}
-              </div>
-              <h3 className='mb-2 text-xl font-semibold text-blue-900'>
-                Cursos en Progreso
-              </h3>
-              <p className='text-sm text-blue-700'>Continúa donde lo dejaste</p>
-            </div>
-            <div className='absolute right-0 bottom-0 opacity-10'>
-              <BookOpen className='h-32 w-32 text-blue-600' />
-            </div>
-          </button>
+          />
 
-          {/* Cursos Completados */}
-          <button
+          <StatCard
+            label='Completados'
+            value={isLoading ? '—' : stats.completedCount}
+            icon={GraduationCap}
+            iconBg='bg-emerald-500/10'
+            iconColor='text-emerald-400'
             onClick={() =>
               navigate({
                 to: '/academy/$academySlug/my-courses',
@@ -100,66 +88,28 @@ export function StudentDashboard({ user, academy }: DashboardProps) {
                 search: { status: 'completed' },
               })
             }
-            className='group relative overflow-hidden rounded-lg border-2 border-green-200 bg-gradient-to-br from-green-50 to-green-100 p-8 text-left transition-all hover:scale-[1.02] hover:border-green-300 hover:shadow-lg active:scale-[0.98]'
-          >
-            <div className='relative z-10'>
-              <div className='mb-4 flex items-center justify-between'>
-                <div className='rounded-lg bg-green-500 p-3 text-white'>
-                  <GraduationCap className='h-8 w-8' />
-                </div>
-                {!isLoading && (
-                  <span className='text-4xl font-bold text-green-600'>
-                    {stats.completedCount}
-                  </span>
-                )}
-              </div>
-              <h3 className='mb-2 text-xl font-semibold text-green-900'>
-                Cursos Finalizados
-              </h3>
-              <p className='text-sm text-green-700'>
-                Revisa tus logros completados
-              </p>
-            </div>
-            <div className='absolute right-0 bottom-0 opacity-10'>
-              <GraduationCap className='h-32 w-32 text-green-600' />
-            </div>
-          </button>
+          />
 
-          {/* Todos los Cursos */}
-          <button
+          <StatCard
+            label='Todos mis cursos'
+            value={isLoading ? '—' : stats.totalCount}
+            icon={BookOpen}
+            iconBg='bg-violet-500/10'
+            iconColor='text-violet-400'
             onClick={() =>
               navigate({
                 to: '/academy/$academySlug/my-courses',
                 params: { academySlug },
               })
             }
-            className='group relative overflow-hidden rounded-lg border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100 p-8 text-left transition-all hover:scale-[1.02] hover:border-orange-300 hover:shadow-lg active:scale-[0.98]'
-          >
-            <div className='relative z-10'>
-              <div className='mb-4 flex items-center justify-between'>
-                <div className='rounded-lg bg-purple-500 p-3 text-white'>
-                  <Award className='h-8 w-8' />
-                </div>
-                {!isLoading && (
-                  <span className='text-4xl font-bold text-purple-600'>
-                    {stats.totalCount}
-                  </span>
-                )}
-              </div>
-              <h3 className='mb-2 text-xl font-semibold text-purple-900'>
-                Todos mis Cursos
-              </h3>
-              <p className='text-sm text-purple-700'>
-                Ver todos tus cursos inscritos
-              </p>
-            </div>
-            <div className='absolute right-0 bottom-0 opacity-10'>
-              <Award className='h-32 w-32 text-purple-600' />
-            </div>
-          </button>
+          />
 
-          {/* Cursos Guardados */}
-          <button
+          <StatCard
+            label='Guardados'
+            value={isLoading ? '—' : stats.savedCount}
+            icon={Bookmark}
+            iconBg='bg-amber-500/10'
+            iconColor='text-amber-400'
             onClick={() =>
               navigate({
                 to: '/academy/$academySlug/my-courses',
@@ -167,28 +117,7 @@ export function StudentDashboard({ user, academy }: DashboardProps) {
                 search: { status: 'wishlist' },
               })
             }
-            className='group relative overflow-hidden rounded-lg border-2 border-pink-200 bg-gradient-to-br from-pink-50 to-pink-100 p-8 text-left transition-all hover:scale-[1.02] hover:border-pink-300 hover:shadow-lg active:scale-[0.98]'
-          >
-            <div className='relative z-10'>
-              <div className='mb-4 flex items-center justify-between'>
-                <div className='rounded-lg bg-pink-500 p-3 text-white'>
-                  <Award className='h-8 w-8' />
-                </div>
-                {!isLoading && (
-                  <span className='text-4xl font-bold text-pink-600'>
-                    {stats.savedCount}
-                  </span>
-                )}
-              </div>
-              <h3 className='mb-2 text-xl font-semibold text-pink-900'>
-                Cursos Guardados
-              </h3>
-              <p className='text-sm text-pink-700'>Revisa tu lista de deseos</p>
-            </div>
-            <div className='absolute right-0 bottom-0 opacity-10'>
-              <Award className='h-32 w-32 text-pink-600' />
-            </div>
-          </button>
+          />
         </div>
       </div>
     </DashboardLayout>

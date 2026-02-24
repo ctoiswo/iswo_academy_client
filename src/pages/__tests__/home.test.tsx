@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import {
   useFeaturedAcademies,
   useAcademyCategories,
@@ -10,10 +9,10 @@ import {
 import { HomePage } from '@/features/home'
 
 // Mock hooks
-vi.mock('@/hooks/use-featured-content')
+jest.mock('@/hooks/use-featured-content')
 
 // Mock react-i18next
-vi.mock('react-i18next', () => ({
+jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
@@ -49,12 +48,12 @@ vi.mock('react-i18next', () => ({
   }),
   initReactI18next: {
     type: '3rdParty',
-    init: vi.fn(),
+    init: jest.fn(),
   },
 }))
 
 // Mock TanStack Router
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   Link: ({ children, to, params, ...props }: any) => {
     let href = to
     if (params) {
@@ -75,18 +74,18 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Mock components
-vi.mock('@/components/layout/public-header', () => ({
+jest.mock('@/components/layout/public-header', () => ({
   PublicHeader: () => (
     <header data-testid='public-header'>Public Header</header>
   ),
 }))
 
-vi.mock('@/components/search/global-search-bar', () => ({
+jest.mock('@/components/search/global-search-bar', () => ({
   GlobalSearchBar: () => <div data-testid='global-search-bar'>Search Bar</div>,
 }))
 
 // Mock home feature components
-vi.mock('@/features/home/components/hero-section', () => ({
+jest.mock('@/features/home/components/hero-section', () => ({
   HeroSection: () => (
     <section data-testid='hero-section'>
       <h1>Descubre tu próxima oportunidad de aprendizaje</h1>
@@ -98,7 +97,7 @@ vi.mock('@/features/home/components/hero-section', () => ({
   ),
 }))
 
-vi.mock('@/features/home/components/categories-filter', () => ({
+jest.mock('@/features/home/components/categories-filter', () => ({
   CategoriesFilter: ({
     categories,
     selectedCategory,
@@ -130,7 +129,7 @@ vi.mock('@/features/home/components/categories-filter', () => ({
   },
 }))
 
-vi.mock('@/features/home/components/academies-section', () => ({
+jest.mock('@/features/home/components/academies-section', () => ({
   AcademiesSection: ({ data, isLoading, isError, onRetry }: any) => {
     if (isLoading) {
       return <div>Cargando academias...</div>
@@ -184,7 +183,7 @@ vi.mock('@/features/home/components/academies-section', () => ({
   },
 }))
 
-vi.mock('@/features/home/components/courses-section', () => ({
+jest.mock('@/features/home/components/courses-section', () => ({
   CoursesSection: ({ data, isLoading }: any) => {
     if (isLoading) {
       return <div>Cargando cursos...</div>
@@ -242,7 +241,7 @@ vi.mock('@/features/home/components/courses-section', () => ({
   },
 }))
 
-vi.mock('@/features/home/components/cta-section', () => ({
+jest.mock('@/features/home/components/cta-section', () => ({
   CTASection: () => (
     <section data-testid='cta-section'>
       <h2>¿Tienes conocimiento que compartir?</h2>
@@ -255,7 +254,7 @@ vi.mock('@/features/home/components/cta-section', () => ({
   ),
 }))
 
-vi.mock('@/features/home/components/footer', () => ({
+jest.mock('@/features/home/components/footer', () => ({
   Footer: () => (
     <footer data-testid='footer'>
       <p>© 2025 ISWO Academy. Todos los derechos reservados.</p>
@@ -266,7 +265,7 @@ vi.mock('@/features/home/components/footer', () => ({
 }))
 
 // Mock framer-motion to avoid animation issues in tests
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
@@ -277,9 +276,9 @@ vi.mock('framer-motion', () => ({
   },
 }))
 
-const mockUseFeaturedAcademies = vi.mocked(useFeaturedAcademies)
-const mockUseAcademyCategories = vi.mocked(useAcademyCategories)
-const mockUseFeaturedCourses = vi.mocked(useFeaturedCourses)
+const mockUseFeaturedAcademies = jest.mocked(useFeaturedAcademies)
+const mockUseAcademyCategories = jest.mocked(useAcademyCategories)
+const mockUseFeaturedCourses = jest.mocked(useFeaturedCourses)
 
 describe('HomePage', () => {
   let queryClient: QueryClient
@@ -453,7 +452,7 @@ describe('HomePage', () => {
       isLoading: false,
       isError: false,
       error: null,
-      refetch: vi.fn(),
+      refetch: jest.fn(),
     } as any)
 
     mockUseFeaturedAcademies.mockReturnValue({
@@ -461,7 +460,7 @@ describe('HomePage', () => {
       isLoading: false,
       isError: false,
       error: null,
-      refetch: vi.fn(),
+      refetch: jest.fn(),
     } as any)
 
     mockUseFeaturedCourses.mockReturnValue({
@@ -469,15 +468,15 @@ describe('HomePage', () => {
       isLoading: false,
       isError: false,
       error: null,
-      refetch: vi.fn(),
+      refetch: jest.fn(),
     } as any)
 
     // Mock scrollIntoView
-    Element.prototype.scrollIntoView = vi.fn()
+    Element.prototype.scrollIntoView = jest.fn()
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   const renderHomePage = () => {
@@ -561,7 +560,7 @@ describe('HomePage', () => {
         isLoading: true,
         isError: false,
         error: null,
-        refetch: vi.fn(),
+        refetch: jest.fn(),
       } as any)
 
       renderHomePage()
@@ -609,7 +608,7 @@ describe('HomePage', () => {
         isLoading: true,
         isError: false,
         error: null,
-        refetch: vi.fn(),
+        refetch: jest.fn(),
       } as any)
 
       renderHomePage()
@@ -617,7 +616,7 @@ describe('HomePage', () => {
     })
 
     it('muestra error state cuando falla la carga', () => {
-      const mockRefetch = vi.fn()
+      const mockRefetch = jest.fn()
       mockUseFeaturedAcademies.mockReturnValue({
         data: undefined,
         isLoading: false,
@@ -636,7 +635,7 @@ describe('HomePage', () => {
     })
 
     it('permite reintentar la carga cuando hay error', async () => {
-      const mockRefetch = vi.fn()
+      const mockRefetch = jest.fn()
       mockUseFeaturedAcademies.mockReturnValue({
         data: undefined,
         isLoading: false,
@@ -715,7 +714,7 @@ describe('HomePage', () => {
         isLoading: false,
         isError: false,
         error: null,
-        refetch: vi.fn(),
+        refetch: jest.fn(),
       } as any)
 
       renderHomePage()
@@ -893,7 +892,7 @@ describe('HomePage', () => {
         isLoading: false,
         isError: false,
         error: null,
-        refetch: vi.fn(),
+        refetch: jest.fn(),
       } as any)
 
       renderHomePage()
@@ -918,7 +917,7 @@ describe('HomePage', () => {
         isLoading: false,
         isError: false,
         error: null,
-        refetch: vi.fn(),
+        refetch: jest.fn(),
       } as any)
 
       renderHomePage()
@@ -959,7 +958,7 @@ describe('HomePage', () => {
         isLoading: false,
         isError: false,
         error: null,
-        refetch: vi.fn(),
+        refetch: jest.fn(),
       } as any)
 
       renderHomePage()
@@ -1035,7 +1034,7 @@ describe('HomePage', () => {
         isLoading: true,
         isError: false,
         error: null,
-        refetch: vi.fn(),
+        refetch: jest.fn(),
       } as any)
 
       mockUseFeaturedCourses.mockReturnValue({
@@ -1043,7 +1042,7 @@ describe('HomePage', () => {
         isLoading: false,
         isError: false,
         error: null,
-        refetch: vi.fn(),
+        refetch: jest.fn(),
       } as any)
 
       renderHomePage()

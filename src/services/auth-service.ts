@@ -7,7 +7,8 @@ import type {
   RegisterResponse,
   MessageResponse,
 } from '@/types'
-import apiClient, { tokenManager } from '@/lib/api-client'
+import apiClient from '@/lib/api-client'
+import { tokenStorage } from '@/lib/token-storage'
 
 /**
  * Authentication Service
@@ -24,12 +25,8 @@ class AuthService {
       auth: credentials,
     })
 
-    // Store tokens automatically
-    tokenManager.setTokens({
-      access_token: response.data.access_token,
-      refresh_token: response.data.refresh_token,
-      expires_in: response.data.expires_in,
-    })
+    // Note: tokens are stored by the auth store (auth-store.ts)
+    // after this method returns — no need to persist here.
 
     return response.data
   }
@@ -58,14 +55,14 @@ class AuthService {
    */
   async logout(): Promise<void> {
     try {
-      const refreshToken = tokenManager.getRefreshToken()
+      const refreshToken = tokenStorage.getRefreshToken()
       if (refreshToken) {
         await apiClient.delete('/auth/logout', {
           data: { refresh_token: refreshToken },
         })
       }
     } finally {
-      tokenManager.clearTokens()
+      tokenStorage.clearTokens()
     }
   }
 
@@ -74,7 +71,7 @@ class AuthService {
    * @returns Promise with new auth tokens
    */
   async refreshTokens(): Promise<AuthTokens> {
-    const refreshToken = tokenManager.getRefreshToken()
+    const refreshToken = tokenStorage.getRefreshToken()
     if (!refreshToken) {
       throw new Error('No refresh token available')
     }
@@ -83,7 +80,8 @@ class AuthService {
       refresh_token: refreshToken,
     })
 
-    tokenManager.setTokens(response.data)
+    // Persist new tokens via the canonical storage
+    tokenStorage.setTokens(response.data)
     return response.data
   }
 

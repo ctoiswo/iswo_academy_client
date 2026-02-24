@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { StatsWidget } from '@/components/dashboard/stats-widget'
+import { StatCard } from '@/components/dashboard/stat-card'
 import { DashboardCard } from '@/components/dashboard/dashboard-card'
 import { Users, BookOpen, DollarSign, UserCheck } from 'lucide-react'
 import { academyAdminQueries } from '@/lib/api/academy-admin'
@@ -47,14 +47,6 @@ export function AcademyStatsOverview({
     enabled: !!(academy?.slug || academy?.id) && !loading,
   })
 
-  const getChangeType = (
-    change: number
-  ): 'increase' | 'decrease' | 'neutral' => {
-    if (change > 0) return 'increase'
-    if (change < 0) return 'decrease'
-    return 'neutral'
-  }
-
   if (error) {
     return (
       <DashboardCard title='Error' variant='outline'>
@@ -68,48 +60,52 @@ export function AcademyStatsOverview({
   return (
     <div className='space-y-6'>
       {/* Main Statistics Grid */}
-      <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-        <StatsWidget
-          title='Total Estudiantes'
-          value={stats?.totalStudents || 0}
-          change={stats?.monthlyGrowth.students}
-          changeType={getChangeType(stats?.monthlyGrowth.students || 0)}
+      <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
+        <StatCard
+          label='Total Estudiantes'
+          value={isLoading ? '—' : (stats?.totalStudents ?? 0).toLocaleString()}
           icon={Users}
+          iconBg='bg-emerald-500/10'
+          iconColor='text-emerald-400'
           loading={isLoading}
-          format='number'
           description='Estudiantes activos inscritos'
         />
 
-        <StatsWidget
-          title='Total Profesores'
-          value={stats?.totalTeachers || 0}
-          change={stats?.monthlyGrowth.teachers}
-          changeType={getChangeType(stats?.monthlyGrowth.teachers || 0)}
+        <StatCard
+          label='Total Profesores'
+          value={isLoading ? '—' : (stats?.totalTeachers ?? 0).toLocaleString()}
           icon={UserCheck}
+          iconBg='bg-primary/10'
+          iconColor='text-primary'
           loading={isLoading}
-          format='number'
           description='Personal docente activo'
         />
 
-        <StatsWidget
-          title='Cursos Activos'
-          value={stats?.totalCourses || 0}
-          change={stats?.monthlyGrowth.courses}
-          changeType={getChangeType(stats?.monthlyGrowth.courses || 0)}
+        <StatCard
+          label='Cursos Activos'
+          value={isLoading ? '—' : (stats?.totalCourses ?? 0).toLocaleString()}
           icon={BookOpen}
+          iconBg='bg-violet-500/10'
+          iconColor='text-violet-400'
           loading={isLoading}
-          format='number'
           description='Cursos publicados'
         />
 
-        <StatsWidget
-          title='Ingresos de la Academia'
-          value={stats?.academyRevenue || 0}
-          change={stats?.monthlyGrowth.revenue}
-          changeType={getChangeType(stats?.monthlyGrowth.revenue || 0)}
+        <StatCard
+          label='Ingresos'
+          value={
+            isLoading
+              ? '—'
+              : new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                  maximumFractionDigits: 0,
+                }).format(stats?.academyRevenue ?? 0)
+          }
           icon={DollarSign}
+          iconBg='bg-amber-500/10'
+          iconColor='text-amber-400'
           loading={isLoading}
-          format='currency'
           description='Ingresos mensuales totales'
         />
       </div>

@@ -1,9 +1,8 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { HeroSection } from '../hero-section'
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
@@ -12,7 +11,7 @@ vi.mock('framer-motion', () => ({
 }))
 
 // Mock react-i18next
-vi.mock('react-i18next', () => ({
+jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
@@ -28,13 +27,13 @@ vi.mock('react-i18next', () => ({
 }))
 
 // Mock GlobalSearchBar component
-vi.mock('@/components/search/global-search-bar', () => ({
+jest.mock('@/components/search/global-search-bar', () => ({
   GlobalSearchBar: () => <div data-testid='global-search-bar'>Search Bar</div>,
 }))
 
 describe('HeroSection', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   describe('Content rendering', () => {

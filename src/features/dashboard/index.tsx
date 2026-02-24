@@ -18,7 +18,6 @@ import { TopNav } from '@/components/layout/top-nav'
 import { NotificationDropdown } from '@/components/notifications'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 
@@ -37,7 +36,6 @@ export function Dashboard() {
             <Search />
             <PointsDisplay compact />
             <NotificationDropdown />
-            <ThemeSwitch />
             <ConfigDrawer />
             <ProfileDropdown />
           </div>
@@ -195,7 +193,6 @@ export function Dashboard() {
           <Search />
           <PointsDisplay compact />
           <NotificationDropdown />
-          <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
         </div>

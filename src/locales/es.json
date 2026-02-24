@@ -65,7 +65,15 @@
         "emailInvalid": "Por favor ingresa una dirección de correo electrónico válida",
         "passwordRequired": "Por favor ingresa tu contraseña",
         "passwordMin": "La contraseña debe tener al menos 7 caracteres"
-      }
+      },
+      "continueWithGoogle": "Continuar con Google",
+      "continueWithGithub": "Continuar con GitHub",
+      "orContinueWithEmail": "o continúa con email",
+      "rememberMe": "Recordar mi sesión",
+      "signUpFree": "Regístrate aquí, es gratis",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña",
+      "errorMessage": "Error al iniciar sesión. Inténtalo de nuevo."
     },
     "signUp": {
       "title": "Crear cuenta",
@@ -96,14 +104,21 @@
       "description": "Ingresa tu correo electrónico registrado y te enviaremos un enlace para restablecer tu contraseña.",
       "email": "Correo electrónico",
       "emailPlaceholder": "nombre@ejemplo.com",
-      "button": "Enviar correo de recuperación",
+      "button": "Enviar enlace de recuperación",
       "sending": "Enviando correo...",
       "backToLogin": "Volver al inicio de sesión",
+      "backToSignIn": "Volver a iniciar sesión",
       "rememberPassword": "¿Recuerdas tu contraseña?",
-      "signIn": "Iniciar sesión",
+      "signIn": "Volver a iniciar sesión",
       "noAccount": "¿No tienes una cuenta?",
       "signUp": "Registrarse",
       "successMessage": "Las instrucciones para restablecer la contraseña han sido enviadas a tu dirección de correo electrónico.",
+      "checkEmailTitle": "Revisa tu correo",
+      "checkEmailDesc": "Hemos enviado un enlace de recuperación a",
+      "checkEmailInstructions": "Revisa tu bandeja de entrada y haz clic en el enlace para restablecer tu contraseña.",
+      "checkSpam": "No olvides revisar la carpeta de spam si no lo encuentras.",
+      "linkExpiry": "El enlace expira en 1 hora.",
+      "resendEmail": "Reenviar correo",
       "validation": {
         "emailRequired": "Por favor ingresa tu correo electrónico",
         "emailInvalid": "Por favor ingresa una dirección de correo electrónico válida"
@@ -125,16 +140,38 @@
       "registerAnotherButton": "Registrar Otra Cuenta",
       "funFact": "Dato curioso:",
       "funFactText": "Los usuarios verificados tienen acceso a contenido premium desde el primer día.",
-      "checkEmail": "Por favor revisa tu correo electrónico y sigue las instrucciones para restablecer tu contraseña. Si no ves el correo, revisa tu carpeta de spam."
+      "checkEmail": "Por favor revisa tu correo electrónico y sigue las instrucciones para restablecer tu contraseña. Si no ves el correo, revisa tu carpeta de spam.",
+      "linkExpires": "El enlace expira en 24 horas",
+      "featureCoursesTitle": "500+ cursos",
+      "featureCoursesDesc": "De expertos reales",
+      "featureCertsTitle": "Certificados",
+      "featureCertsDesc": "Al completar cursos",
+      "featureAccessTitle": "Acceso total",
+      "featureAccessDesc": "A todas las academias",
+      "backToHome": "Volver al inicio",
+      "noEmail": "¿No recibiste el correo?",
+      "resendVerification": "Reenviar verificación"
     },
     "confirmEmail": {
       "title": "Confirmación de Email",
       "subtitle": "Estamos verificando tu correo electrónico para activar tu cuenta en ISWO Academy",
       "loading": "Confirmando tu email...",
-      "successTitle": "¡Email confirmado!",
+      "successTitle": "Correo confirmado exitosamente",
       "errorTitle": "Error de confirmación",
       "success": "¡Tu email ha sido confirmado exitosamente! Ahora puedes iniciar sesión.",
-      "goToLogin": "Iniciar Sesión",
+      "successDesc": "Tu cuenta está completamente activa. Ya puedes iniciar sesión y comenzar tu viaje de aprendizaje extraordinario.",
+      "verifiedBadge": "Correo verificado",
+      "rocketTitle": "Todo listo para despegar",
+      "rocketDesc": "Tu cuenta ha sido verificada correctamente. Inicia sesión para explorar academias, inscribirte en cursos y comenzar a aprender de los mejores expertos.",
+      "nowYouCan": "Ahora puedes",
+      "featureExplore": "Explorar cursos",
+      "featureExploreDesc": "Más de 500 cursos de expertos",
+      "featureJoin": "Unirte a academias",
+      "featureJoinDesc": "Comunidades de aprendizaje",
+      "featureCertify": "Ganar certificados",
+      "featureCertifyDesc": "Valida tus conocimientos",
+      "goToLogin": "Iniciar sesión ahora",
+      "goHome": "Volver al inicio",
       "retry": "Intentar Nuevamente",
       "errors": {
         "noToken": "Token de confirmación no encontrado."
@@ -152,7 +189,7 @@
       "button": "Restablecer contraseña",
       "resetting": "Restableciendo contraseña...",
       "rememberPassword": "¿Recuerdas tu contraseña?",
-      "signIn": "Iniciar sesión",
+      "signIn": "Volver a iniciar sesión",
       "invalidLink": {
         "title": "Enlace inválido",
         "layoutTitle": "Enlace de restablecimiento inválido",
@@ -170,12 +207,53 @@
         "passwordsMismatch": "Las contraseñas no coinciden"
       }
     },
+    "passwordChanged": {
+      "securityBadge": "Seguridad actualizada",
+      "title": "Contraseña cambiada exitosamente",
+      "desc": "Tu contraseña ha sido restablecida correctamente. Tu cuenta está segura y protegida. Ya puedes iniciar sesión con tu nueva contraseña.",
+      "protectedTitle": "Cuenta protegida",
+      "protectedDesc": "Todas las sesiones anteriores han sido cerradas por seguridad. Inicia sesión nuevamente con tu contraseña actualizada.",
+      "tipsLabel": "Consejos de seguridad",
+      "tipSecureTitle": "Contraseña segura",
+      "tipSecureDesc": "Usa combinaciones únicas",
+      "tip2FATitle": "Autenticación 2FA",
+      "tip2FADesc": "Activa doble verificación",
+      "tipSessionsTitle": "Sesiones activas",
+      "tipSessionsDesc": "Revisa tus dispositivos",
+      "signInNow": "Iniciar sesión ahora",
+      "goHome": "Volver al inicio"
+    },
     "layout": {
       "features": {
         "createAcademy": "Crea tu propia academia online",
         "qualityCourses": "Accede a cursos de calidad",
         "certifications": "Certificaciones reconocidas"
-      }
+      },
+      "welcomeBack": "Bienvenido de vuelta",
+      "joinCommunity": "Únete a la comunidad",
+      "titleSignin": "El conocimiento te espera",
+      "titleSignup": "Comienza tu viaje de aprendizaje",
+      "descSignin": "Accede a tus cursos, revisa tu progreso y continúa aprendiendo con los mejores expertos.",
+      "descSignup": "Miles de estudiantes ya transformaron su carrera. Crea tu cuenta y accede a cursos de clase mundial.",
+      "statsStudents": "{{n}}+ estudiantes",
+      "statsCourses": "{{n}}+ cursos",
+      "statsAcademies": "{{n}}+ academias",
+      "testimonial1": {
+        "quote": "ISWO Academy transformó la manera en que comparto mis conocimientos con la comunidad.",
+        "author": "Carlos M.",
+        "role": "Creador de academia"
+      },
+      "testimonial2": {
+        "quote": "Los cursos son de una calidad excepcional. Aprendí más en 3 meses que en un año en la universidad.",
+        "author": "Laura S.",
+        "role": "Estudiante"
+      },
+      "testimonial3": {
+        "quote": "Crear mi propia academia fue increíblemente fácil. Ya tengo más de 2,000 estudiantes.",
+        "author": "Miguel R.",
+        "role": "Instructor"
+      },
+      "testimonialDot": "Testimonio {{index}}"
     }
   },
   "legal": {
@@ -613,6 +691,185 @@
       "beginner": "Principiante",
       "intermediate": "Intermedio",
       "advanced": "Avanzado"
+    }
+  },
+  "createAcademy": {
+    "title": "Crea tu Academia",
+    "subtitle": "Comparte tu conocimiento y construye una comunidad de aprendizaje",
+    "formTitle": "Información de tu Academia",
+    "formDescription": "Completa los pasos para crear tu academia. Podrás editarla después.",
+    "steps": {
+      "basicInfo": "Información básica",
+      "branding": "Identidad visual",
+      "settings": "Configuración"
+    },
+    "fields": {
+      "name": "Nombre de la academia",
+      "namePlaceholder": "Ej: Academia de Programación Web",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describe qué aprenderán tus estudiantes...",
+      "descriptionHelp": "Sé específico sobre los temas y el perfil de estudiante ideal.",
+      "category": "Categoría",
+      "categoryPlaceholder": "Selecciona una categoría",
+      "slug": "URL de tu academia",
+      "slugHelp": "Solo letras minúsculas, números y guiones. No podrás cambiarlo después.",
+      "website": "Sitio web (opcional)",
+      "logoUrl": "URL del logo (opcional)",
+      "logoUrlHelp": "Enlace directo a la imagen del logo (PNG o SVG recomendado).",
+      "bannerUrl": "URL del banner (opcional)",
+      "bannerUrlHelp": "Imagen de portada para tu academia (1200x400 px recomendado).",
+      "isPublic": "Academia pública",
+      "isPublicHelp": "Si está activa, cualquier persona puede encontrar y ver tu academia.",
+      "subscriptionRequired": "Requiere suscripción",
+      "subscriptionRequiredHelp": "Los estudiantes deberán pagar para acceder al contenido.",
+      "monthlyPrice": "Precio mensual (COP)",
+      "monthlyPriceHelp": "Precio que pagarán los estudiantes mensualmente.",
+      "mission": "Misión (opcional)",
+      "missionPlaceholder": "¿Cuál es la misión de tu academia?",
+      "vision": "Visión (opcional)",
+      "visionPlaceholder": "¿Hacia dónde quieres llevar tu academia?"
+    },
+    "actions": {
+      "next": "Siguiente",
+      "back": "Atrás",
+      "create": "Crear Academia"
+    },
+    "success": {
+      "toastMessage": "¡Academia creada exitosamente!",
+      "title": "¡Academia creada!",
+      "subtitle": "Tu academia ha sido creada y está lista para configurar.",
+      "inactiveBadge": "Inactiva",
+      "activateTitle": "Próximo paso: activa tu academia",
+      "activateDescription": "Para que tus estudiantes puedan acceder, debes activar tu academia pagando la suscripción anual de administrador.",
+      "goHome": "Ir al inicio",
+      "viewAcademy": "Ver academia"
+    },
+    "errors": {
+      "generic": "No se pudo crear la academia. Inténtalo de nuevo."
+    }
+  },
+  "pages": {
+    "home": {
+      "hero": {
+        "badge": "Plataforma de aprendizaje #1 en habla hispana",
+        "headline": "Transforma",
+        "headlineSuffix": "con los mejores cursos",
+        "rotatingWords": [
+          "tu carrera",
+          "tu futuro",
+          "tus habilidades",
+          "tu potencial"
+        ],
+        "subtitle": "Accede a cientos de cursos de expertos o crea tu propia academia y comparte el conocimiento que has acumulado con el mundo.",
+        "exploreCourses": "Explorar cursos",
+        "createAcademy": "Crea tu academia"
+      },
+      "academies": {
+        "eyebrow": "Academias destacadas",
+        "title": "Aprende de los mejores creadores",
+        "subtitle": "Explora academias curadas por expertos en cada categoría. Inscríbete a una academia completa o elige los cursos que necesites.",
+        "viewAll": "Ver todas las academias",
+        "countLabel": "{{count}} academias"
+      },
+      "courses": {
+        "eyebrow": "Cursos destacados",
+        "title": "Impulsa tu aprendizaje",
+        "subtitle": "Cursos creados por profesionales con experiencia real. Compra uno o inscríbete a una academia completa.",
+        "viewAll": "Ver todos los cursos",
+        "prevLabel": "Anterior",
+        "nextLabel": "Siguiente",
+        "card": {
+          "by": "por",
+          "lessons": "lecciones",
+          "viewCourse": "Ver curso"
+        }
+      },
+      "features": {
+        "eyebrow": "Por qué ISWO Academy",
+        "title": "Todo lo que necesitas para aprender y enseñar",
+        "subtitle": "Una plataforma completa para estudiantes que quieren crecer y para expertos que quieren compartir.",
+        "items": {
+          "qualityCourses": {
+            "title": "Cursos de calidad",
+            "description": "Contenido curado por expertos con experiencia real en la industria."
+          },
+          "learnAtYourPace": {
+            "title": "Aprende a tu ritmo",
+            "description": "Acceso de por vida a tus cursos. Sin prisas, sin fechas límite."
+          },
+          "verifiedCerts": {
+            "title": "Certificados verificados",
+            "description": "Obtén certificados que validan tu conocimiento ante empleadores."
+          },
+          "createAcademy": {
+            "title": "Crea tu academia",
+            "description": "Comparte lo que sabes. Monta tu propia academia y monetiza tu experiencia."
+          },
+          "analytics": {
+            "title": "Analíticas en tiempo real",
+            "description": "Monitorea tu progreso o el de tus estudiantes con dashboards detallados."
+          },
+          "community": {
+            "title": "Comunidad activa",
+            "description": "Conecta con miles de estudiantes y creadores de contenido."
+          }
+        }
+      },
+      "cta": {
+        "title": "¿Listo para compartir tu conocimiento?",
+        "subtitle": "Crea tu propia academia, sube tus cursos y llega a miles de estudiantes. Empieza hoy y transforma tu experiencia en ingresos.",
+        "createAcademy": "Crear mi academia",
+        "exploreCourses": "Explorar cursos"
+      }
+    }
+  },
+  "coursesLanding": {
+    "hero": {
+      "badge": "{{count}}+ cursos disponibles",
+      "title": "Explora todos nuestros",
+      "titleHighlight": "cursos",
+      "subtitle": "Aprende con los mejores profesionales. Desde fundamentos hasta niveles avanzados, encuentra el curso perfecto para ti.",
+      "searchPlaceholder": "Buscar cursos, instructores..."
+    },
+    "card": {
+      "by": "por",
+      "lessons": "lecciones",
+      "enrolled": "Inscrito",
+      "continueCourse": "Continuar curso",
+      "viewCourse": "Ver curso",
+      "certificate": "Certificado",
+      "free": "Gratis",
+      "general": "General"
+    }
+  },
+  "academiesLanding": {
+    "hero": {
+      "badge": "{{count}}+ academias disponibles",
+      "title": "Encuentra tu",
+      "titleHighlight": "academia ideal",
+      "subtitle": "Academias creadas por expertos en cada categoría. Aprende con los mejores y acelera tu carrera profesional.",
+      "searchPlaceholder": "Buscar academias, instructores..."
+    },
+    "filter": {
+      "all": "Todas ›",
+      "allAcademies": "Todas las academias",
+      "resultsCount_one": "{{count}} academia",
+      "resultsCount_other": "{{count}} academias"
+    },
+    "card": {
+      "by": "por",
+      "courses": "cursos",
+      "viewAcademy": "Ver academia"
+    },
+    "emptyState": {
+      "title": "Sin resultados",
+      "description": "No encontramos academias con ese criterio. Intenta con otra palabra clave o categoría.",
+      "clearFilters": "Limpiar filtros"
+    },
+    "cta": {
+      "title": "¿Quieres crear tu propia academia?",
+      "description": "Únete a más de 120 creadores que ya comparten su conocimiento.",
+      "button": "Crear mi academia"
     }
   }
 }

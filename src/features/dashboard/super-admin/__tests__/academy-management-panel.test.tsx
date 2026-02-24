@@ -1,10 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { AcademyManagementPanel } from '../components/academy-management-panel'
 import type { AcademyOverview } from '../index'
 
 // Mock UI components
-vi.mock('@/components/ui/button', () => ({
+jest.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, size, variant, ...props }: any) => (
     <button
       onClick={onClick}
@@ -17,7 +16,7 @@ vi.mock('@/components/ui/button', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/input', () => ({
+jest.mock('@/components/ui/input', () => ({
   Input: ({ placeholder, value, onChange, className, ...props }: any) => (
     <input
       placeholder={placeholder}
@@ -29,13 +28,13 @@ vi.mock('@/components/ui/input', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/badge', () => ({
+jest.mock('@/components/ui/badge', () => ({
   Badge: ({ children, variant }: any) => (
     <span data-variant={variant}>{children}</span>
   ),
 }))
 
-vi.mock('@/components/ui/table', () => ({
+jest.mock('@/components/ui/table', () => ({
   Table: ({ children }: any) => <table>{children}</table>,
   TableHeader: ({ children }: any) => <thead>{children}</thead>,
   TableBody: ({ children }: any) => <tbody>{children}</tbody>,
@@ -48,7 +47,7 @@ vi.mock('@/components/ui/table', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/dropdown-menu', () => ({
+jest.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenu: ({ children }: any) => <div>{children}</div>,
   DropdownMenuTrigger: ({ children, asChild }: any) => <div>{children}</div>,
   DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
@@ -57,7 +56,7 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
   ),
 }))
 
-vi.mock('@/components/dashboard', () => ({
+jest.mock('@/components/dashboard', () => ({
   DashboardCard: ({ title, description, action, children }: any) => (
     <div data-testid='dashboard-card'>
       {title && <div data-testid='card-title'>{title}</div>}

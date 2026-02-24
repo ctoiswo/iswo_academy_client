@@ -1,57 +1,35 @@
 /**
- * Home Page
- * Main landing page with featured academies and courses
+ * Home Page – Landing design following app design system
  */
-import { useState } from 'react'
-import {
-  useFeaturedAcademies,
-  useAcademyCategories,
-  useFeaturedCourses,
-} from '@/hooks/use-featured-content'
-import { AcademiesSection } from './components/academies-section'
-import { CategoriesFilter } from './components/categories-filter'
-import { CoursesSection } from './components/courses-section'
-import { CTASection } from './components/cta-section'
-import { Footer } from './components/footer'
-import { Header } from './components/header'
-import { HeroSection } from './components/hero-section'
+import { Particles } from '@/components/ui/particles'
+import { HeroSection } from './containers/hero-section'
+import { AcademiesSection } from './containers/academies-section'
+import { CoursesSection } from './containers/courses-section'
+import { FeaturesSection } from './containers/features-section'
+import { CTASection } from './containers/cta-section'
+import { Navbar, Footer } from '@/components'
 
 export function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
-
-  // Fetch data
-  const categoriesQuery = useAcademyCategories()
-  const academiesQuery = useFeaturedAcademies(selectedCategory || undefined)
-  const coursesQuery = useFeaturedCourses(selectedCategory || undefined)
-
   return (
-    <div className='bg-background min-h-screen'>
-      <Header />
-
-      <HeroSection />
-
-      <CategoriesFilter
-        categories={categoriesQuery.data || []}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        isLoading={categoriesQuery.isLoading}
+    <div className='relative min-h-screen flex flex-col'>
+      <Particles
+        className='fixed inset-0 z-0 pointer-events-none'
+        quantity={120}
+        ease={80}
+        size={0.4}
+        staticity={50}
       />
-
-      <AcademiesSection
-        data={academiesQuery.data || []}
-        isLoading={academiesQuery.isLoading}
-        isError={academiesQuery.isError}
-        onRetry={academiesQuery.refetch}
-      />
-
-      <CoursesSection
-        data={coursesQuery.data || []}
-        isLoading={coursesQuery.isLoading}
-      />
-
-      <CTASection />
-
-      <Footer />
+      <div className='relative z-10 flex flex-col flex-1'>
+        <Navbar />
+        <main>
+          <HeroSection />
+          <AcademiesSection />
+          <CoursesSection />
+          <FeaturesSection />
+          <CTASection />
+        </main>
+        <Footer />
+      </div>
     </div>
   )
 }

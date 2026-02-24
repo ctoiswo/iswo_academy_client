@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import type { Enrollment } from '../../types'
 import { MyCourses } from '../my-courses'
 
@@ -114,7 +113,7 @@ describe('MyCourses', () => {
   })
 
   it('calls onContinueCourse when Continue button is clicked', () => {
-    const mockOnContinue = vi.fn()
+    const mockOnContinue = jest.fn()
     render(
       <MyCourses
         enrollments={mockEnrollments}
@@ -129,7 +128,7 @@ describe('MyCourses', () => {
   })
 
   it('calls onViewCertificate when View Certificate button is clicked', () => {
-    const mockOnViewCertificate = vi.fn()
+    const mockOnViewCertificate = jest.fn()
     render(
       <MyCourses
         enrollments={mockEnrollments}

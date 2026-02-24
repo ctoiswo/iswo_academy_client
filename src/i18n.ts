@@ -2,8 +2,9 @@ import i18n from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 import enTranslations from './locales/en.json'
-// Importar traducciones
 import esTranslations from './locales/es.json'
+import frTranslations from './locales/fr.json'
+import itTranslations from './locales/it.json'
 
 // Configuración de i18next
 i18n
@@ -15,19 +16,17 @@ i18n
   .init({
     // Configurar traducciones
     resources: {
-      es: {
-        translation: esTranslations,
-      },
-      en: {
-        translation: enTranslations,
-      },
+      es: { translation: esTranslations },
+      en: { translation: enTranslations },
+      fr: { translation: frTranslations },
+      it: { translation: itTranslations },
     },
 
     // Idioma por defecto
     fallbackLng: 'es',
 
     // Idiomas soportados
-    supportedLngs: ['es', 'en'],
+    supportedLngs: ['es', 'en', 'fr', 'it'],
 
     // Configuración del detector de idioma
     detection: {

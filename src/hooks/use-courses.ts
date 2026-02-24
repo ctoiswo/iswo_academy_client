@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import { courseService } from '@/services/course-service'
 import type {
   CourseFilters,
@@ -114,6 +114,39 @@ export function useAllCourses(filters?: CourseFilters) {
   return useQuery({
     queryKey: ['all-courses', filters],
     queryFn: () => courseService.getAllCourses(filters),
+  })
+}
+
+/**
+ * Hook for the public courses landing page.
+ * Works for both guests and authenticated users — the backend returns
+ * :minimal or :summary view automatically based on the JWT token.
+ */
+export function usePublicCourses(filters?: CourseFilters) {
+  return useQuery({
+    queryKey: ['public-courses', filters],
+    queryFn: () => courseService.getPublicCourses(filters),
+    staleTime: 60_000, // 1 minute — public listing doesn't need to be live
+    placeholderData: (prev) => prev, // Keep previous data while fetching new filters
+  })
+}
+
+/**
+ * Infinite-scroll hook for the public courses landing page.
+ * Fetches courses page by page as the user scrolls.
+ * Works for both guests and authenticated users.
+ */
+export function usePublicCoursesInfinite(filters?: Omit<CourseFilters, 'page'>) {
+  return useInfiniteQuery({
+    queryKey: ['public-courses-infinite', filters],
+    queryFn: ({ pageParam }) =>
+      courseService.getPublicCourses({ ...filters, page: pageParam as number }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { current_page, total_pages } = lastPage.meta
+      return current_page < total_pages ? current_page + 1 : undefined
+    },
+    staleTime: 60_000,
   })
 }
 

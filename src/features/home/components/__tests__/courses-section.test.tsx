@@ -1,16 +1,15 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { CoursesSection } from '../courses-section'
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
 }))
 
 // Mock react-i18next
-vi.mock('react-i18next', () => ({
+jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
@@ -26,7 +25,7 @@ vi.mock('react-i18next', () => ({
 }))
 
 // Mock TanStack Router
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   Link: ({ children, to, ...props }: any) => (
     <a href={to} {...props}>
       {children}
@@ -35,7 +34,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Mock lucide-react
-vi.mock('lucide-react', () => ({
+jest.mock('lucide-react', () => ({
   Loader2: ({ className }: { className?: string }) => (
     <div className={className} data-testid='loader-icon'>
       Loading...
@@ -59,7 +58,7 @@ vi.mock('lucide-react', () => ({
 }))
 
 // Mock UI components
-vi.mock('@/components/ui/button', () => ({
+jest.mock('@/components/ui/button', () => ({
   Button: ({ children, size, variant, asChild, ...props }: any) => {
     const Component = asChild ? 'div' : 'button'
     return (
@@ -76,7 +75,7 @@ vi.mock('@/components/ui/button', () => ({
 }))
 
 // Mock CourseCard component
-vi.mock('../course-card', () => ({
+jest.mock('../course-card', () => ({
   CourseCard: ({ course, index }: any) => (
     <div data-testid={`course-card-${course.id}`} data-index={index}>
       <h4>{course.title}</h4>

@@ -15,6 +15,9 @@ import { create } from 'zustand'
 import { tokenManager } from '@/lib/api-client'
 import { tokenStorage } from '@/lib/token-storage'
 
+// Centralized localStorage key - avoid magic strings scattered across the store
+const CURRENT_ACADEMY_KEY = 'currentAcademyId'
+
 // Re-export types for backward compatibility
 export type { AuthUser, AcademyMembership, AcademyData, AuthTokens }
 export type LoginCredentials = LoginRequest
@@ -128,7 +131,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         // Auto-select the single academy and redirect to role-specific dashboard
         const singleAcademy = academyData.academies[0]
         set({ currentAcademy: singleAcademy })
-        localStorage.setItem('currentAcademyId', singleAcademy.id.toString())
+        localStorage.setItem(CURRENT_ACADEMY_KEY, singleAcademy.id.toString())
 
         // Determine dashboard path based on user role
         let dashboardPath = `/academy/${singleAcademy.id}/dashboard`
@@ -204,7 +207,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
       // Clear tokens from storage
       tokenStorage.clearTokens()
-      localStorage.removeItem('currentAcademyId')
+      localStorage.removeItem(CURRENT_ACADEMY_KEY)
 
       set({
         user: null,
@@ -286,7 +289,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   reset: () => {
     tokenStorage.clearTokens()
-    localStorage.removeItem('currentAcademyId')
+    localStorage.removeItem(CURRENT_ACADEMY_KEY)
     set({
       user: null,
       tokens: null,
@@ -365,7 +368,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     )
     if (selectedAcademy) {
       set({ currentAcademy: selectedAcademy as AcademyMembership })
-      localStorage.setItem('currentAcademyId', academyId.toString())
+      localStorage.setItem(CURRENT_ACADEMY_KEY, academyId.toString())
     }
   },
 
@@ -382,7 +385,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       set({ academyData: academyData as unknown as AcademyData })
 
       // If user had a currentAcademy stored, try to restore it
-      const storedAcademyId = localStorage.getItem('currentAcademyId')
+      const storedAcademyId = localStorage.getItem(CURRENT_ACADEMY_KEY)
       if (storedAcademyId && academyData.academies.length > 0) {
         const academy = academyData.academies.find(
           (a: AcademySummaryLight) => a.id === parseInt(storedAcademyId)
@@ -392,14 +395,14 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         } else if (academyData.count === 1) {
           set({ currentAcademy: academyData.academies[0] as unknown as AcademyMembership })
           localStorage.setItem(
-            'currentAcademy Id',
+            CURRENT_ACADEMY_KEY,
             academyData.academies[0].id.toString()
           )
         }
       } else if (academyData.count === 1) {
         set({ currentAcademy: academyData.academies[0] as unknown as AcademyMembership })
         localStorage.setItem(
-          'currentAcademyId',
+          CURRENT_ACADEMY_KEY,
           academyData.academies[0].id.toString()
         )
       }

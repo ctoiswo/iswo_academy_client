@@ -1,16 +1,15 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { useAuthStore } from '@/stores/auth-store'
 import { SignUp } from '../index'
 
 // Create mock navigate function
-const mockNavigate = vi.fn()
+const mockNavigate = jest.fn()
 
 // Mock dependencies
-vi.mock('@/lib/api-client')
-vi.mock('@/stores/auth-store')
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@/lib/api-client')
+jest.mock('@/stores/auth-store')
+jest.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
   Link: ({ children, to, ...props }: any) => (
     <a href={to} {...props}>
@@ -18,41 +17,41 @@ vi.mock('@tanstack/react-router', () => ({
     </a>
   ),
 }))
-vi.mock('sonner', () => ({
+jest.mock('sonner', () => ({
   toast: {
-    success: vi.fn(),
-    error: vi.fn(),
+    success: jest.fn(),
+    error: jest.fn(),
   },
 }))
 
-const mockUseAuthStore = vi.mocked(useAuthStore)
+const mockUseAuthStore = jest.mocked(useAuthStore)
 
 // Create default mock store to reuse
 const defaultMockStore = {
-  register: vi.fn(),
+  register: jest.fn(),
   user: null,
   tokens: null,
   isAuthenticated: false,
   isLoading: false,
   error: null,
-  login: vi.fn(),
-  logout: vi.fn(),
-  refreshTokens: vi.fn(),
-  setUser: vi.fn(),
-  setTokens: vi.fn(),
-  setLoading: vi.fn(),
-  setError: vi.fn(),
-  reset: vi.fn(),
-  initialize: vi.fn(),
+  login: jest.fn(),
+  logout: jest.fn(),
+  refreshTokens: jest.fn(),
+  setUser: jest.fn(),
+  setTokens: jest.fn(),
+  setLoading: jest.fn(),
+  setError: jest.fn(),
+  reset: jest.fn(),
+  initialize: jest.fn(),
   auth: {
     user: null,
-    setUser: vi.fn(),
+    setUser: jest.fn(),
     accessToken: '',
-    setAccessToken: vi.fn(),
+    setAccessToken: jest.fn(),
     refreshToken: '',
-    setRefreshToken: vi.fn(),
-    resetAccessToken: vi.fn(),
-    reset: vi.fn(),
+    setRefreshToken: jest.fn(),
+    resetAccessToken: jest.fn(),
+    reset: jest.fn(),
   },
 }
 
@@ -63,7 +62,7 @@ describe('Registration Flow Integration', () => {
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('renders the complete sign-up page', () => {
@@ -100,7 +99,7 @@ describe('Registration Flow Integration', () => {
       },
     }
 
-    const mockRegister = vi.fn().mockResolvedValue(mockRegisterResponse)
+    const mockRegister = jest.fn().mockResolvedValue(mockRegisterResponse)
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       register: mockRegister,
@@ -154,7 +153,7 @@ describe('Registration Flow Integration', () => {
       details: ['Email has already been taken'],
     }
 
-    const mockRegister = vi.fn().mockRejectedValue(mockError)
+    const mockRegister = jest.fn().mockRejectedValue(mockError)
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       register: mockRegister,
@@ -203,7 +202,7 @@ describe('Registration Flow Integration', () => {
       code: 'SERVER_ERROR',
     }
 
-    const mockRegister = vi.fn().mockRejectedValue(mockError)
+    const mockRegister = jest.fn().mockRejectedValue(mockError)
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       register: mockRegister,
@@ -252,7 +251,7 @@ describe('Registration Flow Integration', () => {
       code: 'NETWORK_ERROR',
     }
 
-    const mockRegister = vi.fn().mockRejectedValue(mockError)
+    const mockRegister = jest.fn().mockRejectedValue(mockError)
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       register: mockRegister,
@@ -299,7 +298,7 @@ describe('Registration Flow Integration', () => {
       message: 'Registration successful! Please check your email.',
     }
 
-    const mockRegister = vi.fn().mockResolvedValue(mockRegisterResponse)
+    const mockRegister = jest.fn().mockResolvedValue(mockRegisterResponse)
     mockUseAuthStore.mockReturnValue({
       ...defaultMockStore,
       register: mockRegister,

@@ -1,9 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { vi, describe, it, expect } from 'vitest'
 import { CourseSidebar } from '../components/course-sidebar'
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
@@ -26,8 +25,8 @@ describe('CourseSidebar', () => {
   const mockProps = {
     course: mockCourse,
     isSaved: false,
-    onSaveClick: vi.fn(),
-    onShareClick: vi.fn(),
+    onSaveClick: jest.fn(),
+    onShareClick: jest.fn(),
     formatPrice: (price: string) => `$${price}`,
     formatDifficulty: (level: string) =>
       level.charAt(0).toUpperCase() + level.slice(1),

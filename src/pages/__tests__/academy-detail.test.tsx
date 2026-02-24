@@ -1,38 +1,37 @@
 import type { AcademySummary } from '@/types'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { vi, beforeEach, describe, it, expect } from 'vitest'
 import { AcademyDetailPage } from '../../features/academy-detail/index'
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
 }))
 
 // Mock TanStack Router
-const mockUseParams = vi.fn()
-const mockUseRouter = vi.fn()
+const mockUseParams = jest.fn()
+const mockUseRouter = jest.fn()
 
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   useParams: () => mockUseParams(),
   useRouter: () => mockUseRouter(),
   Link: ({ children, ...props }: any) => <a {...props}>{children}</a>,
 }))
 
 // Mock useAcademy hook
-const mockUseAcademy = vi.fn()
-vi.mock('@/hooks/use-academy', () => ({
+const mockUseAcademy = jest.fn()
+jest.mock('@/hooks/use-academy', () => ({
   useAcademy: () => mockUseAcademy(),
 }))
 
 // Mock Header component
-vi.mock('@/features/home/components/header', () => ({
+jest.mock('@/features/home/components/header', () => ({
   Header: () => <header data-testid='public-header'>Header</header>,
 }))
 
 // Mock UI components
-vi.mock('@/components/ui/button', () => ({
+jest.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, ...props }: any) => (
     <button onClick={onClick} {...props}>
       {children}
@@ -40,7 +39,7 @@ vi.mock('@/components/ui/button', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/card', () => ({
+jest.mock('@/components/ui/card', () => ({
   Card: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   CardContent: ({ children, ...props }: any) => (
     <div {...props}>{children}</div>
@@ -49,7 +48,7 @@ vi.mock('@/components/ui/card', () => ({
   CardTitle: ({ children, ...props }: any) => <h3 {...props}>{children}</h3>,
 }))
 
-vi.mock('@/components/ui/tabs', () => ({
+jest.mock('@/components/ui/tabs', () => ({
   Tabs: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   TabsContent: ({ children, ...props }: any) => (
     <div {...props}>{children}</div>
@@ -60,11 +59,11 @@ vi.mock('@/components/ui/tabs', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/badge', () => ({
+jest.mock('@/components/ui/badge', () => ({
   Badge: ({ children, ...props }: any) => <span {...props}>{children}</span>,
 }))
 
-vi.mock('@/components/ui/avatar', () => ({
+jest.mock('@/components/ui/avatar', () => ({
   Avatar: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   AvatarFallback: ({ children, ...props }: any) => (
     <div {...props}>{children}</div>
@@ -72,12 +71,12 @@ vi.mock('@/components/ui/avatar', () => ({
   AvatarImage: ({ src, ...props }: any) => <img src={src} {...props} />,
 }))
 
-vi.mock('@/components/ui/separator', () => ({
+jest.mock('@/components/ui/separator', () => ({
   Separator: (props: any) => <hr {...props} />,
 }))
 
 // Mock CourseCard component
-vi.mock('@/components/course-card', () => ({
+jest.mock('@/components/course-card', () => ({
   CourseCard: ({ course }: any) => (
     <div data-testid='course-card'>
       <h4>{course.title}</h4>
@@ -87,7 +86,7 @@ vi.mock('@/components/course-card', () => ({
 }))
 
 // Mock Lucide React icons
-vi.mock('lucide-react', () => {
+jest.mock('lucide-react', () => {
   const MockIcon = ({ ...props }) => <span {...props} />
   return {
     ArrowLeft: MockIcon,
@@ -209,12 +208,12 @@ describe('AcademyDetailPage', () => {
 
   const mockRouter = {
     history: {
-      back: vi.fn(),
+      back: jest.fn(),
     },
   }
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     mockUseParams.mockReturnValue({ slug: 'react-avanzado' })
     mockUseRouter.mockReturnValue(mockRouter)
   })

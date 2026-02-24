@@ -1,5 +1,4 @@
 import { authApi } from '@/services'
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { tokenManager } from '@/lib/api-client'
 import { tokenStorage } from '@/lib/token-storage'
 import {
@@ -13,40 +12,40 @@ import {
 } from '../auth-store'
 
 // Mock dependencies
-vi.mock('@/lib/token-storage', () => ({
+jest.mock('@/lib/token-storage', () => ({
   tokenStorage: {
-    setTokens: vi.fn(),
-    getTokens: vi.fn(),
-    clearTokens: vi.fn(),
-    isTokenExpired: vi.fn(),
-    getAccessToken: vi.fn(),
-    getRefreshToken: vi.fn(),
-    hasValidTokens: vi.fn(),
+    setTokens: jest.fn(),
+    getTokens: jest.fn(),
+    clearTokens: jest.fn(),
+    isTokenExpired: jest.fn(),
+    getAccessToken: jest.fn(),
+    getRefreshToken: jest.fn(),
+    hasValidTokens: jest.fn(),
   },
 }))
 
-vi.mock('@/services', () => ({
+jest.mock('@/services', () => ({
   authApi: {
-    login: vi.fn(),
-    register: vi.fn(),
-    logout: vi.fn(),
-    refreshTokens: vi.fn(),
+    login: jest.fn(),
+    register: jest.fn(),
+    logout: jest.fn(),
+    refreshTokens: jest.fn(),
   },
   userApi: {
-    getProfile: vi.fn(),
+    getProfile: jest.fn(),
   },
 }))
 
-vi.mock('@/lib/api-client', () => ({
+jest.mock('@/lib/api-client', () => ({
   academyApi: {
-    getUserAcademies: vi.fn(),
+    getUserAcademies: jest.fn(),
   },
   tokenManager: {
-    initialize: vi.fn(),
-    refreshTokens: vi.fn(),
-    hasValidTokens: vi.fn(),
-    getTokenInfo: vi.fn(),
-    clearTokens: vi.fn(),
+    initialize: jest.fn(),
+    refreshTokens: jest.fn(),
+    hasValidTokens: jest.fn(),
+    getTokenInfo: jest.fn(),
+    clearTokens: jest.fn(),
   },
 }))
 
@@ -128,11 +127,11 @@ describe('AuthStore', () => {
   beforeEach(() => {
     // Reset store state before each test
     useAuthStore.getState().reset()
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   describe('Initial State', () => {
@@ -173,7 +172,7 @@ describe('AuthStore', () => {
         message: 'Login successful',
       }
 
-      vi.mocked(authApi.login).mockResolvedValue(mockResponse)
+      jest.mocked(authApi.login).mockResolvedValue(mockResponse)
 
       const { login } = useAuthStore.getState()
       await login(mockLoginCredentials)
@@ -191,7 +190,7 @@ describe('AuthStore', () => {
 
     it('should handle login failure', async () => {
       const mockError = new Error('Invalid credentials')
-      vi.mocked(authApi.login).mockRejectedValue(mockError)
+      jest.mocked(authApi.login).mockRejectedValue(mockError)
 
       const { login } = useAuthStore.getState()
 
@@ -214,7 +213,7 @@ describe('AuthStore', () => {
         resolveLogin = resolve
       })
 
-      vi.mocked(authApi.login).mockReturnValue(loginPromise)
+      jest.mocked(authApi.login).mockReturnValue(loginPromise)
 
       const { login } = useAuthStore.getState()
       const loginCall = login(mockLoginCredentials)
@@ -245,7 +244,7 @@ describe('AuthStore', () => {
         user: mockUser,
       }
 
-      vi.mocked(authApi.register).mockResolvedValue(mockResponse)
+      jest.mocked(authApi.register).mockResolvedValue(mockResponse)
 
       const { register } = useAuthStore.getState()
       const result = await register(mockRegisterData)
@@ -258,7 +257,7 @@ describe('AuthStore', () => {
 
     it('should handle registration failure', async () => {
       const mockError = new Error('Email already exists')
-      vi.mocked(authApi.register).mockRejectedValue(mockError)
+      jest.mocked(authApi.register).mockRejectedValue(mockError)
 
       const { register } = useAuthStore.getState()
 
@@ -281,7 +280,7 @@ describe('AuthStore', () => {
     })
 
     it('should logout successfully', async () => {
-      vi.mocked(authApi.logout).mockResolvedValue({
+      jest.mocked(authApi.logout).mockResolvedValue({
         message: 'Logged out successfully',
       })
 
@@ -300,7 +299,7 @@ describe('AuthStore', () => {
     })
 
     it('should logout even if API call fails', async () => {
-      vi.mocked(authApi.logout).mockRejectedValue(new Error('Network error'))
+      jest.mocked(authApi.logout).mockRejectedValue(new Error('Network error'))
 
       const { logout } = useAuthStore.getState()
       await logout()
@@ -340,8 +339,8 @@ describe('AuthStore', () => {
         expires_at: Date.now() + 3600000,
       }
 
-      vi.mocked(tokenManager.refreshTokens).mockResolvedValue(true)
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(newStoredTokens)
+      jest.mocked(tokenManager.refreshTokens).mockResolvedValue(true)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(newStoredTokens)
 
       const { refreshTokens } = useAuthStore.getState()
       const result = await refreshTokens()
@@ -360,7 +359,7 @@ describe('AuthStore', () => {
       const { reset } = useAuthStore.getState()
       reset()
 
-      vi.mocked(tokenManager.refreshTokens).mockResolvedValue(false)
+      jest.mocked(tokenManager.refreshTokens).mockResolvedValue(false)
 
       const { refreshTokens } = useAuthStore.getState()
       const result = await refreshTokens()
@@ -376,7 +375,7 @@ describe('AuthStore', () => {
     })
 
     it('should handle token manager throwing error', async () => {
-      vi.mocked(tokenManager.refreshTokens).mockRejectedValue(
+      jest.mocked(tokenManager.refreshTokens).mockRejectedValue(
         new Error('Token manager error')
       )
 
@@ -394,8 +393,8 @@ describe('AuthStore', () => {
     })
 
     it('should handle successful refresh with no updated tokens', async () => {
-      vi.mocked(tokenManager.refreshTokens).mockResolvedValue(true)
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(null)
+      jest.mocked(tokenManager.refreshTokens).mockResolvedValue(true)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(null)
 
       const { refreshTokens } = useAuthStore.getState()
       const result = await refreshTokens()
@@ -497,7 +496,7 @@ describe('AuthStore', () => {
 
   describe('Initialize', () => {
     it('should initialize token manager and handle no stored tokens', async () => {
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(null)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(null)
 
       const { initialize } = useAuthStore.getState()
       await initialize()
@@ -518,12 +517,12 @@ describe('AuthStore', () => {
         expires_at: Date.now() + 3600000,
       }
 
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
-      vi.mocked(tokenStorage.isTokenExpired).mockReturnValue(false)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
+      jest.mocked(tokenStorage.isTokenExpired).mockReturnValue(false)
 
       // Mock successful profile fetch
       const { userApi } = await import('@/lib/api-client')
-      vi.mocked(userApi.getProfile).mockResolvedValue(mockUser)
+      jest.mocked(userApi.getProfile).mockResolvedValue(mockUser)
 
       const { initialize } = useAuthStore.getState()
       await initialize()
@@ -544,18 +543,18 @@ describe('AuthStore', () => {
         expires_at: Date.now() - 1000, // Expired
       }
 
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
-      vi.mocked(tokenStorage.isTokenExpired).mockReturnValue(true)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
+      jest.mocked(tokenStorage.isTokenExpired).mockReturnValue(true)
 
       // Mock successful refresh
       const mockRefreshStore = useAuthStore.getState()
-      const refreshSpy = vi
+      const refreshSpy = jest
         .spyOn(mockRefreshStore, 'refreshTokens')
         .mockResolvedValue(true)
 
       // Mock successful profile fetch after refresh
       const { userApi } = await import('@/lib/api-client')
-      vi.mocked(userApi.getProfile).mockResolvedValue(mockUser)
+      jest.mocked(userApi.getProfile).mockResolvedValue(mockUser)
 
       const { initialize } = useAuthStore.getState()
       await initialize()
@@ -577,17 +576,17 @@ describe('AuthStore', () => {
         expires_at: Date.now() + 3600000,
       }
 
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
-      vi.mocked(tokenStorage.isTokenExpired).mockReturnValue(false)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
+      jest.mocked(tokenStorage.isTokenExpired).mockReturnValue(false)
 
       // Mock profile fetch failure, then successful refresh and retry
       const { userApi } = await import('@/lib/api-client')
-      vi.mocked(userApi.getProfile)
+      jest.mocked(userApi.getProfile)
         .mockRejectedValueOnce(new Error('Profile fetch failed'))
         .mockResolvedValueOnce(mockUser)
 
       const mockRefreshStore = useAuthStore.getState()
-      const refreshSpy = vi
+      const refreshSpy = jest
         .spyOn(mockRefreshStore, 'refreshTokens')
         .mockResolvedValue(true)
 
@@ -611,17 +610,17 @@ describe('AuthStore', () => {
         expires_at: Date.now() + 3600000,
       }
 
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
-      vi.mocked(tokenStorage.isTokenExpired).mockReturnValue(false)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(mockStoredTokens)
+      jest.mocked(tokenStorage.isTokenExpired).mockReturnValue(false)
 
       // Mock profile fetch failure and refresh failure
       const { userApi } = await import('@/lib/api-client')
-      vi.mocked(userApi.getProfile).mockRejectedValue(
+      jest.mocked(userApi.getProfile).mockRejectedValue(
         new Error('Profile fetch failed')
       )
 
       // Mock the refresh to fail
-      vi.mocked(tokenManager.refreshTokens).mockResolvedValue(false)
+      jest.mocked(tokenManager.refreshTokens).mockResolvedValue(false)
 
       const { initialize } = useAuthStore.getState()
       await initialize()
@@ -637,13 +636,13 @@ describe('AuthStore', () => {
     })
 
     it('should handle initialization errors gracefully', async () => {
-      vi.mocked(tokenStorage.getTokens).mockImplementation(() => {
+      jest.mocked(tokenStorage.getTokens).mockImplementation(() => {
         throw new Error('Storage error')
       })
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
       const mockRefreshStore = useAuthStore.getState()
-      const resetSpy = vi.spyOn(mockRefreshStore, 'reset')
+      const resetSpy = jest.spyOn(mockRefreshStore, 'reset')
 
       const { initialize } = useAuthStore.getState()
       await initialize()
@@ -719,7 +718,7 @@ describe('AuthStore', () => {
           academies: mockSingleAcademyData,
         }
 
-        vi.mocked(authApi.login).mockResolvedValue(mockResponse)
+        jest.mocked(authApi.login).mockResolvedValue(mockResponse)
 
         const { login } = useAuthStore.getState()
         const result = await login(mockLoginCredentials)
@@ -745,7 +744,7 @@ describe('AuthStore', () => {
           academies: mockMultipleAcademyData,
         }
 
-        vi.mocked(authApi.login).mockResolvedValue(mockResponse)
+        jest.mocked(authApi.login).mockResolvedValue(mockResponse)
 
         const { login } = useAuthStore.getState()
         const result = await login(mockLoginCredentials)
@@ -771,7 +770,7 @@ describe('AuthStore', () => {
           academies: mockEmptyAcademyData,
         }
 
-        vi.mocked(authApi.login).mockResolvedValue(mockResponse)
+        jest.mocked(authApi.login).mockResolvedValue(mockResponse)
 
         const { login } = useAuthStore.getState()
         const result = await login(mockLoginCredentials)
@@ -797,7 +796,7 @@ describe('AuthStore', () => {
           // No academies field
         }
 
-        vi.mocked(authApi.login).mockResolvedValue(mockResponse)
+        jest.mocked(authApi.login).mockResolvedValue(mockResponse)
 
         const { login } = useAuthStore.getState()
         const result = await login(mockLoginCredentials)
@@ -875,7 +874,7 @@ describe('AuthStore', () => {
 
       it('should refresh academy data successfully', async () => {
         const { academyApi } = await import('@/lib/api-client')
-        vi.mocked(academyApi.getUserAcademies).mockResolvedValue(
+        jest.mocked(academyApi.getUserAcademies).mockResolvedValue(
           mockSingleAcademyData
         )
 
@@ -890,11 +889,11 @@ describe('AuthStore', () => {
 
       it('should handle refresh failure gracefully', async () => {
         const { academyApi } = await import('@/lib/api-client')
-        vi.mocked(academyApi.getUserAcademies).mockRejectedValue(
+        jest.mocked(academyApi.getUserAcademies).mockRejectedValue(
           new Error('Network error')
         )
 
-        const consoleSpy = vi
+        const consoleSpy = jest
           .spyOn(console, 'error')
           .mockImplementation(() => {})
 
@@ -918,7 +917,7 @@ describe('AuthStore', () => {
         reset()
 
         const { academyApi } = await import('@/lib/api-client')
-        const academyApiSpy = vi.mocked(academyApi.getUserAcademies)
+        const academyApiSpy = jest.mocked(academyApi.getUserAcademies)
 
         await refreshAcademies()
 
@@ -974,7 +973,7 @@ describe('AuthStore', () => {
       })
 
       it('should clear academy data on logout', async () => {
-        vi.mocked(authApi.logout).mockResolvedValue({
+        jest.mocked(authApi.logout).mockResolvedValue({
           message: 'Logged out successfully',
         })
 

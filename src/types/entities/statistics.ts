@@ -2,6 +2,22 @@
  * Statistics and Analytics related types
  */
 
+/**
+ * Platform summary statistics returned by GET /api/v1/stats
+ * Used for public-facing displays (hero section, landing pages)
+ */
+export interface PlatformStats {
+  total_students: number
+  total_courses: number
+  total_academies: number
+}
+
+export interface StatItem {
+  icon: React.ElementType
+  value: string
+  label: string
+}
+
 export interface GeneralStatistics {
   total_users: number
   total_courses: number

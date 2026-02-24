@@ -3,6 +3,7 @@ import type {
   AcademyCategoryMinimal,
   AcademyCategorySummary,
   AcademyCategoryFull,
+  FeaturedCategory,
   PaginationMeta,
   CreateCategoryRequest,
   UpdateCategoryRequest,
@@ -156,6 +157,16 @@ class AcademyCategoryService {
    */
   async deleteCategory(id: number): Promise<{ message: string }> {
     const response = await apiClient.delete(`/academy_categories/${id}`)
+    return response.data
+  }
+
+  /**
+   * Get featured categories with their public academies for landing page carousels.
+   * Public endpoint - no authentication required.
+   * @returns Promise with array of FeaturedCategory (each including their academies)
+   */
+  async getFeaturedCategories(): Promise<FeaturedCategory[]> {
+    const response = await apiClient.get('/academy_categories/featured')
     return response.data
   }
 }

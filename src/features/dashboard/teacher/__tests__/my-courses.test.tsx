@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { MyCourses } from '../components/my-courses'
 import type { TeacherCourse } from '../types'
 
@@ -139,7 +138,7 @@ describe('MyCourses', () => {
 
   describe('Event Handlers', () => {
     it('calls onCreateCourse when New Course button is clicked', () => {
-      const onCreateCourse = vi.fn()
+      const onCreateCourse = jest.fn()
       render(
         <MyCourses courses={mockCourses} onCreateCourse={onCreateCourse} />
       )
@@ -149,7 +148,7 @@ describe('MyCourses', () => {
     })
 
     it('calls onViewCourse when View Course is clicked', () => {
-      const onViewCourse = vi.fn()
+      const onViewCourse = jest.fn()
       render(<MyCourses courses={mockCourses} onViewCourse={onViewCourse} />)
 
       // Click on the first dropdown menu
@@ -162,7 +161,7 @@ describe('MyCourses', () => {
     })
 
     it('calls onEditCourse when Edit Content is clicked', () => {
-      const onEditCourse = vi.fn()
+      const onEditCourse = jest.fn()
       render(<MyCourses courses={mockCourses} onEditCourse={onEditCourse} />)
 
       // Click on the first dropdown menu
@@ -175,7 +174,7 @@ describe('MyCourses', () => {
     })
 
     it('calls onManageCourse when Manage Settings is clicked', () => {
-      const onManageCourse = vi.fn()
+      const onManageCourse = jest.fn()
       render(
         <MyCourses courses={mockCourses} onManageCourse={onManageCourse} />
       )

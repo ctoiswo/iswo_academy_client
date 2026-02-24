@@ -1,22 +1,21 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import type { AuthUser, AcademyMembership } from '@/stores/auth-store'
 import type { DashboardProps } from '@/components/dashboard-router'
 import { AcademyAdminDashboard } from '../index'
 
 // Mock the layout components
-vi.mock('@/components/layout/dashboard-layout', () => ({
+jest.mock('@/components/layout/dashboard-layout', () => ({
   DashboardLayout: ({ children }: { children: React.ReactNode }) => (
     <div data-testid='dashboard-layout'>{children}</div>
   ),
 }))
 
-vi.mock('@/components/layout/role-navigation', () => ({
+jest.mock('@/components/layout/role-navigation', () => ({
   RoleNavigation: () => <div data-testid='role-navigation'>Navigation</div>,
   useRoleNavigation: () => ({ currentPath: '/dashboard' }),
 }))
 
-vi.mock('@/components/ui/sidebar', () => ({
+jest.mock('@/components/ui/sidebar', () => ({
   Sidebar: ({ children }: { children: React.ReactNode }) => (
     <div data-testid='sidebar'>{children}</div>
   ),
@@ -29,7 +28,7 @@ vi.mock('@/components/ui/sidebar', () => ({
 }))
 
 // Mock the component modules
-vi.mock('../components', () => ({
+jest.mock('../components', () => ({
   AcademyStatsOverview: () => (
     <div data-testid='academy-stats-overview'>Academy Stats</div>
   ),

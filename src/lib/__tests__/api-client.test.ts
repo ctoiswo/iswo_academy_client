@@ -1,5 +1,4 @@
 import axios, { type AxiosError } from 'axios'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 // Now import the module after mocking
 import apiClient, {
   createApiError,
@@ -21,64 +20,65 @@ import apiClient, {
 } from '../api-client'
 
 // Mock axios before importing the module
-vi.mock('axios', () => {
+jest.mock('axios', () => {
   const mockAxiosInstance = {
     interceptors: {
       request: {
-        use: vi.fn(),
+        use: jest.fn(),
       },
       response: {
-        use: vi.fn(),
+        use: jest.fn(),
       },
     },
-    post: vi.fn(),
-    get: vi.fn(),
-    patch: vi.fn(),
-    delete: vi.fn(),
+    post: jest.fn(),
+    get: jest.fn(),
+    patch: jest.fn(),
+    delete: jest.fn(),
   }
 
   return {
+    __esModule: true,
     default: {
-      create: vi.fn(() => mockAxiosInstance),
-      post: vi.fn(),
-      get: vi.fn(),
-      patch: vi.fn(),
-      delete: vi.fn(),
+      create: jest.fn(() => mockAxiosInstance),
+      post: jest.fn(),
+      get: jest.fn(),
+      patch: jest.fn(),
+      delete: jest.fn(),
     },
   }
 })
 
-const mockedAxios = vi.mocked(axios)
+const mockedAxios = jest.mocked(axios)
 
 // Mock auth store
 const mockAuthStore = {
-  getState: vi.fn(() => ({
+  getState: jest.fn(() => ({
     auth: {
       accessToken: 'mock-access-token',
       refreshToken: 'mock-refresh-token',
-      setAccessToken: vi.fn(),
-      setRefreshToken: vi.fn(),
-      reset: vi.fn(),
+      setAccessToken: jest.fn(),
+      setRefreshToken: jest.fn(),
+      reset: jest.fn(),
     },
   })),
 }
 
 describe('API Client', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     setAuthStore(mockAuthStore)
 
     // Reset the mocked methods
-    vi.mocked(apiClient.post).mockReset()
-    vi.mocked(apiClient.get).mockReset()
-    vi.mocked(apiClient.patch).mockReset()
-    vi.mocked(apiClient.delete).mockReset()
+    jest.mocked(apiClient.post).mockReset()
+    jest.mocked(apiClient.get).mockReset()
+    jest.mocked(apiClient.patch).mockReset()
+    jest.mocked(apiClient.delete).mockReset()
     mockedAxios.post.mockReset()
     mockedAxios.get.mockReset()
   })
 
   afterEach(() => {
-    vi.resetAllMocks()
+    jest.resetAllMocks()
   })
 
   describe('Error Handling Utilities', () => {
@@ -387,7 +387,7 @@ describe('API Client', () => {
           },
         }
 
-        vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
+        jest.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
         const result = await authApi.register(userData)
 
@@ -427,7 +427,7 @@ describe('API Client', () => {
           },
         }
 
-        vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
+        jest.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
         const result = await authApi.login(credentials)
 
@@ -446,7 +446,7 @@ describe('API Client', () => {
           data: { message: 'Logged out successfully' },
         }
 
-        vi.mocked(apiClient.delete).mockResolvedValue(mockResponse)
+        jest.mocked(apiClient.delete).mockResolvedValue(mockResponse)
 
         const result = await authApi.logout(refreshToken)
 
@@ -470,7 +470,7 @@ describe('API Client', () => {
           },
         }
 
-        vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
+        jest.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
         const result = await authApi.refreshTokens(refreshToken)
 
@@ -492,7 +492,7 @@ describe('API Client', () => {
           },
         }
 
-        vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
+        jest.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
         const result = await authApi.forgotPassword(email)
 
@@ -516,7 +516,7 @@ describe('API Client', () => {
           },
         }
 
-        vi.mocked(apiClient.post).mockResolvedValue(mockResponse)
+        jest.mocked(apiClient.post).mockResolvedValue(mockResponse)
 
         const result = await authApi.resetPassword(
           token,
@@ -553,7 +553,7 @@ describe('API Client', () => {
           },
         }
 
-        vi.mocked(apiClient.get).mockResolvedValue(mockResponse)
+        jest.mocked(apiClient.get).mockResolvedValue(mockResponse)
 
         const result = await userApi.getProfile()
 
@@ -585,7 +585,7 @@ describe('API Client', () => {
           },
         }
 
-        vi.mocked(apiClient.patch).mockResolvedValue(mockResponse)
+        jest.mocked(apiClient.patch).mockResolvedValue(mockResponse)
 
         const result = await userApi.updateProfile(userData)
 
@@ -633,7 +633,7 @@ describe('API Client', () => {
     beforeEach(async () => {
       // Import tokenManager after mocks are set up
       const { tokenManager } = await import('../api-client')
-      ;(global as any).tokenManager = tokenManager
+        ; (global as any).tokenManager = tokenManager
     })
 
     it('should provide token management utilities', async () => {

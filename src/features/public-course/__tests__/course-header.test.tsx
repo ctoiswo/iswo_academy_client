@@ -1,10 +1,9 @@
 import { render, screen } from '@testing-library/react'
-import { vi, beforeEach, describe, it, expect } from 'vitest'
 import { CourseHeader } from '../components/course-header'
 
 // Mock TanStack Router
-const mockUseRouter = vi.fn()
-vi.mock('@tanstack/react-router', () => ({
+const mockUseRouter = jest.fn()
+jest.mock('@tanstack/react-router', () => ({
   useRouter: () => mockUseRouter(),
   Link: ({ children, to, params, ...props }: any) => (
     <a href={to} {...props}>
@@ -22,10 +21,10 @@ describe('CourseHeader', () => {
     courseTitle: 'Curso de React Avanzado',
   }
 
-  const mockHistoryBack = vi.fn()
+  const mockHistoryBack = jest.fn()
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     mockUseRouter.mockReturnValue({
       history: {
         back: mockHistoryBack,

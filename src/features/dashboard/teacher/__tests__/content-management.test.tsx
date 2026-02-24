@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { ContentManagement } from '../components/content-management'
 import type { LessonContent, Assignment, TeacherCourse } from '../types'
 
@@ -275,7 +274,7 @@ describe('ContentManagement', () => {
 
   describe('Event Handlers', () => {
     it('calls onCreateLesson when New Lesson button is clicked', () => {
-      const onCreateLesson = vi.fn()
+      const onCreateLesson = jest.fn()
       render(
         <ContentManagement
           courses={mockCourses}
@@ -290,7 +289,7 @@ describe('ContentManagement', () => {
     })
 
     it('calls onCreateAssignment when New Assignment button is clicked', () => {
-      const onCreateAssignment = vi.fn()
+      const onCreateAssignment = jest.fn()
       render(
         <ContentManagement
           courses={mockCourses}
@@ -305,7 +304,7 @@ describe('ContentManagement', () => {
     })
 
     it('calls onEditLesson when Edit Content is clicked', () => {
-      const onEditLesson = vi.fn()
+      const onEditLesson = jest.fn()
       render(
         <ContentManagement
           courses={mockCourses}
@@ -324,7 +323,7 @@ describe('ContentManagement', () => {
     })
 
     it('calls onViewLesson when Preview is clicked', () => {
-      const onViewLesson = vi.fn()
+      const onViewLesson = jest.fn()
       render(
         <ContentManagement
           courses={mockCourses}
@@ -343,7 +342,7 @@ describe('ContentManagement', () => {
     })
 
     it('calls onDeleteLesson when Delete is clicked', () => {
-      const onDeleteLesson = vi.fn()
+      const onDeleteLesson = jest.fn()
       render(
         <ContentManagement
           courses={mockCourses}
@@ -364,7 +363,7 @@ describe('ContentManagement', () => {
     })
 
     it('calls onEditAssignment when Edit Assignment is clicked', () => {
-      const onEditAssignment = vi.fn()
+      const onEditAssignment = jest.fn()
       render(
         <ContentManagement
           courses={mockCourses}
@@ -394,7 +393,7 @@ describe('ContentManagement', () => {
     })
 
     it('calls onDeleteAssignment when Delete is clicked on assignment', () => {
-      const onDeleteAssignment = vi.fn()
+      const onDeleteAssignment = jest.fn()
       render(
         <ContentManagement
           courses={mockCourses}

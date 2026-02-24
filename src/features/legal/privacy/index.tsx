@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { AnimatedAuthLayout } from '@/features/auth/components/animated-auth-layout'
+import { AnimatedAuthLayout } from '@/features/auth/containers/animated-auth-layout'
 
 export function PrivacyPolicy() {
   const { t } = useTranslation()

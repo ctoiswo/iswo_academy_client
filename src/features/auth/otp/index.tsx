@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { AnimatedAuthLayout } from '../components/animated-auth-layout'
+import { AnimatedAuthLayout } from '../containers/animated-auth-layout'
 import { OtpForm } from './components/otp-form'
 
 export function Otp() {

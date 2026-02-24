@@ -1,5 +1,6 @@
 import { Building2, Users, BookOpen, DollarSign } from 'lucide-react'
-import { StatsWidget, DashboardCard } from '@/components/dashboard'
+import { StatCard } from '@/components/dashboard/stat-card'
+import { DashboardCard } from '@/components/dashboard'
 import type { GlobalStats } from '../index'
 
 interface GlobalStatsOverviewProps {
@@ -24,59 +25,51 @@ export function GlobalStatsOverview({
   }
 
   return (
-    <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-      <StatsWidget
-        title='Total Academies'
-        value={stats?.totalAcademies ?? 0}
-        change={stats?.monthlyGrowth.academies}
-        changeType={
-          stats?.monthlyGrowth.academies && stats.monthlyGrowth.academies > 0
-            ? 'increase'
-            : 'neutral'
-        }
+    <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
+      <StatCard
+        label='Total Academias'
+        value={(stats?.totalAcademies ?? 0).toLocaleString()}
         icon={Building2}
+        iconBg='bg-primary/10'
+        iconColor='text-primary'
         loading={loading}
-        format='number'
-        description='Active learning institutions'
+        description='Instituciones activas'
       />
 
-      <StatsWidget
-        title='Total Users'
-        value={stats?.totalUsers ?? 0}
-        change={stats?.monthlyGrowth.users}
-        changeType={
-          stats?.monthlyGrowth.users && stats.monthlyGrowth.users > 0
-            ? 'increase'
-            : 'neutral'
-        }
+      <StatCard
+        label='Total Usuarios'
+        value={(stats?.totalUsers ?? 0).toLocaleString()}
         icon={Users}
+        iconBg='bg-emerald-500/10'
+        iconColor='text-emerald-400'
         loading={loading}
-        format='number'
-        description='Registered platform users'
+        description='Usuarios registrados'
       />
 
-      <StatsWidget
-        title='Total Courses'
-        value={stats?.totalCourses ?? 0}
+      <StatCard
+        label='Total Cursos'
+        value={(stats?.totalCourses ?? 0).toLocaleString()}
         icon={BookOpen}
+        iconBg='bg-violet-500/10'
+        iconColor='text-violet-400'
         loading={loading}
-        format='number'
-        description='Published courses across all academies'
+        description='Cursos en todas las academias'
       />
 
-      <StatsWidget
-        title='Total Revenue'
-        value={stats?.totalRevenue ?? 0}
-        change={stats?.monthlyGrowth.revenue}
-        changeType={
-          stats?.monthlyGrowth.revenue && stats.monthlyGrowth.revenue > 0
-            ? 'increase'
-            : 'neutral'
+      <StatCard
+        label='Ingresos Totales'
+        value={
+          new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0,
+          }).format(stats?.totalRevenue ?? 0)
         }
         icon={DollarSign}
+        iconBg='bg-amber-500/10'
+        iconColor='text-amber-400'
         loading={loading}
-        format='currency'
-        description='Platform-wide revenue'
+        description='Ingresos de toda la plataforma'
       />
     </div>
   )

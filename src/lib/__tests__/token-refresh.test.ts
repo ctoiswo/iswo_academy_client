@@ -1,77 +1,77 @@
 import axios, { type AxiosError, type AxiosResponse } from 'axios'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { tokenStorage } from '@/lib/token-storage'
 // Import after mocking
 import apiClient, { tokenManager, setAuthStore } from '../api-client'
 
 // Mock axios and dependencies
-vi.mock('axios', () => {
+jest.mock('axios', () => {
   const mockAxiosInstance = {
     interceptors: {
       request: {
-        use: vi.fn(),
+        use: jest.fn(),
       },
       response: {
-        use: vi.fn(),
+        use: jest.fn(),
       },
     },
-    post: vi.fn(),
-    get: vi.fn(),
-    patch: vi.fn(),
-    delete: vi.fn(),
+    post: jest.fn(),
+    get: jest.fn(),
+    patch: jest.fn(),
+    delete: jest.fn(),
   }
 
   return {
+    __esModule: true,
     default: {
-      create: vi.fn(() => mockAxiosInstance),
-      post: vi.fn(),
-      get: vi.fn(),
+      create: jest.fn(() => mockAxiosInstance),
+      post: jest.fn(),
+      get: jest.fn(),
     },
   }
 })
 
-vi.mock('@/lib/token-storage', () => ({
+jest.mock('@/lib/token-storage', () => ({
   tokenStorage: {
-    getTokens: vi.fn(),
-    setTokens: vi.fn(),
-    clearTokens: vi.fn(),
-    isTokenExpired: vi.fn(),
-    getAccessToken: vi.fn(),
-    getRefreshToken: vi.fn(),
-    hasValidTokens: vi.fn(),
-    willExpireSoon: vi.fn(),
-    getTokenInfo: vi.fn(),
+    getTokens: jest.fn(),
+    setTokens: jest.fn(),
+    clearTokens: jest.fn(),
+    isTokenExpired: jest.fn(),
+    getAccessToken: jest.fn(),
+    getRefreshToken: jest.fn(),
+    hasValidTokens: jest.fn(),
+    willExpireSoon: jest.fn(),
+    getTokenInfo: jest.fn(),
   },
 }))
 
-const mockedAxios = vi.mocked(axios)
+const mockedAxios = jest.mocked(axios)
 
 describe('Token Refresh Mechanism', () => {
   let mockAuthStore: any
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    vi.useFakeTimers()
+    jest.clearAllMocks()
+    jest.useFakeTimers()
 
     // Mock auth store
     mockAuthStore = {
-      getState: vi.fn(() => ({
-        setTokens: vi.fn(),
-        reset: vi.fn(),
+      getState: jest.fn(() => ({
+        setTokens: jest.fn(),
+        reset: jest.fn(),
       })),
     }
     setAuthStore(mockAuthStore)
   })
 
   afterEach(() => {
-    vi.useRealTimers()
-    vi.resetAllMocks()
+    jest.useRealTimers()
+    jest.resetAllMocks()
   })
 
   describe('Proactive Token Refresh', () => {
     it('should refresh tokens when they will expire soon', async () => {
-      vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
-      vi.mocked(tokenStorage.willExpireSoon).mockReturnValue(true)
+      jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
+      jest.mocked(tokenStorage.willExpireSoon).mockReturnValue(true)
 
       const mockRefreshResponse = {
         data: {
@@ -98,10 +98,10 @@ describe('Token Refresh Mechanism', () => {
     })
 
     it('should handle proactive refresh failure', async () => {
-      vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
+      jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Refresh failed'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 
@@ -116,7 +116,7 @@ describe('Token Refresh Mechanism', () => {
     })
 
     it('should handle missing refresh token', async () => {
-      vi.mocked(tokenStorage.getRefreshToken).mockReturnValue(null)
+      jest.mocked(tokenStorage.getRefreshToken).mockReturnValue(null)
 
       const result = await tokenManager.refreshTokens()
 
@@ -127,10 +127,10 @@ describe('Token Refresh Mechanism', () => {
 
   describe('Token Refresh Error Handling', () => {
     it('should handle network errors during refresh', async () => {
-      vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
+      jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Network error'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 
@@ -145,7 +145,7 @@ describe('Token Refresh Mechanism', () => {
     })
 
     it('should handle invalid refresh token response', async () => {
-      vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('invalid-token')
+      jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('invalid-token')
       mockedAxios.post.mockRejectedValue({
         response: {
           status: 401,
@@ -153,7 +153,7 @@ describe('Token Refresh Mechanism', () => {
         },
       })
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 
@@ -164,7 +164,7 @@ describe('Token Refresh Mechanism', () => {
     })
 
     it('should handle server errors during refresh', async () => {
-      vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
+      jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue({
         response: {
           status: 500,
@@ -172,7 +172,7 @@ describe('Token Refresh Mechanism', () => {
         },
       })
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 
@@ -191,8 +191,8 @@ describe('Token Refresh Mechanism', () => {
         expires_at: Date.now() + 3600000, // 1 hour from now
       }
 
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(mockTokens)
-      vi.mocked(tokenStorage.isTokenExpired).mockReturnValue(false)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(mockTokens)
+      jest.mocked(tokenStorage.isTokenExpired).mockReturnValue(false)
 
       tokenManager.initialize()
 
@@ -208,8 +208,8 @@ describe('Token Refresh Mechanism', () => {
         expires_at: Date.now() - 1000, // Expired
       }
 
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(mockTokens)
-      vi.mocked(tokenStorage.isTokenExpired).mockReturnValue(true)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(mockTokens)
+      jest.mocked(tokenStorage.isTokenExpired).mockReturnValue(true)
 
       tokenManager.initialize()
 
@@ -218,14 +218,14 @@ describe('Token Refresh Mechanism', () => {
     })
 
     it('should handle missing tokens during initialization', () => {
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(null)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(null)
 
       expect(() => tokenManager.initialize()).not.toThrow()
       expect(tokenStorage.getTokens).toHaveBeenCalled()
     })
 
     it('should manually refresh tokens', async () => {
-      vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
+      jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
 
       const mockRefreshResponse = {
         data: {
@@ -248,10 +248,10 @@ describe('Token Refresh Mechanism', () => {
     })
 
     it('should handle manual refresh failure', async () => {
-      vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
+      jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Refresh failed'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 
@@ -266,7 +266,7 @@ describe('Token Refresh Mechanism', () => {
     })
 
     it('should check token validity', () => {
-      vi.mocked(tokenStorage.hasValidTokens).mockReturnValue(true)
+      jest.mocked(tokenStorage.hasValidTokens).mockReturnValue(true)
 
       const result = tokenManager.hasValidTokens()
 
@@ -282,7 +282,7 @@ describe('Token Refresh Mechanism', () => {
         timeUntilExpiration: 3600000,
       }
 
-      vi.mocked(tokenStorage.getTokenInfo).mockReturnValue(mockInfo)
+      jest.mocked(tokenStorage.getTokenInfo).mockReturnValue(mockInfo)
 
       const result = tokenManager.getTokenInfo()
 
@@ -306,18 +306,18 @@ describe('Token Refresh Mechanism', () => {
         expires_at: Date.now() + 3600000, // 1 hour from now
       }
 
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(mockTokens)
-      vi.mocked(tokenStorage.isTokenExpired).mockReturnValue(false)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(mockTokens)
+      jest.mocked(tokenStorage.isTokenExpired).mockReturnValue(false)
 
       expect(() => tokenManager.initialize()).not.toThrow()
       expect(tokenStorage.getTokens).toHaveBeenCalled()
     })
 
     it('should handle refresh failure gracefully', async () => {
-      vi.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
+      jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Network error'))
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
 
       const result = await tokenManager.refreshTokens()
 
@@ -330,7 +330,7 @@ describe('Token Refresh Mechanism', () => {
     })
 
     it('should handle multiple initialization calls', () => {
-      vi.mocked(tokenStorage.getTokens).mockReturnValue(null)
+      jest.mocked(tokenStorage.getTokens).mockReturnValue(null)
 
       expect(() => {
         tokenManager.initialize()

@@ -1,24 +1,23 @@
 import { authApi } from '@/services'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { getErrorMessage } from '@/lib/api-client'
 import { ResetPassword } from '../reset-password'
 
 // Create mock functions first
-const mockNavigate = vi.fn()
-const mockUseSearch = vi.fn()
+const mockNavigate = jest.fn()
+const mockUseSearch = jest.fn()
 
 // Mock dependencies
-vi.mock('@/lib/api-client', () => ({
-  getErrorMessage: vi.fn(),
+jest.mock('@/lib/api-client', () => ({
+  getErrorMessage: jest.fn(),
 }))
-vi.mock('@/services', () => ({
+jest.mock('@/services', () => ({
   authApi: {
-    resetPassword: vi.fn(),
+    resetPassword: jest.fn(),
   },
 }))
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
   useSearch: () => mockUseSearch(),
   useLocation: () => ({ pathname: '/reset-password' }),
@@ -28,15 +27,15 @@ vi.mock('@tanstack/react-router', () => ({
     </a>
   ),
 }))
-vi.mock('sonner', () => ({
+jest.mock('sonner', () => ({
   toast: {
-    success: vi.fn(),
-    error: vi.fn(),
+    success: jest.fn(),
+    error: jest.fn(),
   },
 }))
 
-const mockResetPassword = vi.mocked(authApi.resetPassword)
-const mockGetErrorMessage = vi.mocked(getErrorMessage)
+const mockResetPassword = jest.mocked(authApi.resetPassword)
+const mockGetErrorMessage = jest.mocked(getErrorMessage)
 
 describe('Flujo de Restablecimiento de Contraseña', () => {
   beforeEach(() => {
@@ -52,7 +51,7 @@ describe('Flujo de Restablecimiento de Contraseña', () => {
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   describe('con token válido', () => {

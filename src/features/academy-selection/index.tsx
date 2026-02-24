@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import type { AcademyMembership } from '@/types'
 import { useAuthStore } from '@/stores/auth-store'
+import { LandingNav, LandingFooter } from '@/features/landing'
 import {
   LoadingSpinner,
   PageHeader,
@@ -39,11 +40,11 @@ export function AcademySelectionPage() {
   }
 
   return (
-    <div className='from-background via-background to-primary/5 min-h-screen bg-gradient-to-br'>
-      <div className='container mx-auto max-w-7xl px-4 py-12'>
+    <div className='min-h-screen flex flex-col bg-background'>
+      <LandingNav />
+      <main className='flex-1 container mx-auto max-w-7xl px-4 py-16'>
         <PageHeader userName={user.first_name} />
 
-        {/* Academy Grid or Empty State */}
         {academyData.count === 0 ? (
           <EmptyState />
         ) : (
@@ -55,7 +56,8 @@ export function AcademySelectionPage() {
         )}
 
         <PageFooter />
-      </div>
+      </main>
+      <LandingFooter />
     </div>
   )
 }

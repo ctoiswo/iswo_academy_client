@@ -1,9 +1,8 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { Header } from '../header'
 
 // Mock react-i18next through custom hook
-vi.mock('@/hooks/use-translation', () => ({
+jest.mock('@/hooks/use-translation', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
@@ -17,15 +16,15 @@ vi.mock('@/hooks/use-translation', () => ({
 }))
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
 }))
 
 // Mock TanStack Router
-const mockNavigate = vi.fn()
-vi.mock('@tanstack/react-router', () => ({
+const mockNavigate = jest.fn()
+jest.mock('@tanstack/react-router', () => ({
   Link: ({ children, to, className, ...props }: any) => (
     <a href={to} className={className} {...props}>
       {children}
@@ -35,7 +34,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Mock lucide-react icons
-vi.mock('lucide-react', () => ({
+jest.mock('lucide-react', () => ({
   ArrowLeft: ({ className }: { className?: string }) => (
     <div className={className} data-testid='arrow-left-icon'>
       ←
@@ -44,7 +43,7 @@ vi.mock('lucide-react', () => ({
 }))
 
 // Mock UI components
-vi.mock('@/components/ui/button', () => ({
+jest.mock('@/components/ui/button', () => ({
   Button: ({ children, variant, size, asChild, ...props }: any) => {
     const Component = asChild ? 'div' : 'button'
     return (
@@ -60,32 +59,28 @@ vi.mock('@/components/ui/button', () => ({
   },
 }))
 
-vi.mock('@/components/language-toggle', () => ({
+jest.mock('@/components/language-toggle', () => ({
   LanguageToggle: () => <div data-testid='language-toggle'>Lang</div>,
 }))
 
-vi.mock('@/components/large-logo', () => ({
+jest.mock('@/components/large-logo', () => ({
   LargeLogo: () => <div data-testid='large-logo'>LOGO</div>,
-}))
-
-vi.mock('@/components/theme-switch', () => ({
-  ThemeSwitch: () => <div data-testid='theme-switch'>Theme</div>,
 }))
 
 // Mock auth store for UserMenu
 const mockAuthStore = {
   isAuthenticated: false,
   user: null,
-  logout: vi.fn(),
+  logout: jest.fn(),
   academyData: null,
   currentAcademy: null,
 }
 
-vi.mock('@/stores/auth-store', () => ({
+jest.mock('@/stores/auth-store', () => ({
   useAuthStore: () => mockAuthStore,
 }))
 
-vi.mock('./user-menu', () => ({
+jest.mock('../user-menu', () => ({
   UserMenu: () => <div data-testid='user-menu'>User Menu</div>,
 }))
 
@@ -199,12 +194,6 @@ describe('Header', () => {
   })
 
   describe('Utility components', () => {
-    it('should render theme switch', () => {
-      render(<Header />)
-
-      expect(screen.getByTestId('theme-switch')).toBeInTheDocument()
-    })
-
     it('should render language toggle', () => {
       render(<Header />)
 
@@ -230,10 +219,8 @@ describe('Header', () => {
         utilityContainers[utilityContainers.length - 1]
       expect(rightUtilityContainer).toBeInTheDocument()
 
-      const themeSwitch = screen.getByTestId('theme-switch')
       const languageToggle = screen.getByTestId('language-toggle')
 
-      expect(rightUtilityContainer).toContainElement(themeSwitch)
       expect(rightUtilityContainer).toContainElement(languageToggle)
       // User menu buttons are also in this container
       expect(rightUtilityContainer?.textContent).toContain('navigation.login')

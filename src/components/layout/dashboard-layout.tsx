@@ -16,7 +16,6 @@ import { NotificationDropdown } from '@/components/notifications'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { SkipToMain } from '@/components/skip-to-main'
-import { ThemeSwitch } from '@/components/theme-switch'
 
 export type DashboardLayoutVariant = 'full' | 'sidebar' | 'compact'
 
@@ -146,7 +145,6 @@ function FullLayout({
                 {showSearch && <Search />}
                 <PointsDisplay compact />
                 <NotificationDropdown />
-                <ThemeSwitch />
                 <LanguageToggle />
                 {showConfigDrawer && <ConfigDrawer />}
                 <ProfileDropdown />
@@ -193,7 +191,6 @@ function CompactLayout({
                 {showSearch && <Search />}
                 <PointsDisplay compact />
                 <NotificationDropdown />
-                <ThemeSwitch />
                 <LanguageToggle />
                 <ProfileDropdown />
               </div>
@@ -273,7 +270,6 @@ function SidebarLayout({
                     {showSearch && <Search />}
                     <PointsDisplay compact />
                     <NotificationDropdown />
-                    <ThemeSwitch />
                     <LanguageToggle />
                     {showConfigDrawer && <ConfigDrawer />}
                     <ProfileDropdown />

@@ -1,16 +1,15 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { CourseCard } from '../course-card'
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
 }))
 
 // Mock TanStack Router
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   Link: ({ children, to, params, ...props }: any) => (
     <a href={`${to}/${params?.courseSlug}`} {...props}>
       {children}
@@ -19,7 +18,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Mock lucide-react icons
-vi.mock('lucide-react', () => ({
+jest.mock('lucide-react', () => ({
   Clock: ({ className }: { className?: string }) => (
     <div className={className} data-testid='clock-icon'>
       ⏰
@@ -33,7 +32,7 @@ vi.mock('lucide-react', () => ({
 }))
 
 // Mock formatters
-vi.mock('@/lib/formatters', () => ({
+jest.mock('@/lib/formatters', () => ({
   formatPrice: (price: number) => `$${price}`,
   formatDifficulty: (difficulty: string) => {
     const map: Record<string, string> = {
@@ -46,13 +45,13 @@ vi.mock('@/lib/formatters', () => ({
 }))
 
 // Mock helpers
-vi.mock('@/lib/helpers', () => ({
+jest.mock('@/lib/helpers', () => ({
   generateCourseSlug: (course: any) =>
     `${course.id}-${course.title.toLowerCase().replace(/\s+/g, '-')}`,
 }))
 
 // Mock UI components
-vi.mock('@/components/ui/badge', () => ({
+jest.mock('@/components/ui/badge', () => ({
   Badge: ({ children, variant, className, ...props }: any) => (
     <span
       className={className}
@@ -65,7 +64,7 @@ vi.mock('@/components/ui/badge', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/card', () => ({
+jest.mock('@/components/ui/card', () => ({
   Card: ({ children, className, ...props }: any) => (
     <div className={className} data-testid='card' {...props}>
       {children}

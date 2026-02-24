@@ -1,10 +1,9 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { GlobalStatsOverview } from '../components/global-stats-overview'
 import type { GlobalStats } from '../index'
 
 // Mock the StatsWidget component
-vi.mock('@/components/dashboard', () => ({
+jest.mock('@/components/dashboard', () => ({
   StatsWidget: ({
     title,
     value,

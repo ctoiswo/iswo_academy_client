@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 import { Sidebar, SidebarContent, SidebarHeader } from '@/components/ui/sidebar'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { DashboardProps } from '@/components/dashboard-router'
-import { StatsWidget } from '@/components/dashboard/stats-widget'
+import { StatCard } from '@/components/dashboard/stat-card'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import {
   RoleNavigation,
@@ -319,47 +319,53 @@ export function TeacherDashboard({ user, academy }: DashboardProps) {
         </div>
 
         {/* Teacher Statistics */}
-        <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-5'>
-          <StatsWidget
-            title='My Courses'
+        <div className='grid grid-cols-2 lg:grid-cols-5 gap-3'>
+          <StatCard
+            label='Mis Cursos'
             value={mockTeacherStats.totalCourses}
             icon={BookOpen}
+            iconBg='bg-primary/10'
+            iconColor='text-primary'
             loading={loading}
           />
 
-          <StatsWidget
-            title='Total Students'
+          <StatCard
+            label='Total Estudiantes'
             value={mockTeacherStats.totalStudents}
-            change={12}
-            changeType='increase'
             icon={Users}
+            iconBg='bg-emerald-500/10'
+            iconColor='text-emerald-400'
             loading={loading}
           />
 
-          <StatsWidget
-            title='Completion Rate'
-            value={mockTeacherStats.averageCompletionRate}
-            format='percentage'
-            change={5}
-            changeType='increase'
+          <StatCard
+            label='Tasa de Finalización'
+            value={`${mockTeacherStats.averageCompletionRate}%`}
             icon={TrendingUp}
+            iconBg='bg-sky-500/10'
+            iconColor='text-sky-400'
             loading={loading}
           />
 
-          <StatsWidget
-            title='Pending Reviews'
+          <StatCard
+            label='Pendientes'
             value={mockTeacherStats.pendingReviews}
             icon={ClipboardCheck}
+            iconBg='bg-amber-500/10'
+            iconColor='text-amber-400'
             loading={loading}
           />
 
-          <StatsWidget
-            title='Total Revenue'
-            value={mockTeacherStats.totalRevenue}
-            format='currency'
-            change={8}
-            changeType='increase'
+          <StatCard
+            label='Ingresos'
+            value={new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              maximumFractionDigits: 0,
+            }).format(mockTeacherStats.totalRevenue)}
             icon={DollarSign}
+            iconBg='bg-violet-500/10'
+            iconColor='text-violet-400'
             loading={loading}
           />
         </div>

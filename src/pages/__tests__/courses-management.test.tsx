@@ -1,31 +1,30 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import CoursesManagementPage from '../courses-management'
 
 // Mock dependencies
-const mockNavigate = vi.fn()
-vi.mock('@tanstack/react-router', () => ({
+const mockNavigate = jest.fn()
+jest.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
   Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
     <a href={to}>{children}</a>
   ),
 }))
 
-const mockUseCourses = vi.fn()
-const mockUseDeleteCourse = vi.fn()
-vi.mock('@/hooks/use-courses', () => ({
+const mockUseCourses = jest.fn()
+const mockUseDeleteCourse = jest.fn()
+jest.mock('@/hooks/use-courses', () => ({
   useCourses: (academyId: number) => mockUseCourses(academyId),
   useDeleteCourse: (academyId: number) => mockUseDeleteCourse(academyId),
 }))
 
-const mockUseAuthStore = vi.fn()
-vi.mock('@/stores/auth-store', () => ({
+const mockUseAuthStore = jest.fn()
+jest.mock('@/stores/auth-store', () => ({
   useAuthStore: () => mockUseAuthStore(),
 }))
 
-vi.mock('@/components/courses', () => ({
+jest.mock('@/components/courses', () => ({
   CourseForm: ({ onSuccess }: { onSuccess: () => void }) => (
     <div data-testid='course-form'>
       <button onClick={onSuccess}>Guardar Curso</button>
@@ -79,12 +78,12 @@ describe('CoursesManagementPage', () => {
   ]
 
   const mockDeleteMutation = {
-    mutate: vi.fn(),
+    mutate: jest.fn(),
     isPending: false,
   }
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     mockUseAuthStore.mockReturnValue({
       currentAcademy: mockAcademy,
     })

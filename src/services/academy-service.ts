@@ -54,14 +54,14 @@ class AcademyService {
     view?: TView
   ): Promise<
     TView extends 'minimal'
-      ? AcademyMinimal
-      : TView extends 'summary_light'
-        ? AcademySummaryLight
-        : TView extends 'summary'
-          ? AcademySummary
-          : TView extends 'full'
-            ? AcademyFull
-            : AcademySummary
+    ? AcademyMinimal
+    : TView extends 'summary_light'
+    ? AcademySummaryLight
+    : TView extends 'summary'
+    ? AcademySummary
+    : TView extends 'full'
+    ? AcademyFull
+    : AcademySummary
   > {
     const params = view ? { view } : {}
     const response = await apiClient.get(`/academies/${slug}`, { params })
@@ -79,7 +79,7 @@ class AcademyService {
 
   /**
    * Get all academies
-   * @param params - Query parameters (search, page, per_page, gamification, view)
+   * @param params - Query parameters (search, category, sort_by, page, per_page, gamification, view)
    * @param view - View mode: 'minimal' | 'summary_light' | 'summary' | 'full' (default: 'summary_light')
    * @returns Promise with paginated academies data typed according to view
    */
@@ -88,6 +88,8 @@ class AcademyService {
   >(
     params?: {
       search?: string
+      category?: string
+      sort_by?: string
       page?: number
       per_page?: number
       gamification?: string
@@ -97,12 +99,12 @@ class AcademyService {
     data: (TView extends 'minimal'
       ? AcademyMinimal
       : TView extends 'summary_light'
-        ? AcademySummaryLight
-        : TView extends 'summary'
-          ? AcademySummary
-          : TView extends 'full'
-            ? AcademyFull
-            : AcademySummaryLight)[]
+      ? AcademySummaryLight
+      : TView extends 'summary'
+      ? AcademySummary
+      : TView extends 'full'
+      ? AcademyFull
+      : AcademySummaryLight)[]
     meta: PaginationMeta
   }> {
     const queryParams = {

@@ -42,11 +42,11 @@ export function AcademyCard({ academy, onSelect }: AcademyCardProps) {
   const getRoleColor = (role: string) => {
     switch (role) {
       case 'admin':
-        return 'bg-red-100 text-red-700 border-red-200'
+        return 'bg-red-500/10 text-red-400 border-red-500/20'
       case 'teacher':
-        return 'bg-blue-100 text-blue-700 border-blue-200'
+        return 'bg-blue-500/10 text-blue-400 border-blue-500/20'
       default:
-        return 'bg-green-100 text-green-700 border-green-200'
+        return 'bg-green-500/10 text-green-400 border-green-500/20'
     }
   }
 
@@ -71,7 +71,7 @@ export function AcademyCard({ academy, onSelect }: AcademyCardProps) {
       whileHover={{ y: -4 }}
     >
       <Card
-        className='academy-card hover:border-primary/40 group relative h-full cursor-pointer overflow-hidden border-2 transition-all duration-300 hover:shadow-2xl'
+        className='academy-card hover:border-primary/40 group relative h-full cursor-pointer overflow-hidden border border-border/40 bg-card/60 backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:bg-card/80'
         onClick={() => onSelect(academy)}
       >
         {/* Gradient background effect */}

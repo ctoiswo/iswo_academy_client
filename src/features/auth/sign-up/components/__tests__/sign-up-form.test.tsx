@@ -1,23 +1,22 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { toast } from 'sonner'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { useAuthStore } from '@/stores/auth-store'
 import { SignUpForm } from '../sign-up-form'
 
 // Create mock navigate function
-const mockNavigate = vi.fn()
+const mockNavigate = jest.fn()
 
 // Mock dependencies
-vi.mock('@/stores/auth-store')
-vi.mock('sonner')
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@/stores/auth-store')
+jest.mock('sonner')
+jest.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
 }))
 
-const mockRegister = vi.fn()
-const mockUseAuthStore = vi.mocked(useAuthStore)
-const mockToast = vi.mocked(toast)
+const mockRegister = jest.fn()
+const mockUseAuthStore = jest.mocked(useAuthStore)
+const mockToast = jest.mocked(toast)
 
 describe('SignUpForm', () => {
   beforeEach(() => {
@@ -28,33 +27,33 @@ describe('SignUpForm', () => {
       isAuthenticated: false,
       isLoading: false,
       error: null,
-      login: vi.fn(),
-      logout: vi.fn(),
-      refreshTokens: vi.fn(),
-      setUser: vi.fn(),
-      setTokens: vi.fn(),
-      setLoading: vi.fn(),
-      setError: vi.fn(),
-      reset: vi.fn(),
-      initialize: vi.fn(),
+      login: jest.fn(),
+      logout: jest.fn(),
+      refreshTokens: jest.fn(),
+      setUser: jest.fn(),
+      setTokens: jest.fn(),
+      setLoading: jest.fn(),
+      setError: jest.fn(),
+      reset: jest.fn(),
+      initialize: jest.fn(),
       auth: {
         user: null,
-        setUser: vi.fn(),
+        setUser: jest.fn(),
         accessToken: '',
-        setAccessToken: vi.fn(),
+        setAccessToken: jest.fn(),
         refreshToken: '',
-        setRefreshToken: vi.fn(),
-        resetAccessToken: vi.fn(),
-        reset: vi.fn(),
+        setRefreshToken: jest.fn(),
+        resetAccessToken: jest.fn(),
+        reset: jest.fn(),
       },
     })
 
-    mockToast.success = vi.fn()
-    mockToast.error = vi.fn()
+    mockToast.success = jest.fn()
+    mockToast.error = jest.fn()
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('renders all form fields', () => {

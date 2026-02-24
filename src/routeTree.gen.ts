@@ -14,6 +14,7 @@ import { Route as TermsIndexRouteImport } from './routes/terms/index'
 import { Route as PrivacyIndexRouteImport } from './routes/privacy/index'
 import { Route as LandingIndexRouteImport } from './routes/landing/index'
 import { Route as CreateAcademyIndexRouteImport } from './routes/create-academy/index'
+import { Route as CreateAcademyLandingIndexRouteImport } from './routes/create-academy-landing/index'
 import { Route as CoursesIndexRouteImport } from './routes/courses/index'
 import { Route as AcademySelectionIndexRouteImport } from './routes/academy-selection/index'
 import { Route as AcademiesIndexRouteImport } from './routes/academies/index'
@@ -44,6 +45,7 @@ import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/ind
 import { Route as authSignUpSuccessIndexRouteImport } from './routes/(auth)/sign-up-success/index'
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
 import { Route as authResetPasswordIndexRouteImport } from './routes/(auth)/reset-password/index'
+import { Route as authPasswordChangedIndexRouteImport } from './routes/(auth)/password-changed/index'
 import { Route as authOtpIndexRouteImport } from './routes/(auth)/otp/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
 import { Route as authConfirmIndexRouteImport } from './routes/(auth)/confirm/index'
@@ -125,6 +127,12 @@ const CreateAcademyIndexRoute = CreateAcademyIndexRouteImport.update({
   path: '/create-academy/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CreateAcademyLandingIndexRoute =
+  CreateAcademyLandingIndexRouteImport.update({
+    id: '/create-academy-landing/',
+    path: '/create-academy-landing/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
@@ -280,6 +288,12 @@ const authResetPasswordIndexRoute = authResetPasswordIndexRouteImport.update({
   path: '/reset-password/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const authPasswordChangedIndexRoute =
+  authPasswordChangedIndexRouteImport.update({
+    id: '/(auth)/password-changed/',
+    path: '/password-changed/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const authOtpIndexRoute = authOtpIndexRouteImport.update({
   id: '/(auth)/otp/',
   path: '/otp/',
@@ -676,6 +690,7 @@ export interface FileRoutesByFullPath {
   '/academies': typeof AcademiesIndexRoute
   '/academy-selection': typeof AcademySelectionIndexRoute
   '/courses': typeof CoursesIndexRoute
+  '/create-academy-landing': typeof CreateAcademyLandingIndexRoute
   '/create-academy': typeof CreateAcademyIndexRoute
   '/landing': typeof LandingIndexRoute
   '/privacy': typeof PrivacyIndexRoute
@@ -695,6 +710,7 @@ export interface FileRoutesByFullPath {
   '/confirm': typeof authConfirmIndexRoute
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/otp': typeof authOtpIndexRoute
+  '/password-changed': typeof authPasswordChangedIndexRoute
   '/reset-password': typeof authResetPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
   '/sign-up-success': typeof authSignUpSuccessIndexRoute
@@ -767,6 +783,7 @@ export interface FileRoutesByTo {
   '/academies': typeof AcademiesIndexRoute
   '/academy-selection': typeof AcademySelectionIndexRoute
   '/courses': typeof CoursesIndexRoute
+  '/create-academy-landing': typeof CreateAcademyLandingIndexRoute
   '/create-academy': typeof CreateAcademyIndexRoute
   '/landing': typeof LandingIndexRoute
   '/privacy': typeof PrivacyIndexRoute
@@ -786,6 +803,7 @@ export interface FileRoutesByTo {
   '/confirm': typeof authConfirmIndexRoute
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/otp': typeof authOtpIndexRoute
+  '/password-changed': typeof authPasswordChangedIndexRoute
   '/reset-password': typeof authResetPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
   '/sign-up-success': typeof authSignUpSuccessIndexRoute
@@ -858,6 +876,7 @@ export interface FileRoutesById {
   '/academies/': typeof AcademiesIndexRoute
   '/academy-selection/': typeof AcademySelectionIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/create-academy-landing/': typeof CreateAcademyLandingIndexRoute
   '/create-academy/': typeof CreateAcademyIndexRoute
   '/landing/': typeof LandingIndexRoute
   '/privacy/': typeof PrivacyIndexRoute
@@ -877,6 +896,7 @@ export interface FileRoutesById {
   '/(auth)/confirm/': typeof authConfirmIndexRoute
   '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
   '/(auth)/otp/': typeof authOtpIndexRoute
+  '/(auth)/password-changed/': typeof authPasswordChangedIndexRoute
   '/(auth)/reset-password/': typeof authResetPasswordIndexRoute
   '/(auth)/sign-in/': typeof authSignInIndexRoute
   '/(auth)/sign-up-success/': typeof authSignUpSuccessIndexRoute
@@ -952,6 +972,7 @@ export interface FileRouteTypes {
     | '/academies'
     | '/academy-selection'
     | '/courses'
+    | '/create-academy-landing'
     | '/create-academy'
     | '/landing'
     | '/privacy'
@@ -971,6 +992,7 @@ export interface FileRouteTypes {
     | '/confirm'
     | '/forgot-password'
     | '/otp'
+    | '/password-changed'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up-success'
@@ -1043,6 +1065,7 @@ export interface FileRouteTypes {
     | '/academies'
     | '/academy-selection'
     | '/courses'
+    | '/create-academy-landing'
     | '/create-academy'
     | '/landing'
     | '/privacy'
@@ -1062,6 +1085,7 @@ export interface FileRouteTypes {
     | '/confirm'
     | '/forgot-password'
     | '/otp'
+    | '/password-changed'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up-success'
@@ -1133,6 +1157,7 @@ export interface FileRouteTypes {
     | '/academies/'
     | '/academy-selection/'
     | '/courses/'
+    | '/create-academy-landing/'
     | '/create-academy/'
     | '/landing/'
     | '/privacy/'
@@ -1152,6 +1177,7 @@ export interface FileRouteTypes {
     | '/(auth)/confirm/'
     | '/(auth)/forgot-password/'
     | '/(auth)/otp/'
+    | '/(auth)/password-changed/'
     | '/(auth)/reset-password/'
     | '/(auth)/sign-in/'
     | '/(auth)/sign-up-success/'
@@ -1219,6 +1245,7 @@ export interface RootRouteChildren {
   AcademiesIndexRoute: typeof AcademiesIndexRoute
   AcademySelectionIndexRoute: typeof AcademySelectionIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
+  CreateAcademyLandingIndexRoute: typeof CreateAcademyLandingIndexRoute
   CreateAcademyIndexRoute: typeof CreateAcademyIndexRoute
   LandingIndexRoute: typeof LandingIndexRoute
   PrivacyIndexRoute: typeof PrivacyIndexRoute
@@ -1229,6 +1256,7 @@ export interface RootRouteChildren {
   authConfirmIndexRoute: typeof authConfirmIndexRoute
   authForgotPasswordIndexRoute: typeof authForgotPasswordIndexRoute
   authOtpIndexRoute: typeof authOtpIndexRoute
+  authPasswordChangedIndexRoute: typeof authPasswordChangedIndexRoute
   authResetPasswordIndexRoute: typeof authResetPasswordIndexRoute
   authSignInIndexRoute: typeof authSignInIndexRoute
   authSignUpSuccessIndexRoute: typeof authSignUpSuccessIndexRoute
@@ -1273,6 +1301,13 @@ declare module '@tanstack/react-router' {
       path: '/create-academy'
       fullPath: '/create-academy'
       preLoaderRoute: typeof CreateAcademyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-academy-landing/': {
+      id: '/create-academy-landing/'
+      path: '/create-academy-landing'
+      fullPath: '/create-academy-landing'
+      preLoaderRoute: typeof CreateAcademyLandingIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/': {
@@ -1483,6 +1518,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof authResetPasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/password-changed/': {
+      id: '/(auth)/password-changed/'
+      path: '/password-changed'
+      fullPath: '/password-changed'
+      preLoaderRoute: typeof authPasswordChangedIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/otp/': {
@@ -2200,6 +2242,7 @@ const rootRouteChildren: RootRouteChildren = {
   AcademiesIndexRoute: AcademiesIndexRoute,
   AcademySelectionIndexRoute: AcademySelectionIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
+  CreateAcademyLandingIndexRoute: CreateAcademyLandingIndexRoute,
   CreateAcademyIndexRoute: CreateAcademyIndexRoute,
   LandingIndexRoute: LandingIndexRoute,
   PrivacyIndexRoute: PrivacyIndexRoute,
@@ -2210,6 +2253,7 @@ const rootRouteChildren: RootRouteChildren = {
   authConfirmIndexRoute: authConfirmIndexRoute,
   authForgotPasswordIndexRoute: authForgotPasswordIndexRoute,
   authOtpIndexRoute: authOtpIndexRoute,
+  authPasswordChangedIndexRoute: authPasswordChangedIndexRoute,
   authResetPasswordIndexRoute: authResetPasswordIndexRoute,
   authSignInIndexRoute: authSignInIndexRoute,
   authSignUpSuccessIndexRoute: authSignUpSuccessIndexRoute,

@@ -1,23 +1,22 @@
 import { authApi } from '@/services'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { getErrorMessage } from '@/lib/api-client'
 import { ForgotPassword } from '../index'
 
 // Create mock functions first
-const mockNavigate = vi.fn()
+const mockNavigate = jest.fn()
 
 // Mock dependencies
-vi.mock('@/lib/api-client', () => ({
-  getErrorMessage: vi.fn(),
+jest.mock('@/lib/api-client', () => ({
+  getErrorMessage: jest.fn(),
 }))
-vi.mock('@/services', () => ({
+jest.mock('@/services', () => ({
   authApi: {
-    forgotPassword: vi.fn(),
+    forgotPassword: jest.fn(),
   },
 }))
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
   useLocation: () => ({ pathname: '/forgot-password' }),
   Link: ({ children, to, ...props }: any) => (
@@ -26,15 +25,15 @@ vi.mock('@tanstack/react-router', () => ({
     </a>
   ),
 }))
-vi.mock('sonner', () => ({
+jest.mock('sonner', () => ({
   toast: {
-    success: vi.fn(),
-    error: vi.fn(),
+    success: jest.fn(),
+    error: jest.fn(),
   },
 }))
 
-const mockForgotPassword = vi.mocked(authApi.forgotPassword)
-const mockGetErrorMessage = vi.mocked(getErrorMessage)
+const mockForgotPassword = jest.mocked(authApi.forgotPassword)
+const mockGetErrorMessage = jest.mocked(getErrorMessage)
 
 describe('Flujo de Recuperación de Contraseña', () => {
   beforeEach(() => {
@@ -51,7 +50,7 @@ describe('Flujo de Recuperación de Contraseña', () => {
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('renderiza la página completa de recuperación de contraseña', () => {

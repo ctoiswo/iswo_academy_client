@@ -1,14 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ConfirmEmail } from '../confirm-email'
 
 // Create mock functions
-const mockNavigate = vi.fn()
-const mockUseSearch = vi.fn()
+const mockNavigate = jest.fn()
+const mockUseSearch = jest.fn()
 
 // Mock dependencies
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
   useSearch: () => mockUseSearch(),
   Link: ({ children, to, ...props }: any) => (
@@ -19,17 +18,17 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Mock fetch
-global.fetch = vi.fn()
+global.fetch = jest.fn()
 
 describe('ConfirmEmail Flow Integration', () => {
   beforeEach(() => {
     mockNavigate.mockClear()
     mockUseSearch.mockClear()
-    vi.mocked(fetch).mockClear()
+    jest.mocked(fetch).mockClear()
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('muestra mensaje de error cuando no hay token', async () => {
@@ -57,7 +56,7 @@ describe('ConfirmEmail Flow Integration', () => {
     const mockToken = 'valid-token-123'
     mockUseSearch.mockReturnValue({ token: mockToken })
 
-    vi.mocked(fetch).mockResolvedValueOnce({
+    jest.mocked(fetch).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ message: 'Email confirmed' }),
     } as Response)
@@ -96,7 +95,7 @@ describe('ConfirmEmail Flow Integration', () => {
     const mockToken = 'invalid-token'
     mockUseSearch.mockReturnValue({ token: mockToken })
 
-    vi.mocked(fetch).mockResolvedValueOnce({
+    jest.mocked(fetch).mockResolvedValueOnce({
       ok: false,
       json: async () => ({
         error: {
@@ -128,7 +127,7 @@ describe('ConfirmEmail Flow Integration', () => {
     const mockToken = 'already-confirmed-token'
     mockUseSearch.mockReturnValue({ token: mockToken })
 
-    vi.mocked(fetch).mockResolvedValueOnce({
+    jest.mocked(fetch).mockResolvedValueOnce({
       ok: false,
       json: async () => ({
         error: {
@@ -157,7 +156,7 @@ describe('ConfirmEmail Flow Integration', () => {
     const mockToken = 'expired-token'
     mockUseSearch.mockReturnValue({ token: mockToken })
 
-    vi.mocked(fetch).mockResolvedValueOnce({
+    jest.mocked(fetch).mockResolvedValueOnce({
       ok: false,
       json: async () => ({
         error: {
@@ -189,7 +188,7 @@ describe('ConfirmEmail Flow Integration', () => {
     const mockToken = 'valid-token'
     mockUseSearch.mockReturnValue({ token: mockToken })
 
-    vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'))
+    jest.mocked(fetch).mockRejectedValueOnce(new Error('Network error'))
 
     render(<ConfirmEmail />)
 
@@ -212,7 +211,7 @@ describe('ConfirmEmail Flow Integration', () => {
     const mockToken = 'valid-token'
     mockUseSearch.mockReturnValue({ token: mockToken })
 
-    vi.mocked(fetch).mockResolvedValueOnce({
+    jest.mocked(fetch).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ message: 'Email confirmed' }),
     } as Response)
@@ -234,7 +233,7 @@ describe('ConfirmEmail Flow Integration', () => {
     const mockToken = 'expired-token'
     mockUseSearch.mockReturnValue({ token: mockToken })
 
-    vi.mocked(fetch).mockResolvedValueOnce({
+    jest.mocked(fetch).mockResolvedValueOnce({
       ok: false,
       json: async () => ({
         error: {
@@ -265,9 +264,9 @@ describe('ConfirmEmail Flow Integration', () => {
 
     // Mock window.location.reload
     const originalReload = window.location.reload
-    window.location.reload = vi.fn()
+    window.location.reload = jest.fn()
 
-    vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'))
+    jest.mocked(fetch).mockRejectedValueOnce(new Error('Network error'))
 
     render(<ConfirmEmail />)
 
@@ -290,7 +289,7 @@ describe('ConfirmEmail Flow Integration', () => {
     const mockToken = 'valid-token'
     mockUseSearch.mockReturnValue({ token: mockToken })
 
-    vi.mocked(fetch).mockResolvedValue({
+    jest.mocked(fetch).mockResolvedValue({
       ok: true,
       json: async () => ({ message: 'Email confirmed' }),
     } as Response)

@@ -1,4 +1,3 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import * as cookieUtils from '../cookies'
 import {
   tokenStorage,
@@ -7,20 +6,20 @@ import {
 } from '../token-storage'
 
 // Mock the cookies utility
-vi.mock('../cookies', () => ({
-  getCookie: vi.fn(),
-  setCookie: vi.fn(),
-  removeCookie: vi.fn(),
+jest.mock('../cookies', () => ({
+  getCookie: jest.fn(),
+  setCookie: jest.fn(),
+  removeCookie: jest.fn(),
 }))
 
 // Mock localStorage
 const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
   length: 0,
-  key: vi.fn(),
+  key: jest.fn(),
 }
 
 Object.defineProperty(window, 'localStorage', {
@@ -43,20 +42,20 @@ const mockStoredTokens: StoredTokens = {
 
 describe('TokenStorage', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     // Reset localStorage mock
     localStorageMock.getItem.mockReturnValue(null)
     localStorageMock.setItem.mockImplementation(() => {})
     localStorageMock.removeItem.mockImplementation(() => {})
 
     // Reset cookie mocks
-    vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
-    vi.mocked(cookieUtils.setCookie).mockImplementation(() => {})
-    vi.mocked(cookieUtils.removeCookie).mockImplementation(() => {})
+    jest.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
+    jest.mocked(cookieUtils.setCookie).mockImplementation(() => {})
+    jest.mocked(cookieUtils.removeCookie).mockImplementation(() => {})
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   describe('setTokens', () => {
@@ -88,7 +87,7 @@ describe('TokenStorage', () => {
     })
 
     it('should handle storage errors gracefully', () => {
-      vi.mocked(cookieUtils.setCookie).mockImplementation(() => {
+      jest.mocked(cookieUtils.setCookie).mockImplementation(() => {
         throw new Error('Cookie storage failed')
       })
 
@@ -102,7 +101,7 @@ describe('TokenStorage', () => {
     it('should retrieve tokens from cookies first', () => {
       const expiresAt = Date.now() + 3600000
 
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         switch (key) {
           case 'iswo_access_token':
             return mockTokens.access_token
@@ -125,7 +124,7 @@ describe('TokenStorage', () => {
     })
 
     it('should fallback to localStorage when cookies are not available', () => {
-      vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
+      jest.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
       localStorageMock.getItem.mockReturnValue(JSON.stringify(mockStoredTokens))
 
       const tokens = tokenStorage.getTokens()
@@ -135,7 +134,7 @@ describe('TokenStorage', () => {
     })
 
     it('should return null when no tokens are stored', () => {
-      vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
+      jest.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
       localStorageMock.getItem.mockReturnValue(null)
 
       const tokens = tokenStorage.getTokens()
@@ -144,7 +143,7 @@ describe('TokenStorage', () => {
     })
 
     it('should handle JSON parsing errors gracefully', () => {
-      vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
+      jest.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
       localStorageMock.getItem.mockReturnValue('invalid-json')
 
       const tokens = tokenStorage.getTokens()
@@ -155,7 +154,7 @@ describe('TokenStorage', () => {
 
   describe('getAccessToken', () => {
     it('should return access token when tokens exist', () => {
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return mockTokens.access_token
         if (key === 'iswo_refresh_token') return mockTokens.refresh_token
         if (key === 'iswo_token_expires')
@@ -169,7 +168,7 @@ describe('TokenStorage', () => {
     })
 
     it('should return null when no tokens exist', () => {
-      vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
+      jest.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
       localStorageMock.getItem.mockReturnValue(null)
 
       const accessToken = tokenStorage.getAccessToken()
@@ -180,7 +179,7 @@ describe('TokenStorage', () => {
 
   describe('getRefreshToken', () => {
     it('should return refresh token when tokens exist', () => {
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return mockTokens.access_token
         if (key === 'iswo_refresh_token') return mockTokens.refresh_token
         if (key === 'iswo_token_expires')
@@ -194,7 +193,7 @@ describe('TokenStorage', () => {
     })
 
     it('should return null when no tokens exist', () => {
-      vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
+      jest.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
       localStorageMock.getItem.mockReturnValue(null)
 
       const refreshToken = tokenStorage.getRefreshToken()
@@ -247,7 +246,7 @@ describe('TokenStorage', () => {
     })
 
     it('should check stored tokens when no tokens provided', () => {
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'token'
         if (key === 'iswo_refresh_token') return 'refresh'
         if (key === 'iswo_token_expires')
@@ -263,7 +262,7 @@ describe('TokenStorage', () => {
 
   describe('hasValidTokens', () => {
     it('should return true for valid stored tokens', () => {
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'token'
         if (key === 'iswo_refresh_token') return 'refresh'
         if (key === 'iswo_token_expires')
@@ -277,7 +276,7 @@ describe('TokenStorage', () => {
     })
 
     it('should return false for expired tokens', () => {
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'token'
         if (key === 'iswo_refresh_token') return 'refresh'
         if (key === 'iswo_token_expires') return (Date.now() - 1000).toString()
@@ -290,7 +289,7 @@ describe('TokenStorage', () => {
     })
 
     it('should return false when no tokens exist', () => {
-      vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
+      jest.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
       localStorageMock.getItem.mockReturnValue(null)
 
       const hasValid = tokenStorage.hasValidTokens()
@@ -316,7 +315,7 @@ describe('TokenStorage', () => {
     })
 
     it('should handle clearing errors gracefully', () => {
-      vi.mocked(cookieUtils.removeCookie).mockImplementation(() => {
+      jest.mocked(cookieUtils.removeCookie).mockImplementation(() => {
         throw new Error('Clear failed')
       })
 
@@ -327,7 +326,7 @@ describe('TokenStorage', () => {
   describe('getTimeUntilExpiration', () => {
     it('should return correct time until expiration', () => {
       const expiresAt = Date.now() + 3600000 // 1 hour from now
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'token'
         if (key === 'iswo_refresh_token') return 'refresh'
         if (key === 'iswo_token_expires') return expiresAt.toString()
@@ -342,7 +341,7 @@ describe('TokenStorage', () => {
 
     it('should return 0 for expired tokens', () => {
       const expiresAt = Date.now() - 1000 // 1 second ago
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'token'
         if (key === 'iswo_refresh_token') return 'refresh'
         if (key === 'iswo_token_expires') return expiresAt.toString()
@@ -355,7 +354,7 @@ describe('TokenStorage', () => {
     })
 
     it('should return 0 when no tokens exist', () => {
-      vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
+      jest.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
       localStorageMock.getItem.mockReturnValue(null)
 
       const timeUntilExpiration = tokenStorage.getTimeUntilExpiration()
@@ -367,7 +366,7 @@ describe('TokenStorage', () => {
   describe('willExpireSoon', () => {
     it('should return true for tokens expiring within specified time', () => {
       const expiresAt = Date.now() + 60000 // 1 minute from now
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'token'
         if (key === 'iswo_refresh_token') return 'refresh'
         if (key === 'iswo_token_expires') return expiresAt.toString()
@@ -381,7 +380,7 @@ describe('TokenStorage', () => {
 
     it('should return false for tokens not expiring soon', () => {
       const expiresAt = Date.now() + 3600000 // 1 hour from now
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'token'
         if (key === 'iswo_refresh_token') return 'refresh'
         if (key === 'iswo_token_expires') return expiresAt.toString()
@@ -395,7 +394,7 @@ describe('TokenStorage', () => {
 
     it('should use default 5 minute threshold', () => {
       const expiresAt = Date.now() + 60000 // 1 minute from now
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'token'
         if (key === 'iswo_refresh_token') return 'refresh'
         if (key === 'iswo_token_expires') return expiresAt.toString()
@@ -411,7 +410,7 @@ describe('TokenStorage', () => {
   describe('updateAccessToken', () => {
     beforeEach(() => {
       // Set up existing tokens
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'old-token'
         if (key === 'iswo_refresh_token') return 'refresh-token'
         if (key === 'iswo_token_expires')
@@ -436,7 +435,7 @@ describe('TokenStorage', () => {
     })
 
     it('should throw error when no existing tokens', () => {
-      vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
+      jest.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
       localStorageMock.getItem.mockReturnValue(null)
 
       expect(() => tokenStorage.updateAccessToken('new-token', 3600)).toThrow(
@@ -448,7 +447,7 @@ describe('TokenStorage', () => {
   describe('getTokenInfo', () => {
     it('should return correct token info for valid tokens', () => {
       const expiresAt = Date.now() + 3600000
-      vi.mocked(cookieUtils.getCookie).mockImplementation((key) => {
+      jest.mocked(cookieUtils.getCookie).mockImplementation((key) => {
         if (key === 'iswo_access_token') return 'token'
         if (key === 'iswo_refresh_token') return 'refresh'
         if (key === 'iswo_token_expires') return expiresAt.toString()
@@ -464,7 +463,7 @@ describe('TokenStorage', () => {
     })
 
     it('should return correct token info when no tokens exist', () => {
-      vi.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
+      jest.mocked(cookieUtils.getCookie).mockReturnValue(undefined)
       localStorageMock.getItem.mockReturnValue(null)
 
       const tokenInfo = tokenStorage.getTokenInfo()

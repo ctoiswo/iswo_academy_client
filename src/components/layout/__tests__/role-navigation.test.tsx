@@ -1,22 +1,21 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { AuthUser, AcademyMembership } from '@/stores/auth-store'
 import type { DashboardType } from '@/components/dashboard-router'
 import { RoleNavigation, RoleBreadcrumb } from '../role-navigation'
 
 // Mock the hooks
-vi.mock('@/hooks/use-academy-permissions', () => ({
-  useAcademyPermissions: vi.fn(),
+jest.mock('@/hooks/use-academy-permissions', () => ({
+  useAcademyPermissions: jest.fn(),
 }))
 
 // Mock TanStack Router
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   Link: ({ children, to, className, ...props }: any) => (
     <a href={to} className={className} {...props}>
       {children}
     </a>
   ),
-  useRouterState: vi.fn(() => ({
+  useRouterState: jest.fn(() => ({
     location: { pathname: '/academy/1/dashboard' },
   })),
 }))
@@ -47,18 +46,18 @@ describe('RoleNavigation', () => {
   }
 
   beforeEach(async () => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     // Set default mock return value
     const { useAcademyPermissions } = await import(
       '@/hooks/use-academy-permissions'
     )
-    vi.mocked(useAcademyPermissions).mockReturnValue({
+    jest.mocked(useAcademyPermissions).mockReturnValue({
       checkAccess: {
-        role: vi.fn(() => true),
-        permission: vi.fn(() => true),
+        role: jest.fn(() => true),
+        permission: jest.fn(() => true),
       },
       helpers: {
-        isSuperAdmin: vi.fn(() => false),
+        isSuperAdmin: jest.fn(() => false),
       },
     })
   })
@@ -139,13 +138,13 @@ describe('RoleNavigation', () => {
       const { useAcademyPermissions } = await import(
         '@/hooks/use-academy-permissions'
       )
-      vi.mocked(useAcademyPermissions).mockReturnValue({
+      jest.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
-          role: vi.fn(() => true),
-          permission: vi.fn((permission) => permission !== 'manage_courses'),
+          role: jest.fn(() => true),
+          permission: jest.fn((permission) => permission !== 'manage_courses'),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => false),
+          isSuperAdmin: jest.fn(() => false),
         },
       })
 
@@ -212,13 +211,13 @@ describe('RoleNavigation', () => {
       const { useAcademyPermissions } = await import(
         '@/hooks/use-academy-permissions'
       )
-      vi.mocked(useAcademyPermissions).mockReturnValue({
+      jest.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
-          role: vi.fn(() => true),
-          permission: vi.fn(() => true),
+          role: jest.fn(() => true),
+          permission: jest.fn(() => true),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => true),
+          isSuperAdmin: jest.fn(() => true),
         },
       })
 
@@ -242,13 +241,13 @@ describe('RoleNavigation', () => {
       const { useAcademyPermissions } = await import(
         '@/hooks/use-academy-permissions'
       )
-      vi.mocked(useAcademyPermissions).mockReturnValue({
+      jest.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
-          role: vi.fn(() => false),
-          permission: vi.fn(() => false),
+          role: jest.fn(() => false),
+          permission: jest.fn(() => false),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => false),
+          isSuperAdmin: jest.fn(() => false),
         },
       })
 
@@ -272,13 +271,13 @@ describe('RoleNavigation', () => {
       const { useAcademyPermissions } = await import(
         '@/hooks/use-academy-permissions'
       )
-      vi.mocked(useAcademyPermissions).mockReturnValue({
+      jest.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
-          role: vi.fn(() => true),
-          permission: vi.fn(() => true),
+          role: jest.fn(() => true),
+          permission: jest.fn(() => true),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => false),
+          isSuperAdmin: jest.fn(() => false),
         },
       })
 
@@ -299,13 +298,13 @@ describe('RoleNavigation', () => {
       const { useAcademyPermissions } = await import(
         '@/hooks/use-academy-permissions'
       )
-      vi.mocked(useAcademyPermissions).mockReturnValue({
+      jest.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
-          role: vi.fn((role) => role === 'student'), // Only student role
-          permission: vi.fn(() => true),
+          role: jest.fn((role) => role === 'student'), // Only student role
+          permission: jest.fn(() => true),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => false),
+          isSuperAdmin: jest.fn(() => false),
         },
       })
 
@@ -350,18 +349,18 @@ describe('RoleBreadcrumb', () => {
   }
 
   beforeEach(async () => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     // Set default mock return value for breadcrumb tests
     const { useAcademyPermissions } = await import(
       '@/hooks/use-academy-permissions'
     )
-    vi.mocked(useAcademyPermissions).mockReturnValue({
+    jest.mocked(useAcademyPermissions).mockReturnValue({
       checkAccess: {
-        role: vi.fn(() => true),
-        permission: vi.fn(() => true),
+        role: jest.fn(() => true),
+        permission: jest.fn(() => true),
       },
       helpers: {
-        isSuperAdmin: vi.fn(() => false),
+        isSuperAdmin: jest.fn(() => false),
       },
     })
   })
@@ -426,13 +425,13 @@ describe('RoleBreadcrumb', () => {
       const { useAcademyPermissions } = await import(
         '@/hooks/use-academy-permissions'
       )
-      vi.mocked(useAcademyPermissions).mockReturnValue({
+      jest.mocked(useAcademyPermissions).mockReturnValue({
         checkAccess: {
-          role: vi.fn(() => true),
-          permission: vi.fn(() => true),
+          role: jest.fn(() => true),
+          permission: jest.fn(() => true),
         },
         helpers: {
-          isSuperAdmin: vi.fn(() => true),
+          isSuperAdmin: jest.fn(() => true),
         },
       })
 

@@ -1,5 +1,4 @@
 import { renderHook } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useAuthStore } from '@/stores/auth-store'
 import {
   useAcademyPermissions,
@@ -7,11 +6,11 @@ import {
 } from '../use-academy-permissions'
 
 // Mock the auth store
-vi.mock('@/stores/auth-store', () => ({
-  useAuthStore: vi.fn(),
+jest.mock('@/stores/auth-store', () => ({
+  useAuthStore: jest.fn(),
 }))
 
-const mockUseAuthStore = vi.mocked(useAuthStore)
+const mockUseAuthStore = jest.mocked(useAuthStore)
 
 describe('useAcademyPermissions', () => {
   const mockAcademyData = {

@@ -4,6 +4,7 @@ import type {
   CreateCourseRequest,
   UpdateCourseRequest,
   CourseFilters,
+  PaginatedResponse,
 } from '@/types'
 import apiClient from '@/lib/api-client'
 
@@ -34,6 +35,27 @@ class CourseService {
     return Array.isArray(response.data)
       ? response.data
       : response.data?.data || []
+  }
+
+  /**
+   * Get all courses (public endpoint, no auth required)
+   * Sends the JWT token when available so the backend returns the
+   * correct view level (:minimal for guests, :summary for authenticated users).
+   * @param filters - Optional filters (search, category, page, per_page, etc.)
+   * @returns Promise with paginated response including meta
+   */
+  async getPublicCourses(filters?: CourseFilters): Promise<PaginatedResponse<Course>> {
+    const response = await apiClient.get('/courses', { params: filters })
+    // Backend wraps paginated results as { data: [], meta: {} }
+    if (response.data?.data && response.data?.meta) {
+      return response.data as PaginatedResponse<Course>
+    }
+    // Fallback for non-paginated responses
+    const data = Array.isArray(response.data) ? response.data : response.data?.data || []
+    return {
+      data,
+      meta: { current_page: 1, total_pages: 1, total_count: data.length, per_page: data.length },
+    }
   }
 
   /**
@@ -95,7 +117,7 @@ class CourseService {
     // Si es FormData, enviarlo directamente (ya tiene la estructura course[field])
     // Si es objeto, envolverlo en { course: data }
     const payload = data instanceof FormData ? data : { course: data }
-    
+
     const response = await apiClient.post(`/academies/${academySlug}/courses`, payload, {
       headers: data instanceof FormData ? {
         'Content-Type': 'multipart/form-data'
@@ -116,7 +138,7 @@ class CourseService {
     // Si es FormData, enviarlo directamente (ya tiene la estructura course[field])
     // Si es objeto, envolverlo en { course: data }
     const payload = data instanceof FormData ? data : { course: data }
-    
+
     const response = await apiClient.put(`/academies/${academySlug}/courses/${courseSlug}`, payload, {
       headers: data instanceof FormData ? {
         'Content-Type': 'multipart/form-data'

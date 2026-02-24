@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import type { Certificate } from '../../types'
 import { Certificates } from '../certificates'
 
@@ -134,9 +133,9 @@ describe('Certificates', () => {
   })
 
   it('calls callback functions when buttons are clicked', () => {
-    const mockDownload = vi.fn()
-    const mockView = vi.fn()
-    const mockVerify = vi.fn()
+    const mockDownload = jest.fn()
+    const mockView = jest.fn()
+    const mockVerify = jest.fn()
 
     render(
       <Certificates

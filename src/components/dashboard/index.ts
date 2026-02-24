@@ -2,6 +2,10 @@
 export { StatsWidget } from './stats-widget'
 export type { StatsWidgetProps } from './stats-widget'
 
+// Stat Card
+export { StatCard } from './stat-card'
+export type { StatCardProps } from './stat-card'
+
 // Dashboard Card
 export { DashboardCard, MetricCard, ListCard } from './dashboard-card'
 export type {

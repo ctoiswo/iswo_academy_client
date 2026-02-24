@@ -1,10 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { LandingPage } from '@/features/landing-page'
 
 // Mock react-i18next
-vi.mock('react-i18next', () => ({
+jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
@@ -70,7 +69,7 @@ vi.mock('react-i18next', () => ({
 }))
 
 // Mock TanStack Router
-vi.mock('@tanstack/react-router', () => ({
+jest.mock('@tanstack/react-router', () => ({
   Link: ({ children, to, ...props }: any) => (
     <a href={to} {...props}>
       {children}
@@ -79,7 +78,7 @@ vi.mock('@tanstack/react-router', () => ({
 }))
 
 // Mock hook de traducción personalizado
-vi.mock('@/hooks/use-translation', () => ({
+jest.mock('@/hooks/use-translation', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
@@ -92,7 +91,7 @@ vi.mock('@/hooks/use-translation', () => ({
 }))
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
+jest.mock('framer-motion', () => ({
   motion: {
     nav: ({ children, ...props }: any) => <nav {...props}>{children}</nav>,
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
@@ -112,7 +111,7 @@ vi.mock('framer-motion', () => ({
 }))
 
 // Mock landing-page feature components
-vi.mock('@/features/landing-page/components/Navigation', () => ({
+jest.mock('@/features/landing-page/components/Navigation', () => ({
   Navigation: ({ onSectionClick }: any) => (
     <nav data-testid='navigation'>
       <div>ISWO Academy</div>
@@ -128,7 +127,7 @@ vi.mock('@/features/landing-page/components/Navigation', () => ({
   ),
 }))
 
-vi.mock('@/features/landing-page/components/HeroSection', () => ({
+jest.mock('@/features/landing-page/components/HeroSection', () => ({
   HeroSection: () => (
     <section data-testid='hero-section'>
       <h1>Crea tu Propia Academia Online</h1>
@@ -143,7 +142,7 @@ vi.mock('@/features/landing-page/components/HeroSection', () => ({
   ),
 }))
 
-vi.mock('@/features/landing-page/components/FeaturesSection', () => ({
+jest.mock('@/features/landing-page/components/FeaturesSection', () => ({
   FeaturesSection: () => (
     <section data-testid='features-section' id='features'>
       <h2>Todo lo que necesitas para construir tu academia</h2>
@@ -159,7 +158,7 @@ vi.mock('@/features/landing-page/components/FeaturesSection', () => ({
   ),
 }))
 
-vi.mock('@/features/landing-page/components/PricingSection', () => ({
+jest.mock('@/features/landing-page/components/PricingSection', () => ({
   PricingSection: () => (
     <section data-testid='pricing-section' id='pricing'>
       <h2>Precios simples y transparentes</h2>
@@ -181,7 +180,7 @@ vi.mock('@/features/landing-page/components/PricingSection', () => ({
   ),
 }))
 
-vi.mock('@/features/landing-page/components/TestimonialsSection', () => ({
+jest.mock('@/features/landing-page/components/TestimonialsSection', () => ({
   TestimonialsSection: () => (
     <section data-testid='testimonials-section' id='testimonials'>
       <h2>Con la confianza de educadores de todo el mundo</h2>
@@ -192,7 +191,7 @@ vi.mock('@/features/landing-page/components/TestimonialsSection', () => ({
   ),
 }))
 
-vi.mock('@/features/landing-page/components/CTASection', () => ({
+jest.mock('@/features/landing-page/components/CTASection', () => ({
   CTASection: () => (
     <section data-testid='cta-section'>
       <h2>¿Listo para construir tu academia?</h2>
@@ -202,7 +201,7 @@ vi.mock('@/features/landing-page/components/CTASection', () => ({
   ),
 }))
 
-vi.mock('@/features/landing-page/components/Footer', () => ({
+jest.mock('@/features/landing-page/components/Footer', () => ({
   Footer: ({ onSectionClick }: any) => (
     <footer data-testid='footer'>
       <div>
@@ -234,7 +233,7 @@ vi.mock('@/features/landing-page/components/Footer', () => ({
   ),
 }))
 
-vi.mock('@/features/landing-page/components/ScrollToTop', () => ({
+jest.mock('@/features/landing-page/components/ScrollToTop', () => ({
   ScrollToTop: ({ show, onClick }: any) =>
     show ? (
       <button onClick={onClick} data-testid='scroll-to-top'>
@@ -249,13 +248,13 @@ describe('LandingPage', () => {
   beforeEach(() => {
     user = userEvent.setup()
     // Mock scrollIntoView
-    Element.prototype.scrollIntoView = vi.fn()
+    Element.prototype.scrollIntoView = jest.fn()
     // Mock window.scrollTo
-    window.scrollTo = vi.fn()
+    window.scrollTo = jest.fn()
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('renders hero section with main heading', () => {

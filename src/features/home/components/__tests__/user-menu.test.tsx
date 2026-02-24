@@ -1,10 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { UserMenu } from '../user-menu'
 
 // Mock react-i18next
-vi.mock('react-i18next', () => ({
+jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
@@ -20,8 +19,8 @@ vi.mock('react-i18next', () => ({
 }))
 
 // Mock TanStack Router
-const mockNavigate = vi.fn()
-vi.mock('@tanstack/react-router', () => ({
+const mockNavigate = jest.fn()
+jest.mock('@tanstack/react-router', () => ({
   Link: ({ children, to, ...props }: any) => (
     <a href={to} {...props}>
       {children}
@@ -34,17 +33,17 @@ vi.mock('@tanstack/react-router', () => ({
 const mockAuthStore = {
   isAuthenticated: false,
   user: null as any,
-  logout: vi.fn(),
+  logout: jest.fn(),
   academyData: null as any,
   currentAcademy: null as any,
 }
 
-vi.mock('@/stores/auth-store', () => ({
+jest.mock('@/stores/auth-store', () => ({
   useAuthStore: () => mockAuthStore,
 }))
 
 // Mock lucide-react icons
-vi.mock('lucide-react', () => ({
+jest.mock('lucide-react', () => ({
   LayoutDashboard: ({ className }: { className?: string }) => (
     <div className={className} data-testid='dashboard-icon'>
       📊
@@ -63,7 +62,7 @@ vi.mock('lucide-react', () => ({
 }))
 
 // Mock UI components
-vi.mock('@/components/ui/avatar', () => ({
+jest.mock('@/components/ui/avatar', () => ({
   Avatar: ({ children, className, ...props }: any) => (
     <div className={className} data-testid='avatar' {...props}>
       {children}
@@ -79,7 +78,7 @@ vi.mock('@/components/ui/avatar', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/button', () => ({
+jest.mock('@/components/ui/button', () => ({
   Button: ({
     children,
     variant,
@@ -103,7 +102,7 @@ vi.mock('@/components/ui/button', () => ({
   },
 }))
 
-vi.mock('@/components/ui/dropdown-menu', () => ({
+jest.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenu: ({ children }: any) => (
     <div data-testid='dropdown-menu'>{children}</div>
   ),
@@ -164,7 +163,7 @@ const mockAcademyData = {
 
 describe('UserMenu', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     // Reset auth store to unauthenticated state
     mockAuthStore.isAuthenticated = false
     mockAuthStore.user = null
