@@ -14,6 +14,7 @@ import {
   FileText,
   ChevronRight,
   Home,
+  Activity,
 } from 'lucide-react'
 import type { AuthUser, AcademyMembership } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'
@@ -248,11 +249,18 @@ function getNavigationItems(
         description: 'Manage all users across academies',
       },
       {
-        label: 'Analytics',
-        path: '/super-admin/analytics',
-        icon: BarChart3,
+        label: 'Payments',
+        path: '/super-admin/payments',
+        icon: CreditCard,
         roles: ['super_admin'],
-        description: 'Platform-wide analytics and reports',
+        description: 'View and manage all platform payments',
+      },
+      {
+        label: 'System Health',
+        path: '/super-admin/health',
+        icon: Activity,
+        roles: ['super_admin'],
+        description: 'Monitor system services and platform activity',
       },
       {
         label: 'System Settings',

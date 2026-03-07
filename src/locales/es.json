@@ -1138,5 +1138,261 @@
     "errors": {
       "statsError": "Error al cargar estadísticas: {{message}}"
     }
+  },
+  "helpCenter": {
+    "title": "Centro de Ayuda",
+    "subtitle": "Encuentra respuestas y navega por la plataforma",
+    "hero": {
+      "title": "¿Cómo podemos ayudarte?",
+      "subtitle": "Explora las categorías a continuación o dirígete directamente a una sección de la plataforma."
+    },
+    "quickLinks": {
+      "title": "Accesos Rápidos"
+    },
+    "categories": {
+      "title": "Explorar por Tema",
+      "gettingStarted": {
+        "title": "Comenzar",
+        "description": "¿Eres nuevo? Empieza desde el principio.",
+        "links": {
+          "dashboard": "Ir al Panel",
+          "onboarding": "Completar Configuración",
+          "exploreCourses": "Explorar Cursos",
+          "exploreAcademies": "Explorar Academias"
+        }
+      },
+      "academy": {
+        "title": "Gestión de Academia",
+        "description": "Crea y administra tu propia academia.",
+        "links": {
+          "createAcademy": "Crear una Academia",
+          "manageAcademy": "Gestionar Mi Academia",
+          "academyMembers": "Ver Miembros"
+        }
+      },
+      "courses": {
+        "title": "Cursos y Aprendizaje",
+        "description": "Inscríbete, aprende y obtén certificados.",
+        "links": {
+          "browseCourses": "Explorar Cursos",
+          "myCourses": "Mis Cursos",
+          "certificates": "Mis Certificados"
+        }
+      },
+      "account": {
+        "title": "Cuenta y Configuración",
+        "description": "Administra tu perfil y preferencias.",
+        "links": {
+          "profile": "Editar Perfil",
+          "account": "Configuración de Cuenta",
+          "appearance": "Apariencia",
+          "notifications": "Notificaciones"
+        }
+      },
+      "billing": {
+        "title": "Facturación y Pagos",
+        "description": "Compras, reembolsos y códigos de acceso.",
+        "links": {
+          "purchaseCourse": "Comprar un Curso",
+          "accessCode": "Canjear Código de Acceso",
+          "refunds": "Solicitar un Reembolso"
+        }
+      },
+      "security": {
+        "title": "Privacidad y Seguridad",
+        "description": "Tus datos, derechos y políticas.",
+        "links": {
+          "privacy": "Política de Privacidad",
+          "terms": "Términos de Servicio",
+          "settings": "Configuración de Seguridad"
+        }
+      }
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes",
+      "items": {
+        "howToCreate": {
+          "q": "¿Cómo creo mi propia academia?",
+          "a": "Ve a la página 'Crea tu Academia' desde el menú de navegación. Sigue los pasos de configuración para establecer el nombre, descripción y primer curso de tu academia."
+        },
+        "howToEnroll": {
+          "q": "¿Cómo me inscribo en un curso?",
+          "a": "Explora el catálogo de Cursos, haz clic en el curso que te interese y sigue los pasos de inscripción. Algunos cursos son gratuitos y otros requieren compra."
+        },
+        "certificate": {
+          "q": "¿Cómo obtengo un certificado de finalización?",
+          "a": "Completa todas las lecciones y evaluaciones del curso. Una vez que alcances el 100% de progreso, se generará automáticamente un certificado disponible en Mis Cursos."
+        },
+        "refund": {
+          "q": "¿Puedo solicitar un reembolso?",
+          "a": "Las solicitudes de reembolso son gestionadas por el propietario de la academia. Contacta al correo de soporte o comunícate directamente a través de la plataforma si crees que tienes derecho a un reembolso."
+        },
+        "multipleAcademies": {
+          "q": "¿Puedo ser parte de varias academias?",
+          "a": "Sí. Puedes inscribirte en cursos de diferentes academias. Si eres instructor o propietario de una academia, puedes gestionar varias academias desde tu panel."
+        }
+      }
+    },
+    "contact": {
+      "email": {
+        "title": "Soporte por Email",
+        "description": "Envíanos un mensaje y responderemos en menos de 24 horas."
+      },
+      "docs": {
+        "title": "Legal y Documentación",
+        "description": "Revisa nuestras políticas y términos.",
+        "termsLink": "Términos de Servicio"
+      }
+    }
+  },
+  "settings": {
+    "profile": {
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "email": "Correo electrónico",
+      "updateProfile": "Actualizar perfil",
+      "saving": "Guardando…",
+      "updateSuccess": "Perfil actualizado correctamente.",
+      "updateError": "Error al actualizar el perfil.",
+      "dangerZone": {
+        "title": "Zona de peligro",
+        "description": "Elimina permanentemente tu cuenta y todos los datos asociados. Esta acción no se puede deshacer.",
+        "trigger": "Eliminar cuenta",
+        "dialogTitle": "Eliminar cuenta",
+        "dialogDescription": "¿Estás seguro de que deseas eliminar permanentemente tu cuenta? Esta acción no se puede deshacer.",
+        "cancel": "Cancelar",
+        "confirm": "Eliminar cuenta",
+        "error": "Error al eliminar la cuenta."
+      }
+    },
+    "title": "Configuración",
+    "subtitle": "Administra la configuración de tu cuenta y tus preferencias de correo."
+  },
+  "superAdmin": {
+    "users": {
+      "title": "Usuarios",
+      "subtitle": "Gestiona todos los usuarios de la plataforma",
+      "stats": {
+        "total": "Total usuarios",
+        "confirmed": "Confirmados",
+        "unconfirmed": "Sin confirmar",
+        "superAdmins": "Super admins",
+        "newThisMonth": "+{{count}} este mes"
+      },
+      "filters": {
+        "searchPlaceholder": "Buscar por nombre o email...",
+        "filterPlaceholder": "Filtrar por...",
+        "sortPlaceholder": "Ordenar por...",
+        "all": "Todos",
+        "confirmed": "Confirmados",
+        "unconfirmed": "Sin confirmar",
+        "superAdmin": "Super admins",
+        "sortDate": "Fecha de registro",
+        "sortLastLogin": "Último acceso",
+        "sortName": "Nombre",
+        "sortEmail": "Email"
+      },
+      "table": {
+        "loading": "Cargando usuarios...",
+        "emptySearch": "No se encontraron usuarios",
+        "empty": "No hay usuarios disponibles",
+        "colUser": "Usuario",
+        "colStatus": "Estado",
+        "colAcademies": "Academias",
+        "colRegistered": "Registro",
+        "colLastLogin": "Último acceso",
+        "colActions": "Acciones",
+        "statusConfirmed": "Confirmado",
+        "statusPending": "Pendiente",
+        "moreAcademies": "+{{count}} más",
+        "makeSuperAdmin": "Hacer super admin",
+        "removeSuperAdmin": "Quitar super admin"
+      },
+      "relative": {
+        "today": "Hoy",
+        "yesterday": "Ayer",
+        "days": "Hace {{count}} días",
+        "months": "Hace {{count}} meses",
+        "years": "Hace {{count}} años"
+      },
+      "pagination": {
+        "showing": "Mostrando {{from}}–{{to}} de {{total}} usuarios",
+        "previous": "Anterior",
+        "next": "Siguiente"
+      },
+      "dialog": {
+        "promoteTitle": "¿Hacer super admin?",
+        "demoteTitle": "¿Quitar super admin?",
+        "promoteDesc": "{{name}} tendrá acceso completo a la plataforma como super administrador.",
+        "demoteDesc": "{{name}} perderá los privilegios de super administrador.",
+        "cancel": "Cancelar",
+        "saving": "Guardando...",
+        "confirm": "Confirmar",
+        "removeRole": "Quitar rol"
+      },
+      "toast": {
+        "loadError": "No se pudieron cargar los usuarios",
+        "promoted": "{{name}} ahora es super admin.",
+        "demoted": "Se quitó el rol de super admin a {{name}}.",
+        "updateError": "No se pudo actualizar el usuario."
+      }
+    },
+    "payments": {
+      "title": "Pagos",
+      "subtitle": "Gestiona todos los pagos de la plataforma",
+      "stats": {
+        "totalRevenue": "Ingresos totales",
+        "completed": "Completados",
+        "pending": "Pendientes",
+        "failed": "Fallidos",
+        "refunded": "Reembolsados",
+        "thisMonth": "este mes"
+      },
+      "filters": {
+        "searchPlaceholder": "Buscar por usuario, email o transacción...",
+        "filterPlaceholder": "Filtrar por estado...",
+        "filterAll": "Todos",
+        "filterCompleted": "Completados",
+        "filterPending": "Pendientes",
+        "filterFailed": "Fallidos",
+        "filterRefunded": "Reembolsados",
+        "sortPlaceholder": "Ordenar por...",
+        "sortDate": "Fecha",
+        "sortAmount": "Monto"
+      },
+      "table": {
+        "loading": "Cargando pagos...",
+        "empty": "No se encontraron pagos.",
+        "user": "Usuario",
+        "amount": "Monto",
+        "status": "Estado",
+        "resource": "Recurso",
+        "provider": "Proveedor",
+        "date": "Fecha",
+        "statusCompleted": "Completado",
+        "statusPending": "Pendiente",
+        "statusFailed": "Fallido",
+        "statusRefunded": "Reembolsado",
+        "refundAction": "Reembolsar"
+      },
+      "pagination": {
+        "showing": "Mostrando {{from}}–{{to}} de {{total}} pagos",
+        "previous": "Anterior",
+        "next": "Siguiente"
+      },
+      "dialog": {
+        "title": "¿Confirmar reembolso?",
+        "description": "El pago de {{name}} será marcado como reembolsado. Esta acción no se puede deshacer.",
+        "thisUser": "este usuario",
+        "cancel": "Cancelar",
+        "confirm": "Confirmar reembolso",
+        "processing": "Procesando..."
+      },
+      "toast": {
+        "loadError": "No se pudieron cargar los pagos",
+        "refundSuccess": "Reembolso procesado correctamente.",
+        "refundError": "No se pudo procesar el reembolso."
+      }
+    }
   }
 }

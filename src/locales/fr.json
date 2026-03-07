@@ -647,5 +647,261 @@
     "errors": {
       "statsError": "Erreur lors du chargement des statistiques : {{message}}"
     }
+  },
+  "helpCenter": {
+    "title": "Centre d'aide",
+    "subtitle": "Trouvez des réponses et naviguez sur la plateforme",
+    "hero": {
+      "title": "Comment pouvons-nous vous aider ?",
+      "subtitle": "Parcourez les catégories ci-dessous ou accédez directement à une section de la plateforme."
+    },
+    "quickLinks": {
+      "title": "Liens Rapides"
+    },
+    "categories": {
+      "title": "Parcourir par Sujet",
+      "gettingStarted": {
+        "title": "Premiers Pas",
+        "description": "Nouveau ici ? Commencez par le début.",
+        "links": {
+          "dashboard": "Aller au Tableau de Bord",
+          "onboarding": "Terminer la Configuration",
+          "exploreCourses": "Explorer les Cours",
+          "exploreAcademies": "Explorer les Académies"
+        }
+      },
+      "academy": {
+        "title": "Gestion d'Académie",
+        "description": "Créez et gérez votre propre académie.",
+        "links": {
+          "createAcademy": "Créer une Académie",
+          "manageAcademy": "Gérer Mon Académie",
+          "academyMembers": "Voir les Membres"
+        }
+      },
+      "courses": {
+        "title": "Cours et Apprentissage",
+        "description": "Inscrivez-vous, apprenez et obtenez des certificats.",
+        "links": {
+          "browseCourses": "Parcourir les Cours",
+          "myCourses": "Mes Cours",
+          "certificates": "Mes Certificats"
+        }
+      },
+      "account": {
+        "title": "Compte et Paramètres",
+        "description": "Gérez votre profil et vos préférences.",
+        "links": {
+          "profile": "Modifier le Profil",
+          "account": "Paramètres du Compte",
+          "appearance": "Apparence",
+          "notifications": "Notifications"
+        }
+      },
+      "billing": {
+        "title": "Facturation et Paiements",
+        "description": "Achats, remboursements et codes d'accès.",
+        "links": {
+          "purchaseCourse": "Acheter un Cours",
+          "accessCode": "Utiliser un Code d'Accès",
+          "refunds": "Demander un Remboursement"
+        }
+      },
+      "security": {
+        "title": "Confidentialité et Sécurité",
+        "description": "Vos données, droits et politiques.",
+        "links": {
+          "privacy": "Politique de Confidentialité",
+          "terms": "Conditions d'Utilisation",
+          "settings": "Paramètres de Sécurité"
+        }
+      }
+    },
+    "faq": {
+      "title": "Questions Fréquentes",
+      "items": {
+        "howToCreate": {
+          "q": "Comment créer ma propre académie ?",
+          "a": "Rendez-vous sur la page 'Créer votre Académie' depuis le menu de navigation. Suivez les étapes de configuration pour définir le nom, la description et le premier cours de votre académie."
+        },
+        "howToEnroll": {
+          "q": "Comment m'inscrire à un cours ?",
+          "a": "Parcourez le catalogue de Cours, cliquez sur le cours qui vous intéresse et suivez les étapes d'inscription. Certains cours sont gratuits, d'autres nécessitent un achat."
+        },
+        "certificate": {
+          "q": "Comment obtenir un certificat de réussite ?",
+          "a": "Complétez toutes les leçons et évaluations du cours. Une fois 100 % de progression atteint, un certificat est automatiquement généré et disponible dans Mes Cours."
+        },
+        "refund": {
+          "q": "Puis-je demander un remboursement ?",
+          "a": "Les demandes de remboursement sont traitées par le propriétaire de l'académie. Contactez l'e-mail de support ou communiquez directement via la plateforme si vous pensez avoir droit à un remboursement."
+        },
+        "multipleAcademies": {
+          "q": "Puis-je faire partie de plusieurs académies ?",
+          "a": "Oui. Vous pouvez vous inscrire à des cours de différentes académies. Si vous êtes instructeur ou propriétaire, vous pouvez gérer plusieurs académies depuis votre tableau de bord."
+        }
+      }
+    },
+    "contact": {
+      "email": {
+        "title": "Support par E-mail",
+        "description": "Envoyez-nous un message et nous répondrons sous 24 heures."
+      },
+      "docs": {
+        "title": "Légal et Documentation",
+        "description": "Consultez nos politiques et conditions.",
+        "termsLink": "Conditions d'Utilisation"
+      }
+    }
+  },
+  "settings": {
+    "profile": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Adresse e-mail",
+      "updateProfile": "Mettre à jour le profil",
+      "saving": "Enregistrement…",
+      "updateSuccess": "Profil mis à jour avec succès.",
+      "updateError": "Échec de la mise à jour du profil.",
+      "dangerZone": {
+        "title": "Zone dangereuse",
+        "description": "Supprimez définitivement votre compte et toutes les données associées. Cette action est irréversible.",
+        "trigger": "Supprimer le compte",
+        "dialogTitle": "Supprimer le compte",
+        "dialogDescription": "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.",
+        "cancel": "Annuler",
+        "confirm": "Supprimer le compte",
+        "error": "Échec de la suppression du compte."
+      }
+    },
+    "title": "Paramètres",
+    "subtitle": "Gérez les paramètres de votre compte et vos préférences e-mail."
+  },
+  "superAdmin": {
+    "users": {
+      "title": "Utilisateurs",
+      "subtitle": "Gérez tous les utilisateurs de la plateforme",
+      "stats": {
+        "total": "Total utilisateurs",
+        "confirmed": "Confirmés",
+        "unconfirmed": "Non confirmés",
+        "superAdmins": "Super admins",
+        "newThisMonth": "+{{count}} ce mois-ci"
+      },
+      "filters": {
+        "searchPlaceholder": "Rechercher par nom ou email...",
+        "filterPlaceholder": "Filtrer par...",
+        "sortPlaceholder": "Trier par...",
+        "all": "Tous",
+        "confirmed": "Confirmés",
+        "unconfirmed": "Non confirmés",
+        "superAdmin": "Super admins",
+        "sortDate": "Date d'inscription",
+        "sortLastLogin": "Dernière connexion",
+        "sortName": "Nom",
+        "sortEmail": "Email"
+      },
+      "table": {
+        "loading": "Chargement des utilisateurs...",
+        "emptySearch": "Aucun utilisateur trouvé",
+        "empty": "Aucun utilisateur disponible",
+        "colUser": "Utilisateur",
+        "colStatus": "Statut",
+        "colAcademies": "Académies",
+        "colRegistered": "Inscription",
+        "colLastLogin": "Dernière connexion",
+        "colActions": "Actions",
+        "statusConfirmed": "Confirmé",
+        "statusPending": "En attente",
+        "moreAcademies": "+{{count}} de plus",
+        "makeSuperAdmin": "Rendre super admin",
+        "removeSuperAdmin": "Retirer super admin"
+      },
+      "relative": {
+        "today": "Aujourd'hui",
+        "yesterday": "Hier",
+        "days": "Il y a {{count}} jours",
+        "months": "Il y a {{count}} mois",
+        "years": "Il y a {{count}} ans"
+      },
+      "pagination": {
+        "showing": "Affichage de {{from}}–{{to}} sur {{total}} utilisateurs",
+        "previous": "Précédent",
+        "next": "Suivant"
+      },
+      "dialog": {
+        "promoteTitle": "Rendre super admin ?",
+        "demoteTitle": "Retirer super admin ?",
+        "promoteDesc": "{{name}} aura un accès complet à la plateforme en tant que super administrateur.",
+        "demoteDesc": "{{name}} perdra les privilèges de super administrateur.",
+        "cancel": "Annuler",
+        "saving": "Enregistrement...",
+        "confirm": "Confirmer",
+        "removeRole": "Retirer le rôle"
+      },
+      "toast": {
+        "loadError": "Impossible de charger les utilisateurs",
+        "promoted": "{{name}} est maintenant super admin.",
+        "demoted": "Le rôle de super admin a été retiré à {{name}}.",
+        "updateError": "Impossible de mettre à jour l'utilisateur."
+      }
+    },
+    "payments": {
+      "title": "Paiements",
+      "subtitle": "Gérez tous les paiements de la plateforme",
+      "stats": {
+        "totalRevenue": "Revenus totaux",
+        "completed": "Complétés",
+        "pending": "En attente",
+        "failed": "Échoués",
+        "refunded": "Remboursés",
+        "thisMonth": "ce mois-ci"
+      },
+      "filters": {
+        "searchPlaceholder": "Rechercher par utilisateur, email ou transaction...",
+        "filterPlaceholder": "Filtrer par statut...",
+        "filterAll": "Tous",
+        "filterCompleted": "Complétés",
+        "filterPending": "En attente",
+        "filterFailed": "Échoués",
+        "filterRefunded": "Remboursés",
+        "sortPlaceholder": "Trier par...",
+        "sortDate": "Date",
+        "sortAmount": "Montant"
+      },
+      "table": {
+        "loading": "Chargement des paiements...",
+        "empty": "Aucun paiement trouvé.",
+        "user": "Utilisateur",
+        "amount": "Montant",
+        "status": "Statut",
+        "resource": "Ressource",
+        "provider": "Fournisseur",
+        "date": "Date",
+        "statusCompleted": "Complété",
+        "statusPending": "En attente",
+        "statusFailed": "Échoué",
+        "statusRefunded": "Remboursé",
+        "refundAction": "Rembourser"
+      },
+      "pagination": {
+        "showing": "Affichage {{from}}–{{to}} sur {{total}} paiements",
+        "previous": "Précédent",
+        "next": "Suivant"
+      },
+      "dialog": {
+        "title": "Confirmer le remboursement ?",
+        "description": "Le paiement de {{name}} sera marqué comme remboursé. Cette action est irréversible.",
+        "thisUser": "cet utilisateur",
+        "cancel": "Annuler",
+        "confirm": "Confirmer le remboursement",
+        "processing": "En cours..."
+      },
+      "toast": {
+        "loadError": "Impossible de charger les paiements",
+        "refundSuccess": "Remboursement traité avec succès.",
+        "refundError": "Impossible de traiter le remboursement."
+      }
+    }
   }
 }

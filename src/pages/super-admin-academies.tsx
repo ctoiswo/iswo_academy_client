@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import academyService from '@/services/academy-service'
 import type { AcademySummaryLight, PaginationMeta } from '@/types'
+import { useAuthStore } from '@/stores/auth-store'
+import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import {
   LayoutGrid,
   List,
@@ -46,6 +48,7 @@ import {
 type ViewMode = 'grid' | 'list'
 
 export default function SuperAdminAcademies() {
+  const { user } = useAuthStore()
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [academies, setAcademies] = useState<AcademySummaryLight[]>([])
   const [loading, setLoading] = useState(true)
@@ -101,21 +104,15 @@ export default function SuperAdminAcademies() {
   }
 
   return (
-    <div className='container mx-auto space-y-6 p-6'>
-      {/* Header */}
-      <div className='flex items-center justify-between'>
-        <div>
-          <h1 className='text-3xl font-bold'>Academias</h1>
-          <p className='text-muted-foreground mt-1'>
-            Gestiona todas las academias de la plataforma
-          </p>
-        </div>
-        <Button>
-          <Plus className='mr-2 h-4 w-4' />
-          Nueva Academia
-        </Button>
-      </div>
-
+    <DashboardLayout
+      user={user}
+      academy={null}
+      variant='full'
+      dashboardType='super-admin'
+      title='Academias'
+      subtitle='Gestiona todas las academias de la plataforma'
+    >
+      <div className='space-y-6'>
       {/* Filters and View Toggle */}
       <div className='flex flex-col items-stretch gap-4 sm:flex-row sm:items-center'>
         <div className='relative flex-1'>
@@ -145,6 +142,10 @@ export default function SuperAdminAcademies() {
             <List className='h-4 w-4' />
           </Button>
         </div>
+        <Button className='self-start'>
+          <Plus className='mr-2 h-4 w-4' />
+          Nueva Academia
+        </Button>
       </div>
 
       {/* Loading State */}
@@ -405,6 +406,7 @@ export default function SuperAdminAcademies() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </DashboardLayout>
   )
 }

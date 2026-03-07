@@ -129,6 +129,28 @@ class AuthService {
     const response = await apiClient.get<{ user: AuthUser }>('/users/profile')
     return response.data.user
   }
+
+  /**
+   * Update current user profile (name and/or email)
+   */
+  async updateProfile(data: {
+    first_name?: string
+    last_name?: string
+    email?: string
+  }): Promise<AuthUser> {
+    const response = await apiClient.patch<{ user: AuthUser }>(
+      '/users/profile',
+      { user: data }
+    )
+    return response.data.user
+  }
+
+  /**
+   * Delete current user account (not available for super admins)
+   */
+  async deleteAccount(): Promise<void> {
+    await apiClient.delete('/users/profile')
+  }
 }
 
 // Export singleton instance

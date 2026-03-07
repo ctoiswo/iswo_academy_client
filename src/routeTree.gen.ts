@@ -55,19 +55,19 @@ import { Route as PublicAcademiesAcademySlugRouteImport } from './routes/public/
 import { Route as AuthenticatedSuperAdminCategoriesRouteImport } from './routes/_authenticated/super-admin/categories'
 import { Route as AuthenticatedSuperAdminAcademiesRouteImport } from './routes/_authenticated/super-admin/academies'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
-import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
-import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
-import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedDashboardTeacherRouteImport } from './routes/_authenticated/dashboard/teacher'
-import { Route as AuthenticatedDashboardSuperAdminRouteImport } from './routes/_authenticated/dashboard/super-admin'
 import { Route as AuthenticatedDashboardStudentRouteImport } from './routes/_authenticated/dashboard/student'
 import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authenticated/dashboard/admin'
 import { Route as AuthenticatedAdminLearningPathsRouteImport } from './routes/_authenticated/admin/learning-paths'
 import { Route as authAuthCallbackRouteImport } from './routes/(auth)/auth/callback'
 import { Route as CoursesCourseSlugEnrollIndexRouteImport } from './routes/courses/$courseSlug/enroll/index'
+import { Route as AuthenticatedSuperAdminUsersIndexRouteImport } from './routes/_authenticated/super-admin/users/index'
+import { Route as AuthenticatedSuperAdminPaymentsIndexRouteImport } from './routes/_authenticated/super-admin/payments/index'
+import { Route as AuthenticatedSuperAdminHealthIndexRouteImport } from './routes/_authenticated/super-admin/health/index'
 import { Route as AuthenticatedSuperAdminGamificationIndexRouteImport } from './routes/_authenticated/super-admin/gamification/index'
 import { Route as AuthenticatedMyCoursesCourseSlugIndexRouteImport } from './routes/_authenticated/my-courses/$courseSlug/index'
+import { Route as AuthenticatedDashboardSuperAdminIndexRouteImport } from './routes/_authenticated/dashboard/super-admin/index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin/courses/index'
 import { Route as PublicAcademyAcademySlugCoursesRouteImport } from './routes/public/academy/$academySlug/courses'
 import { Route as AuthenticatedAcademyAcademySlugRedeemCodeRouteImport } from './routes/_authenticated/academy/$academySlug/redeem-code'
@@ -348,24 +348,6 @@ const AuthenticatedSettingsNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
-const AuthenticatedSettingsDisplayRoute =
-  AuthenticatedSettingsDisplayRouteImport.update({
-    id: '/display',
-    path: '/display',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedSettingsAppearanceRoute =
-  AuthenticatedSettingsAppearanceRouteImport.update({
-    id: '/appearance',
-    path: '/appearance',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedSettingsAccountRoute =
-  AuthenticatedSettingsAccountRouteImport.update({
-    id: '/account',
-    path: '/account',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
 const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
     id: '/errors/$error',
@@ -376,12 +358,6 @@ const AuthenticatedDashboardTeacherRoute =
   AuthenticatedDashboardTeacherRouteImport.update({
     id: '/teacher',
     path: '/teacher',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardSuperAdminRoute =
-  AuthenticatedDashboardSuperAdminRouteImport.update({
-    id: '/super-admin',
-    path: '/super-admin',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardStudentRoute =
@@ -413,6 +389,24 @@ const CoursesCourseSlugEnrollIndexRoute =
     path: '/courses/$courseSlug/enroll/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedSuperAdminUsersIndexRoute =
+  AuthenticatedSuperAdminUsersIndexRouteImport.update({
+    id: '/users/',
+    path: '/users/',
+    getParentRoute: () => AuthenticatedSuperAdminRouteRoute,
+  } as any)
+const AuthenticatedSuperAdminPaymentsIndexRoute =
+  AuthenticatedSuperAdminPaymentsIndexRouteImport.update({
+    id: '/payments/',
+    path: '/payments/',
+    getParentRoute: () => AuthenticatedSuperAdminRouteRoute,
+  } as any)
+const AuthenticatedSuperAdminHealthIndexRoute =
+  AuthenticatedSuperAdminHealthIndexRouteImport.update({
+    id: '/health/',
+    path: '/health/',
+    getParentRoute: () => AuthenticatedSuperAdminRouteRoute,
+  } as any)
 const AuthenticatedSuperAdminGamificationIndexRoute =
   AuthenticatedSuperAdminGamificationIndexRouteImport.update({
     id: '/gamification/',
@@ -424,6 +418,12 @@ const AuthenticatedMyCoursesCourseSlugIndexRoute =
     id: '/$courseSlug/',
     path: '/$courseSlug/',
     getParentRoute: () => AuthenticatedMyCoursesRoute,
+  } as any)
+const AuthenticatedDashboardSuperAdminIndexRoute =
+  AuthenticatedDashboardSuperAdminIndexRouteImport.update({
+    id: '/super-admin/',
+    path: '/super-admin/',
+    getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedAdminCoursesIndexRoute =
   AuthenticatedAdminCoursesIndexRouteImport.update({
@@ -727,12 +727,8 @@ export interface FileRoutesByFullPath {
   '/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/dashboard/student': typeof AuthenticatedDashboardStudentRoute
-  '/dashboard/super-admin': typeof AuthenticatedDashboardSuperAdminRoute
   '/dashboard/teacher': typeof AuthenticatedDashboardTeacherRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/settings/account': typeof AuthenticatedSettingsAccountRoute
-  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
   '/super-admin/categories': typeof AuthenticatedSuperAdminCategoriesRoute
@@ -763,8 +759,12 @@ export interface FileRoutesByFullPath {
   '/academy/$academySlug/redeem-code': typeof AuthenticatedAcademyAcademySlugRedeemCodeRoute
   '/public/academy/$academySlug/courses': typeof PublicAcademyAcademySlugCoursesRouteWithChildren
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
+  '/dashboard/super-admin': typeof AuthenticatedDashboardSuperAdminIndexRoute
   '/my-courses/$courseSlug': typeof AuthenticatedMyCoursesCourseSlugIndexRoute
   '/super-admin/gamification': typeof AuthenticatedSuperAdminGamificationIndexRoute
+  '/super-admin/health': typeof AuthenticatedSuperAdminHealthIndexRoute
+  '/super-admin/payments': typeof AuthenticatedSuperAdminPaymentsIndexRoute
+  '/super-admin/users': typeof AuthenticatedSuperAdminUsersIndexRoute
   '/courses/$courseSlug/enroll': typeof CoursesCourseSlugEnrollIndexRoute
   '/academy/$academySlug/courses/$courseSlug': typeof AuthenticatedAcademyAcademySlugCoursesCourseSlugRouteRouteWithChildren
   '/academy/$academySlug/admin/course-new': typeof AuthenticatedAcademyAcademySlugAdminCourseNewRoute
@@ -824,12 +824,8 @@ export interface FileRoutesByTo {
   '/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/dashboard/student': typeof AuthenticatedDashboardStudentRoute
-  '/dashboard/super-admin': typeof AuthenticatedDashboardSuperAdminRoute
   '/dashboard/teacher': typeof AuthenticatedDashboardTeacherRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/settings/account': typeof AuthenticatedSettingsAccountRoute
-  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
   '/super-admin/categories': typeof AuthenticatedSuperAdminCategoriesRoute
@@ -858,8 +854,12 @@ export interface FileRoutesByTo {
   '/academy/$academySlug/redeem-code': typeof AuthenticatedAcademyAcademySlugRedeemCodeRoute
   '/public/academy/$academySlug/courses': typeof PublicAcademyAcademySlugCoursesRouteWithChildren
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
+  '/dashboard/super-admin': typeof AuthenticatedDashboardSuperAdminIndexRoute
   '/my-courses/$courseSlug': typeof AuthenticatedMyCoursesCourseSlugIndexRoute
   '/super-admin/gamification': typeof AuthenticatedSuperAdminGamificationIndexRoute
+  '/super-admin/health': typeof AuthenticatedSuperAdminHealthIndexRoute
+  '/super-admin/payments': typeof AuthenticatedSuperAdminPaymentsIndexRoute
+  '/super-admin/users': typeof AuthenticatedSuperAdminUsersIndexRoute
   '/courses/$courseSlug/enroll': typeof CoursesCourseSlugEnrollIndexRoute
   '/academy/$academySlug/admin/course-new': typeof AuthenticatedAcademyAcademySlugAdminCourseNewRoute
   '/public/academy/$academySlug/courses/$courseSlug': typeof PublicAcademyAcademySlugCoursesCourseSlugRouteWithChildren
@@ -921,12 +921,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/_authenticated/dashboard/student': typeof AuthenticatedDashboardStudentRoute
-  '/_authenticated/dashboard/super-admin': typeof AuthenticatedDashboardSuperAdminRoute
   '/_authenticated/dashboard/teacher': typeof AuthenticatedDashboardTeacherRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
-  '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
   '/_authenticated/super-admin/categories': typeof AuthenticatedSuperAdminCategoriesRoute
@@ -957,8 +953,12 @@ export interface FileRoutesById {
   '/_authenticated/academy/$academySlug/redeem-code': typeof AuthenticatedAcademyAcademySlugRedeemCodeRoute
   '/public/academy/$academySlug/courses': typeof PublicAcademyAcademySlugCoursesRouteWithChildren
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
+  '/_authenticated/dashboard/super-admin/': typeof AuthenticatedDashboardSuperAdminIndexRoute
   '/_authenticated/my-courses/$courseSlug/': typeof AuthenticatedMyCoursesCourseSlugIndexRoute
   '/_authenticated/super-admin/gamification/': typeof AuthenticatedSuperAdminGamificationIndexRoute
+  '/_authenticated/super-admin/health/': typeof AuthenticatedSuperAdminHealthIndexRoute
+  '/_authenticated/super-admin/payments/': typeof AuthenticatedSuperAdminPaymentsIndexRoute
+  '/_authenticated/super-admin/users/': typeof AuthenticatedSuperAdminUsersIndexRoute
   '/courses/$courseSlug/enroll/': typeof CoursesCourseSlugEnrollIndexRoute
   '/_authenticated/academy/$academySlug/courses/$courseSlug': typeof AuthenticatedAcademyAcademySlugCoursesCourseSlugRouteRouteWithChildren
   '/_authenticated/academy/$academySlug/admin/course-new': typeof AuthenticatedAcademyAcademySlugAdminCourseNewRoute
@@ -1021,12 +1021,8 @@ export interface FileRouteTypes {
     | '/admin/learning-paths'
     | '/dashboard/admin'
     | '/dashboard/student'
-    | '/dashboard/super-admin'
     | '/dashboard/teacher'
     | '/errors/$error'
-    | '/settings/account'
-    | '/settings/appearance'
-    | '/settings/display'
     | '/settings/notifications'
     | '/super-admin/academies'
     | '/super-admin/categories'
@@ -1057,8 +1053,12 @@ export interface FileRouteTypes {
     | '/academy/$academySlug/redeem-code'
     | '/public/academy/$academySlug/courses'
     | '/admin/courses'
+    | '/dashboard/super-admin'
     | '/my-courses/$courseSlug'
     | '/super-admin/gamification'
+    | '/super-admin/health'
+    | '/super-admin/payments'
+    | '/super-admin/users'
     | '/courses/$courseSlug/enroll'
     | '/academy/$academySlug/courses/$courseSlug'
     | '/academy/$academySlug/admin/course-new'
@@ -1118,12 +1118,8 @@ export interface FileRouteTypes {
     | '/admin/learning-paths'
     | '/dashboard/admin'
     | '/dashboard/student'
-    | '/dashboard/super-admin'
     | '/dashboard/teacher'
     | '/errors/$error'
-    | '/settings/account'
-    | '/settings/appearance'
-    | '/settings/display'
     | '/settings/notifications'
     | '/super-admin/academies'
     | '/super-admin/categories'
@@ -1152,8 +1148,12 @@ export interface FileRouteTypes {
     | '/academy/$academySlug/redeem-code'
     | '/public/academy/$academySlug/courses'
     | '/admin/courses'
+    | '/dashboard/super-admin'
     | '/my-courses/$courseSlug'
     | '/super-admin/gamification'
+    | '/super-admin/health'
+    | '/super-admin/payments'
+    | '/super-admin/users'
     | '/courses/$courseSlug/enroll'
     | '/academy/$academySlug/admin/course-new'
     | '/public/academy/$academySlug/courses/$courseSlug'
@@ -1214,12 +1214,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/learning-paths'
     | '/_authenticated/dashboard/admin'
     | '/_authenticated/dashboard/student'
-    | '/_authenticated/dashboard/super-admin'
     | '/_authenticated/dashboard/teacher'
     | '/_authenticated/errors/$error'
-    | '/_authenticated/settings/account'
-    | '/_authenticated/settings/appearance'
-    | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
     | '/_authenticated/super-admin/academies'
     | '/_authenticated/super-admin/categories'
@@ -1250,8 +1246,12 @@ export interface FileRouteTypes {
     | '/_authenticated/academy/$academySlug/redeem-code'
     | '/public/academy/$academySlug/courses'
     | '/_authenticated/admin/courses/'
+    | '/_authenticated/dashboard/super-admin/'
     | '/_authenticated/my-courses/$courseSlug/'
     | '/_authenticated/super-admin/gamification/'
+    | '/_authenticated/super-admin/health/'
+    | '/_authenticated/super-admin/payments/'
+    | '/_authenticated/super-admin/users/'
     | '/courses/$courseSlug/enroll/'
     | '/_authenticated/academy/$academySlug/courses/$courseSlug'
     | '/_authenticated/academy/$academySlug/admin/course-new'
@@ -1642,27 +1642,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsNotificationsRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
-    '/_authenticated/settings/display': {
-      id: '/_authenticated/settings/display'
-      path: '/display'
-      fullPath: '/settings/display'
-      preLoaderRoute: typeof AuthenticatedSettingsDisplayRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
-    '/_authenticated/settings/appearance': {
-      id: '/_authenticated/settings/appearance'
-      path: '/appearance'
-      fullPath: '/settings/appearance'
-      preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
-    '/_authenticated/settings/account': {
-      id: '/_authenticated/settings/account'
-      path: '/account'
-      fullPath: '/settings/account'
-      preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
     '/_authenticated/errors/$error': {
       id: '/_authenticated/errors/$error'
       path: '/errors/$error'
@@ -1675,13 +1654,6 @@ declare module '@tanstack/react-router' {
       path: '/teacher'
       fullPath: '/dashboard/teacher'
       preLoaderRoute: typeof AuthenticatedDashboardTeacherRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/super-admin': {
-      id: '/_authenticated/dashboard/super-admin'
-      path: '/super-admin'
-      fullPath: '/dashboard/super-admin'
-      preLoaderRoute: typeof AuthenticatedDashboardSuperAdminRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/student': {
@@ -1719,6 +1691,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesCourseSlugEnrollIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/super-admin/users/': {
+      id: '/_authenticated/super-admin/users/'
+      path: '/users'
+      fullPath: '/super-admin/users'
+      preLoaderRoute: typeof AuthenticatedSuperAdminUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedSuperAdminRouteRoute
+    }
+    '/_authenticated/super-admin/payments/': {
+      id: '/_authenticated/super-admin/payments/'
+      path: '/payments'
+      fullPath: '/super-admin/payments'
+      preLoaderRoute: typeof AuthenticatedSuperAdminPaymentsIndexRouteImport
+      parentRoute: typeof AuthenticatedSuperAdminRouteRoute
+    }
+    '/_authenticated/super-admin/health/': {
+      id: '/_authenticated/super-admin/health/'
+      path: '/health'
+      fullPath: '/super-admin/health'
+      preLoaderRoute: typeof AuthenticatedSuperAdminHealthIndexRouteImport
+      parentRoute: typeof AuthenticatedSuperAdminRouteRoute
+    }
     '/_authenticated/super-admin/gamification/': {
       id: '/_authenticated/super-admin/gamification/'
       path: '/gamification'
@@ -1732,6 +1725,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/my-courses/$courseSlug'
       preLoaderRoute: typeof AuthenticatedMyCoursesCourseSlugIndexRouteImport
       parentRoute: typeof AuthenticatedMyCoursesRoute
+    }
+    '/_authenticated/dashboard/super-admin/': {
+      id: '/_authenticated/dashboard/super-admin/'
+      path: '/super-admin'
+      fullPath: '/dashboard/super-admin'
+      preLoaderRoute: typeof AuthenticatedDashboardSuperAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/admin/courses/': {
       id: '/_authenticated/admin/courses/'
@@ -2022,18 +2022,12 @@ const AuthenticatedAdminRouteRouteWithChildren =
   )
 
 interface AuthenticatedSettingsRouteRouteChildren {
-  AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
-  AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
-  AuthenticatedSettingsDisplayRoute: typeof AuthenticatedSettingsDisplayRoute
   AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
 
 const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
   {
-    AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
-    AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
-    AuthenticatedSettingsDisplayRoute: AuthenticatedSettingsDisplayRoute,
     AuthenticatedSettingsNotificationsRoute:
       AuthenticatedSettingsNotificationsRoute,
     AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
@@ -2048,6 +2042,9 @@ interface AuthenticatedSuperAdminRouteRouteChildren {
   AuthenticatedSuperAdminAcademiesRoute: typeof AuthenticatedSuperAdminAcademiesRoute
   AuthenticatedSuperAdminCategoriesRoute: typeof AuthenticatedSuperAdminCategoriesRoute
   AuthenticatedSuperAdminGamificationIndexRoute: typeof AuthenticatedSuperAdminGamificationIndexRoute
+  AuthenticatedSuperAdminHealthIndexRoute: typeof AuthenticatedSuperAdminHealthIndexRoute
+  AuthenticatedSuperAdminPaymentsIndexRoute: typeof AuthenticatedSuperAdminPaymentsIndexRoute
+  AuthenticatedSuperAdminUsersIndexRoute: typeof AuthenticatedSuperAdminUsersIndexRoute
   AuthenticatedSuperAdminGamificationAcademiesSlugBadgesRoute: typeof AuthenticatedSuperAdminGamificationAcademiesSlugBadgesRoute
 }
 
@@ -2059,6 +2056,12 @@ const AuthenticatedSuperAdminRouteRouteChildren: AuthenticatedSuperAdminRouteRou
       AuthenticatedSuperAdminCategoriesRoute,
     AuthenticatedSuperAdminGamificationIndexRoute:
       AuthenticatedSuperAdminGamificationIndexRoute,
+    AuthenticatedSuperAdminHealthIndexRoute:
+      AuthenticatedSuperAdminHealthIndexRoute,
+    AuthenticatedSuperAdminPaymentsIndexRoute:
+      AuthenticatedSuperAdminPaymentsIndexRoute,
+    AuthenticatedSuperAdminUsersIndexRoute:
+      AuthenticatedSuperAdminUsersIndexRoute,
     AuthenticatedSuperAdminGamificationAcademiesSlugBadgesRoute:
       AuthenticatedSuperAdminGamificationAcademiesSlugBadgesRoute,
   }
@@ -2071,17 +2074,17 @@ const AuthenticatedSuperAdminRouteRouteWithChildren =
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRoute
   AuthenticatedDashboardStudentRoute: typeof AuthenticatedDashboardStudentRoute
-  AuthenticatedDashboardSuperAdminRoute: typeof AuthenticatedDashboardSuperAdminRoute
   AuthenticatedDashboardTeacherRoute: typeof AuthenticatedDashboardTeacherRoute
+  AuthenticatedDashboardSuperAdminIndexRoute: typeof AuthenticatedDashboardSuperAdminIndexRoute
 }
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardAdminRoute: AuthenticatedDashboardAdminRoute,
     AuthenticatedDashboardStudentRoute: AuthenticatedDashboardStudentRoute,
-    AuthenticatedDashboardSuperAdminRoute:
-      AuthenticatedDashboardSuperAdminRoute,
     AuthenticatedDashboardTeacherRoute: AuthenticatedDashboardTeacherRoute,
+    AuthenticatedDashboardSuperAdminIndexRoute:
+      AuthenticatedDashboardSuperAdminIndexRoute,
   }
 
 const AuthenticatedDashboardRouteWithChildren =

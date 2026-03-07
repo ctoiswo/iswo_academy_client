@@ -8,8 +8,6 @@ import {
   Award,
   Settings,
   UserCog,
-  Bell,
-  Palette,
   HelpCircle,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
@@ -49,11 +47,6 @@ export function getSuperAdminSidebar(): SidebarData['navGroups'] {
             },
           ],
         },
-        {
-          title: 'Analíticas Globales',
-          url: '/super-admin/analytics',
-          icon: BarChart3,
-        },
       ],
     },
     {
@@ -87,21 +80,6 @@ export function getSuperAdminSidebar(): SidebarData['navGroups'] {
               title: 'Perfil',
               url: '/settings',
               icon: UserCog,
-            },
-            {
-              title: 'Apariencia',
-              url: '/settings/appearance',
-              icon: Palette,
-            },
-            {
-              title: 'Notificaciones',
-              url: '/settings/notifications',
-              icon: Bell,
-            },
-            {
-              title: 'Pantalla',
-              url: '/settings/display',
-              icon: Monitor,
             },
           ],
         },

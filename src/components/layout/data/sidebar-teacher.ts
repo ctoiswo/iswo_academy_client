@@ -11,8 +11,6 @@ import {
   FileQuestion,
   Settings,
   UserCog,
-  Palette,
-  Monitor,
   HelpCircle,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
@@ -96,21 +94,6 @@ export function getTeacherSidebar(
               title: 'Perfil',
               url: `/settings`,
               icon: UserCog,
-            },
-            {
-              title: 'Notificaciones',
-              url: `/settings/notifications`,
-              icon: Bell,
-            },
-            {
-              title: 'Apariencia',
-              url: `/settings/appearance`,
-              icon: Palette,
-            },
-            {
-              title: 'Pantalla',
-              url: `/settings/display`,
-              icon: Monitor,
             },
           ],
         },

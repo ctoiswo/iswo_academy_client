@@ -1138,5 +1138,261 @@
     "errors": {
       "statsError": "Error loading statistics: {{message}}"
     }
+  },
+  "helpCenter": {
+    "title": "Help Center",
+    "subtitle": "Find answers and navigate the platform",
+    "hero": {
+      "title": "How can we help you?",
+      "subtitle": "Browse the categories below or jump straight to a section of the platform."
+    },
+    "quickLinks": {
+      "title": "Quick Links"
+    },
+    "categories": {
+      "title": "Browse by Topic",
+      "gettingStarted": {
+        "title": "Getting Started",
+        "description": "New here? Start from the beginning.",
+        "links": {
+          "dashboard": "Go to Dashboard",
+          "onboarding": "Complete Onboarding",
+          "exploreCourses": "Explore Courses",
+          "exploreAcademies": "Explore Academies"
+        }
+      },
+      "academy": {
+        "title": "Academy Management",
+        "description": "Create and manage your own academy.",
+        "links": {
+          "createAcademy": "Create an Academy",
+          "manageAcademy": "Manage My Academy",
+          "academyMembers": "View Members"
+        }
+      },
+      "courses": {
+        "title": "Courses & Learning",
+        "description": "Enroll, learn, and earn certificates.",
+        "links": {
+          "browseCourses": "Browse Courses",
+          "myCourses": "My Courses",
+          "certificates": "My Certificates"
+        }
+      },
+      "account": {
+        "title": "Account & Settings",
+        "description": "Manage your profile and preferences.",
+        "links": {
+          "profile": "Edit Profile",
+          "account": "Account Settings",
+          "appearance": "Appearance",
+          "notifications": "Notifications"
+        }
+      },
+      "billing": {
+        "title": "Billing & Payments",
+        "description": "Purchases, refunds and access codes.",
+        "links": {
+          "purchaseCourse": "Purchase a Course",
+          "accessCode": "Redeem Access Code",
+          "refunds": "Request a Refund"
+        }
+      },
+      "security": {
+        "title": "Privacy & Security",
+        "description": "Your data, rights and policies.",
+        "links": {
+          "privacy": "Privacy Policy",
+          "terms": "Terms of Service",
+          "settings": "Security Settings"
+        }
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": {
+        "howToCreate": {
+          "q": "How do I create my own academy?",
+          "a": "Go to the 'Create Your Academy' page from the navigation menu. Follow the onboarding steps to set up your academy name, description, and first course."
+        },
+        "howToEnroll": {
+          "q": "How do I enroll in a course?",
+          "a": "Browse the Courses catalog, click on any course you're interested in, and follow the enrollment steps. Some courses are free while others require a purchase."
+        },
+        "certificate": {
+          "q": "How do I get a certificate of completion?",
+          "a": "Complete all lessons and assessments in a course. Once you reach 100% progress, a certificate will be automatically generated and available in My Courses."
+        },
+        "refund": {
+          "q": "Can I request a refund?",
+          "a": "Refund requests are handled by the academy owner. Contact the support email or reach out directly through the platform if you believe you are entitled to a refund."
+        },
+        "multipleAcademies": {
+          "q": "Can I be part of multiple academies?",
+          "a": "Yes. You can enroll in courses from different academies. If you are an instructor or academy owner, you can manage multiple academies from your dashboard."
+        }
+      }
+    },
+    "contact": {
+      "email": {
+        "title": "Email Support",
+        "description": "Send us a message and we'll respond within 24 hours."
+      },
+      "docs": {
+        "title": "Legal & Documentation",
+        "description": "Review our policies and terms.",
+        "termsLink": "Terms of Service"
+      }
+    }
+  },
+  "settings": {
+    "profile": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "updateProfile": "Update profile",
+      "saving": "Saving…",
+      "updateSuccess": "Profile updated successfully.",
+      "updateError": "Failed to update profile.",
+      "dangerZone": {
+        "title": "Danger zone",
+        "description": "Permanently delete your account and all associated data. This action cannot be undone.",
+        "trigger": "Delete account",
+        "dialogTitle": "Delete account",
+        "dialogDescription": "Are you sure you want to permanently delete your account? This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Delete account",
+        "error": "Failed to delete account."
+      }
+    },
+    "title": "Settings",
+    "subtitle": "Manage your account settings and set e-mail preferences."
+  },
+  "superAdmin": {
+    "users": {
+      "title": "Users",
+      "subtitle": "Manage all platform users",
+      "stats": {
+        "total": "Total users",
+        "confirmed": "Confirmed",
+        "unconfirmed": "Unconfirmed",
+        "superAdmins": "Super admins",
+        "newThisMonth": "+{{count}} this month"
+      },
+      "filters": {
+        "searchPlaceholder": "Search by name or email...",
+        "filterPlaceholder": "Filter by...",
+        "sortPlaceholder": "Sort by...",
+        "all": "All",
+        "confirmed": "Confirmed",
+        "unconfirmed": "Unconfirmed",
+        "superAdmin": "Super admins",
+        "sortDate": "Registration date",
+        "sortLastLogin": "Last login",
+        "sortName": "Name",
+        "sortEmail": "Email"
+      },
+      "table": {
+        "loading": "Loading users...",
+        "emptySearch": "No users found",
+        "empty": "No users available",
+        "colUser": "User",
+        "colStatus": "Status",
+        "colAcademies": "Academies",
+        "colRegistered": "Registered",
+        "colLastLogin": "Last login",
+        "colActions": "Actions",
+        "statusConfirmed": "Confirmed",
+        "statusPending": "Pending",
+        "moreAcademies": "+{{count}} more",
+        "makeSuperAdmin": "Make super admin",
+        "removeSuperAdmin": "Remove super admin"
+      },
+      "relative": {
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "days": "{{count}} days ago",
+        "months": "{{count}} months ago",
+        "years": "{{count}} years ago"
+      },
+      "pagination": {
+        "showing": "Showing {{from}}–{{to}} of {{total}} users",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "dialog": {
+        "promoteTitle": "Make super admin?",
+        "demoteTitle": "Remove super admin?",
+        "promoteDesc": "{{name}} will have full access to the platform as a super administrator.",
+        "demoteDesc": "{{name}} will lose super administrator privileges.",
+        "cancel": "Cancel",
+        "saving": "Saving...",
+        "confirm": "Confirm",
+        "removeRole": "Remove role"
+      },
+      "toast": {
+        "loadError": "Users could not be loaded",
+        "promoted": "{{name}} is now a super admin.",
+        "demoted": "Super admin role removed from {{name}}.",
+        "updateError": "Could not update the user."
+      }
+    },
+    "payments": {
+      "title": "Payments",
+      "subtitle": "Manage all platform payments",
+      "stats": {
+        "totalRevenue": "Total Revenue",
+        "completed": "Completed",
+        "pending": "Pending",
+        "failed": "Failed",
+        "refunded": "Refunded",
+        "thisMonth": "this month"
+      },
+      "filters": {
+        "searchPlaceholder": "Search by user, email or transaction...",
+        "filterPlaceholder": "Filter by status...",
+        "filterAll": "All",
+        "filterCompleted": "Completed",
+        "filterPending": "Pending",
+        "filterFailed": "Failed",
+        "filterRefunded": "Refunded",
+        "sortPlaceholder": "Sort by...",
+        "sortDate": "Date",
+        "sortAmount": "Amount"
+      },
+      "table": {
+        "loading": "Loading payments...",
+        "empty": "No payments found.",
+        "user": "User",
+        "amount": "Amount",
+        "status": "Status",
+        "resource": "Resource",
+        "provider": "Provider",
+        "date": "Date",
+        "statusCompleted": "Completed",
+        "statusPending": "Pending",
+        "statusFailed": "Failed",
+        "statusRefunded": "Refunded",
+        "refundAction": "Refund"
+      },
+      "pagination": {
+        "showing": "Showing {{from}}–{{to}} of {{total}} payments",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "dialog": {
+        "title": "Confirm refund?",
+        "description": "The payment from {{name}} will be marked as refunded. This action cannot be undone.",
+        "thisUser": "this user",
+        "cancel": "Cancel",
+        "confirm": "Confirm refund",
+        "processing": "Processing..."
+      },
+      "toast": {
+        "loadError": "Could not load payments",
+        "refundSuccess": "Refund processed successfully.",
+        "refundError": "Could not process the refund."
+      }
+    }
   }
 }

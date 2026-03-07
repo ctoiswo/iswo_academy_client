@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import { useAuthStore } from '@/stores/auth-store'
+import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import academyService from '@/services/academy-service'
 import superAdminGamificationService from '@/services/super-admin-gamification-service'
 import type { GamificationOverview } from '@/types'
@@ -43,6 +45,7 @@ import {
 } from '@/components/ui/table'
 
 export default function SuperAdminGamification() {
+  const { user } = useAuthStore()
   const navigate = useNavigate()
   const [overview, setOverview] = useState<GamificationOverview | null>(null)
   const [academies, setAcademies] = useState<any[]>([])
@@ -179,17 +182,15 @@ export default function SuperAdminGamification() {
   }
 
   return (
-    <div className='container mx-auto space-y-6 p-6'>
-      {/* Header */}
-      <div className='flex items-center justify-between'>
-        <div>
-          <h1 className='text-3xl font-bold'>Gestión de Gamificación</h1>
-          <p className='text-muted-foreground'>
-            Gestiona la configuración de gamificación y badges en todas las
-            academias
-          </p>
-        </div>
-      </div>
+    <DashboardLayout
+      user={user}
+      academy={null}
+      variant='full'
+      dashboardType='super-admin'
+      title='Gestión de Gamificación'
+      subtitle='Gestiona la configuración de gamificación y badges en todas las academias'
+    >
+      <div className='space-y-6'>
 
       {/* Overview Stats */}
       {overview && (
@@ -485,6 +486,7 @@ export default function SuperAdminGamification() {
           </CardContent>
         </Card>
       )}
-    </div>
+      </div>
+    </DashboardLayout>
   )
 }

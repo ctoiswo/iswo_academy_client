@@ -3,10 +3,6 @@ import {
   Sparkles,
   Settings,
   UserCog,
-  Wrench,
-  Palette,
-  Bell,
-  Monitor,
   HelpCircle,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
@@ -51,26 +47,6 @@ export function getGuestSidebar(
               title: 'Perfil',
               url: '/settings',
               icon: UserCog,
-            },
-            {
-              title: 'Cuenta',
-              url: '/settings/account',
-              icon: Wrench,
-            },
-            {
-              title: 'Apariencia',
-              url: '/settings/appearance',
-              icon: Palette,
-            },
-            {
-              title: 'Notificaciones',
-              url: '/settings/notifications',
-              icon: Bell,
-            },
-            {
-              title: 'Pantalla',
-              url: '/settings/display',
-              icon: Monitor,
             },
           ],
         },
