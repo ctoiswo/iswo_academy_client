@@ -17,7 +17,7 @@ export function getGuestSidebar(
   const generalItems = [
     {
       title: 'Panel Principal',
-      url: '/dashboard',
+      url: '/dashboard/student',
       icon: LayoutDashboard,
     },
   ]

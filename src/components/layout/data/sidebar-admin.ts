@@ -35,7 +35,7 @@ export function getAdminSidebar(
         items: [
           {
             title: 'Panel Principal',
-            url: `/academy/${academySlug}/dashboard`,
+            url: `/academy/${academySlug}/dashboard/admin`,
             icon: LayoutDashboard,
           },
           {

@@ -16,6 +16,7 @@ import { NotificationDropdown } from '@/components/notifications'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { SkipToMain } from '@/components/skip-to-main'
+import { Particles } from '@/components/ui/particles'
 
 export type DashboardLayoutVariant = 'full' | 'sidebar' | 'compact'
 
@@ -140,7 +141,14 @@ function FullLayout({
   return (
     <SearchProvider>
       <LayoutProvider>
-        <div className={cn('bg-background min-h-screen', className)}>
+        <div className={cn('bg-background relative min-h-screen', className)}>
+          <Particles
+            className='absolute inset-0 z-0 pointer-events-none'
+            quantity={120}
+            ease={80}
+            size={0.4}
+            staticity={50}
+          />
           <SkipToMain />
 
           {/* Header */}
@@ -194,7 +202,14 @@ function CompactLayout({
   return (
     <SearchProvider>
       <LayoutProvider>
-        <div className={cn('bg-background min-h-screen min-w-full', className)}>
+        <div className={cn('bg-background relative min-h-screen min-w-full', className)}>
+          <Particles
+            className='absolute inset-0 z-0 pointer-events-none'
+            quantity={120}
+            ease={80}
+            size={0.4}
+            staticity={50}
+          />
           <SkipToMain />
 
           {/* Compact Header */}
@@ -276,6 +291,9 @@ function SidebarLayout({
                 // Set content container for container queries
                 '@container/content',
 
+                // Scope particles to this area
+                'relative',
+
                 // If layout is fixed, set height to prevent overflow
                 'has-[[data-layout=fixed]]:h-svh',
 
@@ -283,6 +301,13 @@ function SidebarLayout({
                 'peer-data-[variant=inset]:has-[[data-layout=fixed]]:h-[calc(100svh-(var(--spacing)*4))]'
               )}
             >
+              <Particles
+                className='absolute inset-0 z-0 pointer-events-none'
+                quantity={120}
+                ease={80}
+                size={0.4}
+                staticity={50}
+              />
               {/* Header */}
               <Header>
                 <div className='flex w-full items-center justify-between'>

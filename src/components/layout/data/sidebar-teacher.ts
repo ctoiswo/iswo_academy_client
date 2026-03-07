@@ -28,7 +28,7 @@ export function getTeacherSidebar(
       items: [
         {
           title: 'Panel Principal',
-          url: `/academy/${academySlug}/dashboard`,
+          url: `/academy/${academySlug}/dashboard/teacher`,
           icon: LayoutDashboard,
         },
         {

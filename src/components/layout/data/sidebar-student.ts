@@ -22,7 +22,7 @@ export function getStudentSidebar(
       items: [
         {
           title: 'Panel Principal',
-          url: `/academy/${academySlug}/dashboard`,
+          url: `/academy/${academySlug}/dashboard/student`,
           icon: LayoutDashboard,
         },
         {
