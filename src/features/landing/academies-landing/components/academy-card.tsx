@@ -19,8 +19,19 @@ export function AcademyCard({ academy, index }: AcademyCardProps) {
 
   return (
     <article className='group relative flex flex-col rounded-xl border border-border/40 bg-secondary/20 overflow-hidden transition-all duration-300 hover:border-primary/30 hover:bg-secondary/40 hover:shadow-[0_0_20px_rgba(99,102,241,0.06)] hover:-translate-y-0.5'>
-      {/* Accent bar */}
-      <div className={cn('h-1.5 w-full bg-gradient-to-r', from, to)} />
+      {/* Banner image / accent bar */}
+      <div className='relative h-28 w-full overflow-hidden shrink-0'>
+        {academy.banner_url ? (
+          <img
+            src={academy.banner_url}
+            alt={academy.name}
+            className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
+          />
+        ) : (
+          <div className={cn('h-full w-full bg-gradient-to-br', from, to)} />
+        )}
+        <div className='absolute inset-0 bg-black/20' />
+      </div>
 
       <div className='flex flex-col gap-3 p-5'>
         {/* Icon + name */}

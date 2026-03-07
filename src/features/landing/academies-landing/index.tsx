@@ -7,6 +7,7 @@ import { AcademiesHero } from './containers/academies-hero'
 import { AcademiesFilter } from './containers/academies-filter'
 import { AcademiesGrid } from './containers/academies-grid'
 import { AcademiesCta } from './components/academies-cta'
+import { Particles } from '@/components/ui/particles'
 
 export function AcademiesLandingPage() {
   const [search, setSearch] = useState('')
@@ -59,8 +60,14 @@ export function AcademiesLandingPage() {
 
   return (
     <div className='min-h-screen flex flex-col bg-background'>
+      <Particles
+        className='fixed inset-0 z-0 pointer-events-none'
+        quantity={120}
+        ease={80}
+        size={0.4}
+        staticity={50}
+      />
       <Navbar />
-
       <AcademiesHero
         search={search}
         onSearchChange={setSearch}

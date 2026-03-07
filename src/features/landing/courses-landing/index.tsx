@@ -6,6 +6,7 @@ import { CoursesHero } from './containers/courses-hero'
 import { CoursesFilter } from './containers/courses-filter'
 import { CoursesGrid } from './containers/courses-grid'
 import { COURSE_CATEGORIES } from '@/constants/home-constants'
+import { Particles } from '@/components/ui/particles'
 
 export function CoursesLandingPage() {
   const [search, setSearch] = useState('')
@@ -57,8 +58,14 @@ export function CoursesLandingPage() {
 
   return (
     <div className='min-h-screen flex flex-col bg-background'>
+      <Particles
+        className='fixed inset-0 z-0 pointer-events-none'
+        quantity={120}
+        ease={80}
+        size={0.4}
+        staticity={50}
+      />
       <Navbar />
-
       <CoursesHero
         search={search}
         onSearchChange={setSearch}

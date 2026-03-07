@@ -12,18 +12,6 @@ export function CoursesHero({ search, onSearchChange, totalCourses }: CoursesHer
 
   return (
     <section className='relative pt-28 pb-16 overflow-hidden'>
-      <div className='pointer-events-none absolute inset-0'>
-        <div
-          className='absolute inset-0 opacity-[0.03]'
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-          }}
-        />
-        <div className='absolute top-[-20%] left-1/2 -translate-x-1/2 w-[700px] h-[400px] opacity-15 blur-[140px] rounded-full bg-primary' />
-      </div>
-
       <div className='relative z-10 max-w-7xl mx-auto px-4 lg:px-8 flex flex-col items-center gap-6 text-center'>
         <div className='flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-medium'>
           <span className='size-1.5 rounded-full bg-primary animate-pulse' />

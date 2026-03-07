@@ -1,61 +1,43 @@
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Palette, BarChart3, Globe, Shield, CreditCard, Headphones } from 'lucide-react'
 
-const benefits = [
-  {
-    icon: Palette,
-    title: 'Tu marca, tu academia',
-    description: 'Personaliza colores, logo y dominio. Tus estudiantes veran TU marca, no la nuestra.',
-    accent: 'from-indigo-500 to-indigo-600',
-  },
-  {
-    icon: BarChart3,
-    title: 'Analiticas avanzadas',
-    description: 'Monitorea inscripciones, ingresos, progreso de estudiantes y tasas de finalizacion en tiempo real.',
-    accent: 'from-emerald-500 to-teal-600',
-  },
-  {
-    icon: Globe,
-    title: 'Alcance global',
-    description: 'Tu academia sera visible en nuestro marketplace con miles de estudiantes activos buscando aprender.',
-    accent: 'from-sky-500 to-blue-600',
-  },
-  {
-    icon: Shield,
-    title: 'Hosting y seguridad',
-    description: 'Nosotros nos encargamos de la infraestructura, SSL, backups y rendimiento. Tu solo crea contenido.',
-    accent: 'from-amber-500 to-orange-600',
-  },
-  {
-    icon: CreditCard,
-    title: 'Pagos integrados',
-    description: 'Recibe pagos de tus estudiantes directamente. Stripe, PayPal y transferencias bancarias incluidos.',
-    accent: 'from-pink-500 to-rose-600',
-  },
-  {
-    icon: Headphones,
-    title: 'Soporte dedicado',
-    description: 'Equipo de soporte listo para ayudarte con cualquier duda tecnica o estrategica.',
-    accent: 'from-violet-500 to-purple-600',
-  },
+const benefitIcons = [Palette, BarChart3, Globe, Shield, CreditCard, Headphones]
+const benefitAccents = [
+  'from-indigo-500 to-indigo-600',
+  'from-emerald-500 to-teal-600',
+  'from-sky-500 to-blue-600',
+  'from-amber-500 to-orange-600',
+  'from-pink-500 to-rose-600',
+  'from-violet-500 to-purple-600',
 ]
+const benefitKeys = ['branding', 'analytics', 'global', 'hosting', 'payments', 'support'] as const
 
 export function BenefitsSection() {
+  const { t } = useTranslation()
+
+  const benefits = benefitKeys.map((key, i) => ({
+    icon: benefitIcons[i],
+    accent: benefitAccents[i],
+    title: t(`createAcademyLanding.benefits.${key}.title`),
+    description: t(`createAcademyLanding.benefits.${key}.description`),
+  }))
+
   return (
     <section className='relative py-24'>
       <div className='max-w-7xl mx-auto px-4 lg:px-8 flex flex-col gap-12'>
         <div className='flex flex-col items-center gap-4 text-center'>
           <span className='text-xs font-semibold uppercase tracking-widest text-primary'>
-            Ventajas
+            {t('createAcademyLanding.benefits.eyebrow')}
           </span>
           <h2
             className='text-3xl sm:text-4xl font-bold text-foreground tracking-tight text-balance'
             style={{ fontFamily: 'var(--font-heading)' }}
           >
-            Todo lo que necesitas para lanzar tu academia
+            {t('createAcademyLanding.benefits.title')}
           </h2>
           <p className='text-sm text-muted-foreground max-w-lg leading-relaxed'>
-            Enfocate en crear contenido increible. Nosotros nos encargamos de todo lo demas.
+            {t('createAcademyLanding.benefits.subtitle')}
           </p>
         </div>
 

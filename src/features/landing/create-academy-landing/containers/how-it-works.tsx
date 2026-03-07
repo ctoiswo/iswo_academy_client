@@ -1,51 +1,36 @@
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { UserPlus, Upload, Megaphone, Banknote } from 'lucide-react'
 
-const steps = [
-  {
-    icon: UserPlus,
-    number: '01',
-    title: 'Crea tu cuenta',
-    description: 'Registrate, elige un plan y configura tu academia en minutos con nuestro asistente paso a paso.',
-  },
-  {
-    icon: Upload,
-    number: '02',
-    title: 'Sube tu contenido',
-    description: 'Agrega cursos, videos, recursos y evaluaciones. Organiza todo en modulos claros para tus estudiantes.',
-  },
-  {
-    icon: Megaphone,
-    number: '03',
-    title: 'Publica y promociona',
-    description: 'Tu academia aparece en nuestro marketplace. Comparte en redes y llega a miles de estudiantes.',
-  },
-  {
-    icon: Banknote,
-    number: '04',
-    title: 'Genera ingresos',
-    description: 'Recibe pagos de cada inscripcion. Retira tus ganancias cuando quieras, sin complicaciones.',
-  },
-]
+const stepIcons = [UserPlus, Upload, Megaphone, Banknote]
+const stepNumbers = ['01', '02', '03', '04'] as const
+const stepKeys = ['step1', 'step2', 'step3', 'step4'] as const
 
 export function HowItWorks() {
+  const { t } = useTranslation()
+
+  const steps = stepKeys.map((key, i) => ({
+    icon: stepIcons[i],
+    number: stepNumbers[i],
+    title: t(`createAcademyLanding.howItWorks.${key}.title`),
+    description: t(`createAcademyLanding.howItWorks.${key}.description`),
+  }))
+
   return (
     <section className='relative py-24 overflow-hidden'>
-      <div className='pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] opacity-[0.08] blur-[140px] rounded-full bg-primary' aria-hidden='true' />
-
       <div className='max-w-7xl mx-auto px-4 lg:px-8 flex flex-col gap-16'>
         <div className='flex flex-col items-center gap-4 text-center'>
           <span className='text-xs font-semibold uppercase tracking-widest text-primary'>
-            Como funciona
+            {t('createAcademyLanding.howItWorks.eyebrow')}
           </span>
           <h2
             className='text-3xl sm:text-4xl font-bold text-foreground tracking-tight text-balance'
             style={{ fontFamily: 'var(--font-heading)' }}
           >
-            Lanza tu academia en 4 pasos
+            {t('createAcademyLanding.howItWorks.title')}
           </h2>
           <p className='text-sm text-muted-foreground max-w-lg leading-relaxed'>
-            No necesitas conocimientos tecnicos. Nuestro proceso es simple y guiado.
+            {t('createAcademyLanding.howItWorks.subtitle')}
           </p>
         </div>
 

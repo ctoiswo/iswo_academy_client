@@ -871,5 +871,216 @@
       "description": "Join over 120 creators already sharing their knowledge.",
       "button": "Create my academy"
     }
+  },
+  "createAcademyLanding": {
+    "hero": {
+      "badge": "For creators and experts",
+      "headline": "Convert",
+      "headlineRotating": [
+        "your experience",
+        "your skills",
+        "your knowledge",
+        "your passion"
+      ],
+      "headlineSuffix": "into an academy",
+      "subtitle": "Create your own academy, upload unlimited courses, manage students and generate revenue. All with the ISWO Academy infrastructure behind you.",
+      "ctaPricing": "See plans and pricing",
+      "ctaExplore": "Explore academies",
+      "highlight1": "Monetize your expertise",
+      "highlight2": "Reach thousands of students",
+      "highlight3": "Grow without limits"
+    },
+    "benefits": {
+      "eyebrow": "Advantages",
+      "title": "Everything you need to launch your academy",
+      "subtitle": "Focus on creating amazing content. We take care of everything else.",
+      "branding": {
+        "title": "Your brand, your academy",
+        "description": "Customize colors, logo and domain. Your students will see YOUR brand, not ours."
+      },
+      "analytics": {
+        "title": "Advanced analytics",
+        "description": "Monitor enrollments, revenue, student progress and completion rates in real time."
+      },
+      "global": {
+        "title": "Global reach",
+        "description": "Your academy will be visible in our marketplace with thousands of active students looking to learn."
+      },
+      "hosting": {
+        "title": "Hosting and security",
+        "description": "We handle the infrastructure, SSL, backups and performance. You just create content."
+      },
+      "payments": {
+        "title": "Integrated payments",
+        "description": "Receive payments from your students directly. Stripe, PayPal and bank transfers included."
+      },
+      "support": {
+        "title": "Dedicated support",
+        "description": "Support team ready to help you with any technical or strategic question."
+      }
+    },
+    "howItWorks": {
+      "eyebrow": "How it works",
+      "title": "Launch your academy in 4 steps",
+      "subtitle": "No technical knowledge required. Our process is simple and guided.",
+      "step1": {
+        "title": "Create your account",
+        "description": "Sign up, choose a plan and set up your academy in minutes with our step-by-step wizard."
+      },
+      "step2": {
+        "title": "Upload your content",
+        "description": "Add courses, videos, resources and assessments. Organize everything in clear modules for your students."
+      },
+      "step3": {
+        "title": "Publish and promote",
+        "description": "Your academy appears in our marketplace. Share on social media and reach thousands of students."
+      },
+      "step4": {
+        "title": "Generate revenue",
+        "description": "Receive payments from each enrollment. Withdraw your earnings whenever you want, hassle-free."
+      }
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "title": "A plan for every stage",
+      "subtitle": "Start free for 14 days. No credit card required.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "discount": "-25%",
+      "perMonth": "/ month",
+      "billedYearly": "Billed annually (${{total}}/year)",
+      "mostPopular": "Most popular",
+      "starter": {
+        "name": "Starter",
+        "description": "Ideal for getting started and validating your idea.",
+        "features": [
+          "Up to 5 published courses",
+          "100 active students",
+          "Integrated Stripe payments",
+          "Basic analytics dashboard",
+          "Custom subdomain",
+          "Email support"
+        ],
+        "cta": "Start with Starter"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "For serious creators who want to scale.",
+        "features": [
+          "Unlimited courses",
+          "Unlimited students",
+          "Integrated payments + PayPal",
+          "Advanced analytics",
+          "Custom domain",
+          "Priority support",
+          "Automatic certificates",
+          "Sales funnel"
+        ],
+        "cta": "Start with Pro"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "For large organizations and teams.",
+        "features": [
+          "Everything in Pro",
+          "Multi-academy (up to 5)",
+          "Full API access",
+          "SSO / SAML",
+          "Dedicated account manager",
+          "Guaranteed SLA 99.9%",
+          "Personalized onboarding",
+          "Full white-label"
+        ],
+        "cta": "Contact sales"
+      }
+    },
+    "testimonials": {
+      "eyebrow": "Testimonials",
+      "title": "Creators who already trust us",
+      "subtitle": "Over 120 academies created and growing. Here's what our creators say.",
+      "prev": "Previous",
+      "next": "Next",
+      "dot": "Testimonial {{index}}",
+      "items": [
+        {
+          "name": "Maria Rodriguez",
+          "role": "Founder, UX/UI Academy",
+          "avatar": "MR",
+          "text": "Since I launched my academy on ISWO, my passive income has tripled. The platform is incredibly easy to use and the support is exceptional.",
+          "stats": "450 active students"
+        },
+        {
+          "name": "Carlos Mendez",
+          "role": "Web Development Instructor",
+          "avatar": "CM",
+          "text": "What I liked most is that I didn't have to worry about anything technical. I just focused on creating quality content and ISWO took care of the rest.",
+          "stats": "1,200+ courses sold"
+        },
+        {
+          "name": "Ana Lucia Torres",
+          "role": "Digital Marketing Expert",
+          "avatar": "AT",
+          "text": "The visibility the marketplace gives me is incredible. Students from all over Latin America find my academy organically. It's a game-changer.",
+          "stats": "$15,000+ in earnings"
+        },
+        {
+          "name": "Diego Fernandez",
+          "role": "Cloud Computing Academy",
+          "avatar": "DF",
+          "text": "I migrated my academy from another platform and it was the best decision. The advanced analytics let me understand exactly what my students need.",
+          "stats": "98% satisfaction"
+        },
+        {
+          "name": "Sofia Vargas",
+          "role": "Data Science Instructor",
+          "avatar": "SV",
+          "text": "The automatic certificates and integrated payment system saved me hours of administrative work. Now I just focus on teaching.",
+          "stats": "320 certificates issued"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Frequently asked questions",
+      "subtitle": "Everything you need to know before creating your academy. If you have more questions, our team is available 24/7.",
+      "items": [
+        {
+          "question": "How long does it take to activate my academy?",
+          "answer": "Your academy can be live in less than 24 hours. You just need to sign up, set up your profile and upload your first content. Our team reviews academies to guarantee quality and notifies you when it's ready."
+        },
+        {
+          "question": "What percentage of revenue do I keep?",
+          "answer": "Depending on your plan, you receive between 70% and 90% of each sale. On the Starter Plan you get 70%, Pro 80% and Enterprise 90%. Payments are processed every 30 days directly to your bank account or PayPal."
+        },
+        {
+          "question": "Do I need technical knowledge to create my academy?",
+          "answer": "Not at all. ISWO Academy is designed so anyone can create and manage their academy without knowing how to code. We have step-by-step tutorials, live support and an intuitive interface that guides you through the entire process."
+        },
+        {
+          "question": "What types of content can I upload?",
+          "answer": "You can upload videos (MP4, MKV up to 4GB per file), PDFs, presentations, audio files and rich text. You can also embed interactive quizzes, manually reviewed assignments and practical projects."
+        },
+        {
+          "question": "Can I migrate my courses from another platform?",
+          "answer": "Yes. We offer an assisted migration service for creators coming from Hotmart, Teachable, Udemy, Kajabi or any other platform. Our technical team accompanies you throughout the entire process at no additional cost on Pro and Enterprise plans."
+        },
+        {
+          "question": "How does the ISWO marketplace work?",
+          "answer": "Your academy appears organically in the ISWO marketplace, where thousands of students search for courses every day. The better your content and ratings, the greater visibility your academy will have. You also participate in seasonal discount campaigns that we promote."
+        },
+        {
+          "question": "Can I cancel or change my plan at any time?",
+          "answer": "Yes, you can change your plan or cancel your subscription at any time from your control panel. There is no commitment or penalties. If you cancel, your academy remains active until the end of the paid period."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Don't wait any more.",
+      "titleHighlight": "Start today for free.",
+      "subtitle": "Join over 120 academies already transforming lives and generating revenue with ISWO Academy. No hidden fees, no contracts, no risks.",
+      "primaryCta": "Create my academy for free",
+      "secondaryCta": "Compare plans",
+      "footnote": "No credit card · 14-day free trial · Cancel anytime"
+    }
   }
 }

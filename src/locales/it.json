@@ -380,5 +380,216 @@
       "description": "Unisciti a oltre 120 creatori che condividono già le loro conoscenze.",
       "button": "Crea la mia accademia"
     }
+  },
+  "createAcademyLanding": {
+    "hero": {
+      "badge": "Per creatori ed esperti",
+      "headline": "Trasforma",
+      "headlineRotating": [
+        "la tua esperienza",
+        "le tue competenze",
+        "la tua conoscenza",
+        "la tua passione"
+      ],
+      "headlineSuffix": "in un'accademia",
+      "subtitle": "Crea la tua accademia, carica corsi illimitati, gestisci gli studenti e genera entrate. Tutto con l'infrastruttura di ISWO Academy alle spalle.",
+      "ctaPricing": "Vedi piani e prezzi",
+      "ctaExplore": "Esplora le accademie",
+      "highlight1": "Monetizza la tua esperienza",
+      "highlight2": "Raggiungi migliaia di studenti",
+      "highlight3": "Cresci senza limiti"
+    },
+    "benefits": {
+      "eyebrow": "Vantaggi",
+      "title": "Tutto ciò di cui hai bisogno per lanciare la tua accademia",
+      "subtitle": "Concentrati sulla creazione di contenuti straordinari. Noi ci occupiamo di tutto il resto.",
+      "branding": {
+        "title": "Il tuo brand, la tua accademia",
+        "description": "Personalizza colori, logo e dominio. I tuoi studenti vedranno IL TUO brand, non il nostro."
+      },
+      "analytics": {
+        "title": "Analisi avanzate",
+        "description": "Monitora iscrizioni, entrate, progressi degli studenti e tassi di completamento in tempo reale."
+      },
+      "global": {
+        "title": "Portata globale",
+        "description": "La tua accademia sarà visibile sul nostro marketplace con migliaia di studenti attivi che cercano di imparare."
+      },
+      "hosting": {
+        "title": "Hosting e sicurezza",
+        "description": "Gestiamo l'infrastruttura, SSL, backup e prestazioni. Tu crei solo contenuti."
+      },
+      "payments": {
+        "title": "Pagamenti integrati",
+        "description": "Ricevi pagamenti dai tuoi studenti direttamente. Stripe, PayPal e bonifici bancari inclusi."
+      },
+      "support": {
+        "title": "Supporto dedicato",
+        "description": "Team di supporto pronto ad aiutarti con qualsiasi domanda tecnica o strategica."
+      }
+    },
+    "howItWorks": {
+      "eyebrow": "Come funziona",
+      "title": "Lancia la tua accademia in 4 passi",
+      "subtitle": "Non servono competenze tecniche. Il nostro processo è semplice e guidato.",
+      "step1": {
+        "title": "Crea il tuo account",
+        "description": "Registrati, scegli un piano e configura la tua accademia in pochi minuti con il nostro assistente passo-passo."
+      },
+      "step2": {
+        "title": "Carica il tuo contenuto",
+        "description": "Aggiungi corsi, video, risorse e valutazioni. Organizza tutto in moduli chiari per i tuoi studenti."
+      },
+      "step3": {
+        "title": "Pubblica e promuovi",
+        "description": "La tua accademia appare sul nostro marketplace. Condividi sui social e raggiungi migliaia di studenti."
+      },
+      "step4": {
+        "title": "Genera entrate",
+        "description": "Ricevi pagamenti per ogni iscrizione. Ritira i tuoi guadagni quando vuoi, senza complicazioni."
+      }
+    },
+    "pricing": {
+      "eyebrow": "Prezzi",
+      "title": "Un piano per ogni fase",
+      "subtitle": "Inizia gratis per 14 giorni. Nessuna carta di credito richiesta.",
+      "monthly": "Mensile",
+      "yearly": "Annuale",
+      "discount": "-25%",
+      "perMonth": "/ mese",
+      "billedYearly": "Fatturato annualmente (${{total}}/anno)",
+      "mostPopular": "Il più popolare",
+      "starter": {
+        "name": "Starter",
+        "description": "Ideale per iniziare e validare la tua idea.",
+        "features": [
+          "Fino a 5 corsi pubblicati",
+          "100 studenti attivi",
+          "Pagamenti integrati Stripe",
+          "Dashboard analitica di base",
+          "Sottodominio personalizzato",
+          "Supporto via email"
+        ],
+        "cta": "Inizia con Starter"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Per creatori seri che vogliono crescere.",
+        "features": [
+          "Corsi illimitati",
+          "Studenti illimitati",
+          "Pagamenti integrati + PayPal",
+          "Analisi avanzate",
+          "Dominio personalizzato",
+          "Supporto prioritario",
+          "Certificati automatici",
+          "Funnel di vendita"
+        ],
+        "cta": "Inizia con Pro"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "Per grandi organizzazioni e team.",
+        "features": [
+          "Tutto di Pro",
+          "Multi-accademia (fino a 5)",
+          "Accesso API completo",
+          "SSO / SAML",
+          "Account manager dedicato",
+          "SLA garantito 99.9%",
+          "Onboarding personalizzato",
+          "White-label completo"
+        ],
+        "cta": "Contatta le vendite"
+      }
+    },
+    "testimonials": {
+      "eyebrow": "Testimonianze",
+      "title": "Creatori che si fidano già di noi",
+      "subtitle": "Oltre 120 accademie create e in crescita. Ecco cosa dicono i nostri creatori.",
+      "prev": "Precedente",
+      "next": "Successivo",
+      "dot": "Testimonianza {{index}}",
+      "items": [
+        {
+          "name": "Maria Rodriguez",
+          "role": "Fondatrice, Accademia UX/UI",
+          "avatar": "MR",
+          "text": "Da quando ho lanciato la mia accademia su ISWO, i miei redditi passivi sono triplicati. La piattaforma è incredibilmente facile da usare e il supporto è eccezionale.",
+          "stats": "450 studenti attivi"
+        },
+        {
+          "name": "Carlos Mendez",
+          "role": "Istruttore di Sviluppo Web",
+          "avatar": "CM",
+          "text": "Quello che mi è piaciuto di più è che non ho dovuto preoccuparmi di nulla di tecnico. Mi sono solo dedicato a creare contenuti di qualità e ISWO si è occupato del resto.",
+          "stats": "1.200+ corsi venduti"
+        },
+        {
+          "name": "Ana Lucia Torres",
+          "role": "Esperta di Marketing Digitale",
+          "avatar": "AT",
+          "text": "La visibilità che mi dà il marketplace è incredibile. Studenti da tutta l'America Latina trovano la mia accademia in modo organico. È un vero game-changer.",
+          "stats": "$15.000+ in guadagni"
+        },
+        {
+          "name": "Diego Fernandez",
+          "role": "Accademia Cloud Computing",
+          "avatar": "DF",
+          "text": "Ho migrato la mia accademia da un'altra piattaforma ed è stata la migliore decisione. Le analisi avanzate mi permettono di capire esattamente cosa hanno bisogno i miei studenti.",
+          "stats": "98% di soddisfazione"
+        },
+        {
+          "name": "Sofia Vargas",
+          "role": "Istruttrice di Data Science",
+          "avatar": "SV",
+          "text": "I certificati automatici e il sistema di pagamento integrato mi hanno risparmiato ore di lavoro amministrativo. Ora mi concentro solo sull'insegnamento.",
+          "stats": "320 certificati emessi"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Domande frequenti",
+      "subtitle": "Tutto ciò che devi sapere prima di creare la tua accademia. Se hai altre domande, il nostro team è disponibile 24/7.",
+      "items": [
+        {
+          "question": "Quanto tempo ci vuole per attivare la mia accademia?",
+          "answer": "La tua accademia può essere attiva in meno di 24 ore. Devi solo registrarti, configurare il tuo profilo e caricare il tuo primo contenuto. Il nostro team esamina le accademie per garantire la qualità e ti notifica quando è pronta."
+        },
+        {
+          "question": "Quale percentuale delle entrate mi spetta?",
+          "answer": "A seconda del tuo piano, ricevi tra il 70% e il 90% di ogni vendita. Con il Piano Starter ottieni il 70%, Pro l'80% e Enterprise il 90%. I pagamenti vengono elaborati ogni 30 giorni direttamente sul tuo conto bancario o PayPal."
+        },
+        {
+          "question": "Ho bisogno di conoscenze tecniche per creare la mia accademia?",
+          "answer": "Per niente. ISWO Academy è progettata perché chiunque possa creare e gestire la propria accademia senza saper programmare. Abbiamo tutorial passo-passo, supporto in diretta e un'interfaccia intuitiva che ti guida durante tutto il processo."
+        },
+        {
+          "question": "Che tipi di contenuto posso caricare?",
+          "answer": "Puoi caricare video (MP4, MKV fino a 4 GB per file), PDF, presentazioni, file audio e testo formattato. Puoi anche incorporare quiz interattivi, compiti con revisione manuale e progetti pratici."
+        },
+        {
+          "question": "Posso migrare i miei corsi da un'altra piattaforma?",
+          "answer": "Sì. Offriamo un servizio di migrazione assistita per i creatori che vengono da Hotmart, Teachable, Udemy, Kajabi o qualsiasi altra piattaforma. Il nostro team tecnico ti accompagna durante tutto il processo senza costi aggiuntivi nei piani Pro ed Enterprise."
+        },
+        {
+          "question": "Come funziona il marketplace di ISWO?",
+          "answer": "La tua accademia appare organicamente nel marketplace di ISWO, dove migliaia di studenti cercano corsi ogni giorno. Migliori sono i tuoi contenuti e le valutazioni, maggiore sarà la visibilità della tua accademia. Inoltre, partecipi a campagne di sconto stagionali che promoviamo noi."
+        },
+        {
+          "question": "Posso annullare o cambiare piano in qualsiasi momento?",
+          "answer": "Sì, puoi cambiare piano o annullare il tuo abbonamento in qualsiasi momento dal tuo pannello di controllo. Non ci sono impegni né penali. Se annulli, la tua accademia rimane attiva fino alla fine del periodo pagato."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Non aspettare oltre.",
+      "titleHighlight": "Inizia oggi gratis.",
+      "subtitle": "Unisciti a oltre 120 accademie che stanno già trasformando vite e generando entrate con ISWO Academy. Nessuna commissione nascosta, nessun contratto, nessun rischio.",
+      "primaryCta": "Crea la mia accademia gratis",
+      "secondaryCta": "Confronta i piani",
+      "footnote": "Nessuna carta di credito · Prova gratuita 14 giorni · Annulla quando vuoi"
+    }
   }
 }

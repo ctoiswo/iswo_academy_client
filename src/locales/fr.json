@@ -380,5 +380,216 @@
       "description": "Rejoignez plus de 120 créateurs qui partagent déjà leurs connaissances.",
       "button": "Créer mon académie"
     }
+  },
+  "createAcademyLanding": {
+    "hero": {
+      "badge": "Pour les créateurs et experts",
+      "headline": "Convertissez",
+      "headlineRotating": [
+        "votre expérience",
+        "vos compétences",
+        "votre savoir",
+        "votre passion"
+      ],
+      "headlineSuffix": "en une académie",
+      "subtitle": "Créez votre propre académie, publiez des cours illimités, gérez vos étudiants et générez des revenus. Tout avec l'infrastructure d'ISWO Academy derrière vous.",
+      "ctaPricing": "Voir les plans et tarifs",
+      "ctaExplore": "Explorer les académies",
+      "highlight1": "Monétisez votre expertise",
+      "highlight2": "Atteignez des milliers d'étudiants",
+      "highlight3": "Évoluez sans limites"
+    },
+    "benefits": {
+      "eyebrow": "Avantages",
+      "title": "Tout ce dont vous avez besoin pour lancer votre académie",
+      "subtitle": "Concentrez-vous sur la création de contenu incroyable. Nous nous occupons de tout le reste.",
+      "branding": {
+        "title": "Votre marque, votre académie",
+        "description": "Personnalisez les couleurs, le logo et le domaine. Vos étudiants verront VOTRE marque, pas la nôtre."
+      },
+      "analytics": {
+        "title": "Analyses avancées",
+        "description": "Surveillez les inscriptions, les revenus, la progression des étudiants et les taux de complétion en temps réel."
+      },
+      "global": {
+        "title": "Portée mondiale",
+        "description": "Votre académie sera visible sur notre marketplace avec des milliers d'étudiants actifs cherchant à apprendre."
+      },
+      "hosting": {
+        "title": "Hébergement et sécurité",
+        "description": "Nous gérons l'infrastructure, SSL, les sauvegardes et les performances. Vous créez simplement du contenu."
+      },
+      "payments": {
+        "title": "Paiements intégrés",
+        "description": "Recevez les paiements de vos étudiants directement. Stripe, PayPal et virements bancaires inclus."
+      },
+      "support": {
+        "title": "Support dédié",
+        "description": "Équipe de support prête à vous aider pour toute question technique ou stratégique."
+      }
+    },
+    "howItWorks": {
+      "eyebrow": "Comment ça marche",
+      "title": "Lancez votre académie en 4 étapes",
+      "subtitle": "Aucune connaissance technique requise. Notre processus est simple et guidé.",
+      "step1": {
+        "title": "Créez votre compte",
+        "description": "Inscrivez-vous, choisissez un plan et configurez votre académie en quelques minutes avec notre assistant étape par étape."
+      },
+      "step2": {
+        "title": "Téléchargez votre contenu",
+        "description": "Ajoutez des cours, vidéos, ressources et évaluations. Organisez le tout en modules clairs pour vos étudiants."
+      },
+      "step3": {
+        "title": "Publiez et faites la promotion",
+        "description": "Votre académie apparaît sur notre marketplace. Partagez sur les réseaux et atteignez des milliers d'étudiants."
+      },
+      "step4": {
+        "title": "Générez des revenus",
+        "description": "Recevez des paiements pour chaque inscription. Retirez vos gains quand vous voulez, sans complications."
+      }
+    },
+    "pricing": {
+      "eyebrow": "Tarifs",
+      "title": "Un plan pour chaque étape",
+      "subtitle": "Commencez gratuitement pendant 14 jours. Sans carte de crédit requise.",
+      "monthly": "Mensuel",
+      "yearly": "Annuel",
+      "discount": "-25%",
+      "perMonth": "/ mois",
+      "billedYearly": "Facturé annuellement (${{total}}/an)",
+      "mostPopular": "Le plus populaire",
+      "starter": {
+        "name": "Starter",
+        "description": "Idéal pour démarrer et valider votre idée.",
+        "features": [
+          "Jusqu'à 5 cours publiés",
+          "100 étudiants actifs",
+          "Paiements intégrés Stripe",
+          "Tableau de bord analytique de base",
+          "Sous-domaine personnalisé",
+          "Support par email"
+        ],
+        "cta": "Commencer avec Starter"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Pour les créateurs sérieux qui veulent évoluer.",
+        "features": [
+          "Cours illimités",
+          "Étudiants illimités",
+          "Paiements intégrés + PayPal",
+          "Analyses avancées",
+          "Domaine personnalisé",
+          "Support prioritaire",
+          "Certificats automatiques",
+          "Entonnoir de vente"
+        ],
+        "cta": "Commencer avec Pro"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "Pour les grandes organisations et équipes.",
+        "features": [
+          "Tout ce qui est dans Pro",
+          "Multi-académie (jusqu'à 5)",
+          "Accès API complet",
+          "SSO / SAML",
+          "Account manager dédié",
+          "SLA garanti 99.9%",
+          "Onboarding personnalisé",
+          "White-label complet"
+        ],
+        "cta": "Contacter les ventes"
+      }
+    },
+    "testimonials": {
+      "eyebrow": "Témoignages",
+      "title": "Des créateurs qui nous font déjà confiance",
+      "subtitle": "Plus de 120 académies créées et en pleine croissance. Voici ce que disent nos créateurs.",
+      "prev": "Précédent",
+      "next": "Suivant",
+      "dot": "Témoignage {{index}}",
+      "items": [
+        {
+          "name": "Maria Rodriguez",
+          "role": "Fondatrice, Académie UX/UI",
+          "avatar": "MR",
+          "text": "Depuis que j'ai lancé mon académie sur ISWO, mes revenus passifs ont triplé. La plateforme est incroyablement facile à utiliser et le support est exceptionnel.",
+          "stats": "450 étudiants actifs"
+        },
+        {
+          "name": "Carlos Mendez",
+          "role": "Instructeur en Développement Web",
+          "avatar": "CM",
+          "text": "Ce que j'ai le plus apprécié, c'est de ne pas avoir à me soucier de la technique. Je me suis concentré sur la création de contenu de qualité et ISWO s'est occupé du reste.",
+          "stats": "1 200+ cours vendus"
+        },
+        {
+          "name": "Ana Lucia Torres",
+          "role": "Experte en Marketing Digital",
+          "avatar": "AT",
+          "text": "La visibilité que me donne le marketplace est incroyable. Des étudiants de toute l'Amérique latine trouvent mon académie de manière organique. C'est un vrai changement de jeu.",
+          "stats": "15 000$+ en gains"
+        },
+        {
+          "name": "Diego Fernandez",
+          "role": "Académie Cloud Computing",
+          "avatar": "DF",
+          "text": "J'ai migré mon académie depuis une autre plateforme et c'était la meilleure décision. Les analyses avancées me permettent de comprendre exactement ce que mes étudiants ont besoin.",
+          "stats": "98% de satisfaction"
+        },
+        {
+          "name": "Sofia Vargas",
+          "role": "Instructrice en Data Science",
+          "avatar": "SV",
+          "text": "Les certificats automatiques et le système de paiement intégré m'ont économisé des heures de travail administratif. Maintenant je me concentre uniquement sur l'enseignement.",
+          "stats": "320 certificats émis"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Questions fréquentes",
+      "subtitle": "Tout ce que vous devez savoir avant de créer votre académie. Si vous avez d'autres questions, notre équipe est disponible 24h/24 et 7j/7.",
+      "items": [
+        {
+          "question": "Combien de temps faut-il pour activer mon académie ?",
+          "answer": "Votre académie peut être active en moins de 24 heures. Vous devez juste vous inscrire, configurer votre profil et télécharger votre premier contenu. Notre équipe passe les académies en revue pour garantir la qualité et vous notifie quand c'est prêt."
+        },
+        {
+          "question": "Quel pourcentage des revenus me revient ?",
+          "answer": "Selon votre plan, vous recevez entre 70% et 90% de chaque vente. Avec le Plan Starter vous obtenez 70%, Pro 80% et Enterprise 90%. Les paiements sont traités tous les 30 jours directement sur votre compte bancaire ou PayPal."
+        },
+        {
+          "question": "Ai-je besoin de connaissances techniques pour créer mon académie ?",
+          "answer": "Pas du tout. ISWO Academy est conçue pour que tout le monde puisse créer et gérer son académie sans savoir programmer. Nous avons des tutoriels étape par étape, un support en direct et une interface intuitive qui vous guide tout au long du processus."
+        },
+        {
+          "question": "Quels types de contenu puis-je télécharger ?",
+          "answer": "Vous pouvez télécharger des vidéos (MP4, MKV jusqu'à 4 Go par fichier), des PDFs, des présentations, des fichiers audio et du texte enrichi. Vous pouvez également intégrer des quiz interactifs, des devoirs avec révision manuelle et des projets pratiques."
+        },
+        {
+          "question": "Puis-je migrer mes cours depuis une autre plateforme ?",
+          "answer": "Oui. Nous offrons un service de migration assistée pour les créateurs venant de Hotmart, Teachable, Udemy, Kajabi ou toute autre plateforme. Notre équipe technique vous accompagne tout au long du processus sans frais supplémentaires pour les plans Pro et Enterprise."
+        },
+        {
+          "question": "Comment fonctionne le marketplace d'ISWO ?",
+          "answer": "Votre académie apparaît de façon organique sur le marketplace d'ISWO, où des milliers d'étudiants cherchent des cours chaque jour. Plus votre contenu et vos évaluations sont bons, plus votre académie sera visible. Vous participez également à des campagnes de réduction saisonnières que nous promouvons."
+        },
+        {
+          "question": "Puis-je annuler ou changer de plan à tout moment ?",
+          "answer": "Oui, vous pouvez changer de plan ou annuler votre abonnement à tout moment depuis votre panneau de contrôle. Il n'y a pas d'engagement ni de pénalités. Si vous annulez, votre académie reste active jusqu'à la fin de la période payée."
+        }
+      ]
+    },
+    "cta": {
+      "title": "N'attendez plus.",
+      "titleHighlight": "Commencez gratuitement aujourd'hui.",
+      "subtitle": "Rejoignez plus de 120 académies qui transforment déjà des vies et génèrent des revenus avec ISWO Academy. Pas de frais cachés, pas de contrats, pas de risques.",
+      "primaryCta": "Créer mon académie gratuitement",
+      "secondaryCta": "Comparer les plans",
+      "footnote": "Sans carte de crédit · Essai gratuit 14 jours · Annulez quand vous voulez"
+    }
   }
 }

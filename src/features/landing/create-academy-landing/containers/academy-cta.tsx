@@ -1,8 +1,11 @@
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import { Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export function AcademyCta() {
+  const { t } = useTranslation()
+
   return (
     <section className='relative py-24 overflow-hidden'>
       {/* Background glow */}
@@ -26,16 +29,15 @@ export function AcademyCta() {
                 className='text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight text-balance'
                 style={{ fontFamily: 'var(--font-heading)' }}
               >
-                No esperes mas.
+                {t('createAcademyLanding.cta.title')}
                 <br />
                 <span className='bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent'>
-                  Empieza hoy gratis.
+                  {t('createAcademyLanding.cta.titleHighlight')}
                 </span>
               </h2>
 
               <p className='text-sm sm:text-base text-muted-foreground max-w-lg leading-relaxed'>
-                Unete a mas de 120 academias que ya estan transformando vidas y generando ingresos
-                con ISWO Academy. Sin comisiones ocultas, sin contratos, sin riesgos.
+                {t('createAcademyLanding.cta.subtitle')}
               </p>
             </div>
 
@@ -43,16 +45,16 @@ export function AcademyCta() {
               <Button asChild size='lg' className='w-full sm:w-auto gap-2 px-8'>
                 <Link to='/sign-in'>
                   <Zap className='size-4' />
-                  Crear mi academia gratis
+                  {t('createAcademyLanding.cta.primaryCta')}
                 </Link>
               </Button>
               <Button asChild size='lg' variant='outline' className='w-full sm:w-auto px-8'>
-                <a href='#precios'>Comparar planes</a>
+                <a href='#precios'>{t('createAcademyLanding.cta.secondaryCta')}</a>
               </Button>
             </div>
 
             <p className='text-xs text-muted-foreground'>
-              Sin tarjeta de credito · Prueba gratuita 14 dias · Cancela cuando quieras
+              {t('createAcademyLanding.cta.footnote')}
             </p>
           </div>
         </div>

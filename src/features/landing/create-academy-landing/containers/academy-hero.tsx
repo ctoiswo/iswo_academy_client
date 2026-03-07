@@ -1,23 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Rocket, DollarSign, Users, TrendingUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const highlights = [
-  { icon: DollarSign, text: 'Monetiza tu experiencia' },
-  { icon: Users, text: 'Llega a miles de estudiantes' },
-  { icon: TrendingUp, text: 'Crece sin limites' },
-]
-
-const rotatingPhrases = [
-  'tu experiencia',
-  'tus habilidades',
-  'tu conocimiento',
-  'tu pasion',
-]
+const highlightIcons = [DollarSign, Users, TrendingUp]
 
 export function AcademyHero() {
+  const { t } = useTranslation()
+  const rotatingPhrases = t('createAcademyLanding.hero.headlineRotating', {
+    returnObjects: true,
+  }) as string[]
+  const highlights = [
+    { icon: highlightIcons[0], text: t('createAcademyLanding.hero.highlight1') },
+    { icon: highlightIcons[1], text: t('createAcademyLanding.hero.highlight2') },
+    { icon: highlightIcons[2], text: t('createAcademyLanding.hero.highlight3') },
+  ]
+
   const [phraseIndex, setPhraseIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
 
@@ -30,28 +30,15 @@ export function AcademyHero() {
       }, 300)
     }, 3000)
     return () => clearInterval(interval)
-  }, [])
+  }, [rotatingPhrases.length])
 
   return (
     <section className='relative min-h-[90vh] flex items-center justify-center overflow-hidden'>
-      <div className='pointer-events-none absolute inset-0'>
-        <div
-          className='absolute inset-0 opacity-[0.03]'
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-          }}
-        />
-        <div className='absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[500px] opacity-20 blur-[160px] rounded-full bg-primary' />
-        <div className='absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] opacity-10 blur-[120px] rounded-full bg-indigo-400' />
-      </div>
-
       <div className='relative z-10 max-w-7xl mx-auto px-4 lg:px-8 pt-24 pb-16 flex flex-col items-center gap-12'>
         {/* Badge */}
         <div className='flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-medium'>
           <Rocket className='size-3.5' />
-          Para creadores y expertos
+          {t('createAcademyLanding.hero.badge')}
         </div>
 
         {/* Headline */}
@@ -60,7 +47,7 @@ export function AcademyHero() {
             className='text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground tracking-tight leading-[1.1] text-balance'
             style={{ fontFamily: 'var(--font-heading)' }}
           >
-            Convierte{' '}
+            {t('createAcademyLanding.hero.headline')}{' '}
             <span className='relative inline-block'>
               <span
                 className={cn(
@@ -72,11 +59,10 @@ export function AcademyHero() {
               </span>
               <span className='absolute bottom-0 left-0 right-0 h-[3px] bg-primary/40 rounded-full' />
             </span>
-            {' '}en una academia
+            {' '}{t('createAcademyLanding.hero.headlineSuffix')}
           </h1>
           <p className='text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl'>
-            Crea tu propia academia, sube cursos ilimitados, gestiona estudiantes y genera ingresos.
-            Todo con la infraestructura de ISWO Academy detras.
+            {t('createAcademyLanding.hero.subtitle')}
           </p>
         </div>
 
@@ -87,7 +73,7 @@ export function AcademyHero() {
               size='lg'
               className='h-12 px-8 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_24px_rgba(99,102,241,0.25)] hover:shadow-[0_0_32px_rgba(99,102,241,0.35)] transition-all duration-300'
             >
-              Ver planes y precios
+              {t('createAcademyLanding.hero.ctaPricing')}
               <ArrowRight className='size-4 ml-2' />
             </Button>
           </a>
@@ -97,7 +83,7 @@ export function AcademyHero() {
               size='lg'
               className='h-12 px-8 text-sm font-semibold border-border/60 text-foreground hover:bg-secondary/40 hover:border-primary/40 transition-all duration-300'
             >
-              Explorar academias
+              {t('createAcademyLanding.hero.ctaExplore')}
             </Button>
           </Link>
         </div>

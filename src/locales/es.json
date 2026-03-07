@@ -871,5 +871,216 @@
       "description": "Únete a más de 120 creadores que ya comparten su conocimiento.",
       "button": "Crear mi academia"
     }
+  },
+  "createAcademyLanding": {
+    "hero": {
+      "badge": "Para creadores y expertos",
+      "headline": "Convierte",
+      "headlineRotating": [
+        "tu experiencia",
+        "tus habilidades",
+        "tu conocimiento",
+        "tu pasión"
+      ],
+      "headlineSuffix": "en una academia",
+      "subtitle": "Crea tu propia academia, sube cursos ilimitados, gestiona estudiantes y genera ingresos. Todo con la infraestructura de ISWO Academy detrás.",
+      "ctaPricing": "Ver planes y precios",
+      "ctaExplore": "Explorar academias",
+      "highlight1": "Monetiza tu experiencia",
+      "highlight2": "Llega a miles de estudiantes",
+      "highlight3": "Crece sin límites"
+    },
+    "benefits": {
+      "eyebrow": "Ventajas",
+      "title": "Todo lo que necesitas para lanzar tu academia",
+      "subtitle": "Enfócate en crear contenido increíble. Nosotros nos encargamos de todo lo demás.",
+      "branding": {
+        "title": "Tu marca, tu academia",
+        "description": "Personaliza colores, logo y dominio. Tus estudiantes verán TU marca, no la nuestra."
+      },
+      "analytics": {
+        "title": "Analíticas avanzadas",
+        "description": "Monitorea inscripciones, ingresos, progreso de estudiantes y tasas de finalización en tiempo real."
+      },
+      "global": {
+        "title": "Alcance global",
+        "description": "Tu academia será visible en nuestro marketplace con miles de estudiantes activos buscando aprender."
+      },
+      "hosting": {
+        "title": "Hosting y seguridad",
+        "description": "Nosotros nos encargamos de la infraestructura, SSL, backups y rendimiento. Tú solo crea contenido."
+      },
+      "payments": {
+        "title": "Pagos integrados",
+        "description": "Recibe pagos de tus estudiantes directamente. Stripe, PayPal y transferencias bancarias incluidos."
+      },
+      "support": {
+        "title": "Soporte dedicado",
+        "description": "Equipo de soporte listo para ayudarte con cualquier duda técnica o estratégica."
+      }
+    },
+    "howItWorks": {
+      "eyebrow": "Cómo funciona",
+      "title": "Lanza tu academia en 4 pasos",
+      "subtitle": "No necesitas conocimientos técnicos. Nuestro proceso es simple y guiado.",
+      "step1": {
+        "title": "Crea tu cuenta",
+        "description": "Regístrate, elige un plan y configura tu academia en minutos con nuestro asistente paso a paso."
+      },
+      "step2": {
+        "title": "Sube tu contenido",
+        "description": "Agrega cursos, videos, recursos y evaluaciones. Organiza todo en módulos claros para tus estudiantes."
+      },
+      "step3": {
+        "title": "Publica y promociona",
+        "description": "Tu academia aparece en nuestro marketplace. Comparte en redes y llega a miles de estudiantes."
+      },
+      "step4": {
+        "title": "Genera ingresos",
+        "description": "Recibe pagos de cada inscripción. Retira tus ganancias cuando quieras, sin complicaciones."
+      }
+    },
+    "pricing": {
+      "eyebrow": "Precios",
+      "title": "Un plan para cada etapa",
+      "subtitle": "Empieza gratis por 14 días. Sin tarjeta de crédito requerida.",
+      "monthly": "Mensual",
+      "yearly": "Anual",
+      "discount": "-25%",
+      "perMonth": "/ mes",
+      "billedYearly": "Facturado anualmente (${{total}}/año)",
+      "mostPopular": "Más popular",
+      "starter": {
+        "name": "Starter",
+        "description": "Ideal para comenzar y validar tu idea.",
+        "features": [
+          "Hasta 5 cursos publicados",
+          "100 estudiantes activos",
+          "Pagos integrados con Stripe",
+          "Panel de analíticas básico",
+          "Subdominio personalizado",
+          "Soporte por email"
+        ],
+        "cta": "Empezar con Starter"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Para creadores serios que quieren escalar.",
+        "features": [
+          "Cursos ilimitados",
+          "Estudiantes ilimitados",
+          "Pagos integrados + PayPal",
+          "Analíticas avanzadas",
+          "Dominio personalizado",
+          "Soporte prioritario",
+          "Certificados automáticos",
+          "Embudo de ventas"
+        ],
+        "cta": "Empezar con Pro"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "Para organizaciones y equipos grandes.",
+        "features": [
+          "Todo lo de Pro",
+          "Multi-academia (hasta 5)",
+          "API access completo",
+          "SSO / SAML",
+          "Account manager dedicado",
+          "SLA garantizado 99.9%",
+          "Onboarding personalizado",
+          "White-label completo"
+        ],
+        "cta": "Contactar ventas"
+      }
+    },
+    "testimonials": {
+      "eyebrow": "Testimonios",
+      "title": "Creadores que ya confían en nosotros",
+      "subtitle": "Más de 120 academias creadas y creciendo. Esto es lo que dicen nuestros creadores.",
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "dot": "Testimonio {{index}}",
+      "items": [
+        {
+          "name": "María Rodríguez",
+          "role": "Fundadora, Academia de UX/UI",
+          "avatar": "MR",
+          "text": "Desde que lancé mi academia en ISWO, mis ingresos pasivos se triplicaron. La plataforma es increíblemente fácil de usar y el soporte es excepcional.",
+          "stats": "450 estudiantes activos"
+        },
+        {
+          "name": "Carlos Méndez",
+          "role": "Instructor de Desarrollo Web",
+          "avatar": "CM",
+          "text": "Lo que más me gustó es que no tuve que preocuparme por nada técnico. Solo me dediqué a crear contenido de calidad y ISWO se encargó del resto.",
+          "stats": "1,200+ cursos vendidos"
+        },
+        {
+          "name": "Ana Lucía Torres",
+          "role": "Experta en Marketing Digital",
+          "avatar": "AT",
+          "text": "La visibilidad que me da el marketplace es increíble. Estudiantes de toda Latinoamérica encuentran mi academia orgánicamente. Es un game-changer.",
+          "stats": "$15,000+ en ganancias"
+        },
+        {
+          "name": "Diego Fernández",
+          "role": "Academy de Cloud Computing",
+          "avatar": "DF",
+          "text": "Migré mi academia de otra plataforma y fue la mejor decisión. Las analíticas avanzadas me permiten entender exactamente qué necesitan mis estudiantes.",
+          "stats": "98% satisfacción"
+        },
+        {
+          "name": "Sofía Vargas",
+          "role": "Instructora de Data Science",
+          "avatar": "SV",
+          "text": "Los certificados automáticos y el sistema de pagos integrado me ahorraron horas de trabajo administrativo. Ahora solo me enfoco en enseñar.",
+          "stats": "320 certificados emitidos"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Preguntas frecuentes",
+      "subtitle": "Todo lo que necesitas saber antes de crear tu academia. Si tienes más dudas, nuestro equipo está disponible 24/7.",
+      "items": [
+        {
+          "question": "¿Cuánto tiempo tarda en activarse mi academia?",
+          "answer": "Tu academia puede estar activa en menos de 24 horas. Solo necesitas registrarte, configurar tu perfil y subir tu primer contenido. Nuestro equipo revisa las academias para garantizar la calidad y te notificamos cuando esté lista."
+        },
+        {
+          "question": "¿Qué porcentaje de los ingresos me corresponde?",
+          "answer": "Dependiendo de tu plan, recibes entre el 70% y el 90% de cada venta. En el Plan Starter obtienes 70%, en Pro 80% y en Enterprise 90%. Los pagos se procesan cada 30 días directamente a tu cuenta bancaria o PayPal."
+        },
+        {
+          "question": "¿Necesito conocimientos técnicos para crear mi academia?",
+          "answer": "Para nada. ISWO Academy está diseñada para que cualquier persona pueda crear y gestionar su academia sin saber programación. Tenemos tutoriales paso a paso, soporte en vivo y una interfaz intuitiva que te guía durante todo el proceso."
+        },
+        {
+          "question": "¿Qué tipos de contenido puedo subir?",
+          "answer": "Puedes subir videos (MP4, MKV hasta 4GB por archivo), PDFs, presentaciones, archivos de audio y texto enriquecido. También puedes incrustar quizzes interactivos, tareas con revisión manual y proyectos prácticos."
+        },
+        {
+          "question": "¿Puedo migrar mis cursos desde otra plataforma?",
+          "answer": "Sí. Ofrecemos un servicio de migración asistida para creadores que vienen de Hotmart, Teachable, Udemy, Kajabi o cualquier otra plataforma. Nuestro equipo técnico te acompaña durante todo el proceso sin costo adicional en los planes Pro y Enterprise."
+        },
+        {
+          "question": "¿Cómo funciona el marketplace de ISWO?",
+          "answer": "Tu academia aparece orgánicamente en el marketplace de ISWO, donde miles de estudiantes buscan cursos cada día. Cuanto mejor sea tu contenido y valoraciones, mayor visibilidad tendrá tu academia. Además, participas en campañas de descuento estacionales que nosotros promocionamos."
+        },
+        {
+          "question": "¿Puedo cancelar o cambiar de plan en cualquier momento?",
+          "answer": "Sí, puedes cambiar de plan o cancelar tu suscripción en cualquier momento desde tu panel de control. No hay permanencia ni penalizaciones. Si cancelas, tu academia permanece activa hasta el fin del periodo pagado."
+        }
+      ]
+    },
+    "cta": {
+      "title": "No esperes más.",
+      "titleHighlight": "Empieza hoy gratis.",
+      "subtitle": "Únete a más de 120 academias que ya están transformando vidas y generando ingresos con ISWO Academy. Sin comisiones ocultas, sin contratos, sin riesgos.",
+      "primaryCta": "Crear mi academia gratis",
+      "secondaryCta": "Comparar planes",
+      "footnote": "Sin tarjeta de crédito · Prueba gratuita 14 días · Cancela cuando quieras"
+    }
   }
 }
