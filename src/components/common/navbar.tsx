@@ -70,6 +70,11 @@ export function Navbar() {
               {t('navigation.login')}
             </Button>
           </Link>
+          <Link to='/sign-up'>
+            <Button variant='ghost' size='sm' className='text-sm bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_16px_rgba(99,102,241,0.2)]'>
+              {t('navigation.register')}
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile toggle */}

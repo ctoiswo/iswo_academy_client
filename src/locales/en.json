@@ -1082,5 +1082,61 @@
       "secondaryCta": "Compare plans",
       "footnote": "No credit card · 14-day free trial · Cancel anytime"
     }
+  },
+  "super_admin": {
+    "dashboard": {
+      "title": "Super Admin Dashboard",
+      "subtitle": "Manage all academies and system-wide settings"
+    },
+    "stats": {
+      "totalAcademies": "Total Academies",
+      "totalUsers": "Total Users",
+      "totalCourses": "Total Courses",
+      "totalRevenue": "Total Revenue",
+      "activeAcademies": "active",
+      "inactiveAcademies": "inactive",
+      "publishedCourses": "published",
+      "draftCourses": "drafts",
+      "newThisMonth": "+{{count}} this month",
+      "vsLastMonth": "same as last month",
+      "growthPositive": "+{{pct}}% vs last month",
+      "growthNegative": "{{pct}}% vs last month"
+    },
+    "charts": {
+      "revenueTitle": "Revenue last 6 months",
+      "usersTitle": "New users per month",
+      "users": "users"
+    },
+    "academies": {
+      "title": "Academy Management",
+      "description": "Manage all academies on the platform",
+      "addAcademy": "Add Academy",
+      "searchPlaceholder": "Search academies...",
+      "statusLabel": "Status",
+      "statusAll": "All",
+      "statusActive": "Active",
+      "statusInactive": "Inactive",
+      "statusSuspended": "Suspended",
+      "totalCount": "{{count}} academies",
+      "colName": "Academy",
+      "colStatus": "Status",
+      "colUsers": "Users",
+      "colCourses": "Courses",
+      "colRevenue": "Revenue",
+      "colCreated": "Created",
+      "emptyDefault": "No academies found",
+      "emptyFiltered": "No academies match your filters",
+      "actionView": "View Details",
+      "actionSettings": "Manage Settings",
+      "actionSuspend": "Suspend Academy",
+      "errorLoading": "Error loading academies: {{message}}"
+    },
+    "pagination": {
+      "pageOf": "Page {{current}} of {{total}}",
+      "totalCount": "{{count}} academies"
+    },
+    "errors": {
+      "statsError": "Error loading statistics: {{message}}"
+    }
   }
 }

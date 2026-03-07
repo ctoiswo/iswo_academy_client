@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   superAdminApi,
   type GlobalStats,
@@ -6,115 +7,75 @@ import {
 } from '@/lib/api-client'
 import type { DashboardProps } from '@/components/dashboard-router'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
-import { AcademyManagementPanel } from './components/academy-management-panel'
-import { GlobalStatsOverview } from './components/global-stats-overview'
+import { AcademyManagementPanel } from './containers/academy-management-panel'
+import { GlobalStatsOverview } from './containers/global-stats-overview'
+import type { AcademyStatusFilter } from './types'
 
 // Re-export types for component use
 export type { GlobalStats, AcademyOverview }
 
+export interface AcademiesMeta {
+  current_page: number
+  total_pages: number
+  total_count: number
+  per_page: number
+}
+
 export function SuperAdminDashboard({ user, academy }: DashboardProps) {
+  const { t } = useTranslation()
   const [globalStats, setGlobalStats] = useState<GlobalStats | null>(null)
   const [academies, setAcademies] = useState<AcademyOverview[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [academiesMeta, setAcademiesMeta] = useState<AcademiesMeta | null>(null)
+  const [statsLoading, setStatsLoading] = useState(true)
+  const [academiesLoading, setAcademiesLoading] = useState(true)
+  const [statsError, setStatsError] = useState<string | null>(null)
+  const [academiesError, setAcademiesError] = useState<string | null>(null)
 
-  // Load real data from API
+  // Academies filter/pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState<AcademyStatusFilter>('all')
+
   useEffect(() => {
-    const loadDashboardData = async () => {
-      try {
-        setIsLoading(true)
-        setError(null)
-
-        // Load global statistics and academies in parallel
-        const [statsResponse, academiesResponse] = await Promise.all([
-          superAdminApi.getGlobalStats(),
-          superAdminApi.getAcademies({ per_page: 50 }), // Load first 50 academies
-        ])
-
-        setGlobalStats(statsResponse)
-        setAcademies(academiesResponse.data)
-      } catch (err: any) {
-        const errorMessage = err?.message || 'Failed to load dashboard data'
-        setError(errorMessage)
-        // console.error('Dashboard loading error:', err)
-
-        // Fallback to mock data in development if API fails
-        if (import.meta.env.DEV) {
-          // console.warn('API failed, using mock data for development')
-          const mockStats: GlobalStats = {
-            totalAcademies: 12,
-            totalUsers: 1247,
-            totalCourses: 89,
-            totalRevenue: 45230,
-            monthlyGrowth: {
-              academies: 8.2,
-              users: 15.3,
-              revenue: 12.7,
-            },
-          }
-
-          const mockAcademies: AcademyOverview[] = [
-            {
-              id: 1,
-              name: 'Tech Academy',
-              description: 'Leading technology education platform',
-              logo_url: null,
-              total_users: 324,
-              total_courses: 25,
-              total_revenue: 15420,
-              created_at: '2024-01-15T10:00:00Z',
-              status: 'active',
-              creator: {
-                id: 1,
-                name: 'John Doe',
-                email: 'john@example.com',
-              },
-            },
-            {
-              id: 2,
-              name: 'Business School',
-              description: 'Professional business training',
-              logo_url: null,
-              total_users: 198,
-              total_courses: 18,
-              total_revenue: 12350,
-              created_at: '2024-02-01T14:30:00Z',
-              status: 'active',
-              creator: {
-                id: 2,
-                name: 'Jane Smith',
-                email: 'jane@example.com',
-              },
-            },
-            {
-              id: 3,
-              name: 'Design Institute',
-              description: 'Creative design and arts education',
-              logo_url: null,
-              total_users: 156,
-              total_courses: 12,
-              total_revenue: 8940,
-              created_at: '2024-02-20T09:15:00Z',
-              status: 'inactive',
-              creator: {
-                id: 3,
-                name: 'Bob Johnson',
-                email: 'bob@example.com',
-              },
-            },
-          ]
-
-          setGlobalStats(mockStats)
-          setAcademies(mockAcademies)
-          setError(null)
-        }
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadDashboardData()
+    setStatsLoading(true)
+    superAdminApi
+      .getGlobalStats()
+      .then(setGlobalStats)
+      .catch((err) => setStatsError(err?.message || 'Failed to load statistics'))
+      .finally(() => setStatsLoading(false))
   }, [])
+
+  const fetchAcademies = useCallback(() => {
+    setAcademiesLoading(true)
+    setAcademiesError(null)
+    superAdminApi
+      .getAcademies({
+        page: currentPage,
+        per_page: 10,
+        search: searchTerm || undefined,
+        status: statusFilter === 'all' ? undefined : statusFilter,
+      })
+      .then((res) => {
+        setAcademies(res.data)
+        setAcademiesMeta(res.meta ?? null)
+      })
+      .catch((err) => setAcademiesError(err?.message || 'Failed to load academies'))
+      .finally(() => setAcademiesLoading(false))
+  }, [currentPage, searchTerm, statusFilter])
+
+  useEffect(() => {
+    fetchAcademies()
+  }, [fetchAcademies])
+
+  // Reset to page 1 when filters change
+  const handleSearch = (value: string) => {
+    setSearchTerm(value)
+    setCurrentPage(1)
+  }
+  const handleStatusFilter = (value: AcademyStatusFilter) => {
+    setStatusFilter(value)
+    setCurrentPage(1)
+  }
 
   if (!user) return null
 
@@ -124,29 +85,27 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
       academy={academy}
       variant='full'
       dashboardType='super-admin'
+      title={t('super_admin.dashboard.title')}
+      subtitle={t('super_admin.dashboard.subtitle')}
     >
       <div className='space-y-6'>
-        <div>
-          <h1 className='text-3xl font-bold tracking-tight'>
-            Super Admin Dashboard
-          </h1>
-          <p className='text-muted-foreground'>
-            Manage all academies and system-wide settings
-          </p>
-        </div>
-
-        {/* Global Statistics Overview */}
         <GlobalStatsOverview
           stats={globalStats}
-          loading={isLoading}
-          error={error}
+          loading={statsLoading}
+          error={statsError}
         />
 
-        {/* Academy Management Panel */}
         <AcademyManagementPanel
           academies={academies}
-          loading={isLoading}
-          error={error}
+          meta={academiesMeta}
+          loading={academiesLoading}
+          error={academiesError}
+          currentPage={currentPage}
+          searchTerm={searchTerm}
+          statusFilter={statusFilter}
+          onPageChange={setCurrentPage}
+          onSearch={handleSearch}
+          onStatusFilter={handleStatusFilter}
         />
       </div>
     </DashboardLayout>

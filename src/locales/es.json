@@ -1082,5 +1082,61 @@
       "secondaryCta": "Comparar planes",
       "footnote": "Sin tarjeta de crédito · Prueba gratuita 14 días · Cancela cuando quieras"
     }
+  },
+  "super_admin": {
+    "dashboard": {
+      "title": "Super Admin Dashboard",
+      "subtitle": "Gestiona todas las academias y configuraciones del sistema"
+    },
+    "stats": {
+      "totalAcademies": "Total Academias",
+      "totalUsers": "Total Usuarios",
+      "totalCourses": "Total Cursos",
+      "totalRevenue": "Ingresos Totales",
+      "activeAcademies": "activas",
+      "inactiveAcademies": "inactivas",
+      "publishedCourses": "publicados",
+      "draftCourses": "borradores",
+      "newThisMonth": "+{{count}} este mes",
+      "vsLastMonth": "igual que el mes anterior",
+      "growthPositive": "+{{pct}}% vs mes anterior",
+      "growthNegative": "{{pct}}% vs mes anterior"
+    },
+    "charts": {
+      "revenueTitle": "Ingresos últimos 6 meses",
+      "usersTitle": "Nuevos usuarios por mes",
+      "users": "usuarios"
+    },
+    "academies": {
+      "title": "Gestión de Academias",
+      "description": "Administra todas las academias de la plataforma",
+      "addAcademy": "Nueva Academia",
+      "searchPlaceholder": "Buscar academias...",
+      "statusLabel": "Estado",
+      "statusAll": "Todos",
+      "statusActive": "Activa",
+      "statusInactive": "Inactiva",
+      "statusSuspended": "Suspendida",
+      "totalCount": "{{count}} academias",
+      "colName": "Academia",
+      "colStatus": "Estado",
+      "colUsers": "Usuarios",
+      "colCourses": "Cursos",
+      "colRevenue": "Ingresos",
+      "colCreated": "Creada",
+      "emptyDefault": "No se encontraron academias",
+      "emptyFiltered": "Ninguna academia coincide con los filtros",
+      "actionView": "Ver detalles",
+      "actionSettings": "Administrar configuración",
+      "actionSuspend": "Suspender academia",
+      "errorLoading": "Error al cargar academias: {{message}}"
+    },
+    "pagination": {
+      "pageOf": "Página {{current}} de {{total}}",
+      "totalCount": "{{count}} academias"
+    },
+    "errors": {
+      "statsError": "Error al cargar estadísticas: {{message}}"
+    }
   }
 }

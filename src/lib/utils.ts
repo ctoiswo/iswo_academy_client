@@ -70,9 +70,9 @@ export function formatStat(value: number): string {
 
 export function buildStatItems(stats: PlatformStats): StatItem[] {
   return [
-    { icon: Users,     value: formatStat(stats.total_students),  label: 'Estudiantes activos' },
-    { icon: BookOpen,  value: formatStat(stats.total_courses),    label: 'Cursos disponibles' },
-    { icon: Award,     value: formatStat(stats.total_academies),  label: 'Academias creadas' },
+    { icon: Users, value: formatStat(stats.total_students), label: 'Estudiantes activos' },
+    { icon: BookOpen, value: formatStat(stats.total_courses), label: 'Cursos disponibles' },
+    { icon: Award, value: formatStat(stats.total_academies), label: 'Academias creadas' },
   ]
 }
 
@@ -93,4 +93,19 @@ export function formatPrice(course: Course): string {
     currency: course.currency || 'USD',
     maximumFractionDigits: 0,
   }).format(Number(course.price))
+}
+
+export function formatDate(dateString: string, locale = 'en-US'): string {
+  return new Date(dateString).toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
+export function formatCurrency(amount: number, currency = 'USD'): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+  }).format(amount)
 }

@@ -119,12 +119,21 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         academyData,
       })
 
-      // Determine routing based on academy count
-      if (academyData.count === 0) {
-        // No academies - redirect to dashboard (guest student)
+      // Super admin bypasses academy logic entirely
+      if (response.user.is_super_admin) {
         return {
           shouldRedirect: true,
-          redirectPath: '/dashboard',
+          redirectPath: '/dashboard/super-admin',
+          showAcademySelection: false,
+        }
+      }
+
+      // Determine routing based on academy count
+      if (academyData.count === 0) {
+        // No academies - guest student
+        return {
+          shouldRedirect: true,
+          redirectPath: '/dashboard/student',
           showAcademySelection: false,
         }
       } else if (academyData.count === 1) {
@@ -133,12 +142,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         set({ currentAcademy: singleAcademy })
         localStorage.setItem(CURRENT_ACADEMY_KEY, singleAcademy.id.toString())
 
-        // Determine dashboard path based on user role
-        let dashboardPath = `/academy/${singleAcademy.id}/dashboard`
+        let dashboardPath = '/dashboard/student'
         if (singleAcademy.user_role === 'admin') {
-          dashboardPath = `/academy/${singleAcademy.id}/admin`
+          dashboardPath = '/dashboard/admin'
         } else if (singleAcademy.user_role === 'teacher') {
-          dashboardPath = `/academy/${singleAcademy.id}/teacher/dashboard`
+          dashboardPath = '/dashboard/teacher'
         }
 
         return {

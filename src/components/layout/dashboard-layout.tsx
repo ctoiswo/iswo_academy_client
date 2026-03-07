@@ -30,6 +30,8 @@ interface DashboardLayoutProps {
   showSearch?: boolean
   showConfigDrawer?: boolean
   className?: string
+  title?: string
+  subtitle?: string
 }
 
 interface DashboardSidebarProps {
@@ -59,6 +61,8 @@ export function DashboardLayout({
   showSearch = true,
   showConfigDrawer = true,
   className,
+  title,
+  subtitle,
 }: DashboardLayoutProps) {
   const defaultOpen = getCookie('sidebar_state') !== 'false'
 
@@ -73,6 +77,8 @@ export function DashboardLayout({
           showSearch={showSearch}
           showConfigDrawer={showConfigDrawer}
           className={className}
+          title={title}
+          subtitle={subtitle}
         >
           {children}
         </FullLayout>
@@ -87,6 +93,8 @@ export function DashboardLayout({
           showSearch={showSearch}
           showConfigDrawer={showConfigDrawer}
           className={className}
+          title={title}
+          subtitle={subtitle}
         >
           {children}
         </CompactLayout>
@@ -105,6 +113,8 @@ export function DashboardLayout({
           showConfigDrawer={showConfigDrawer}
           defaultOpen={defaultOpen}
           className={className}
+          title={title}
+          subtitle={subtitle}
         >
           {children}
         </SidebarLayout>
@@ -123,6 +133,8 @@ function FullLayout({
   showSearch,
   showConfigDrawer,
   className,
+  title,
+  subtitle,
 }: Omit<DashboardLayoutProps, 'variant' | 'sidebar' | 'dashboardType'>) {
   if (!user) return null
   return (
@@ -135,9 +147,14 @@ function FullLayout({
           <Header className='border-b'>
             <div className='flex w-full items-center justify-between'>
               <div className='flex items-center space-x-4'>
-                <h1 className='text-xl font-semibold'>
-                  {academy ? academy.name : 'ISWO Academy'}
-                </h1>
+                <div className='flex flex-col'>
+                  <h1 className='text-xl font-semibold leading-tight'>
+                    {title ?? (academy ? academy.name : 'ISWO Academy')}
+                  </h1>
+                  {subtitle && (
+                    <p className='text-muted-foreground text-xs'>{subtitle}</p>
+                  )}
+                </div>
                 {topNavLinks.length > 0 && <TopNav links={topNavLinks} />}
               </div>
 
@@ -170,6 +187,8 @@ function CompactLayout({
   topNavLinks = [],
   showSearch,
   className,
+  title,
+  subtitle,
 }: Omit<DashboardLayoutProps, 'variant' | 'sidebar' | 'dashboardType'>) {
   if (!user) return null
   return (
@@ -181,10 +200,13 @@ function CompactLayout({
           {/* Compact Header */}
           <Header className='bg-card/50 supports-[backdrop-filter]:bg-card/50 border-b backdrop-blur'>
             <div className='flex w-full items-center justify-between'>
-              <div className='flex items-center space-x-2'>
-                <h1 className='text-lg font-medium'>
-                  {academy ? academy.name : 'My Learning'}
+              <div className='flex flex-col'>
+                <h1 className='text-lg font-medium leading-tight'>
+                  {title ?? (academy ? academy.name : 'My Learning')}
                 </h1>
+                {subtitle && (
+                  <p className='text-muted-foreground text-xs'>{subtitle}</p>
+                )}
               </div>
 
               <div className='flex items-center space-x-2'>
@@ -228,6 +250,8 @@ function SidebarLayout({
   showConfigDrawer,
   defaultOpen,
   className,
+  title,
+  subtitle,
 }: Omit<DashboardLayoutProps, 'variant'> & { defaultOpen: boolean }) {
   if (!user) return null
   return (
@@ -263,6 +287,14 @@ function SidebarLayout({
               <Header>
                 <div className='flex w-full items-center justify-between'>
                   <div className='flex items-center space-x-4'>
+                    {title && (
+                      <div className='flex flex-col'>
+                        <h1 className='text-xl font-semibold leading-tight'>{title}</h1>
+                        {subtitle && (
+                          <p className='text-muted-foreground text-xs'>{subtitle}</p>
+                        )}
+                      </div>
+                    )}
                     {topNavLinks.length > 0 && <TopNav links={topNavLinks} />}
                   </div>
 

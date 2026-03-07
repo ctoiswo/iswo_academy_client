@@ -591,5 +591,61 @@
       "secondaryCta": "Confronta i piani",
       "footnote": "Nessuna carta di credito · Prova gratuita 14 giorni · Annulla quando vuoi"
     }
+  },
+  "super_admin": {
+    "dashboard": {
+      "title": "Dashboard Super Admin",
+      "subtitle": "Gestisci tutte le accademie e le impostazioni di sistema"
+    },
+    "stats": {
+      "totalAcademies": "Totale Accademie",
+      "totalUsers": "Totale Utenti",
+      "totalCourses": "Totale Corsi",
+      "totalRevenue": "Entrate Totali",
+      "activeAcademies": "attive",
+      "inactiveAcademies": "inattive",
+      "publishedCourses": "pubblicati",
+      "draftCourses": "bozze",
+      "newThisMonth": "+{{count}} questo mese",
+      "vsLastMonth": "uguale al mese scorso",
+      "growthPositive": "+{{pct}}% vs mese scorso",
+      "growthNegative": "{{pct}}% vs mese scorso"
+    },
+    "charts": {
+      "revenueTitle": "Entrate ultimi 6 mesi",
+      "usersTitle": "Nuovi utenti per mese",
+      "users": "utenti"
+    },
+    "academies": {
+      "title": "Gestione Accademie",
+      "description": "Gestisci tutte le accademie della piattaforma",
+      "addAcademy": "Aggiungi Accademia",
+      "searchPlaceholder": "Cerca accademie...",
+      "statusLabel": "Stato",
+      "statusAll": "Tutti",
+      "statusActive": "Attiva",
+      "statusInactive": "Inattiva",
+      "statusSuspended": "Sospesa",
+      "totalCount": "{{count}} accademie",
+      "colName": "Accademia",
+      "colStatus": "Stato",
+      "colUsers": "Utenti",
+      "colCourses": "Corsi",
+      "colRevenue": "Entrate",
+      "colCreated": "Creata",
+      "emptyDefault": "Nessuna accademia trovata",
+      "emptyFiltered": "Nessuna accademia corrisponde ai filtri",
+      "actionView": "Visualizza dettagli",
+      "actionSettings": "Gestisci impostazioni",
+      "actionSuspend": "Sospendi accademia",
+      "errorLoading": "Errore nel caricamento delle accademie: {{message}}"
+    },
+    "pagination": {
+      "pageOf": "Pagina {{current}} di {{total}}",
+      "totalCount": "{{count}} accademie"
+    },
+    "errors": {
+      "statsError": "Errore nel caricamento delle statistiche: {{message}}"
+    }
   }
 }

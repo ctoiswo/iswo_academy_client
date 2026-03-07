@@ -25,7 +25,7 @@ export function getSuperAdminSidebar(): SidebarData['navGroups'] {
       items: [
         {
           title: 'Panel Principal',
-          url: '/dashboard',
+          url: '/dashboard/super-admin',
           icon: LayoutDashboard,
         },
         {
