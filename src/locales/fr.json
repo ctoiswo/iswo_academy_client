@@ -903,5 +903,338 @@
         "refundError": "Impossible de traiter le remboursement."
       }
     }
+  },
+  "dashboard": {
+    "student": {
+      "welcome": {
+        "title": "Bon retour, {{firstName}} 👋",
+        "taskCountBefore": "Vous avez",
+        "taskCountHighlight": "{{count}} tâches en attente",
+        "taskCountAfter": "dans vos cours actifs.",
+        "continueLearning": "Continuer à apprendre",
+        "viewTasks": "Voir les tâches en attente"
+      },
+      "stats": {
+        "inProgress": "En cours",
+        "completed": "Terminés",
+        "saved": "Enregistrés",
+        "streak": "Jours de suite"
+      },
+      "continueLearning": {
+        "title": "Continuez là où vous en étiez",
+        "inProgress": "EN COURS",
+        "completedPercent": "{{progress}}% terminé",
+        "courseProgress": "Progression du cours",
+        "continue": "Continuer"
+      },
+      "tasks": {
+        "title": "Tâches en attente",
+        "empty": "Aucune tâche en attente. Continuez comme ça ! 🎉",
+        "noDate": "Sans date",
+        "today": "Aujourd'hui",
+        "tomorrow": "Demain",
+        "inDays": "Dans {{count}} jours",
+        "overdue": "En retard",
+        "urgent": "Urgent"
+      },
+      "learningPaths": {
+        "title": "Mes parcours d'apprentissage",
+        "viewAll": "Voir tout",
+        "empty": "Vous n'êtes inscrit à aucun parcours d'apprentissage.",
+        "courses": "{{completed}}/{{total}} cours",
+        "durationMonth": "1 mois",
+        "durationMonths": "{{count}} mois",
+        "continue": "Continuer"
+      },
+      "achievements": {
+        "title": "Réalisations récentes",
+        "empty": "Terminez des cours pour débloquer des réalisations !",
+        "today": "Aujourd'hui",
+        "yesterday": "Hier",
+        "daysAgo": "Il y a {{count}} jours",
+        "weekAgo": "Il y a 1 semaine",
+        "weeksAgo": "Il y a {{count}} semaines",
+        "monthAgo": "Il y a 1 mois",
+        "monthsAgo": "Il y a {{count}} mois"
+      }
+    }
+  },
+  "sidebar": {
+    "groups": {
+      "general": "Général",
+      "progress": "Progression",
+      "others": "Autres",
+      "academy": "Académie",
+      "users": "Utilisateurs",
+      "gamification": "Gamification",
+      "teaching": "Enseignement",
+      "management": "Gestion",
+      "configuration": "Configuration",
+      "courseManagement": "Gestion du Cours",
+      "pathManagement": "Gestion du Parcours"
+    },
+    "items": {
+      "dashboard": "Tableau de bord",
+      "notifications": "Notifications",
+      "myCourses": "Mes Cours",
+      "exploreCourses": "Explorer les Cours",
+      "myAssignments": "Mes Devoirs",
+      "myBadges": "Mes Badges",
+      "certificates": "Certificats",
+      "redeemCode": "Échanger un Code",
+      "analytics": "Analytiques",
+      "myLessons": "Mes Leçons",
+      "assignments": "Devoirs",
+      "exams": "Examens",
+      "myStudents": "Mes Étudiants",
+      "grades": "Notes",
+      "resources": "Ressources",
+      "settings": "Paramètres",
+      "profile": "Profil",
+      "helpCenter": "Centre d'aide",
+      "backToPaths": "Retour aux Parcours",
+      "backToCourses": "Retour aux Cours",
+      "information": "Informations",
+      "courses": "Cours",
+      "lessons": "Leçons",
+      "unlock": "Configuration de déblocage",
+      "pricing": "Tarification",
+      "students": "Étudiants",
+      "statistics": "Statistiques",
+      "learningPaths": "Parcours d'apprentissage",
+      "academySettings": "Paramètres de l'académie",
+      "allUsers": "Tous les utilisateurs",
+      "teachers": "Professeurs",
+      "badges": "Badges",
+      "academies": "Académies",
+      "allAcademies": "Toutes les Académies",
+      "categories": "Catégories",
+      "usersList": "Utilisateurs",
+      "payments": "Paiements",
+      "systemHealth": "État du Système",
+      "completeProfile": "Complétez votre Profil"
+    }
+  },
+  "gamification": {
+    "badgeModal": {
+      "newAchievement": "Nouveau succès débloqué",
+      "points": "+{{count}} points",
+      "earnedBy": "Obtenu par :",
+      "viewBadges": "Voir mes badges",
+      "share": "Partager"
+    }
+  },
+  "badges": {
+    "account-confirmed": {
+      "name": "Bienvenue dans la Communauté!",
+      "description": "Vous avez confirmé votre email et rejoint notre communauté. C'est le début de votre parcours d'apprentissage!"
+    },
+    "first-video": {
+      "name": "Première Vue",
+      "description": "Vous avez regardé votre première vidéo de cours. Excellent début!"
+    },
+    "first-lesson": {
+      "name": "Premier Pas",
+      "description": "Vous avez complété votre première leçon. Un voyage de mille lieues commence par un seul pas!"
+    },
+    "first-course": {
+      "name": "Diplômé",
+      "description": "Vous avez complété votre premier cours. Félicitations pour votre dévouement!"
+    },
+    "first-quiz": {
+      "name": "Quiz Passé",
+      "description": "Vous avez réussi votre premier quiz. La théorie devient pratique!"
+    },
+    "first-certificate": {
+      "name": "Certifié",
+      "description": "Vous avez obtenu votre premier certificat officiel. Votre travail est reconnu!"
+    },
+    "five-courses": {
+      "name": "Polymathe",
+      "description": "Vous avez complété 5 cours différents. Vos connaissances s'étendent dans de multiples directions."
+    },
+    "ten-lessons": {
+      "name": "Constant",
+      "description": "Vous avez complété 10 leçons. La constance est le chemin du succès."
+    },
+    "ten-courses": {
+      "name": "Maître",
+      "description": "Vous avez complété 10 cours complets. Vous avez atteint un niveau de maîtrise impressionnant."
+    },
+    "hundred-lessons": {
+      "name": "Inarrêtable",
+      "description": "Vous avez complété 100 leçons. Votre dévouement ne connaît pas de limites."
+    },
+    "perfectionist": {
+      "name": "Perfectionniste",
+      "description": "Vous avez obtenu un score parfait à un quiz. Maîtrise absolue du sujet!"
+    },
+    "ace-student": {
+      "name": "Étudiant Vedette",
+      "description": "Vous avez obtenu 5 scores parfaits. Votre excellence est constante."
+    },
+    "speedster": {
+      "name": "Rapide et Focalisé",
+      "description": "Vous avez complété un cours en un temps record. L'efficacité et la connaissance vont de pair."
+    },
+    "first-comment": {
+      "name": "Conversationnel",
+      "description": "Vous avez laissé votre premier commentaire. Bienvenue dans la communauté!"
+    },
+    "helpful-member": {
+      "name": "Membre Utile",
+      "description": "Vos commentaires ont reçu 10 votes positifs. Vous aidez les autres à apprendre!"
+    },
+    "discussion-starter": {
+      "name": "Initiateur de Discussions",
+      "description": "Vous avez créé votre premier sujet de discussion. Vous favorisez le dialogue et l'apprentissage!"
+    },
+    "community-leader": {
+      "name": "Leader de la Communauté",
+      "description": "Vous avez laissé 50 commentaires constructifs. Vous êtes un pilier de notre communauté."
+    },
+    "week-warrior": {
+      "name": "Guerrier de la Semaine",
+      "description": "Vous avez maintenu une série de 7 jours d'apprentissage. La constance est la clé!"
+    },
+    "month-master": {
+      "name": "Maître du Mois",
+      "description": "Vous avez maintenu une série de 30 jours consécutifs. Votre discipline est admirable!"
+    },
+    "year-legend": {
+      "name": "Légende de l'Année",
+      "description": "Vous avez maintenu une série de 365 jours consécutifs. Vous êtes une inspiration pour tous!"
+    },
+    "night-owl": {
+      "name": "Oiseau de Nuit",
+      "description": "Vous avez complété une leçon entre 22h et 4h. La connaissance ne dort jamais!"
+    },
+    "early-bird": {
+      "name": "Lève-Tôt",
+      "description": "Vous avez complété une leçon entre 5h et 7h. Le succès commence tôt!"
+    },
+    "weekend-learner": {
+      "name": "Apprenant du Week-end",
+      "description": "Vous avez complété 10 leçons le week-end. Vous utilisez votre temps libre à bon escient!"
+    },
+    "renaissance-person": {
+      "name": "Personne de la Renaissance",
+      "description": "Vous avez complété des cours dans 3 catégories différentes. Vos connaissances sont vraiment diversifiées."
+    },
+    "course-collector": {
+      "name": "Collectionneur de Cours",
+      "description": "Vous êtes inscrit à 5 cours simultanément. Votre soif de connaissance est insatiable!"
+    },
+    "certificate-hunter": {
+      "name": "Chasseur de Certificats",
+      "description": "Vous avez obtenu 5 certificats différents. Votre CV brille de vos réalisations."
+    },
+    "level-10": {
+      "name": "Novice Avancé",
+      "description": "Vous avez atteint le niveau 10. Vos progrès sont remarquables!"
+    },
+    "level-25": {
+      "name": "Expert",
+      "description": "Vous avez atteint le niveau 25. Vous êtes un véritable expert!"
+    },
+    "level-50": {
+      "name": "Maître Légendaire",
+      "description": "Vous avez atteint le niveau 50. Votre dévouement vous a mené au sommet!"
+    },
+    "secret-explorer": {
+      "name": "Explorateur Secret",
+      "description": "Vous avez découvert un secret caché. Votre curiosité a été récompensée!"
+    },
+    "first-course-created": {
+      "name": "Premier Cours Créé",
+      "description": "Vous avez créé votre premier cours. Bienvenue dans l'équipe des éducateurs!"
+    },
+    "first-lesson-created": {
+      "name": "Première Leçon Créée",
+      "description": "Vous avez publié votre première leçon. La connaissance commence à circuler!"
+    },
+    "first-assessment-created": {
+      "name": "Première Évaluation Créée",
+      "description": "Vous avez créé votre première évaluation. Aidez vos étudiants à mesurer leurs progrès!"
+    },
+    "first-learning-path-created": {
+      "name": "Concepteur de Parcours",
+      "description": "Vous avez conçu votre premier parcours d'apprentissage. Guidez vos étudiants vers le succès!"
+    },
+    "first-certificate-created": {
+      "name": "Créateur de Certificats",
+      "description": "Vous avez conçu votre premier modèle de certificat. Reconnaissez les réalisations de vos étudiants!"
+    }
+  },
+  "notifications": {
+    "assignment_new": {
+      "title": "Nouveau devoir : {{name}}"
+    },
+    "assignment_graded": {
+      "title": "Votre devoir a été noté"
+    },
+    "assignment_feedback": {
+      "title": "Nouveau commentaire sur votre devoir"
+    },
+    "assignment_due_soon": {
+      "title": "Devoir à rendre bientôt : {{name}}"
+    },
+    "assignment_overdue": {
+      "title": "Devoir en retard : {{name}}"
+    },
+    "course_new": {
+      "title": "Nouveau cours disponible : {{name}}"
+    },
+    "course_updated": {
+      "title": "Cours mis à jour : {{name}}"
+    },
+    "course_starting_soon": {
+      "title": "Le cours commence bientôt : {{name}}"
+    },
+    "enrollment_approved": {
+      "title": "Inscription approuvée"
+    },
+    "enrollment_rejected": {
+      "title": "Inscription refusée"
+    },
+    "lesson_new": {
+      "title": "Nouvelle leçon : {{name}}"
+    },
+    "section_new": {
+      "title": "Nouvelle section : {{name}}"
+    },
+    "quiz_available": {
+      "title": "Nouveau quiz disponible : {{name}}"
+    },
+    "comment_new": {
+      "title": "Nouveau commentaire"
+    },
+    "comment_reply": {
+      "title": "Nouvelle réponse à votre commentaire"
+    },
+    "comment_mention": {
+      "title": "Vous avez été mentionné dans un commentaire"
+    },
+    "certificate_issued": {
+      "title": "Certificat émis"
+    },
+    "certificate_revoked": {
+      "title": "Certificat révoqué"
+    },
+    "announcement": {
+      "title": "Annonce : {{name}}"
+    },
+    "payment_success": {
+      "title": "Paiement réussi"
+    },
+    "payment_failed": {
+      "title": "Paiement échoué"
+    },
+    "subscription_expiring": {
+      "title": "Votre abonnement expire bientôt"
+    },
+    "system_alert": {
+      "title": "Alerte système"
+    }
   }
 }

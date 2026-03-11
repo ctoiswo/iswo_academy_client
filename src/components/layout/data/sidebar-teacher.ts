@@ -20,85 +20,86 @@ import { type SidebarData } from '../types'
  * Enfocado en enseñanza y gestión de cursos propios
  */
 export function getTeacherSidebar(
-  academySlug: string
+  academySlug: string,
+  t: (key: string) => string
 ): SidebarData['navGroups'] {
   return [
     {
-      title: 'General',
+      title: t('sidebar.groups.general'),
       items: [
         {
-          title: 'Panel Principal',
+          title: t('sidebar.items.dashboard'),
           url: `/academy/${academySlug}/dashboard/teacher`,
           icon: LayoutDashboard,
         },
         {
-          title: 'Notificaciones',
+          title: t('sidebar.items.notifications'),
           url: `/academy/${academySlug}/notifications`,
           icon: Bell,
         },
         {
-          title: 'Analíticas',
+          title: t('sidebar.items.analytics'),
           url: `/academy/${academySlug}/analytics`,
           icon: BarChart3,
         },
       ],
     },
     {
-      title: 'Enseñanza',
+      title: t('sidebar.groups.teaching'),
       items: [
         {
-          title: 'Mis Cursos',
+          title: t('sidebar.items.myCourses'),
           url: `/academy/${academySlug}/teaching/courses`,
           icon: GraduationCap,
         },
         {
-          title: 'Mis Lecciones',
+          title: t('sidebar.items.myLessons'),
           url: `/academy/${academySlug}/teaching/lessons`,
           icon: BookMarked,
         },
         {
-          title: 'Tareas',
+          title: t('sidebar.items.assignments'),
           url: `/academy/${academySlug}/teaching/assignments`,
           icon: ClipboardList,
         },
         {
-          title: 'Exámenes',
+          title: t('sidebar.items.exams'),
           url: `/academy/${academySlug}/teaching/exams`,
           icon: FileQuestion,
         },
         {
-          title: 'Mis Estudiantes',
+          title: t('sidebar.items.myStudents'),
           url: `/academy/${academySlug}/teaching/students`,
           icon: Users,
         },
         {
-          title: 'Calificaciones',
+          title: t('sidebar.items.grades'),
           url: `/academy/${academySlug}/teaching/grades`,
           icon: Award,
         },
         {
-          title: 'Recursos',
+          title: t('sidebar.items.resources'),
           url: `/academy/${academySlug}/teaching/resources`,
           icon: FolderKanban,
         },
       ],
     },
     {
-      title: 'Configuración',
+      title: t('sidebar.groups.configuration'),
       items: [
         {
-          title: 'Ajustes',
+          title: t('sidebar.items.settings'),
           icon: Settings,
           items: [
             {
-              title: 'Perfil',
+              title: t('sidebar.items.profile'),
               url: `/settings`,
               icon: UserCog,
             },
           ],
         },
         {
-          title: 'Centro de Ayuda',
+          title: t('sidebar.items.helpCenter'),
           url: '/help-center',
           icon: HelpCircle,
         },

@@ -12,11 +12,12 @@ import { type SidebarData } from '../types'
  * Vista básica con opciones limitadas
  */
 export function getGuestSidebar(
-  showOnboarding: boolean
+  showOnboarding: boolean,
+  t: (key: string) => string
 ): SidebarData['navGroups'] {
-  const generalItems = [
+  const generalItems: { title: string; url: string; icon: typeof LayoutDashboard }[] = [
     {
-      title: 'Panel Principal',
+      title: t('sidebar.items.dashboard'),
       url: '/dashboard/student',
       icon: LayoutDashboard,
     },
@@ -25,7 +26,7 @@ export function getGuestSidebar(
   // Add onboarding if not completed
   if (showOnboarding) {
     generalItems.push({
-      title: 'Completa tu Perfil',
+      title: t('sidebar.items.completeProfile'),
       url: '/onboarding',
       icon: Sparkles,
     })
@@ -33,25 +34,25 @@ export function getGuestSidebar(
 
   return [
     {
-      title: 'General',
+      title: t('sidebar.groups.general'),
       items: generalItems,
     },
     {
-      title: 'Configuración',
+      title: t('sidebar.groups.configuration'),
       items: [
         {
-          title: 'Ajustes',
+          title: t('sidebar.items.settings'),
           icon: Settings,
           items: [
             {
-              title: 'Perfil',
+              title: t('sidebar.items.profile'),
               url: '/settings',
               icon: UserCog,
             },
           ],
         },
         {
-          title: 'Centro de Ayuda',
+          title: t('sidebar.items.helpCenter'),
           url: '/help-center',
           icon: HelpCircle,
         },

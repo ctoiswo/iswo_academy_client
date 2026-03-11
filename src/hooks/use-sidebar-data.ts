@@ -1,4 +1,5 @@
 import { useLocation } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
 import { useUserEnrollments } from '@/hooks/use-enrollments'
 import { getAdminSidebar } from '@/components/layout/data/sidebar-admin'
@@ -18,6 +19,7 @@ export function useSidebarData(): SidebarData['navGroups'] {
   const { user, academyData, currentAcademy } = useAuthStore()
   const location = useLocation()
   const { data: enrollmentsData } = useUserEnrollments({ status: 'active' })
+  const { t } = useTranslation()
 
   // Determinar el role del usuario
   const getUserRole = (): UserRole => {
@@ -61,13 +63,13 @@ export function useSidebarData(): SidebarData['navGroups'] {
   // Obtener el sidebar según el rol y la ubicación
   if (userRole === 'super_admin') {
     // Super admin siempre usa su sidebar especial (sin slug de academia)
-    return getSuperAdminSidebar()
+    return getSuperAdminSidebar(t)
   }
 
   if (userRole === 'guest') {
     // Guest usa sidebar básico
     const showOnboarding = user && !user.onboarding_completed_at
-    return getGuestSidebar(!!showOnboarding)
+    return getGuestSidebar(!!showOnboarding, t)
   }
 
   if (isInAcademyRoute && currentAcademy) {
@@ -75,13 +77,13 @@ export function useSidebarData(): SidebarData['navGroups'] {
 
     switch (userRole) {
       case 'admin':
-        return getAdminSidebar(academySlug, courseSlug, learningPathSlug)
+        return getAdminSidebar(academySlug, t, courseSlug, learningPathSlug)
       case 'teacher':
-        return getTeacherSidebar(academySlug)
+        return getTeacherSidebar(academySlug, t)
       case 'student':
-        return getStudentSidebar(academySlug)
+        return getStudentSidebar(academySlug, t)
       default:
-        return getStudentSidebar(academySlug)
+        return getStudentSidebar(academySlug, t)
     }
   }
 
@@ -90,10 +92,10 @@ export function useSidebarData(): SidebarData['navGroups'] {
     const firstAcademySlug =
       enrollmentsData.enrollments[0]?.course?.academy_slug
     if (firstAcademySlug) {
-      return getStudentSidebar(firstAcademySlug)
+      return getStudentSidebar(firstAcademySlug, t)
     }
   }
 
   // Fallback: usar el sidebar apropiado sin slug
-  return getGuestSidebar(false)
+  return getGuestSidebar(false, t)
 }

@@ -90,3 +90,42 @@ export interface StudentDashboardData {
   upcoming_lessons: UpcomingLesson[]
   recommendations: CourseRecommendation[]
 }
+
+// ─── Dashboard UI types (mock-backed for now) ────────────────────────────────
+
+export type TaskType = 'quiz' | 'project' | 'reading'
+
+export interface MockTask {
+  id: string
+  title: string
+  course: string
+  dueDate: string
+  type: TaskType
+  urgent: boolean
+}
+
+export interface MockLearningPath {
+  id: string
+  title: string
+  progress: number
+  totalCourses: number
+  completedCourses: number
+  currentCourse: string
+  estimatedTime: string
+  color: string
+}
+
+export interface MockAchievement {
+  id: string
+  title: string
+  icon: React.ComponentType<{ className?: string }>
+  date: string
+  color: string
+}
+
+export interface LastCourse {
+  id: string
+  title: string
+  progress: number
+  slug: string
+}

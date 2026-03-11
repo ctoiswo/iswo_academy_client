@@ -149,10 +149,9 @@ export function useBadgeNotifications(
     // Cable endpoint is at /cable (not under /api/v1)
     const wsUrl =
       import.meta.env.VITE_CABLE_URL ||
-      import.meta.env.VITE_API_URL?.replace(/^http/, 'ws').replace(
-        '/api/v1',
-        ''
-      ) + '/cable'
+      (import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1')
+        .replace(/^http/, 'ws')
+        .replace('/api/v1', '') + '/cable'
 
     // Create ActionCable consumer with authentication
     consumerRef.current = createConsumer(

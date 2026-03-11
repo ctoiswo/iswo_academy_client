@@ -1,44 +1,28 @@
-import { useMemo } from 'react'
-import { useNavigate } from '@tanstack/react-router'
-import { BookOpen, GraduationCap, PlayCircle, Bookmark } from 'lucide-react'
-import { useUserEnrollments } from '@/hooks/use-enrollments'
-import { useWishlist } from '@/hooks/use-wishlist'
+import { useState, useEffect } from 'react'
 import type { DashboardProps } from '@/components/dashboard-router'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
-import { StatCard } from '@/components/dashboard/stat-card'
+import { useStudentDashboard } from '@/hooks/use-student-dashboard'
+import { WelcomeHero } from './containers/welcome-hero'
+import { StatsSection } from './containers/stats-section'
+import { ContinueLearning } from './containers/continue-learning'
+import { PendingTasks } from './containers/pending-tasks'
+import { LearningPathsSection } from './containers/learning-paths-section'
+import { AchievementsSection } from './containers/achievements-section'
 
 export function StudentDashboard({ user, academy }: DashboardProps) {
-  const navigate = useNavigate()
+  const [mounted, setMounted] = useState(false)
 
-  // Get academy slug for navigation
-  const academySlug = academy?.slug || 'default'
-
-  // Fetch enrollments data
-  const { data: allEnrollments, isLoading } = useUserEnrollments()
-  const { data: activeEnrollments } = useUserEnrollments({ status: 'active' })
-  const { data: completedEnrollments } = useUserEnrollments({
-    status: 'completed',
-  })
-
-  // Get wishlist data
-  const { coursesCount } = useWishlist()
-
-  // Calculate stats from real data
-  const stats = useMemo(() => {
-    const active = activeEnrollments?.enrollments?.length || 0
-    const completed = completedEnrollments?.enrollments?.length || 0
-    const total = allEnrollments?.enrollments?.length || 0
-
-    return {
-      activeCount: active,
-      completedCount: completed,
-      totalCount: total,
-      savedCount: coursesCount,
-      studyStreak: 0, // TODO: Implement study streak tracking
-    }
-  }, [allEnrollments, activeEnrollments, completedEnrollments, coursesCount])
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   if (!user) return null
+
+  const academySlug = academy?.slug ?? 'default'
+  const firstName = user.first_name ?? 'estudiante'
+
+  const { data: dashboardData, isLoading } = useStudentDashboard(academySlug)
+  const dashboardContent = dashboardData?.data
 
   return (
     <DashboardLayout
@@ -50,75 +34,34 @@ export function StudentDashboard({ user, academy }: DashboardProps) {
       showSearch={false}
       showConfigDrawer={false}
     >
-      <div className='space-y-6'>
-        <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Mi Aprendizaje</h1>
-          <p className='text-muted-foreground'>
-            Continúa tu viaje de aprendizaje y sigue tu progreso
-          </p>
-        </div>
-
-        {/* Learning Categories Grid */}
-        <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
-          <StatCard
-            label='En progreso'
-            value={isLoading ? '—' : stats.activeCount}
-            icon={PlayCircle}
-            iconBg='bg-primary/10'
-            iconColor='text-primary'
-            onClick={() =>
-              navigate({
-                to: '/academy/$academySlug/my-courses',
-                params: { academySlug },
-                search: { status: 'active' },
-              })
-            }
-          />
-
-          <StatCard
-            label='Completados'
-            value={isLoading ? '—' : stats.completedCount}
-            icon={GraduationCap}
-            iconBg='bg-emerald-500/10'
-            iconColor='text-emerald-400'
-            onClick={() =>
-              navigate({
-                to: '/academy/$academySlug/my-courses',
-                params: { academySlug },
-                search: { status: 'completed' },
-              })
-            }
-          />
-
-          <StatCard
-            label='Todos mis cursos'
-            value={isLoading ? '—' : stats.totalCount}
-            icon={BookOpen}
-            iconBg='bg-violet-500/10'
-            iconColor='text-violet-400'
-            onClick={() =>
-              navigate({
-                to: '/academy/$academySlug/my-courses',
-                params: { academySlug },
-              })
-            }
-          />
-
-          <StatCard
-            label='Guardados'
-            value={isLoading ? '—' : stats.savedCount}
-            icon={Bookmark}
-            iconBg='bg-amber-500/10'
-            iconColor='text-amber-400'
-            onClick={() =>
-              navigate({
-                to: '/academy/$academySlug/my-courses',
-                params: { academySlug },
-                search: { status: 'wishlist' },
-              })
-            }
-          />
-        </div>
+      <div className='flex flex-col gap-8'>
+        <WelcomeHero
+          firstName={firstName}
+          pendingTasksCount={dashboardContent?.pending_assignments.length ?? 0}
+          mounted={mounted}
+        />
+        <StatsSection
+          mounted={mounted}
+          academySlug={academySlug}
+          currentStreak={dashboardContent?.streak?.current_streak}
+        />
+        <ContinueLearning mounted={mounted} academySlug={academySlug} />
+        <PendingTasks
+          mounted={mounted}
+          assignments={dashboardContent?.pending_assignments ?? []}
+          isLoading={isLoading}
+        />
+        <LearningPathsSection
+          mounted={mounted}
+          academySlug={academySlug}
+          enrollments={dashboardContent?.learning_path_enrollments ?? []}
+          isLoading={isLoading}
+        />
+        <AchievementsSection
+          mounted={mounted}
+          achievements={dashboardContent?.user_achievements ?? []}
+          isLoading={isLoading}
+        />
       </div>
     </DashboardLayout>
   )

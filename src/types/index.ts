@@ -35,6 +35,7 @@ export * from './entities/learning-path'
 export * from './entities/user-profile'
 export * from './entities/student-assignment'
 export * from './entities/super-admin-gamification'
+export * from './entities/dashboard'
 
 // API types
 export * from './api/responses'

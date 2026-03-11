@@ -16,32 +16,34 @@ import { type SidebarData } from '../types'
  * Sidebar para Super Admin
  * Gestión global de todas las academias del sistema
  */
-export function getSuperAdminSidebar(): SidebarData['navGroups'] {
+export function getSuperAdminSidebar(
+  t: (key: string) => string
+): SidebarData['navGroups'] {
   return [
     {
-      title: 'General',
+      title: t('sidebar.groups.general'),
       items: [
         {
-          title: 'Panel Principal',
+          title: t('sidebar.items.dashboard'),
           url: '/dashboard/super-admin',
           icon: LayoutDashboard,
         },
         {
-          title: 'Academias',
+          title: t('sidebar.items.academies'),
           icon: GraduationCap,
           items: [
             {
-              title: 'Todas las Academias',
+              title: t('sidebar.items.allAcademies'),
               url: '/super-admin/academies',
               icon: GraduationCap,
             },
             {
-              title: 'Categorías',
+              title: t('sidebar.items.categories'),
               url: '/super-admin/categories',
               icon: LayoutDashboard,
             },
             {
-              title: 'Gamificación',
+              title: t('sidebar.groups.gamification'),
               url: '/super-admin/gamification',
               icon: Award,
             },
@@ -50,41 +52,41 @@ export function getSuperAdminSidebar(): SidebarData['navGroups'] {
       ],
     },
     {
-      title: 'Gestión',
+      title: t('sidebar.groups.management'),
       items: [
         {
-          title: 'Usuarios',
+          title: t('sidebar.items.usersList'),
           url: '/super-admin/users',
           icon: Users,
         },
         {
-          title: 'Pagos',
+          title: t('sidebar.items.payments'),
           url: '/super-admin/payments',
           icon: ShoppingCart,
         },
         {
-          title: 'Estado del Sistema',
+          title: t('sidebar.items.systemHealth'),
           url: '/super-admin/health',
           icon: Monitor,
         },
       ],
     },
     {
-      title: 'Configuración',
+      title: t('sidebar.groups.configuration'),
       items: [
         {
-          title: 'Ajustes',
+          title: t('sidebar.items.settings'),
           icon: Settings,
           items: [
             {
-              title: 'Perfil',
+              title: t('sidebar.items.profile'),
               url: '/settings',
               icon: UserCog,
             },
           ],
         },
         {
-          title: 'Centro de Ayuda',
+          title: t('sidebar.items.helpCenter'),
           url: '/help-center',
           icon: HelpCircle,
         },

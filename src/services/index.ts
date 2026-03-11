@@ -18,6 +18,10 @@ export {
   academyCategoryService as academyCategoryApi,
 } from './academy-category-service'
 export {
+  default as dashboardService,
+  dashboardService as dashboardApi,
+} from './dashboard-service'
+export {
   default as courseService,
   courseService as courseApi,
 } from './course-service'

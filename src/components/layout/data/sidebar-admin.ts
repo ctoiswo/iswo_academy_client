@@ -24,6 +24,7 @@ import { type SidebarData } from '../types'
  */
 export function getAdminSidebar(
   academySlug: string,
+  t: (key: string) => string,
   courseSlug?: string,
   learningPathSlug?: string
 ): SidebarData['navGroups'] {
@@ -31,60 +32,60 @@ export function getAdminSidebar(
   if (learningPathSlug) {
     return [
       {
-        title: 'General',
+        title: t('sidebar.groups.general'),
         items: [
           {
-            title: 'Panel Principal',
+            title: t('sidebar.items.dashboard'),
             url: `/academy/${academySlug}/dashboard/admin`,
             icon: LayoutDashboard,
           },
           {
-            title: 'Volver a Rutas',
+            title: t('sidebar.items.backToPaths'),
             url: `/academy/${academySlug}/learning-paths`,
             icon: Route,
           },
         ],
       },
       {
-        title: 'Gestión de la Ruta',
+        title: t('sidebar.groups.pathManagement'),
         items: [
           {
-            title: 'Información',
+            title: t('sidebar.items.information'),
             url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/info`,
             icon: Info,
           },
           {
-            title: 'Cursos',
+            title: t('sidebar.items.courses'),
             url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/courses`,
             icon: GraduationCap,
           },
           {
-            title: 'Desbloqueo',
+            title: t('sidebar.items.unlock'),
             url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/unlock-config`,
             icon: Layers,
           },
           {
-            title: 'Precios',
+            title: t('sidebar.items.pricing'),
             url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/pricing`,
             icon: ShoppingCart,
           },
           {
-            title: 'Estudiantes',
+            title: t('sidebar.items.students'),
             url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/students`,
             icon: Users,
           },
           {
-            title: 'Estadísticas',
+            title: t('sidebar.items.statistics'),
             url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/analytics`,
             icon: BarChart3,
           },
           {
-            title: 'Certificados',
+            title: t('sidebar.items.certificates'),
             url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/certificates`,
             icon: Award,
           },
           {
-            title: 'Configuración',
+            title: t('sidebar.items.settings'),
             url: `/academy/${academySlug}/learning-paths/${learningPathSlug}/settings`,
             icon: Settings,
           },
@@ -97,55 +98,55 @@ export function getAdminSidebar(
   if (courseSlug) {
     return [
       {
-        title: 'General',
+        title: t('sidebar.groups.general'),
         items: [
           {
-            title: 'Panel Principal',
+            title: t('sidebar.items.dashboard'),
             url: `/academy/${academySlug}/dashboard`,
             icon: LayoutDashboard,
           },
           {
-            title: 'Volver a Cursos',
+            title: t('sidebar.items.backToCourses'),
             url: `/academy/${academySlug}/admin/courses`,
             icon: GraduationCap,
           },
         ],
       },
       {
-        title: 'Gestión del Curso',
+        title: t('sidebar.groups.courseManagement'),
         items: [
           {
-            title: 'Información',
+            title: t('sidebar.items.information'),
             url: `/academy/${academySlug}/courses/${courseSlug}/info`,
             icon: Info,
           },
           {
-            title: 'Lecciones',
+            title: t('sidebar.items.lessons'),
             url: `/academy/${academySlug}/courses/${courseSlug}/lessons`,
             icon: PlayCircle,
           },
           {
-            title: 'Tareas',
+            title: t('sidebar.items.assignments'),
             url: `/academy/${academySlug}/courses/${courseSlug}/assignments`,
             icon: CheckSquare,
           },
           {
-            title: 'Exámenes',
+            title: t('sidebar.items.exams'),
             url: `/academy/${academySlug}/courses/${courseSlug}/exams`,
             icon: FileQuestion,
           },
           {
-            title: 'Estudiantes',
+            title: t('sidebar.items.students'),
             url: `/academy/${academySlug}/courses/${courseSlug}/students`,
             icon: Users,
           },
           {
-            title: 'Certificados',
+            title: t('sidebar.items.certificates'),
             url: `/academy/${academySlug}/courses/${courseSlug}/certificates`,
             icon: Award,
           },
           {
-            title: 'Configuración',
+            title: t('sidebar.items.settings'),
             url: `/academy/${academySlug}/courses/${courseSlug}/settings`,
             icon: Settings,
           },
@@ -157,65 +158,65 @@ export function getAdminSidebar(
   // Sidebar normal para vista de cursos
   return [
     {
-      title: 'General',
+      title: t('sidebar.groups.general'),
       items: [
         {
-          title: 'Panel Principal',
+          title: t('sidebar.items.dashboard'),
           url: `/academy/${academySlug}/dashboard`,
           icon: LayoutDashboard,
         },
         {
-          title: 'Notificaciones',
+          title: t('sidebar.items.notifications'),
           url: `/academy/${academySlug}/notifications`,
           icon: Bell,
         },
       ],
     },
     {
-      title: 'Academia',
+      title: t('sidebar.groups.academy'),
       items: [
         {
-          title: 'Cursos',
+          title: t('sidebar.items.courses'),
           url: `/academy/${academySlug}/admin/courses`,
           icon: GraduationCap,
         },
         {
-          title: 'Rutas de Aprendizaje',
+          title: t('sidebar.items.learningPaths'),
           url: `/academy/${academySlug}/learning-paths`,
           icon: Route,
         },
         {
-          title: 'Configuraciones',
+          title: t('sidebar.items.academySettings'),
           url: `/academy/${academySlug}/settings`,
           icon: Settings2,
         },
       ],
     },
     {
-      title: 'Usuarios',
+      title: t('sidebar.groups.users'),
       items: [
         {
-          title: 'Todos los Usuarios',
+          title: t('sidebar.items.allUsers'),
           url: `/academy/${academySlug}/users`,
           icon: Users,
         },
         {
-          title: 'Profesores',
+          title: t('sidebar.items.teachers'),
           url: `/academy/${academySlug}/teachers`,
           icon: UserCheck,
         },
         {
-          title: 'Estudiantes',
+          title: t('sidebar.items.students'),
           url: `/academy/${academySlug}/students`,
           icon: GraduationCap,
         },
       ],
     },
     {
-      title: 'Gamificación',
+      title: t('sidebar.groups.gamification'),
       items: [
         {
-          title: 'Insignias',
+          title: t('sidebar.items.badges'),
           url: `/academy/${academySlug}/badges`,
           icon: Award,
         },

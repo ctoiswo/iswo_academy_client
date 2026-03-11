@@ -368,7 +368,60 @@
     "myLearning": "My Learning",
     "stats": "Stats",
     "recentActivity": "Recent Activity",
-    "continueWhere": "Continue where you left off"
+    "continueWhere": "Continue where you left off",
+    "student": {
+      "welcome": {
+        "title": "Welcome back, {{firstName}} 👋",
+        "taskCountBefore": "You have",
+        "taskCountHighlight": "{{count}} pending tasks",
+        "taskCountAfter": "in your active courses.",
+        "continueLearning": "Continue learning",
+        "viewTasks": "View pending tasks"
+      },
+      "stats": {
+        "inProgress": "In progress",
+        "completed": "Completed",
+        "saved": "Saved",
+        "streak": "Day streak"
+      },
+      "continueLearning": {
+        "title": "Continue where you left off",
+        "inProgress": "IN PROGRESS",
+        "completedPercent": "{{progress}}% completed",
+        "courseProgress": "Course progress",
+        "continue": "Continue"
+      },
+      "tasks": {
+        "title": "Pending tasks",
+        "empty": "No pending tasks. Keep it up! 🎉",
+        "noDate": "No date",
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "inDays": "In {{count}} days",
+        "overdue": "Overdue",
+        "urgent": "Urgent"
+      },
+      "learningPaths": {
+        "title": "My Learning Paths",
+        "viewAll": "View all",
+        "empty": "You are not enrolled in any learning path yet.",
+        "courses": "{{completed}}/{{total}} courses",
+        "durationMonth": "1 month",
+        "durationMonths": "{{count}} months",
+        "continue": "Continue"
+      },
+      "achievements": {
+        "title": "Recent achievements",
+        "empty": "Complete courses to unlock achievements!",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "daysAgo": "{{count}} days ago",
+        "weekAgo": "1 week ago",
+        "weeksAgo": "{{count}} weeks ago",
+        "monthAgo": "1 month ago",
+        "monthsAgo": "{{count}} months ago"
+      }
+    }
   },
   "profile": {
     "title": "Profile",
@@ -382,7 +435,14 @@
     "badges": "Badges",
     "achievements": "Achievements",
     "leaderboard": "Leaderboard",
-    "level": "Level"
+    "level": "Level",
+    "badgeModal": {
+      "newAchievement": "New achievement unlocked",
+      "points": "+{{count}} points",
+      "earnedBy": "Earned by:",
+      "viewBadges": "View my badges",
+      "share": "Share"
+    }
   },
   "errors": {
     "generic": "An unexpected error occurred",
@@ -1393,6 +1453,275 @@
         "refundSuccess": "Refund processed successfully.",
         "refundError": "Could not process the refund."
       }
+    }
+  },
+  "sidebar": {
+    "groups": {
+      "general": "General",
+      "progress": "Progress",
+      "others": "Others",
+      "academy": "Academy",
+      "users": "Users",
+      "gamification": "Gamification",
+      "teaching": "Teaching",
+      "management": "Management",
+      "configuration": "Configuration",
+      "courseManagement": "Course Management",
+      "pathManagement": "Learning Path Management"
+    },
+    "items": {
+      "dashboard": "Main Panel",
+      "notifications": "Notifications",
+      "myCourses": "My Courses",
+      "exploreCourses": "Explore Courses",
+      "myAssignments": "My Assignments",
+      "myBadges": "My Badges",
+      "certificates": "Certificates",
+      "redeemCode": "Redeem Code",
+      "analytics": "Analytics",
+      "myLessons": "My Lessons",
+      "assignments": "Assignments",
+      "exams": "Exams",
+      "myStudents": "My Students",
+      "grades": "Grades",
+      "resources": "Resources",
+      "settings": "Settings",
+      "profile": "Profile",
+      "helpCenter": "Help Center",
+      "backToPaths": "Back to Paths",
+      "backToCourses": "Back to Courses",
+      "information": "Information",
+      "courses": "Courses",
+      "lessons": "Lessons",
+      "unlock": "Unlock Config",
+      "pricing": "Pricing",
+      "students": "Students",
+      "statistics": "Statistics",
+      "learningPaths": "Learning Paths",
+      "academySettings": "Academy Settings",
+      "allUsers": "All Users",
+      "teachers": "Teachers",
+      "badges": "Badges",
+      "academies": "Academies",
+      "allAcademies": "All Academies",
+      "categories": "Categories",
+      "usersList": "Users",
+      "payments": "Payments",
+      "systemHealth": "System Status",
+      "completeProfile": "Complete Your Profile"
+    }
+  },
+  "badges": {
+    "account-confirmed": {
+      "name": "Welcome to the Community!",
+      "description": "You confirmed your email and joined our community. This is the beginning of your learning journey!"
+    },
+    "first-video": {
+      "name": "First View",
+      "description": "You completed your first lesson video. Great start!"
+    },
+    "first-lesson": {
+      "name": "First Step",
+      "description": "You completed your first full lesson. A journey of a thousand miles begins with a single step!"
+    },
+    "first-course": {
+      "name": "Graduate",
+      "description": "You completed your first full course. Congratulations on your dedication!"
+    },
+    "first-quiz": {
+      "name": "Quiz Taker",
+      "description": "You passed your first quiz. Theory becomes practice!"
+    },
+    "first-certificate": {
+      "name": "Certified",
+      "description": "You earned your first official certificate. Your hard work is recognized!"
+    },
+    "five-courses": {
+      "name": "Polymath",
+      "description": "You completed 5 different courses. Your knowledge expands in multiple directions."
+    },
+    "ten-lessons": {
+      "name": "Consistent",
+      "description": "You completed 10 lessons. Consistency is the path to success."
+    },
+    "ten-courses": {
+      "name": "Master",
+      "description": "You completed 10 full courses. You have reached an impressive level of mastery."
+    },
+    "hundred-lessons": {
+      "name": "Unstoppable",
+      "description": "You completed 100 lessons. Your dedication knows no limits."
+    },
+    "perfectionist": {
+      "name": "Perfectionist",
+      "description": "You got a perfect score on a quiz. Absolute mastery of the subject!"
+    },
+    "ace-student": {
+      "name": "Star Student",
+      "description": "You got 5 perfect scores. Your excellence is consistent."
+    },
+    "speedster": {
+      "name": "Fast & Focused",
+      "description": "You completed a course in record time. Efficiency and knowledge go hand in hand."
+    },
+    "first-comment": {
+      "name": "Conversationalist",
+      "description": "You left your first comment. Welcome to the community!"
+    },
+    "helpful-member": {
+      "name": "Helpful Member",
+      "description": "Your comments received 10 positive votes. You help others learn!"
+    },
+    "discussion-starter": {
+      "name": "Discussion Starter",
+      "description": "You created your first discussion topic. You foster dialogue and learning!"
+    },
+    "community-leader": {
+      "name": "Community Leader",
+      "description": "You left 50 constructive comments. You are a pillar of our community."
+    },
+    "week-warrior": {
+      "name": "Week Warrior",
+      "description": "You kept a 7-day learning streak. Consistency is key!"
+    },
+    "month-master": {
+      "name": "Month Master",
+      "description": "You kept a 30-day consecutive streak. Your discipline is admirable!"
+    },
+    "year-legend": {
+      "name": "Year Legend",
+      "description": "You kept a 365-day consecutive streak. You are an inspiration to all!"
+    },
+    "night-owl": {
+      "name": "Night Owl",
+      "description": "You completed a lesson between 10 PM and 4 AM. Knowledge never sleeps!"
+    },
+    "early-bird": {
+      "name": "Early Bird",
+      "description": "You completed a lesson between 5 AM and 7 AM. Success starts early!"
+    },
+    "weekend-learner": {
+      "name": "Weekend Learner",
+      "description": "You completed 10 lessons on weekends. You use your free time wisely!"
+    },
+    "renaissance-person": {
+      "name": "Renaissance Person",
+      "description": "You completed courses in 3 different categories. Your knowledge is truly diverse."
+    },
+    "course-collector": {
+      "name": "Course Collector",
+      "description": "You are enrolled in 5 courses simultaneously. Your hunger for knowledge is insatiable!"
+    },
+    "certificate-hunter": {
+      "name": "Certificate Hunter",
+      "description": "You earned 5 different certificates. Your resume shines with your achievements."
+    },
+    "level-10": {
+      "name": "Advanced Novice",
+      "description": "You reached level 10. Your progress is remarkable!"
+    },
+    "level-25": {
+      "name": "Expert",
+      "description": "You reached level 25. You are a true expert!"
+    },
+    "level-50": {
+      "name": "Legendary Master",
+      "description": "You reached level 50. Your dedication has taken you to the top!"
+    },
+    "secret-explorer": {
+      "name": "Secret Explorer",
+      "description": "You discovered a hidden secret. Your curiosity has been rewarded!"
+    },
+    "first-course-created": {
+      "name": "First Course Created",
+      "description": "You created your first course. Welcome to the educator team!"
+    },
+    "first-lesson-created": {
+      "name": "First Lesson Created",
+      "description": "You published your first lesson. Knowledge starts to flow!"
+    },
+    "first-assessment-created": {
+      "name": "First Assessment Created",
+      "description": "You created your first assessment. Help your students measure their progress!"
+    },
+    "first-learning-path-created": {
+      "name": "Path Designer",
+      "description": "You designed your first learning path. Guide your students toward success!"
+    },
+    "first-certificate-created": {
+      "name": "Certificate Creator",
+      "description": "You designed your first certificate template. Recognize your students' achievements!"
+    }
+  },
+  "notifications": {
+    "assignment_new": {
+      "title": "New assignment: {{name}}"
+    },
+    "assignment_graded": {
+      "title": "Your assignment has been graded"
+    },
+    "assignment_feedback": {
+      "title": "New feedback on your assignment"
+    },
+    "assignment_due_soon": {
+      "title": "Assignment due soon: {{name}}"
+    },
+    "assignment_overdue": {
+      "title": "Overdue assignment: {{name}}"
+    },
+    "course_new": {
+      "title": "New course available: {{name}}"
+    },
+    "course_updated": {
+      "title": "Course updated: {{name}}"
+    },
+    "course_starting_soon": {
+      "title": "Course starting soon: {{name}}"
+    },
+    "enrollment_approved": {
+      "title": "Enrollment approved"
+    },
+    "enrollment_rejected": {
+      "title": "Enrollment rejected"
+    },
+    "lesson_new": {
+      "title": "New lesson: {{name}}"
+    },
+    "section_new": {
+      "title": "New section: {{name}}"
+    },
+    "quiz_available": {
+      "title": "New quiz available: {{name}}"
+    },
+    "comment_new": {
+      "title": "New comment"
+    },
+    "comment_reply": {
+      "title": "New reply to your comment"
+    },
+    "comment_mention": {
+      "title": "You were mentioned in a comment"
+    },
+    "certificate_issued": {
+      "title": "Certificate issued"
+    },
+    "certificate_revoked": {
+      "title": "Certificate revoked"
+    },
+    "announcement": {
+      "title": "Announcement: {{name}}"
+    },
+    "payment_success": {
+      "title": "Payment successful"
+    },
+    "payment_failed": {
+      "title": "Payment failed"
+    },
+    "subscription_expiring": {
+      "title": "Your subscription is expiring soon"
+    },
+    "system_alert": {
+      "title": "System alert"
     }
   }
 }

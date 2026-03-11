@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { createConsumer } from '@rails/actioncable'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
+import { useTranslation } from 'react-i18next'
 
 interface Notification {
   id: number
@@ -33,6 +34,7 @@ interface UseNotificationsOptions {
 export function useNotifications(options: UseNotificationsOptions = {}) {
   const { enabled = true, autoConnect = true, showToasts = true } = options
   const { isAuthenticated, tokens, currentAcademy } = useAuthStore()
+  const { t } = useTranslation()
 
   // Estados del hook
   const [notifications, setNotifications] = useState<Notification[]>([])
@@ -58,7 +60,11 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
     // Mostrar toast si está habilitado
     if (showToasts) {
       const emoji = getCategoryEmoji(newNotification.category, newNotification.type || newNotification.notification_type)
-      const message = newNotification.title
+      const notifiableName = newNotification.notifiable?.title || newNotification.actor?.full_name || ''
+      const message = t(`notifications.${newNotification.notification_type}.title`, {
+        name: notifiableName,
+        defaultValue: newNotification.title,
+      })
       const duration = getPriorityDuration(newNotification.priority)
 
       if (newNotification.priority >= 3) {
@@ -211,10 +217,9 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
       try {
         const wsUrl =
           import.meta.env.VITE_CABLE_URL ||
-          import.meta.env.VITE_API_URL?.replace(/^http/, 'ws').replace(
-            '/api/v1',
-            ''
-          ) + '/cable'
+          (import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1')
+            .replace(/^http/, 'ws')
+            .replace('/api/v1', '') + '/cable'
 
         consumerRef.current = createConsumer(
           `${wsUrl}?token=${tokens.access_token}`

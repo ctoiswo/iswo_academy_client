@@ -14,59 +14,60 @@ import { type SidebarData } from '../types'
  * Enfocado en aprendizaje y progreso personal
  */
 export function getStudentSidebar(
-  academySlug: string
+  academySlug: string,
+  t: (key: string) => string
 ): SidebarData['navGroups'] {
   return [
     {
-      title: 'General',
+      title: t('sidebar.groups.general'),
       items: [
         {
-          title: 'Panel Principal',
+          title: t('sidebar.items.dashboard'),
           url: `/academy/${academySlug}/dashboard/student`,
           icon: LayoutDashboard,
         },
         {
-          title: 'Notificaciones',
+          title: t('sidebar.items.notifications'),
           url: `/academy/${academySlug}/notifications`,
           icon: Bell,
         },
         {
-          title: 'Mis Cursos',
+          title: t('sidebar.items.myCourses'),
           url: `/academy/${academySlug}/my-courses`,
           icon: BookOpen,
         },
         {
-          title: 'Explorar Cursos',
+          title: t('sidebar.items.exploreCourses'),
           url: '/academies',
           icon: GraduationCap,
         },
         {
-          title: 'Mis Tareas',
+          title: t('sidebar.items.myAssignments'),
           url: `/academy/${academySlug}/my-assignments`,
           icon: ClipboardList,
         },
       ],
     },
     {
-      title: 'Progreso',
+      title: t('sidebar.groups.progress'),
       items: [
         {
-          title: 'Mis Insignias',
+          title: t('sidebar.items.myBadges'),
           url: `/academy/${academySlug}/badges`,
           icon: Award,
         },
         {
-          title: 'Certificados',
+          title: t('sidebar.items.certificates'),
           url: `/academy/${academySlug}/certificates`,
           icon: Award,
         },
       ],
     },
     {
-      title: 'Otros',
+      title: t('sidebar.groups.others'),
       items: [
         {
-          title: 'Canjear Código',
+          title: t('sidebar.items.redeemCode'),
           url: `/academy/${academySlug}/redeem-code`,
           icon: Key,
         },
