@@ -2,7 +2,6 @@ import {
   LayoutDashboard,
   GraduationCap,
   Users,
-  BarChart3,
   Monitor,
   ShoppingCart,
   Award,

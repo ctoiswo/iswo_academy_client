@@ -258,7 +258,6 @@ export function SignUpForm({ redirectTo }: SignUpFormProps) {
                 placeholder='Juan'
                 className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
                 onFocus={() => setFocusedField('first_name')}
-                onBlur={() => setFocusedField(null)}
                 {...register('first_name')}
               />
             </div>
@@ -282,7 +281,6 @@ export function SignUpForm({ redirectTo }: SignUpFormProps) {
                 placeholder='Pérez'
                 className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
                 onFocus={() => setFocusedField('last_name')}
-                onBlur={() => setFocusedField(null)}
                 {...register('last_name')}
               />
             </div>
@@ -310,7 +308,6 @@ export function SignUpForm({ redirectTo }: SignUpFormProps) {
               placeholder='tu@email.com'
               className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
               onFocus={() => setFocusedField('email')}
-              onBlur={() => setFocusedField(null)}
               {...register('email')}
             />
           </div>
@@ -337,7 +334,6 @@ export function SignUpForm({ redirectTo }: SignUpFormProps) {
               placeholder='Crea una contrasena'
               className='pl-10 pr-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
               onFocus={() => setFocusedField('password')}
-              onBlur={() => setFocusedField(null)}
               {...register('password')}
             />
             <button
@@ -372,7 +368,6 @@ export function SignUpForm({ redirectTo }: SignUpFormProps) {
               placeholder='Repite tu contrasena'
               className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
               onFocus={() => setFocusedField('password_confirmation')}
-              onBlur={() => setFocusedField(null)}
               {...register('password_confirmation')}
             />
           </div>

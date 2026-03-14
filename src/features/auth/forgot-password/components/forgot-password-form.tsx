@@ -131,7 +131,6 @@ export function ForgotPasswordForm() {
               disabled={isLoading}
               className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
               onFocus={() => setFocusedField('email')}
-              onBlur={() => setFocusedField(null)}
               {...form.register('email')}
             />
           </div>

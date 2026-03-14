@@ -14,7 +14,6 @@ import {
   FileQuestion,
   Info,
 } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
 import { useCourse } from '@/hooks/use-courses'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

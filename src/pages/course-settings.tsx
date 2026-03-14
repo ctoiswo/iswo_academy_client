@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Save, Trash2, Archive } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
 import {
   useCourse,
   useUpdateCourse,

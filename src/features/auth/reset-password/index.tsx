@@ -2,7 +2,6 @@ import { Link, useSearch } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,

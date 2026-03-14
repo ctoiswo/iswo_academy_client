@@ -55,6 +55,7 @@ import { Route as PublicAcademiesAcademySlugRouteImport } from './routes/public/
 import { Route as AuthenticatedSuperAdminCategoriesRouteImport } from './routes/_authenticated/super-admin/categories'
 import { Route as AuthenticatedSuperAdminAcademiesRouteImport } from './routes/_authenticated/super-admin/academies'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
+import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedDashboardTeacherRouteImport } from './routes/_authenticated/dashboard/teacher'
 import { Route as AuthenticatedDashboardStudentRouteImport } from './routes/_authenticated/dashboard/student'
@@ -363,6 +364,12 @@ const AuthenticatedSettingsNotificationsRoute =
   AuthenticatedSettingsNotificationsRouteImport.update({
     id: '/notifications',
     path: '/notifications',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedSettingsAccountRoute =
+  AuthenticatedSettingsAccountRouteImport.update({
+    id: '/account',
+    path: '/account',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
 const AuthenticatedErrorsErrorRoute =
@@ -864,6 +871,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/student': typeof AuthenticatedDashboardStudentRoute
   '/dashboard/teacher': typeof AuthenticatedDashboardTeacherRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
   '/super-admin/categories': typeof AuthenticatedSuperAdminCategoriesRoute
@@ -978,6 +986,7 @@ export interface FileRoutesByTo {
   '/dashboard/student': typeof AuthenticatedDashboardStudentRoute
   '/dashboard/teacher': typeof AuthenticatedDashboardTeacherRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
   '/super-admin/categories': typeof AuthenticatedSuperAdminCategoriesRoute
@@ -1088,6 +1097,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/student': typeof AuthenticatedDashboardStudentRoute
   '/_authenticated/dashboard/teacher': typeof AuthenticatedDashboardTeacherRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/super-admin/academies': typeof AuthenticatedSuperAdminAcademiesRoute
   '/_authenticated/super-admin/categories': typeof AuthenticatedSuperAdminCategoriesRoute
@@ -1205,6 +1215,7 @@ export interface FileRouteTypes {
     | '/dashboard/student'
     | '/dashboard/teacher'
     | '/errors/$error'
+    | '/settings/account'
     | '/settings/notifications'
     | '/super-admin/academies'
     | '/super-admin/categories'
@@ -1319,6 +1330,7 @@ export interface FileRouteTypes {
     | '/dashboard/student'
     | '/dashboard/teacher'
     | '/errors/$error'
+    | '/settings/account'
     | '/settings/notifications'
     | '/super-admin/academies'
     | '/super-admin/categories'
@@ -1428,6 +1440,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/student'
     | '/_authenticated/dashboard/teacher'
     | '/_authenticated/errors/$error'
+    | '/_authenticated/settings/account'
     | '/_authenticated/settings/notifications'
     | '/_authenticated/super-admin/academies'
     | '/_authenticated/super-admin/categories'
@@ -1869,6 +1882,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/settings/notifications'
       preLoaderRoute: typeof AuthenticatedSettingsNotificationsRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/settings/account': {
+      id: '/_authenticated/settings/account'
+      path: '/account'
+      fullPath: '/settings/account'
+      preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
     '/_authenticated/errors/$error': {
@@ -2370,12 +2390,14 @@ const AuthenticatedAdminRouteRouteWithChildren =
   )
 
 interface AuthenticatedSettingsRouteRouteChildren {
+  AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
 
 const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
   {
+    AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
     AuthenticatedSettingsNotificationsRoute:
       AuthenticatedSettingsNotificationsRoute,
     AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,

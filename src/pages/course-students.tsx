@@ -9,7 +9,6 @@ import {
   TrendingUp,
   Award,
 } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
 import {
   useCourseEnrollments,
   useDeleteEnrollment,

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { DashboardCard } from '@/components/dashboard'
-import type { GlobalStats } from '../index'
+import type { GlobalStats } from '../types'
 import { StatsGrid } from '../components/stats-grid'
 import { RevenueChart } from '../components/revenue-chart'
 import { NewUsersChart } from '../components/new-users-chart'

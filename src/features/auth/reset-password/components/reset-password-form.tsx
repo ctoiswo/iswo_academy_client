@@ -167,7 +167,6 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
               disabled={isLoading}
               className='pl-10 pr-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
               onFocus={() => setFocusedField('password')}
-              onBlur={() => setFocusedField(null)}
               {...form.register('password')}
             />
             <Button
@@ -216,7 +215,6 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
               disabled={isLoading}
               className='pl-10 pr-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
               onFocus={() => setFocusedField('password_confirmation')}
-              onBlur={() => setFocusedField(null)}
               {...form.register('password_confirmation')}
             />
             <Button

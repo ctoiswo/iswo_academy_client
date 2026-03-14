@@ -10,7 +10,6 @@ import {
   Settings,
   FileText,
 } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
 import {
   useCertificateTemplates,
   useDeleteCertificateTemplate,

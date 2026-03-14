@@ -2,7 +2,7 @@ import { Building2, Users, BookOpen, DollarSign, TrendingUp, TrendingDown, Minus
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { GlobalStats } from '../index'
+import type { GlobalStats } from '../types'
 
 interface StatsGridProps {
   stats: GlobalStats | null

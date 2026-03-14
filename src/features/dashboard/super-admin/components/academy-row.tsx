@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { TableCell, TableRow } from '@/components/ui/table'
 import { formatCurrency } from '@/lib/utils'
-import type { AcademyOverview } from '../index'
+import type { AcademyOverview } from '../types'
 
 interface AcademyRowProps {
   academy: AcademyOverview

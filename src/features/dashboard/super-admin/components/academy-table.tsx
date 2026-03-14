@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import type { AcademyOverview } from '../index'
+import type { AcademyOverview } from '../types'
 import type { AcademyStatusFilter } from '../types'
 import { AcademyRow } from './academy-row'
 
