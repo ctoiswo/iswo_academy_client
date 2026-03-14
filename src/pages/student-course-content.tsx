@@ -515,6 +515,11 @@ export default function StudentCourseContentPage() {
                 >
                   {sections.map((section, idx) => {
                     const lessonCount = section.lessons?.length ?? 0
+                    const completedCount = section.lessons?.filter(
+                      (l) => l.is_completed
+                    ).length ?? 0
+                    const sectionDone =
+                      lessonCount > 0 && completedCount === lessonCount
                     return (
                       <AccordionItem
                         key={section.id}
@@ -523,11 +528,24 @@ export default function StudentCourseContentPage() {
                       >
                         <AccordionTrigger className='hover:bg-secondary/20 px-5 py-4 transition-colors hover:no-underline'>
                           <div className='flex min-w-0 flex-1 items-center gap-4'>
-                            <div className='bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-lg text-sm font-semibold'>
-                              {idx + 1}
-                            </div>
+                            {sectionDone ? (
+                              <div className='flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15'>
+                                <CheckCircle2 className='size-5 text-emerald-500' />
+                              </div>
+                            ) : (
+                              <div className='bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-lg text-sm font-semibold'>
+                                {idx + 1}
+                              </div>
+                            )}
                             <div className='flex min-w-0 flex-1 flex-col items-start gap-0.5'>
-                              <span className='text-foreground w-full truncate text-left font-medium'>
+                              <span
+                                className={cn(
+                                  'w-full truncate text-left font-medium',
+                                  sectionDone
+                                    ? 'text-emerald-500'
+                                    : 'text-foreground'
+                                )}
+                              >
                                 {section.title}
                               </span>
                               <div className='text-muted-foreground flex items-center gap-3 text-xs'>
@@ -535,11 +553,20 @@ export default function StudentCourseContentPage() {
                                   {lessonCount}{' '}
                                   {t('courseContent.lessonsLabel')}
                                 </span>
+                                {course.enrolled && lessonCount > 0 && (
+                                  <span className='text-emerald-500'>
+                                    {completedCount}/{lessonCount}
+                                  </span>
+                                )}
                               </div>
                             </div>
                             <Badge
                               variant='outline'
-                              className='mr-2 shrink-0 text-xs'
+                              className={cn(
+                                'mr-2 shrink-0 text-xs',
+                                sectionDone &&
+                                  'border-emerald-500/40 bg-emerald-500/10 text-emerald-500'
+                              )}
                             >
                               {lessonCount}
                             </Badge>
@@ -554,10 +581,26 @@ export default function StudentCourseContentPage() {
                                   onClick={() =>
                                     navigateToLesson(String(lesson.id))
                                   }
-                                  className='group hover:bg-secondary/40 flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors'
+                                  className={cn(
+                                    'group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors',
+                                    lesson.is_completed
+                                      ? 'hover:bg-emerald-500/10'
+                                      : 'hover:bg-secondary/40'
+                                  )}
                                 >
-                                  <LessonTypeIcon type={lesson.lesson_type} />
-                                  <span className='text-foreground flex-1 text-sm'>
+                                  {lesson.is_completed ? (
+                                    <CheckCircle2 className='size-4 shrink-0 text-emerald-500' />
+                                  ) : (
+                                    <LessonTypeIcon type={lesson.lesson_type} />
+                                  )}
+                                  <span
+                                    className={cn(
+                                      'flex-1 text-sm',
+                                      lesson.is_completed
+                                        ? 'text-emerald-600 line-through dark:text-emerald-400'
+                                        : 'text-foreground'
+                                    )}
+                                  >
                                     {lesson.title}
                                   </span>
                                   {lesson.is_free && (

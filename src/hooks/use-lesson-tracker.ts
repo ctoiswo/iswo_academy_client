@@ -33,6 +33,10 @@ export function useLessonTracker(academySlug: string, courseSlug: string) {
       queryClient.invalidateQueries({
         queryKey: ['lesson', academySlug, courseSlug],
       })
+      // Refresh course data so the progress bar on the content page updates
+      queryClient.invalidateQueries({
+        queryKey: ['course', academySlug, courseSlug],
+      })
       toast.success('¡Lección completada!')
     },
     onError: () => {

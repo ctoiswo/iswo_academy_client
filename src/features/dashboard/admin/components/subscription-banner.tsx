@@ -8,18 +8,36 @@ interface SubscriptionBannerProps {
 }
 
 export function SubscriptionBanner({ academy }: SubscriptionBannerProps) {
-  const { admin_subscription_active, subscription_expires_at, admin_subscription_days_remaining, slug } = academy
+  const { admin_subscription_active, subscription_expires_at, admin_subscription_days_remaining, slug, status } = academy
 
-  const isExpired = !admin_subscription_active
+  // Newly created academy — no subscription ever configured
+  const isDiscoverMode = status === 'inactive' && !subscription_expires_at
+  const isExpired = !isDiscoverMode && !admin_subscription_active
   const isExpiringSoon =
     admin_subscription_active &&
     subscription_expires_at !== null &&
     admin_subscription_days_remaining !== null &&
     admin_subscription_days_remaining <= 7
 
-  if (!isExpired && !isExpiringSoon) return null
+  if (!isDiscoverMode && !isExpired && !isExpiringSoon) return null
 
   const subscriptionUrl = `/academy/${slug}/settings/subscription`
+
+  if (isDiscoverMode) {
+    return (
+      <div className='flex items-center justify-between gap-4 rounded-lg border border-blue-500/40 bg-blue-500/10 px-4 py-3 text-sm text-blue-700 dark:text-blue-400'>
+        <div className='flex items-center gap-3'>
+          <AlertTriangle className='h-5 w-5 shrink-0' />
+          <span className='font-medium'>
+            Estás en <strong>modo descubrimiento</strong>. Tu academia aún no tiene un plan activo — no podrás crear cursos, rutas de aprendizaje ni contenido hasta activar tu suscripción.
+          </span>
+        </div>
+        <Button asChild size='sm' variant='outline' className='shrink-0 border-blue-500 text-blue-700 hover:bg-blue-100 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-400/10'>
+          <Link to={subscriptionUrl as string}>Activar plan</Link>
+        </Button>
+      </div>
+    )
+  }
 
   if (isExpired) {
     return (

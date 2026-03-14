@@ -96,6 +96,7 @@ export interface AcademyMembership {
   admin_subscription_active: boolean
   subscription_expires_at: string | null
   admin_subscription_days_remaining: number | null
+  status: string
 }
 
 // Academy data structure returned in auth responses

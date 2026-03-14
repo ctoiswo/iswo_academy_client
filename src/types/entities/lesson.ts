@@ -33,6 +33,7 @@ export interface Lesson {
   duration_minutes?: number
   position: number
   is_free: boolean
+  is_completed?: boolean
   processing_status?: ProcessingStatus
   processing_error?: string
   created_at: string
@@ -40,6 +41,7 @@ export interface Lesson {
   mux_playback_id?: string
   mux_asset_id?: string
   user_progress?: LessonUserProgress | null
+  attachments?: LessonAttachment[]
 }
 
 export interface Section {
@@ -64,6 +66,38 @@ export interface LessonUserProgress {
   time_spent_seconds: number
   completion_percentage: number
   last_accessed_at: string | null
+}
+
+export interface LessonAttachment {
+  id: number
+  title: string
+  description?: string | null
+  attachment_type: string
+  file_icon: string
+  file_extension: string
+  file_size_mb: number | null
+  required: boolean
+  download_url: string | null
+}
+
+export interface LessonComment {
+  id: number
+  body: string
+  body_html: string
+  created_at: string
+  edited: boolean
+  edited_at: string | null
+  replies_count: number
+  reactions_count: number
+  parent_id?: number | null
+  user: {
+    id: number
+    full_name: string
+    email: string
+  } | null
+  can_edit?: boolean
+  can_delete?: boolean
+  replies?: LessonComment[]
 }
 
 export interface LessonProgress {

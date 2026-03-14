@@ -27,6 +27,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useSections } from '@/hooks/use-sections'
+import { LessonExtras } from './lesson-extras'
 import {
   Accordion,
   AccordionContent,
@@ -51,12 +52,20 @@ interface CoursePlayerProps {
 function VideoPlayer({
   lesson,
   onComplete,
+  isCompleting = false,
+  isCompleted = false,
 }: {
   lesson: Lesson
   onComplete: () => void
+  isCompleting?: boolean
+  isCompleted?: boolean
 }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  // Stable refs so the YT.Player callback never captures a stale closure
+  const onCompleteRef = useRef(onComplete)
+  const completedOnceRef = useRef(isCompleted)
+  useEffect(() => { onCompleteRef.current = onComplete }, [onComplete])
   const controlsTimeout = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   const [isPlaying, setIsPlaying] = useState(false)
@@ -68,7 +77,7 @@ function VideoPlayer({
   const [showControls, setShowControls] = useState(true)
   const [playbackRate, setPlaybackRate] = useState(1)
   const [showSettings, setShowSettings] = useState(false)
-  const [completedOnce, setCompletedOnce] = useState(false)
+  const [completedOnce, setCompletedOnce] = useState(isCompleted)
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -181,34 +190,113 @@ function VideoPlayer({
 
   // Determine the actual video src from provider
   const getVideoSrc = (): string | undefined => {
-    if (lesson.video_url) return lesson.video_url
-    if (lesson.video_provider === 'youtube' && lesson.video_identifier) {
-      // Return undefined — we'll render an iframe embed instead
+    // YouTube and Vimeo are embedded via iframe — never use video_url as <video> src
+    if (lesson.video_provider === 'youtube' || lesson.video_provider === 'vimeo') {
       return undefined
     }
-    return undefined
+    return lesson.video_url || undefined
   }
 
-  const isYouTube =
-    lesson.video_provider === 'youtube' && !!lesson.video_identifier
+  // Extract YouTube video ID from video_identifier or from video_url
+  const getYouTubeId = (): string | null => {
+    if (lesson.video_identifier) return lesson.video_identifier
+    if (lesson.video_url) {
+      try {
+        const u = new URL(lesson.video_url)
+        if (u.hostname.includes('youtube.com')) return u.searchParams.get('v')
+        if (u.hostname === 'youtu.be') return u.pathname.slice(1).split('?')[0]
+      } catch {}
+    }
+    return null
+  }
+
+  const youTubeId = lesson.video_provider === 'youtube' ? getYouTubeId() : null
+  const isYouTube = !!youTubeId
   const isVimeo = lesson.video_provider === 'vimeo' && !!lesson.video_identifier
   const videoSrc = getVideoSrc()
 
-  // YouTube / Vimeo: embed iframe
-  if (isYouTube || isVimeo) {
-    const src = isYouTube
-      ? `https://www.youtube.com/embed/${lesson.video_identifier}?autoplay=0&rel=0`
-      : `https://player.vimeo.com/video/${lesson.video_identifier}`
+  // Load the YouTube IFrame API script once and create a YT.Player that
+  // fires onComplete automatically when the video ends (state 0 = ENDED).
+  useEffect(() => {
+    if (!isYouTube || !youTubeId) return
 
+    const containerId = `yt-player-${lesson.id}`
+    let player: any = null
+
+    const createPlayer = () => {
+      if (!document.getElementById(containerId)) return
+      player = new (window as any).YT.Player(containerId, {
+        videoId: youTubeId,
+        playerVars: { rel: 0, modestbranding: 1, origin: window.location.origin },
+        events: {
+          onStateChange: (event: any) => {
+            // state 0 = YT.PlayerState.ENDED
+            if (event.data === 0 && !completedOnceRef.current) {
+              completedOnceRef.current = true
+              onCompleteRef.current()
+            }
+          },
+        },
+      })
+    }
+
+    if ((window as any).YT?.Player) {
+      createPlayer()
+    } else {
+      // Load the API script if not already injected
+      if (!document.getElementById('yt-iframe-api')) {
+        const tag = document.createElement('script')
+        tag.id = 'yt-iframe-api'
+        tag.src = 'https://www.youtube.com/iframe_api'
+        document.head.appendChild(tag)
+      }
+      const prev = (window as any).onYouTubeIframeAPIReady
+      ;(window as any).onYouTubeIframeAPIReady = () => {
+        prev?.()
+        createPlayer()
+      }
+    }
+
+    return () => {
+      try { player?.destroy() } catch {}
+    }
+  }, [isYouTube, youTubeId, lesson.id])
+
+  // YouTube / Vimeo: embed
+  if (isYouTube || isVimeo) {
     return (
-      <div className='relative aspect-video w-full overflow-hidden rounded-xl bg-black'>
-        <iframe
-          src={src}
-          className='h-full w-full'
-          allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-          allowFullScreen
-          title={lesson.title}
-        />
+      <div className='bg-card border-border flex flex-col overflow-hidden rounded-xl border'>
+        <div className='relative aspect-video w-full bg-black'>
+          {isYouTube ? (
+            // YT.Player mounts its own iframe inside this div
+            <div id={`yt-player-${lesson.id}`} className='h-full w-full' />
+          ) : (
+            <iframe
+              src={`https://player.vimeo.com/video/${lesson.video_identifier}`}
+              className='h-full w-full'
+              allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+              allowFullScreen
+              title={lesson.title}
+            />
+          )}
+        </div>
+        <div className='border-border bg-secondary/20 border-t px-6 py-4'>
+          {isCompleted ? (
+            <div className='flex w-full items-center justify-center gap-2 rounded-md bg-green-600/20 px-4 py-2 text-sm font-medium text-green-400'>
+              <CheckCircle2 className='size-4' />
+              Lección completada
+            </div>
+          ) : (
+            <Button
+              onClick={onComplete}
+              disabled={isCompleting}
+              className='bg-primary text-primary-foreground hover:bg-primary/90 w-full gap-2'
+            >
+              <CheckCircle2 className='size-4' />
+              {isCompleting ? 'Guardando...' : 'Marcar como completado'}
+            </Button>
+          )}
+        </div>
       </div>
     )
   }
@@ -790,10 +878,27 @@ export function CoursePlayer({
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
   // Tracks which lesson IDs the user has completed this session + any already
-  // completed ones loaded from the API via user_progress.
+  // completed ones loaded from the API via is_completed on sections data.
   const [completedIds, setCompletedIds] = useState<Set<number>>(new Set())
 
-  // When the current lesson loads (or its user_progress changes), seed the set.
+  // Seed from sections data (is_completed per lesson) — covers all lessons at once.
+  useEffect(() => {
+    if (sections.length === 0) return
+    const preCompleted = sections
+      .flatMap((s) => s.lessons ?? [])
+      .filter((l) => l.is_completed)
+      .map((l) => l.id)
+    if (preCompleted.length > 0) {
+      setCompletedIds((prev) => {
+        const merged = new Set(prev)
+        preCompleted.forEach((id) => merged.add(id))
+        return merged
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionsLoading])
+
+  // Also pick up any completion from the currently-loaded lesson's user_progress.
   useEffect(() => {
     if (currentLesson?.user_progress?.completed) {
       setCompletedIds((prev) => {
@@ -851,7 +956,12 @@ export function CoursePlayer({
     switch (currentLesson.lesson_type) {
       case 'video':
         return (
-          <VideoPlayer lesson={currentLesson} onComplete={handleComplete} />
+          <VideoPlayer
+            lesson={currentLesson}
+            onComplete={handleComplete}
+            isCompleting={isCompleting}
+            isCompleted={completedIds.has(currentLesson.id)}
+          />
         )
       case 'text':
         return (
@@ -948,6 +1058,14 @@ export function CoursePlayer({
         <main className='mx-auto flex w-full max-w-5xl flex-1 flex-col p-4 lg:p-6'>
           {/* Lesson content */}
           <div className='flex-1'>{renderContent()}</div>
+
+          {/* Resources & Comments */}
+          {currentLesson && (
+            <LessonExtras
+              lessonId={currentLesson.id}
+              attachments={currentLesson.attachments}
+            />
+          )}
 
           {/* Lesson info & navigation */}
           {currentLesson && (
