@@ -100,7 +100,7 @@ export function ConfirmEmail() {
 
       try {
         const response = await fetch(
-          `http://localhost:3001/api/v1/auth/confirm/${token}`,
+          `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/auth/confirm/${token}`,
           {
             method: 'GET',
             headers: {

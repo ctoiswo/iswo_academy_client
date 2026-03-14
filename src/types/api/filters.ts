@@ -26,6 +26,7 @@ export interface CourseFilters {
  */
 export interface EnrollmentFilters {
   status?: EnrollmentStatus
+  academy_slug?: string
   page?: number
   per_page?: number
 }

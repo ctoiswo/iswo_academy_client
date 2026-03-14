@@ -35,7 +35,9 @@ export default function MyCoursesPage() {
     academySlug?: string
   }
   const searchParams = useSearch({ strict: false }) as { status?: string }
-  const [filters, setFilters] = useState<EnrollmentFilters>({})
+  const [filters, setFilters] = useState<EnrollmentFilters>(
+    academySlug ? { academy_slug: academySlug } : {}
+  )
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [isWishlistView, setIsWishlistView] = useState(false)
@@ -54,14 +56,17 @@ export default function MyCoursesPage() {
     } else {
       setIsWishlistView(false)
       if (searchParams?.status) {
-        setFilters({ status: searchParams.status as any })
+        setFilters({
+          ...(academySlug ? { academy_slug: academySlug } : {}),
+          status: searchParams.status as any,
+        })
       }
     }
-  }, [searchParams])
+  }, [searchParams, academySlug])
 
   const handleFilterChange = (status: string) => {
     setFilters({
-      ...filters,
+      ...(academySlug ? { academy_slug: academySlug } : {}),
       status: status === 'all' ? undefined : (status as any),
     })
   }

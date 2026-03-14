@@ -99,8 +99,11 @@ class CourseService {
    * @param slugOrId - Course slug or ID
    * @returns Promise with course details
    */
-  async getCourseBySlug(slugOrId: string | number): Promise<Course> {
-    const response = await apiClient.get(`/courses/${slugOrId}`)
+  async getCourseBySlug(slugOrId: string | number, academySlug?: string): Promise<Course> {
+    const path = academySlug
+      ? `/academies/${academySlug}/courses/${slugOrId}`
+      : `/courses/${slugOrId}`
+    const response = await apiClient.get(path)
     return response.data
   }
 

@@ -229,7 +229,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
       try {
         const wsUrl =
           import.meta.env.VITE_CABLE_URL ||
-          (import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1')
+          (import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1')
             .replace(/^http/, 'ws')
             .replace('/api/v1', '') + '/cable'
 

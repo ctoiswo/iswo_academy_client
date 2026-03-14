@@ -144,11 +144,11 @@ export function AccessCodeCard({
               <CardTitle className='flex items-center gap-2 text-lg'>
                 <div className='flex items-center gap-2'>
                   {showCode ? (
-                    <code className='rounded bg-gray-100 px-2 py-1 font-mono text-sm'>
+                    <code className='bg-muted/60 text-foreground rounded px-2 py-1 font-mono text-sm'>
                       {accessCode.code}
                     </code>
                   ) : (
-                    <code className='rounded bg-gray-100 px-2 py-1 font-mono text-sm'>
+                    <code className='bg-muted/60 text-foreground rounded px-2 py-1 font-mono text-sm'>
                       {'•'.repeat(8)}
                     </code>
                   )}

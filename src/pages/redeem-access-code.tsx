@@ -9,17 +9,12 @@ import { DashboardLayout } from '@/components/layout/dashboard-layout'
 export default function RedeemAccessCodePage() {
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const { user, currentAcademy } = useAuthStore()
+  const { user, currentAcademy, refreshAcademies } = useAuthStore()
 
-  const handleSuccess = (response: AccessCodeRedemptionResponse) => {
-    // After successful redemption, navigate to the course lessons
-    navigate({
-      to: '/academy/$academySlug/courses/$courseSlug/lessons',
-      params: {
-        academySlug: response.course.academy.slug,
-        courseSlug: response.course.slug,
-      },
-    })
+  const handleSuccess = async (_response: AccessCodeRedemptionResponse) => {
+    // Refresh the academy list so the newly joined academy appears in the selector
+    await refreshAcademies()
+    navigate({ to: '/academy-selection' })
   }
 
   return (

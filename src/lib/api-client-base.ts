@@ -14,7 +14,7 @@ import { tokenStorage } from '@/lib/token-storage'
 
 // Get API base URL from environment
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1'
+  import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
 
 // Interface para el store de autenticación
 interface AuthStore {

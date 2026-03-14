@@ -19,6 +19,7 @@ class EnrollmentService {
     const params = new URLSearchParams()
 
     if (filters?.status) params.append('status', filters.status)
+    if (filters?.academy_slug) params.append('academy_slug', filters.academy_slug)
     if (filters?.page) params.append('page', filters.page.toString())
     if (filters?.per_page)
       params.append('per_page', filters.per_page.toString())

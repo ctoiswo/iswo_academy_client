@@ -61,7 +61,7 @@ export function AcademiesPage() {
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          'http://localhost:3001/api/v1/academy_categories'
+          `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'}/academy_categories`
         )
         if (!response.ok) {
           throw new Error('Failed to fetch categories')

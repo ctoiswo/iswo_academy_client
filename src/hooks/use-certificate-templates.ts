@@ -62,6 +62,9 @@ export const useUpdateCertificateTemplate = (
       queryClient.invalidateQueries({
         queryKey: ['certificate-template', academySlug, templateId],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['certificate-template-preview', academySlug, templateId],
+      })
       toast.success('Plantilla actualizada exitosamente')
     },
     onError: (error: any) => {

@@ -19,7 +19,7 @@ export function ContinueLearning({
   const { t } = useTranslation()
   const c = 'dashboard.student.continueLearning'
   const navigate = useNavigate()
-  const { data: activeEnrollments } = useUserEnrollments({ status: 'active' })
+  const { data: activeEnrollments } = useUserEnrollments({ status: 'active', academy_slug: academySlug })
 
   const lastCourse = useMemo(() => {
     const enrollments = activeEnrollments?.enrollments ?? []

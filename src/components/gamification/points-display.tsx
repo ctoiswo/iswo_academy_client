@@ -21,21 +21,24 @@ export function PointsDisplay({
   className,
   compact = false,
 }: PointsDisplayProps) {
-  const { user, isAuthenticated } = useAuthStore()
+  const { user, isAuthenticated, currentAcademy } = useAuthStore()
   const [profile, setProfile] = useState<GamificationProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!isAuthenticated || !user) {
+      if (!isAuthenticated || !user || !currentAcademy) {
         setLoading(false)
         return
       }
 
       try {
         setLoading(true)
-        const data = await gamificationService.getGamificationProfile()
+        const data = await gamificationService.getGamificationProfile(
+          undefined,
+          currentAcademy?.slug ?? undefined
+        )
         setProfile(data)
         setError(null)
       } catch (_err) {
@@ -47,7 +50,7 @@ export function PointsDisplay({
     }
 
     fetchProfile()
-  }, [user, isAuthenticated])
+  }, [user, isAuthenticated, currentAcademy?.slug])
 
   // Don't show anything if not authenticated or if there's an error
   if (!isAuthenticated || loading || error || !profile) {

@@ -23,10 +23,10 @@ export function useCourses(
   })
 }
 
-export function useCourse(slugOrId: string | number) {
+export function useCourse(slugOrId: string | number, academySlug?: string) {
   return useQuery({
-    queryKey: ['course', slugOrId],
-    queryFn: () => courseService.getCourseBySlug(slugOrId),
+    queryKey: ['course', academySlug, slugOrId],
+    queryFn: () => courseService.getCourseBySlug(slugOrId, academySlug),
     enabled: !!slugOrId,
   })
 }

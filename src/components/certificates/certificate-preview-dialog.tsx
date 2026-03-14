@@ -29,7 +29,7 @@ export function CertificatePreviewDialog({
 
   // URL for opening in new tab (direct HTML endpoint)
   const apiBaseUrl =
-    import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1'
+    import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
   const baseUrl = apiBaseUrl.replace(/\/api\/v1\/?$/, '')
   const directUrl = `${baseUrl}/api/v1/academies/${academySlug}/certificate_templates/${templateId}/preview_html`
 
@@ -54,19 +54,16 @@ export function CertificatePreviewDialog({
             </Button>
           </DialogTitle>
         </DialogHeader>
-        <div className='max-h-[70vh] overflow-auto rounded-lg bg-gray-50 p-4'>
+        <div className='overflow-hidden rounded-lg bg-gray-100'>
           {isLoading ? (
-            <Skeleton className='h-[600px] w-full' />
+            <Skeleton className='h-[500px] w-full' />
           ) : preview?.html ? (
-            <div
-              dangerouslySetInnerHTML={{ __html: preview.html }}
-              className='certificate-preview'
-              style={{
-                transform: 'scale(0.7)',
-                transformOrigin: 'top center',
-                width: '142%',
-                marginLeft: '-21%',
-              }}
+            <iframe
+              srcDoc={preview.html}
+              className='w-full'
+              style={{ height: '500px', border: 'none' }}
+              title='Vista previa del certificado'
+              sandbox='allow-same-origin'
             />
           ) : (
             <div className='text-muted-foreground py-12 text-center'>

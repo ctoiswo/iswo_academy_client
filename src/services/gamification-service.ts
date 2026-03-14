@@ -75,13 +75,15 @@ class GamificationService {
   /**
    * Get user's gamification profile
    * @param userId - User ID (optional, defaults to current user)
+   * @param academySlug - Academy slug to scope the request (sends X-Academy-Slug header)
    * @returns Promise with gamification profile
    */
-  async getGamificationProfile(userId?: number): Promise<GamificationProfile> {
+  async getGamificationProfile(userId?: number, academySlug?: string): Promise<GamificationProfile> {
     const endpoint = userId
       ? `/gamification_profiles/${userId}`
       : '/gamification_profiles/me'
-    const response = await apiClient.get(endpoint)
+    const headers = academySlug ? { 'X-Academy-Slug': academySlug } : undefined
+    const response = await apiClient.get(endpoint, { headers })
     return response.data.data || response.data
   }
 

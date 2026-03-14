@@ -148,7 +148,7 @@ export function SignUpForm({ redirectTo }: SignUpFormProps) {
   function handleOAuthLogin(provider: 'github' | 'google_oauth2') {
     const baseUrl =
       import.meta.env.VITE_API_URL?.replace('/api/v1', '') ||
-      'http://localhost:3001'
+      'http://localhost:3000'
     window.location.href = `${baseUrl}/auth/${provider}`
   }
 
