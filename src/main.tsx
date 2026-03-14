@@ -6,7 +6,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import { RouterProvider, createRouter, createHashHistory } from '@tanstack/react-router'
+import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { initializeAuthIntegration } from '@/lib/auth-integration'
@@ -75,12 +75,8 @@ const queryClient = new QueryClient({
 })
 
 // Create a new router instance
-// Use hash history for GCS static hosting (avoids 404s on direct URL access)
-const history = import.meta.env.PROD ? createHashHistory() : undefined
-
 const router = createRouter({
   routeTree,
-  history,
   context: { queryClient },
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,

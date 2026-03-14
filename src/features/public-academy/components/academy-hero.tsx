@@ -10,6 +10,7 @@ interface AcademyHeroProps {
     slug: string
     description?: string | null
     banner_url?: string | null
+    logo_url?: string | null
     enrolled_users_count?: number
     courses_count?: number
     creator?: {
@@ -32,7 +33,8 @@ export function AcademyHero({
   onSave,
   onShare,
 }: AcademyHeroProps) {
-  const bannerUrl = academy.banner_url || '/images/academy-placeholder.jpg'
+  const bannerUrl = academy.banner_url ?? null
+  const logoUrl = academy.logo_url ?? null
   const creatorName =
     academy.creator?.name ||
     `${academy.creator?.first_name || ''} ${academy.creator?.last_name || ''}`.trim() ||
@@ -40,14 +42,18 @@ export function AcademyHero({
 
   return (
     <section className='relative overflow-hidden'>
-      <div className='absolute inset-0'>
-        <img
-          src={bannerUrl}
-          alt={academy.name}
-          className='h-full w-full object-cover'
-        />
-        <div className='absolute inset-0 bg-black/60' />
-      </div>
+      {/* Background banner with vertical gradient fade */}
+      {bannerUrl ? (
+        <>
+          <div
+            className='absolute inset-0 bg-cover bg-center'
+            style={{ backgroundImage: `url(${bannerUrl})` }}
+          />
+          <div className='absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background' />
+        </>
+      ) : (
+        <div className='from-primary/20 via-background to-background absolute inset-0 bg-gradient-to-b' />
+      )}
 
       <div className='relative z-10 container py-20 lg:py-32'>
         <div className='max-w-4xl'>
@@ -56,11 +62,21 @@ export function AcademyHero({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {academy.academy_category && (
-              <Badge variant='secondary' className='mb-4'>
-                {academy.academy_category.name}
-              </Badge>
-            )}
+            {/* Logo + category row */}
+            <div className='mb-6 flex items-center gap-4'>
+              {logoUrl && (
+                <img
+                  src={logoUrl}
+                  alt={`${academy.name} logo`}
+                  className='h-16 w-16 rounded-xl object-cover shadow-lg ring-2 ring-white/20'
+                />
+              )}
+              {academy.academy_category && (
+                <Badge variant='secondary'>
+                  {academy.academy_category.name}
+                </Badge>
+              )}
+            </div>
 
             <h1 className='text-4xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl'>
               {academy.name}

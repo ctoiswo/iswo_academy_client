@@ -38,9 +38,6 @@ jobs:
     - name: Run TypeScript type check
       run: pnpm type-check
 
-    # - name: Run tests
-    #   run: pnpm test
-
   deploy:
     runs-on: ubuntu-latest
     needs: test
@@ -49,27 +46,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
-
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 9
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v5
-      with:
-        node-version: '24'
-        cache: 'pnpm'
-
-    - name: Install dependencies
-      run: pnpm install
-
-    - name: Build application
-      env:
-        VITE_API_URL: ${{ secrets.VITE_API_URL }}
-        VITE_CABLE_URL: ${{ secrets.VITE_CABLE_URL }}
-        VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
-      run: pnpm build
 
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2
@@ -82,20 +58,36 @@ jobs:
       with:
         project_id: gifted-monitor-490019-j7
 
-    - name: Deploy to Cloud Storage
-      run: |
-        # Upload hashed assets with long-lived cache (1 year)
-        gsutil -m -h "Cache-Control:public, max-age=31536000, immutable" \
-          rsync -r -d ./dist/assets gs://app-iswo-academy/assets
+    - name: Configure Docker for GCR
+      run: gcloud auth configure-docker gcr.io
 
-        # Upload index.html and other root files with no-cache so updates are picked up immediately
-        gsutil -m -h "Cache-Control:no-cache, no-store, must-revalidate" \
-          rsync -r -d -x "^assets/" ./dist gs://app-iswo-academy
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.3'
 
-    - name: Configure bucket for static website hosting
+    - name: Install Kamal
+      run: gem install kamal
+
+    - name: Set up SSH key
       run: |
-        gsutil web set -m index.html -e index.html gs://app-iswo-academy
-        gsutil iam ch allUsers:objectViewer gs://app-iswo-academy || true
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/google_compute_engine
+        chmod 600 ~/.ssh/google_compute_engine
+        printf 'Host 35.231.98.72\n  IdentityFile ~/.ssh/google_compute_engine\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null\n' > ~/.ssh/config
+        chmod 600 ~/.ssh/config
+
+    - name: Deploy with Kamal
+      env:
+        VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+      run: |
+        GCP_TOKEN=$(gcloud auth print-access-token)
+        mkdir -p .kamal
+        echo "KAMAL_REGISTRY_PASSWORD=${GCP_TOKEN}" > .kamal/secrets
+        kamal deploy
+
+    - name: Clean up
+      run: rm -f ~/.ssh/google_compute_engine .kamal/secrets
 
     - name: Invalidate CDN cache (optional)
       run: |

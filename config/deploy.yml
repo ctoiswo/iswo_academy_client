@@ -1,0 +1,37 @@
+# Frontend service
+service: iswo_academy_client
+
+# Docker image name in GCR
+image: gifted-monitor-490019-j7/iswo_academy_client
+
+# Deploy to the same VM as the backend
+servers:
+  web:
+    - 35.231.98.72
+
+deploy_timeout: 120
+
+# kamal-proxy routes app.35-231-98-72.nip.io to this container
+proxy:
+  ssl: true
+  host: app.35-231-98-72.nip.io
+  app_port: 80
+  healthcheck:
+    path: /
+    interval: 3
+    timeout: 10
+
+# GCR registry
+registry:
+  server: gcr.io
+  username: oauth2accesstoken
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Build args — VITE env vars are baked into the bundle at build time
+builder:
+  arch: amd64
+  args:
+    VITE_API_URL: https://api.35-231-98-72.nip.io/api/v1
+    VITE_CABLE_URL: wss://api.35-231-98-72.nip.io/cable
+    VITE_CLERK_PUBLISHABLE_KEY: <%= ENV.fetch("VITE_CLERK_PUBLISHABLE_KEY", "") %>
