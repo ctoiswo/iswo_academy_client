@@ -1,5 +1,0 @@
-ignoredBuiltDependencies:
-  - '@clerk/shared'
-  - '@swc/core'
-  - '@tailwindcss/oxide'
-  - esbuild
