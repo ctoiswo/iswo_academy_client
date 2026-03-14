@@ -193,9 +193,22 @@ export default function StudentCourseContentPage() {
     <div className='bg-background min-h-screen'>
       {/* ── Hero Banner ──────────────────────────────────────────────────────── */}
       <div className='relative overflow-hidden'>
-        {/* backgrounds */}
-        <div className='from-primary/20 via-background to-background absolute inset-0 bg-gradient-to-br' />
-        <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.15),transparent_60%)]' />
+        {/* promotional image fading to background */}
+        {course.promotional_image_url ? (
+          <>
+            <div
+              className='absolute inset-0 bg-cover bg-center'
+              style={{ backgroundImage: `url(${course.promotional_image_url})` }}
+            />
+            {/* fade-out overlay: dark tint on top, full background color at bottom */}
+            <div className='absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background' />
+          </>
+        ) : (
+          <>
+            <div className='from-primary/20 via-background to-background absolute inset-0 bg-gradient-to-br' />
+            <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.15),transparent_60%)]' />
+          </>
+        )}
         <div
           className='pointer-events-none absolute inset-0 opacity-[0.03]'
           style={{
@@ -233,12 +246,7 @@ export default function StudentCourseContentPage() {
                     {course.category}
                   </Badge>
                 )}
-                {(Array.isArray(course.tags)
-                  ? course.tags
-                  : typeof course.tags === 'string'
-                    ? course.tags.split(',').map((t) => t.trim()).filter(Boolean)
-                    : []
-                ).slice(0, 3).map((tag) => (
+                {(course.tags ?? []).slice(0, 3).map((tag) => (
                   <Badge
                     key={tag}
                     variant='outline'
