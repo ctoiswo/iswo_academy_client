@@ -140,8 +140,8 @@ class CourseService {
         headers:
           data instanceof FormData
             ? {
-                'Content-Type': 'multipart/form-data',
-              }
+              'Content-Type': 'multipart/form-data',
+            }
             : undefined,
       }
     )
@@ -172,8 +172,8 @@ class CourseService {
         headers:
           data instanceof FormData
             ? {
-                'Content-Type': 'multipart/form-data',
-              }
+              'Content-Type': 'multipart/form-data',
+            }
             : undefined,
       }
     )

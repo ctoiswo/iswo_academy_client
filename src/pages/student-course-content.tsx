@@ -246,15 +246,28 @@ export default function StudentCourseContentPage() {
                     {course.category}
                   </Badge>
                 )}
-                {(course.tags ?? []).slice(0, 3).map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant='outline'
-                    className='border-border/60 text-muted-foreground'
-                  >
-                    {tag}
-                  </Badge>
-                ))}
+                {[
+                  ...new Set(
+                    Array.isArray(course.tags)
+                      ? course.tags
+                      : typeof course.tags === 'string'
+                        ? course.tags
+                            .split(',')
+                            .map((t) => t.trim())
+                            .filter(Boolean)
+                        : []
+                  ),
+                ]
+                  .slice(0, 3)
+                  .map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant='outline'
+                      className='border-border/60 text-muted-foreground'
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
               </div>
 
               {/* Title */}
