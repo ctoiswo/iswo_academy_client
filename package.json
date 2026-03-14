@@ -17,7 +17,6 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@clerk/clerk-react": "^5.42.1",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -114,7 +113,6 @@
   },
   "pnpm": {
     "ignoredBuiltDependencies": [
-      "@clerk/shared",
       "@swc/core",
       "@tailwindcss/oxide",
       "esbuild"

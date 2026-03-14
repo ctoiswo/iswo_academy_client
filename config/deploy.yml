@@ -40,4 +40,3 @@ builder:
   args:
     VITE_API_URL: https://api.35-231-98-72.nip.io/api/v1
     VITE_CABLE_URL: wss://api.35-231-98-72.nip.io/cable
-    VITE_CLERK_PUBLISHABLE_KEY: <%= ENV.fetch("VITE_CLERK_PUBLISHABLE_KEY", "") %>

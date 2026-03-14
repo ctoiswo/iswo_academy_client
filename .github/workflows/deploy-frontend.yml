@@ -78,8 +78,6 @@ jobs:
         chmod 600 ~/.ssh/config
 
     - name: Deploy with Kamal
-      env:
-        VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
       run: |
         GCP_TOKEN=$(gcloud auth print-access-token)
         mkdir -p .kamal
