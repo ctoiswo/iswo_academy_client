@@ -31,3 +31,4 @@ mise.toml
 # Skills
 .agents
 .agent.kamal/secrets
+.agent
