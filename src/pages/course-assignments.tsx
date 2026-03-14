@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import { useParams } from '@tanstack/react-router'
+import { useParams, useNavigate } from '@tanstack/react-router'
 import type { Assignment } from '@/types'
 import { CheckSquare } from 'lucide-react'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/stores/auth-store'
 import { useAssignments } from '@/hooks/use-assignments'
-import { useCourseBySlug } from '@/hooks/use-courses'
-import { useLessons } from '@/hooks/use-lessons'
+import { useCourse } from '@/hooks/use-courses'
 import { useSections } from '@/hooks/use-sections'
 import {
   Card,
@@ -23,8 +21,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { AssignmentCard } from '@/components/assignments/assignment-card'
-import { CreateAssignmentDialog } from '@/components/assignments/create-assignment-dialog'
 
 export default function CourseAssignmentsPage() {
   const params = useParams({ strict: false }) as {
@@ -32,32 +31,20 @@ export default function CourseAssignmentsPage() {
     courseSlug: string
   }
   const { academySlug, courseSlug } = params
-  const { currentAcademy } = useAuthStore()
+  const navigate = useNavigate()
 
   const [statusFilter, setStatusFilter] = useState<
     'all' | 'active' | 'past_due' | 'upcoming'
   >('all')
   const [sectionFilter, setSectionFilter] = useState<string>('all')
 
-  const academyId = currentAcademy?.id
   const {
     data: course,
     isLoading: loadingCourse,
     error: courseError,
-  } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  } = useCourse(courseSlug)
   const { data: sections = [] } = useSections(academySlug, courseSlug)
 
-  // Get lessons for the first section (for the create dialog)
-  const firstSectionId = sections[0]?.id || 0
-  const { data: sectionLessons = [] } = useLessons(
-    academySlug,
-    courseSlug,
-    firstSectionId
-  )
-
-  // For now, we'll pass lessons from the first section to the dialog
-  // In future, we could enhance this to fetch lessons dynamically per section
-  const allLessons = sectionLessons
 
   const assignmentParams = {
     status: statusFilter === 'all' ? undefined : statusFilter,
@@ -103,7 +90,7 @@ export default function CourseAssignmentsPage() {
           <h3 className='mb-2 text-lg font-bold text-red-600'>
             Error al Cargar el Curso
           </h3>
-          <p className='text-gray-600'>
+          <p className='text-muted-foreground'>
             Curso no encontrado o no tienes permiso para acceder
           </p>
         </div>
@@ -128,7 +115,7 @@ export default function CourseAssignmentsPage() {
     <div className='container mx-auto py-8'>
       <div className='mb-6'>
         <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
-        <p className='text-gray-600'>
+        <p className='text-muted-foreground'>
           Crea y gestiona tareas, cuestionarios y proyectos
         </p>
       </div>
@@ -142,12 +129,17 @@ export default function CourseAssignmentsPage() {
                 Añade tareas para evaluar el progreso de los estudiantes
               </CardDescription>
             </div>
-            <CreateAssignmentDialog
-              academySlug={academySlug}
-              courseSlug={courseSlug}
-              sections={sections}
-              lessons={allLessons}
-            />
+            <Button
+              onClick={() =>
+                navigate({
+                  to: '/academy/$academySlug/courses/$courseSlug/assignments/new',
+                  params: { academySlug, courseSlug },
+                })
+              }
+            >
+              <Plus className='mr-2 h-4 w-4' />
+              Añadir Tarea
+            </Button>
           </div>
 
           {/* Filtros */}
@@ -202,7 +194,7 @@ export default function CourseAssignmentsPage() {
               <Skeleton className='h-48' />
             </div>
           ) : filteredAssignments.length === 0 ? (
-            <div className='py-12 text-center text-gray-500'>
+            <div className='py-12 text-center text-muted-foreground'>
               <CheckSquare className='mx-auto mb-4 h-12 w-12' />
               <h3 className='mb-2 text-lg font-medium'>
                 {assignments.length === 0
@@ -215,12 +207,17 @@ export default function CourseAssignmentsPage() {
                   : 'Intenta cambiar los filtros para ver más tareas'}
               </p>
               {assignments.length === 0 && (
-                <CreateAssignmentDialog
-                  academySlug={academySlug}
-                  courseSlug={courseSlug}
-                  sections={sections}
-                  lessons={allLessons}
-                />
+                <Button
+                  onClick={() =>
+                    navigate({
+                      to: '/academy/$academySlug/courses/$courseSlug/assignments/new',
+                      params: { academySlug, courseSlug },
+                    })
+                  }
+                >
+                  <Plus className='mr-2 h-4 w-4' />
+                  Añadir Tarea
+                </Button>
               )}
             </div>
           ) : (

@@ -2,6 +2,31 @@
 @import 'tw-animate-css';
 @import './theme.css';
 
+@plugin "@tailwindcss/typography";
+
+/* ProseMirror / Tiptap editor styles */
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: var(--muted-foreground);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+}
+
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @layer base {

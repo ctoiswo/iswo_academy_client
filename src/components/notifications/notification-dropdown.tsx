@@ -49,7 +49,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
       >
         <Bell
           size={20}
-          className={hasUnread ? 'text-blue-600' : 'text-gray-600'}
+          className={hasUnread ? 'text-blue-600' : 'text-muted-foreground'}
         />
         {hasUnread && (
           <Badge
@@ -102,7 +102,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
               {/* Notifications List */}
               <ScrollArea className='max-h-96'>
                 {notifications.length === 0 ? (
-                  <div className='p-8 text-center text-gray-500'>
+                  <div className='p-8 text-center text-muted-foreground'>
                     <Bell size={32} className='mx-auto mb-2 opacity-50' />
                     <p>No tienes notificaciones</p>
                   </div>
@@ -135,7 +135,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                           <div className='min-w-0 flex-1'>
                             <div className='flex items-start justify-between gap-2'>
                               <h4
-                                className={`line-clamp-1 text-sm font-medium ${!notification.read ? 'text-gray-900' : 'text-gray-600'}`}
+                                className={`line-clamp-1 text-sm font-medium ${!notification.read ? 'text-foreground' : 'text-muted-foreground'}`}
                               >
                                 {notification.title}
                               </h4>
@@ -145,13 +145,13 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                             </div>
 
                             {notification.body && (
-                              <p className='mt-1 line-clamp-2 text-xs text-gray-600'>
+                              <p className='mt-1 line-clamp-2 text-xs text-muted-foreground'>
                                 {notification.body}
                               </p>
                             )}
 
                             <div className='mt-2 flex items-center justify-between'>
-                              <span className='text-xs text-gray-500'>
+                              <span className='text-xs text-muted-foreground'>
                                 {formatDistanceToNow(
                                   new Date(notification.created_at),
                                   {
@@ -164,7 +164,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                               {notification.action_url && (
                                 <ExternalLink
                                   size={12}
-                                  className='text-gray-400'
+                                  className='text-muted-foreground'
                                 />
                               )}
                             </div>
@@ -172,10 +172,10 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                             {/* Actor Info */}
                             {notification.actor && (
                               <div className='mt-1 flex items-center gap-1'>
-                                <span className='text-xs text-gray-500'>
+                                <span className='text-xs text-muted-foreground'>
                                   por
                                 </span>
-                                <span className='text-xs font-medium text-gray-700'>
+                                <span className='text-xs font-medium text-muted-foreground'>
                                   {notification.actor.full_name}
                                 </span>
                               </div>

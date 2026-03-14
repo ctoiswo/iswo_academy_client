@@ -1,4 +1,3 @@
-import { Command } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { useLayout } from '@/context/layout-provider'
 import { useSidebarData } from '@/hooks/use-sidebar-data'
@@ -7,12 +6,35 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar'
 import { AcademySwitcher } from '@/components/academy-switcher'
+import { LargeLogo } from '@/components/large-logo'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
-import { TeamSwitcher } from './team-switcher'
+
+function IswoSidebarHeader({ subtitle }: { subtitle: string }) {
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          size='lg'
+          className='cursor-default hover:bg-transparent active:bg-transparent'
+        >
+          <LargeLogo className='h-8 w-auto dark:invert' />
+          <div className='grid flex-1 text-start text-sm leading-tight'>
+            <span className='truncate text-xs text-muted-foreground'>
+              {subtitle}
+            </span>
+          </div>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  )
+}
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
@@ -31,28 +53,10 @@ export function AppSidebar() {
         {/* Academy Switcher for authenticated users with academies */}
         {!isGuest ? (
           <AcademySwitcher
-            fallback={
-              <TeamSwitcher
-                teams={[
-                  {
-                    name: 'ISWO Academy',
-                    logo: Command,
-                    plan: 'Platform',
-                  },
-                ]}
-              />
-            }
+            fallback={<IswoSidebarHeader subtitle='Platform' />}
           />
         ) : (
-          <TeamSwitcher
-            teams={[
-              {
-                name: 'ISWO Academy',
-                logo: Command,
-                plan: 'Guest User',
-              },
-            ]}
-          />
+          <IswoSidebarHeader subtitle='Guest User' />
         )}
       </SidebarHeader>
       <SidebarContent>

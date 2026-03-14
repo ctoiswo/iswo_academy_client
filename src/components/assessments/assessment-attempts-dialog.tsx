@@ -175,18 +175,18 @@ export function AssessmentAttemptsDialog({
                             <span className='font-semibold'>
                               {attempt.score}
                             </span>
-                            <span className='text-sm text-gray-500'>
+                            <span className='text-sm text-muted-foreground'>
                               {' '}
                               / {assessment.total_points}
                             </span>
-                            <div className='text-xs text-gray-500'>
+                            <div className='text-xs text-muted-foreground'>
                               {attempt.percentage !== null
                                 ? `${attempt.percentage.toFixed(1)}%`
                                 : ''}
                             </div>
                           </div>
                         ) : (
-                          <span className='text-gray-400'>-</span>
+                          <span className='text-muted-foreground'>-</span>
                         )}
                       </TableCell>
                       <TableCell className='text-sm'>
@@ -199,7 +199,7 @@ export function AssessmentAttemptsDialog({
                         {attempt.completed_at ? (
                           formatDate(attempt.completed_at)
                         ) : (
-                          <span className='text-gray-400'>-</span>
+                          <span className='text-muted-foreground'>-</span>
                         )}
                       </TableCell>
                     </TableRow>
@@ -208,7 +208,7 @@ export function AssessmentAttemptsDialog({
               </Table>
             </div>
           ) : (
-            <div className='py-12 text-center text-gray-500'>
+            <div className='py-12 text-center text-muted-foreground'>
               <Clock className='mx-auto mb-2 h-12 w-12 opacity-30' />
               <p className='font-medium'>
                 {statusFilter === 'all' && 'No hay intentos registrados aún'}

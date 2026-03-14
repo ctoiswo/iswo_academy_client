@@ -2,9 +2,8 @@ import { useState } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
 import type { AssessmentType, Assessment, AssessmentFull } from '@/types'
 import { ArrowLeft, FileQuestion } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
+import { useCourse } from '@/hooks/use-courses'
 import { useAssessments } from '@/hooks/use-assessments'
-import { useCourseBySlug } from '@/hooks/use-courses'
 import { useSections } from '@/hooks/use-sections'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -21,7 +20,6 @@ export default function CourseExamsPage() {
     courseSlug: string
   }
   const { academySlug, courseSlug } = params
-  const { currentAcademy } = useAuthStore()
 
   // Estados - DEBEN estar antes de cualquier return condicional
   const [filterType, setFilterType] = useState<AssessmentType | 'all'>('all')
@@ -36,12 +34,11 @@ export default function CourseExamsPage() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Hooks de datos
-  const academyId = currentAcademy?.id
   const {
     data: course,
     isLoading,
     error,
-  } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  } = useCourse(courseSlug)
   const { data: sections } = useSections(academySlug, courseSlug)
 
   const { data: assessments, isLoading: assessmentsLoading } = useAssessments(
@@ -67,7 +64,7 @@ export default function CourseExamsPage() {
           <h3 className='mb-2 text-lg font-bold text-red-600'>
             Error al Cargar el Curso
           </h3>
-          <p className='text-gray-600'>
+          <p className='text-muted-foreground'>
             Curso no encontrado o no tienes permiso para acceder
           </p>
           <Link
@@ -118,7 +115,7 @@ export default function CourseExamsPage() {
             </Button>
           </Link>
           <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
-          <p className='text-gray-600'>
+          <p className='text-muted-foreground'>
             Crea y gestiona exámenes y quizzes para evaluar conocimientos
           </p>
         </div>
@@ -170,8 +167,8 @@ export default function CourseExamsPage() {
 
       {!assessmentsLoading && filteredAssessments.length === 0 && (
         <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 py-16 text-center'>
-          <FileQuestion className='mx-auto mb-4 h-16 w-16 text-gray-400' />
-          <h3 className='mb-2 text-xl font-semibold text-gray-700'>
+          <FileQuestion className='mx-auto mb-4 h-16 w-16 text-muted-foreground' />
+          <h3 className='mb-2 text-xl font-semibold text-muted-foreground'>
             {filterType === 'all' && 'Aún no hay evaluaciones'}
             {filterType === 'Quiz' && 'Aún no hay quizzes'}
             {filterType === 'Exam' &&
@@ -179,7 +176,7 @@ export default function CourseExamsPage() {
                 ? 'Ya existe un examen final'
                 : 'Aún no hay exámenes finales')}
           </h3>
-          <p className='mx-auto mb-6 max-w-md text-gray-600'>
+          <p className='mx-auto mb-6 max-w-md text-muted-foreground'>
             {filterType === 'all' &&
               'Crea quizzes para evaluar secciones individuales o exámenes finales para evaluar todo el curso'}
             {filterType === 'Quiz' &&

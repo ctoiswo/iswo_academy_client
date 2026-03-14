@@ -133,7 +133,7 @@ export function MetricCard({
         return 'text-red-600'
       case 'neutral':
       default:
-        return 'text-gray-500'
+        return 'text-muted-foreground'
     }
   }
 

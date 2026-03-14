@@ -73,11 +73,11 @@ export function MyCourses({
         description='Your enrolled courses and learning progress'
       >
         <div className='py-8 text-center'>
-          <BookOpen className='mx-auto mb-4 h-12 w-12 text-gray-400' />
-          <h3 className='mb-2 text-lg font-medium text-gray-900'>
+          <BookOpen className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
+          <h3 className='mb-2 text-lg font-medium text-foreground'>
             No courses yet
           </h3>
-          <p className='mb-4 text-gray-500'>
+          <p className='mb-4 text-muted-foreground'>
             Start your learning journey by enrolling in your first course.
           </p>
           <Button>Browse Courses</Button>
@@ -117,10 +117,10 @@ export function MyCourses({
                     </Badge>
                   )}
                 </div>
-                <p className='mb-3 line-clamp-2 text-sm text-gray-600'>
+                <p className='mb-3 line-clamp-2 text-sm text-muted-foreground'>
                   {enrollment.course.description}
                 </p>
-                <div className='flex items-center gap-4 text-sm text-gray-500'>
+                <div className='flex items-center gap-4 text-sm text-muted-foreground'>
                   <div className='flex items-center gap-1'>
                     <Clock className='h-4 w-4' />
                     {formatDuration(enrollment.course.duration_minutes)}
@@ -144,7 +144,7 @@ export function MyCourses({
             <div className='mb-4'>
               <div className='mb-2 flex items-center justify-between'>
                 <span className='text-sm font-medium'>Progress</span>
-                <span className='text-sm text-gray-500'>
+                <span className='text-sm text-muted-foreground'>
                   {Math.round(enrollment.progress_percentage)}%
                 </span>
               </div>
@@ -156,7 +156,7 @@ export function MyCourses({
 
             {/* Action Buttons */}
             <div className='flex items-center justify-between'>
-              <div className='text-xs text-gray-500'>
+              <div className='text-xs text-muted-foreground'>
                 Enrolled {new Date(enrollment.enrolled_at).toLocaleDateString()}
               </div>
               <div className='flex gap-2'>

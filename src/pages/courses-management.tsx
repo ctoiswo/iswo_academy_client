@@ -16,11 +16,11 @@ export default function CoursesManagementPage() {
         dashboardType='academy-admin'
       >
         <div className='py-12 text-center'>
-          <BookOpen className='mx-auto mb-4 h-12 w-12 text-gray-400' />
-          <h3 className='mb-2 text-lg font-medium text-gray-900'>
+          <BookOpen className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
+          <h3 className='mb-2 text-lg font-medium text-foreground'>
             No hay Academia Seleccionada
           </h3>
-          <p className='text-gray-500'>
+          <p className='text-muted-foreground'>
             Por favor selecciona una academia para gestionar cursos
           </p>
         </div>

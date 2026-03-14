@@ -103,7 +103,7 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
             <h3 className='mb-2 font-semibold'>
               {redemptionResult.course.title}
             </h3>
-            <p className='mb-3 text-sm text-gray-600'>
+            <p className='mb-3 text-sm text-muted-foreground'>
               {redemptionResult.course.description}
             </p>
             <div className='flex items-center gap-4 text-sm'>
@@ -121,7 +121,7 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
           </div>
 
           {/* Access code info */}
-          <div className='text-sm text-gray-600'>
+          <div className='text-sm text-muted-foreground'>
             <p>
               {t('accessCode.redeem.remainingUses', {
                 count: redemptionResult.access_code.remaining_uses,
@@ -229,7 +229,7 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
                         <h3 className='mb-2 font-semibold'>
                           {validation.course.title}
                         </h3>
-                        <p className='mb-3 text-sm text-gray-600'>
+                        <p className='mb-3 text-sm text-muted-foreground'>
                           {validation.course.description}
                         </p>
                         <div className='flex items-center gap-4 text-sm'>

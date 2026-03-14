@@ -138,17 +138,31 @@ class AcademyService {
   }
 
   /**
-   * Update an academy (requires admin)
-   * @param id - Academy ID
+   * Update an academy (requires admin) — JSON fields only
+   * @param id - Academy ID or slug
    * @param data - Updated academy data
    * @returns Promise with updated academy
    */
   async updateAcademy(
-    id: number,
+    id: number | string,
     data: UpdateAcademyRequest
   ): Promise<Academy> {
     const response = await apiClient.patch(`/academies/${id}`, {
       academy: data,
+    })
+    return response.data
+  }
+
+  /**
+   * Update an academy with file uploads (logo / banner)
+   * Sends a multipart/form-data request.
+   * @param slug - Academy slug
+   * @param data - FormData containing academy fields + optional File objects
+   * @returns Promise with updated academy
+   */
+  async updateAcademyWithFiles(slug: string, data: FormData): Promise<Academy> {
+    const response = await apiClient.patch(`/academies/${slug}`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
     })
     return response.data
   }

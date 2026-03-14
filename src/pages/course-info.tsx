@@ -7,8 +7,8 @@ import {
   BarChart3,
   Calendar,
 } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
-import { useCourseBySlug } from '@/hooks/use-courses'
+import { useTranslation } from 'react-i18next'
+import { useCourse } from '@/hooks/use-courses'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -27,15 +27,14 @@ export default function CourseInfoPage() {
     courseSlug: string
   }
   const { academySlug, courseSlug } = params
-  const { currentAcademy } = useAuthStore()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
-  const academyId = currentAcademy?.id
   const {
     data: course,
     isLoading,
     error,
-  } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  } = useCourse(courseSlug)
 
   if (isLoading) {
     return (
@@ -53,11 +52,11 @@ export default function CourseInfoPage() {
     return (
       <div className='container mx-auto py-8'>
         <div className='py-12 text-center'>
-          <h3 className='mb-2 text-lg font-bold text-red-600'>
-            Error al Cargar el Curso
+          <h3 className='mb-2 text-lg font-bold text-destructive'>
+            {t('courseInfo.errorTitle')}
           </h3>
-          <p className='text-gray-600'>
-            Curso no encontrado o no tienes permiso para acceder
+          <p className='text-muted-foreground'>
+            {t('courseInfo.errorDescription')}
           </p>
           <Link
             to='/academy/$academySlug/admin/courses'
@@ -66,7 +65,7 @@ export default function CourseInfoPage() {
           >
             <Button variant='outline'>
               <ArrowLeft className='mr-2 h-4 w-4' />
-              Volver a Cursos
+              {t('courseInfo.backToCourses')}
             </Button>
           </Link>
         </div>
@@ -80,7 +79,7 @@ export default function CourseInfoPage() {
         <div className='mb-4 flex items-start justify-between'>
           <div>
             <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
-            <p className='text-gray-600'>{course.description}</p>
+            <p className='text-muted-foreground'>{course.description}</p>
           </div>
           <Button
             onClick={() =>
@@ -91,7 +90,7 @@ export default function CourseInfoPage() {
             }
           >
             <Settings className='mr-2 h-4 w-4' />
-            Editar Curso
+            {t('courseInfo.editCourse')}
           </Button>
         </div>
       </div>
@@ -99,18 +98,18 @@ export default function CourseInfoPage() {
       <div className='grid gap-6'>
         <Card>
           <CardHeader>
-            <CardTitle>Información General</CardTitle>
+            <CardTitle>{t('courseInfo.generalInfo')}</CardTitle>
             <CardDescription>
-              Detalles y configuración del curso
+              {t('courseInfo.generalInfoDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className='grid grid-cols-2 gap-6 md:grid-cols-4'>
               {/* Estado */}
               <div className='flex flex-col'>
-                <div className='mb-2 flex items-center gap-2 text-gray-600'>
+                <div className='mb-2 flex items-center gap-2 text-muted-foreground'>
                   <BarChart3 className='h-4 w-4' />
-                  <span className='text-sm font-medium'>Estado</span>
+                  <span className='text-sm font-medium'>{t('courseInfo.status')}</span>
                 </div>
                 <Badge
                   variant={
@@ -119,48 +118,44 @@ export default function CourseInfoPage() {
                   className='w-fit'
                 >
                   {course.status === 'published'
-                    ? 'Publicado'
+                    ? t('courseInfo.statusPublished')
                     : course.status === 'draft'
-                      ? 'Borrador'
-                      : 'Archivado'}
+                      ? t('courseInfo.statusDraft')
+                      : t('courseInfo.statusArchived')}
                 </Badge>
               </div>
 
               {/* Nivel de Dificultad */}
               <div className='flex flex-col'>
-                <div className='mb-2 flex items-center gap-2 text-gray-600'>
+                <div className='mb-2 flex items-center gap-2 text-muted-foreground'>
                   <BarChart3 className='h-4 w-4' />
-                  <span className='text-sm font-medium'>Nivel</span>
+                  <span className='text-sm font-medium'>{t('courseInfo.level')}</span>
                 </div>
                 <Badge variant='outline' className='w-fit'>
-                  {course.difficulty_level === 'beginner'
-                    ? 'Principiante'
-                    : course.difficulty_level === 'intermediate'
-                      ? 'Intermedio'
-                      : 'Avanzado'}
+                  {t(`myCourses.difficulty.${course.difficulty_level}`, { defaultValue: course.difficulty_level })}
                 </Badge>
               </div>
 
               {/* Precio */}
               <div className='flex flex-col'>
-                <div className='mb-2 flex items-center gap-2 text-gray-600'>
+                <div className='mb-2 flex items-center gap-2 text-muted-foreground'>
                   <DollarSign className='h-4 w-4' />
-                  <span className='text-sm font-medium'>Precio</span>
+                  <span className='text-sm font-medium'>{t('courseInfo.price')}</span>
                 </div>
-                <p className='text-lg font-semibold text-green-600'>
+                <p className='text-lg font-semibold text-emerald-500'>
                   {course.is_free
-                    ? 'Gratis'
+                    ? t('courseInfo.free')
                     : `$${Number(course.price).toLocaleString()}`}
                 </p>
               </div>
 
               {/* Duración */}
               <div className='flex flex-col'>
-                <div className='mb-2 flex items-center gap-2 text-gray-600'>
+                <div className='mb-2 flex items-center gap-2 text-muted-foreground'>
                   <Clock className='h-4 w-4' />
-                  <span className='text-sm font-medium'>Duración</span>
+                  <span className='text-sm font-medium'>{t('courseInfo.duration')}</span>
                 </div>
-                <p className='text-lg font-semibold'>
+                <p className='text-lg font-semibold text-foreground'>
                   {Math.floor(course.duration_minutes / 60)}h{' '}
                   {course.duration_minutes % 60}m
                 </p>
@@ -170,12 +165,12 @@ export default function CourseInfoPage() {
             {/* Fechas */}
             <div className='mt-6 grid grid-cols-2 gap-6 border-t pt-6'>
               <div className='flex flex-col'>
-                <div className='mb-1 flex items-center gap-2 text-gray-600'>
+                <div className='mb-1 flex items-center gap-2 text-muted-foreground'>
                   <Calendar className='h-4 w-4' />
-                  <span className='text-sm font-medium'>Fecha de creación</span>
+                  <span className='text-sm font-medium'>{t('courseInfo.createdAt')}</span>
                 </div>
-                <p className='text-sm text-gray-700'>
-                  {new Date(course.created_at).toLocaleDateString('es-ES', {
+                <p className='text-sm text-foreground'>
+                  {new Date(course.created_at).toLocaleDateString(undefined, {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
@@ -183,14 +178,14 @@ export default function CourseInfoPage() {
                 </p>
               </div>
               <div className='flex flex-col'>
-                <div className='mb-1 flex items-center gap-2 text-gray-600'>
+                <div className='mb-1 flex items-center gap-2 text-muted-foreground'>
                   <Calendar className='h-4 w-4' />
                   <span className='text-sm font-medium'>
-                    Última actualización
+                    {t('courseInfo.updatedAt')}
                   </span>
                 </div>
-                <p className='text-sm text-gray-700'>
-                  {new Date(course.updated_at).toLocaleDateString('es-ES', {
+                <p className='text-sm text-foreground'>
+                  {new Date(course.updated_at).toLocaleDateString(undefined, {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
@@ -201,8 +196,8 @@ export default function CourseInfoPage() {
 
             {course.thumbnail_url && (
               <div className='mt-6 border-t pt-6'>
-                <h4 className='mb-3 text-sm font-medium text-gray-600'>
-                  Miniatura del curso
+                <h4 className='mb-3 text-sm font-medium text-muted-foreground'>
+                  {t('courseInfo.thumbnail')}
                 </h4>
                 <img
                   src={course.thumbnail_url}

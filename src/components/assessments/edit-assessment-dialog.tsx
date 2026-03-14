@@ -120,7 +120,7 @@ export function EditAssessmentDialog({
                 <p className='text-sm font-medium'>
                   {isQuiz ? 'Quiz de Sección' : 'Examen Final'}
                 </p>
-                <p className='text-xs text-gray-600'>
+                <p className='text-xs text-muted-foreground'>
                   {isQuiz
                     ? 'Evaluación de sección con múltiples intentos'
                     : 'Evaluación final del curso completo'}
@@ -247,7 +247,7 @@ export function EditAssessmentDialog({
                   <Label htmlFor='published' className='cursor-pointer'>
                     Publicado
                   </Label>
-                  <p className='text-xs text-gray-600'>
+                  <p className='text-xs text-muted-foreground'>
                     Los estudiantes pueden ver y realizar esta evaluación
                   </p>
                 </div>
@@ -266,7 +266,7 @@ export function EditAssessmentDialog({
                   >
                     Preguntas Aleatorias
                   </Label>
-                  <p className='text-xs text-gray-600'>
+                  <p className='text-xs text-muted-foreground'>
                     Mezclar el orden de las preguntas
                   </p>
                 </div>
@@ -287,7 +287,7 @@ export function EditAssessmentDialog({
                   >
                     Mostrar Respuestas Correctas
                   </Label>
-                  <p className='text-xs text-gray-600'>
+                  <p className='text-xs text-muted-foreground'>
                     Mostrar las respuestas correctas después de completar
                   </p>
                 </div>
@@ -309,7 +309,7 @@ export function EditAssessmentDialog({
                     >
                       Requiere Todas las Secciones Completas
                     </Label>
-                    <p className='text-xs text-gray-600'>
+                    <p className='text-xs text-muted-foreground'>
                       El estudiante debe completar todas las secciones primero
                     </p>
                   </div>

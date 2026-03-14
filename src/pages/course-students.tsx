@@ -14,7 +14,7 @@ import {
   useCourseEnrollments,
   useDeleteEnrollment,
 } from '@/hooks/use-course-enrollments'
-import { useCourseBySlug } from '@/hooks/use-courses'
+import { useCourse } from '@/hooks/use-courses'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,16 +42,14 @@ export default function CourseStudentsPage() {
     courseSlug: string
   }
   const { academySlug, courseSlug } = params
-  const { currentAcademy } = useAuthStore()
   const [deletingEnrollment, setDeletingEnrollment] =
     useState<Enrollment | null>(null)
 
-  const academyId = currentAcademy?.id
   const {
     data: course,
     isLoading,
     error,
-  } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  } = useCourse(courseSlug)
   const { data: enrollments, isLoading: loadingEnrollments } =
     useCourseEnrollments(academySlug, courseSlug)
   const deleteEnrollment = useDeleteEnrollment(academySlug, courseSlug)
@@ -71,7 +69,7 @@ export default function CourseStudentsPage() {
           <h3 className='mb-2 text-lg font-bold text-red-600'>
             Error al Cargar el Curso
           </h3>
-          <p className='text-gray-600'>
+          <p className='text-muted-foreground'>
             Curso no encontrado o no tienes permiso para acceder
           </p>
           <Link
@@ -120,7 +118,7 @@ export default function CourseStudentsPage() {
           </Button>
         </Link>
         <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
-        <p className='text-gray-600'>
+        <p className='text-muted-foreground'>
           Gestiona los estudiantes inscritos en este curso
         </p>
       </div>
@@ -198,7 +196,7 @@ export default function CourseStudentsPage() {
               ))}
             </div>
           ) : !enrollments || enrollments.length === 0 ? (
-            <div className='py-12 text-center text-gray-500'>
+            <div className='py-12 text-center text-muted-foreground'>
               <Users className='mx-auto mb-4 h-12 w-12' />
               <h3 className='mb-2 text-lg font-medium'>
                 No hay estudiantes inscritos
@@ -238,10 +236,10 @@ export default function CourseStudentsPage() {
                                   : 'Suspendido'}
                             </Badge>
                           </div>
-                          <p className='text-sm text-gray-600'>
+                          <p className='text-sm text-muted-foreground'>
                             {enrollment.user.email}
                           </p>
-                          <div className='mt-2 flex items-center gap-4 text-xs text-gray-500'>
+                          <div className='mt-2 flex items-center gap-4 text-xs text-muted-foreground'>
                             <span>
                               Inscrito:{' '}
                               {new Date(

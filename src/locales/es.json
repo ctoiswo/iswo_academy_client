@@ -753,6 +753,25 @@
       "advanced": "Avanzado"
     }
   },
+  "courseInfo": {
+    "errorTitle": "Error al Cargar el Curso",
+    "errorDescription": "Curso no encontrado o no tienes permiso para acceder",
+    "backToCourses": "Volver a Cursos",
+    "editCourse": "Editar Curso",
+    "generalInfo": "Información General",
+    "generalInfoDesc": "Detalles y configuración del curso",
+    "status": "Estado",
+    "level": "Nivel",
+    "price": "Precio",
+    "duration": "Duración",
+    "createdAt": "Fecha de creación",
+    "updatedAt": "Última actualización",
+    "thumbnail": "Miniatura del curso",
+    "free": "Gratis",
+    "statusPublished": "Publicado",
+    "statusDraft": "Borrador",
+    "statusArchived": "Archivado"
+  },
   "createAcademy": {
     "title": "Crea tu Academia",
     "subtitle": "Comparte tu conocimiento y construye una comunidad de aprendizaje",
@@ -1723,5 +1742,214 @@
     "system_alert": {
       "title": "Alerta del sistema"
     }
+  },
+  "academyUsers": {
+    "subtitle": "Gestiona los miembros de tu academia",
+    "searchPlaceholder": "Buscar por nombre o correo...",
+    "empty": "No se encontraron usuarios.",
+    "roleUpdated": "Rol actualizado correctamente.",
+    "roleUpdateError": "No se pudo actualizar el rol.",
+    "userRemoved": "Usuario removido de la academia.",
+    "removeError": "No se pudo remover al usuario.",
+    "enrollments": "inscripciones",
+    "courses": "cursos",
+    "pagination": "Mostrando {{from}}-{{to}} de {{total}}",
+    "titles": {
+      "all": "Todos los Usuarios",
+      "admins": "Administradores",
+      "teachers": "Profesores",
+      "students": "Estudiantes"
+    },
+    "tabs": {
+      "all": "Todos",
+      "admins": "Admins",
+      "teachers": "Profesores",
+      "students": "Estudiantes"
+    },
+    "columns": {
+      "name": "Nombre",
+      "email": "Correo",
+      "role": "Rol",
+      "joined": "Se unió",
+      "activity": "Actividad"
+    },
+    "roles": {
+      "admin": "Admin",
+      "teacher": "Profesor",
+      "student": "Estudiante"
+    },
+    "actions": {
+      "makeAdmin": "Hacer Admin",
+      "makeTeacher": "Hacer Profesor",
+      "makeStudent": "Hacer Estudiante",
+      "remove": "Remover de la academia"
+    },
+    "removeDialog": {
+      "title": "Remover usuario",
+      "description": "¿Estás seguro de que deseas remover a {{name}} de la academia? Esta acción no se puede deshacer.",
+      "confirm": "Remover"
+    }
+  },
+  "academySettings": {
+    "title": "Configuración de Academia",
+    "subtitle": "Administra la información y características de tu academia",
+    "tabs": {
+      "general": "Información General",
+      "features": "Funcionalidades"
+    },
+    "generalInfo": {
+      "name": "Nombre de la Academia",
+      "namePlaceholder": "Mi Academia",
+      "nameError": "El nombre debe tener al menos 3 caracteres.",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describe tu academia...",
+      "descriptionError": "La descripción debe tener al menos 10 caracteres.",
+      "slug": "URL Slug",
+      "slugDescription": "Identificador único en la URL: /academy/{{slug}}",
+      "website": "Sitio Web",
+      "websitePlaceholder": "https://miacademia.com",
+      "websiteError": "Ingresa una URL válida.",
+      "category": "Categoría",
+      "categoryPlaceholder": "Selecciona una categoría",
+      "mission": "Misión",
+      "missionPlaceholder": "¿Cuál es la misión de tu academia?",
+      "vision": "Visión",
+      "visionPlaceholder": "¿Cuál es la visión de tu academia?",
+      "isPublic": "Academia Pública",
+      "isPublicDescription": "Permite que cualquier usuario encuentre y vea esta academia.",
+      "subscriptionRequired": "Requiere Suscripción",
+      "subscriptionRequiredDescription": "Los estudiantes deben pagar una suscripción para acceder.",
+      "monthlyPrice": "Precio Mensual",
+      "annualPrice": "Precio Anual",
+      "logo": "Logo",
+      "changeLogo": "Cambiar Logo",
+      "uploadLogo": "Subir Logo",
+      "banner": "Banner",
+      "changeBanner": "Cambiar Banner",
+      "uploadBanner": "Subir Banner",
+      "save": "Guardar Cambios",
+      "saving": "Guardando...",
+      "saveSuccess": "Academia actualizada correctamente.",
+      "saveError": "No se pudo actualizar la academia. Inténtalo de nuevo."
+    },
+    "features": {
+      "gamification": "Gamificación",
+      "gamificationDescription": "Activa puntos, insignias y rankings para motivar a los estudiantes.",
+      "certificates": "Certificados",
+      "certificatesDescription": "Permite generar certificados de finalización de cursos.",
+      "discussions": "Discusiones",
+      "discussionsDescription": "Habilita foros y comentarios en cursos y lecciones.",
+      "progressTracking": "Seguimiento de Progreso",
+      "progressTrackingDescription": "Registra y muestra el avance de cada estudiante en los cursos.",
+      "save": "Guardar Cambios",
+      "saving": "Guardando...",
+      "saveSuccess": "Funcionalidades actualizadas correctamente.",
+      "saveError": "No se pudieron actualizar las funcionalidades."
+    }
+  },
+  "academyBadges": {
+    "title": "Insignias",
+    "subtitle": "Crea y gestiona las insignias de motivación para tu academia",
+    "newBadge": "Nueva Insignia",
+    "editBadge": "Editar Insignia",
+    "searchPlaceholder": "Buscar insignias...",
+    "filterCategory": "Categoría",
+    "filterTier": "Nivel",
+    "filterStatus": "Estado",
+    "all": "Todos",
+    "active": "Activa",
+    "inactive": "Inactiva",
+    "secret": "Secreta",
+    "earned": "obtenidas",
+    "badgesCount": "insignias",
+    "empty": "No hay insignias creadas aún.",
+    "createFirst": "Crear primera insignia",
+    "createSuccess": "Insignia creada correctamente.",
+    "createError": "No se pudo crear la insignia.",
+    "updateSuccess": "Insignia actualizada correctamente.",
+    "updateError": "No se pudo actualizar la insignia.",
+    "deleteSuccess": "Insignia eliminada correctamente.",
+    "deleteError": "No se pudo eliminar la insignia.",
+    "categories": {
+      "milestone": "Hito",
+      "social": "Social",
+      "mastery": "Maestría",
+      "streak": "Racha",
+      "special": "Especial",
+      "collection": "Colección",
+      "creator": "Creador"
+    },
+    "tiers": {
+      "bronze": "Bronce",
+      "silver": "Plata",
+      "gold": "Oro",
+      "platinum": "Platino",
+      "diamond": "Diamante"
+    },
+    "rarities": {
+      "common": "Común",
+      "uncommon": "Poco común",
+      "rare": "Raro",
+      "epic": "Épico",
+      "legendary": "Legendario"
+    },
+    "form": {
+      "name": "Nombre",
+      "slug": "Slug",
+      "description": "Descripción",
+      "category": "Categoría",
+      "tier": "Nivel",
+      "rarity": "Rareza",
+      "pointsReward": "Puntos de recompensa",
+      "displayOrder": "Orden de visualización",
+      "iconUrl": "URL del ícono",
+      "isActive": "Activa",
+      "isSecret": "Secreta",
+      "trigger": "Disparador",
+      "triggerType": "Tipo de disparador",
+      "triggerConditions": "Condiciones (JSON)",
+      "triggerConditionsHint": "Ingresa las condiciones en formato JSON válido.",
+      "cancel": "Cancelar",
+      "save": "Guardar cambios",
+      "saving": "Guardando...",
+      "create": "Crear insignia"
+    },
+    "deleteDialog": {
+      "title": "Eliminar insignia",
+      "description": "¿Estás seguro de que deseas eliminar '{{name}}'? Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar"
+    }
+  },
+  "courseContent": {
+    "errorTitle": "Error al cargar el curso",
+    "errorDescription": "Curso no encontrado o sin permiso de acceso.",
+    "backToCourses": "Volver a mis cursos",
+    "reviews": "reseñas",
+    "students": "estudiantes",
+    "createdBy": "Creado por",
+    "updatedAt": "Actualizado",
+    "yourProgress": "Tu progreso",
+    "lessonsCompleted": "{{completed}} de {{total}} lecciones completadas",
+    "continueLearning": "Continuar aprendiendo",
+    "startCourse": "Comenzar curso",
+    "courseIncludes": "Este curso incluye:",
+    "videoDemand": "{{hours}} de video bajo demanda",
+    "totalLessons": "{{count}} lecciones en total",
+    "interactiveQuizzes": "{{count}} quizzes interactivos",
+    "certificate": "Certificado de finalización",
+    "whatYouLearn": "Lo que aprenderás",
+    "courseContentSection": "Contenido del curso",
+    "sectionsSummary": "{{sections}} secciones · {{lessons}} lecciones",
+    "sectionsSummaryWithHours": "{{sections}} secciones · {{lessons}} lecciones · {{hours}}",
+    "noContent": "Aún no hay contenido disponible",
+    "noContentDesc": "El instructor está preparando el material. Vuelve pronto.",
+    "lessonsLabel": "lecciones",
+    "previewBadge": "Vista previa",
+    "noLessonsInSection": "No hay lecciones en esta sección",
+    "descriptionSection": "Descripción",
+    "instructorSection": "Instructor",
+    "videosLabel": "videos",
+    "minLabel": "min"
   }
 }

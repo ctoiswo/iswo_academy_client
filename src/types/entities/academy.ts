@@ -68,12 +68,55 @@ export interface AcademyFull extends AcademyBase {
   logo_url: string | null
   banner_url: string | null
   monthly_price: string
+  annual_price: string | null
+  website_url: string | null
+  mission: string | null
+  vision: string | null
   subscription_required: boolean
   is_public: boolean
   status: AcademyStatus
   creator: Creator | null
+  academy_category: AcademyCategory | null
   courses_count: number
   enrolled_users_count: number
+  created_at: string
+  updated_at: string
+}
+
+// Academy configuration (from /configuration endpoint)
+export interface AcademyConfiguration {
+  id: number
+  academy_id: number
+  // Theme
+  theme: 'default' | 'corporate' | 'modern' | 'academic' | 'minimal' | 'creative'
+  primary_color: string | null
+  secondary_color: string | null
+  accent_color: string | null
+  background_color: string | null
+  text_color: string | null
+  custom_css: string | null
+  // Layout
+  logo_position: string | null
+  layout_style: string | null
+  show_academy_name: boolean
+  show_powered_by: boolean
+  // Content
+  welcome_message: string | null
+  footer_text: string | null
+  language: string | null
+  timezone: string | null
+  // Support
+  support_name: string | null
+  support_email: string | null
+  support_phone: string | null
+  support_hours: string | null
+  support_url: string | null
+  // Feature toggles
+  enable_certificates: boolean
+  enable_discussions: boolean
+  enable_progress_tracking: boolean
+  enable_gamification: boolean
+  // Timestamps
   created_at: string
   updated_at: string
 }

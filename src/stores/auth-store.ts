@@ -142,16 +142,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         set({ currentAcademy: singleAcademy })
         localStorage.setItem(CURRENT_ACADEMY_KEY, singleAcademy.id.toString())
 
-        let dashboardPath = '/dashboard/student'
-        if (singleAcademy.user_role === 'admin') {
-          dashboardPath = '/dashboard/admin'
-        } else if (singleAcademy.user_role === 'teacher') {
-          dashboardPath = '/dashboard/teacher'
-        }
-
         return {
           shouldRedirect: true,
-          redirectPath: dashboardPath,
+          redirectPath: `/academy/${singleAcademy.slug}/dashboard`,
           showAcademySelection: false,
         }
       } else {

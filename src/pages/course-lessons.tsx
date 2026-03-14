@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams } from '@tanstack/react-router'
+import { useParams, useNavigate } from '@tanstack/react-router'
 import type { Lesson, Section } from '@/types'
 import {
   DndContext,
@@ -18,7 +18,7 @@ import {
 } from '@dnd-kit/sortable'
 import { Plus, FolderOpen } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
-import { useCourseBySlug } from '@/hooks/use-courses'
+import { useCourse } from '@/hooks/use-courses'
 import { useSections, useReorderSection } from '@/hooks/use-sections'
 import { Button } from '@/components/ui/button'
 import {
@@ -29,7 +29,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { CreateLessonDialog } from '@/components/lessons/create-lesson-dialog'
 import { EditLessonDialog } from '@/components/lessons/edit-lesson-dialog'
 import { CreateSectionDialog } from '@/components/sections/create-section-dialog'
 import { EditSectionDialog } from '@/components/sections/edit-section-dialog'
@@ -42,17 +41,14 @@ export default function CourseLessonsPage() {
   }
   const { academySlug, courseSlug } = params
   const { currentAcademy } = useAuthStore()
+  const navigate = useNavigate()
 
   // Check if user is student
   const isStudent = currentAcademy?.user_role === 'student'
 
   const [createSectionDialogOpen, setCreateSectionDialogOpen] = useState(false)
   const [editSectionDialogOpen, setEditSectionDialogOpen] = useState(false)
-  const [createLessonDialogOpen, setCreateLessonDialogOpen] = useState(false)
   const [editLessonDialogOpen, setEditLessonDialogOpen] = useState(false)
-  const [selectedSectionId, setSelectedSectionId] = useState<number | null>(
-    null
-  )
   const [editingSection, setEditingSection] = useState<Section | null>(null)
   const [editingLesson, setEditingLesson] = useState<{
     lesson: Lesson
@@ -60,12 +56,11 @@ export default function CourseLessonsPage() {
   } | null>(null)
   const [localSections, setLocalSections] = useState<Section[]>([])
 
-  const academyId = currentAcademy?.id
   const {
     data: course,
     isLoading,
     error,
-  } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  } = useCourse(courseSlug)
   const { data: sectionsData, isLoading: sectionsLoading } = useSections(
     academySlug,
     courseSlug
@@ -107,8 +102,11 @@ export default function CourseLessonsPage() {
   }
 
   const handleCreateLesson = (sectionId: number) => {
-    setSelectedSectionId(sectionId)
-    setCreateLessonDialogOpen(true)
+    navigate({
+      to: '/academy/$academySlug/courses/$courseSlug/lessons/new',
+      params: { academySlug, courseSlug },
+      search: { sectionId },
+    })
   }
 
   const handleEditSection = (section: Section) => {
@@ -136,7 +134,7 @@ export default function CourseLessonsPage() {
           <h3 className='mb-2 text-lg font-bold text-red-600'>
             Error al Cargar el Curso
           </h3>
-          <p className='text-gray-600'>
+          <p className='text-muted-foreground'>
             Curso no encontrado o no tienes permiso para acceder
           </p>
         </div>
@@ -156,7 +154,7 @@ export default function CourseLessonsPage() {
     <div className='container pb-8'>
       <div className='mb-6'>
         <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
-        <p className='text-gray-600'>
+        <p className='text-muted-foreground'>
           Gestiona lecciones, secciones y contenido del curso
         </p>
       </div>
@@ -182,7 +180,7 @@ export default function CourseLessonsPage() {
         </CardHeader>
         <CardContent>
           {sections.length === 0 ? (
-            <div className='py-12 text-center text-gray-500'>
+            <div className='py-12 text-center text-muted-foreground'>
               <FolderOpen className='mx-auto mb-4 h-12 w-12' />
               {isStudent ? (
                 <>
@@ -254,16 +252,6 @@ export default function CourseLessonsPage() {
         courseSlug={courseSlug}
         section={editingSection}
       />
-
-      {selectedSectionId && (
-        <CreateLessonDialog
-          open={createLessonDialogOpen}
-          onOpenChange={setCreateLessonDialogOpen}
-          academySlug={academySlug}
-          courseSlug={courseSlug}
-          sectionId={selectedSectionId}
-        />
-      )}
 
       {editingLesson && (
         <EditLessonDialog

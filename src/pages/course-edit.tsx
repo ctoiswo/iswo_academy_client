@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
-import { useCourseBySlug } from '@/hooks/use-courses'
+import { useCourse } from '@/hooks/use-courses'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CourseForm } from '@/components/courses'
@@ -12,14 +11,11 @@ export default function CourseEditPage() {
     academySlug: string
     courseSlug: string
   }
-  const { currentAcademy } = useAuthStore()
-
-  const academyId = currentAcademy?.id
   const {
     data: course,
     isLoading,
     error,
-  } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  } = useCourse(courseSlug)
 
   const handleSuccess = () => {
     navigate({
@@ -54,7 +50,7 @@ export default function CourseEditPage() {
           <h3 className='mb-2 text-lg font-bold text-red-600'>
             Error al Cargar el Curso
           </h3>
-          <p className='text-gray-600'>
+          <p className='text-muted-foreground'>
             Curso no encontrado o no tienes permiso para editarlo
           </p>
           <Button variant='outline' onClick={handleCancel} className='mt-4'>

@@ -23,7 +23,7 @@ export function getStudentSidebar(
       items: [
         {
           title: t('sidebar.items.dashboard'),
-          url: `/academy/${academySlug}/dashboard/student`,
+          url: `/academy/${academySlug}/dashboard`,
           icon: LayoutDashboard,
         },
         {

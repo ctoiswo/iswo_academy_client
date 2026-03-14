@@ -753,6 +753,25 @@
       "advanced": "Advanced"
     }
   },
+  "courseInfo": {
+    "errorTitle": "Failed to Load Course",
+    "errorDescription": "Course not found or you don't have permission to access it",
+    "backToCourses": "Back to Courses",
+    "editCourse": "Edit Course",
+    "generalInfo": "General Information",
+    "generalInfoDesc": "Course details and configuration",
+    "status": "Status",
+    "level": "Level",
+    "price": "Price",
+    "duration": "Duration",
+    "createdAt": "Created on",
+    "updatedAt": "Last updated",
+    "thumbnail": "Course thumbnail",
+    "free": "Free",
+    "statusPublished": "Published",
+    "statusDraft": "Draft",
+    "statusArchived": "Archived"
+  },
   "createAcademy": {
     "title": "Create your Academy",
     "subtitle": "Share your knowledge and build a learning community",
@@ -1723,5 +1742,214 @@
     "system_alert": {
       "title": "System alert"
     }
+  },
+  "academyUsers": {
+    "subtitle": "Manage your academy members",
+    "searchPlaceholder": "Search by name or email...",
+    "empty": "No users found.",
+    "roleUpdated": "Role updated successfully.",
+    "roleUpdateError": "Could not update the role.",
+    "userRemoved": "User removed from academy.",
+    "removeError": "Could not remove the user.",
+    "enrollments": "enrollments",
+    "courses": "courses",
+    "pagination": "Showing {{from}}-{{to}} of {{total}}",
+    "titles": {
+      "all": "All Users",
+      "admins": "Administrators",
+      "teachers": "Teachers",
+      "students": "Students"
+    },
+    "tabs": {
+      "all": "All",
+      "admins": "Admins",
+      "teachers": "Teachers",
+      "students": "Students"
+    },
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "joined": "Joined",
+      "activity": "Activity"
+    },
+    "roles": {
+      "admin": "Admin",
+      "teacher": "Teacher",
+      "student": "Student"
+    },
+    "actions": {
+      "makeAdmin": "Make Admin",
+      "makeTeacher": "Make Teacher",
+      "makeStudent": "Make Student",
+      "remove": "Remove from academy"
+    },
+    "removeDialog": {
+      "title": "Remove user",
+      "description": "Are you sure you want to remove {{name}} from the academy? This action cannot be undone.",
+      "confirm": "Remove"
+    }
+  },
+  "academySettings": {
+    "title": "Academy Settings",
+    "subtitle": "Manage your academy's information and features",
+    "tabs": {
+      "general": "General Information",
+      "features": "Features"
+    },
+    "generalInfo": {
+      "name": "Academy Name",
+      "namePlaceholder": "My Academy",
+      "nameError": "Name must be at least 3 characters.",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe your academy...",
+      "descriptionError": "Description must be at least 10 characters.",
+      "slug": "URL Slug",
+      "slugDescription": "Unique URL identifier: /academy/{{slug}}",
+      "website": "Website",
+      "websitePlaceholder": "https://myacademy.com",
+      "websiteError": "Please enter a valid URL.",
+      "category": "Category",
+      "categoryPlaceholder": "Select a category",
+      "mission": "Mission",
+      "missionPlaceholder": "What is your academy's mission?",
+      "vision": "Vision",
+      "visionPlaceholder": "What is your academy's vision?",
+      "isPublic": "Public Academy",
+      "isPublicDescription": "Allow any user to find and view this academy.",
+      "subscriptionRequired": "Requires Subscription",
+      "subscriptionRequiredDescription": "Students must pay a subscription to access.",
+      "monthlyPrice": "Monthly Price",
+      "annualPrice": "Annual Price",
+      "logo": "Logo",
+      "changeLogo": "Change Logo",
+      "uploadLogo": "Upload Logo",
+      "banner": "Banner",
+      "changeBanner": "Change Banner",
+      "uploadBanner": "Upload Banner",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "saveSuccess": "Academy updated successfully.",
+      "saveError": "Could not update the academy. Please try again."
+    },
+    "features": {
+      "gamification": "Gamification",
+      "gamificationDescription": "Enable points, badges and rankings to motivate students.",
+      "certificates": "Certificates",
+      "certificatesDescription": "Allow generating course completion certificates.",
+      "discussions": "Discussions",
+      "discussionsDescription": "Enable forums and comments on courses and lessons.",
+      "progressTracking": "Progress Tracking",
+      "progressTrackingDescription": "Track and display each student's progress in courses.",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "saveSuccess": "Features updated successfully.",
+      "saveError": "Could not update features."
+    }
+  },
+  "academyBadges": {
+    "title": "Badges",
+    "subtitle": "Create and manage motivation badges for your academy",
+    "newBadge": "New Badge",
+    "editBadge": "Edit Badge",
+    "searchPlaceholder": "Search badges...",
+    "filterCategory": "Category",
+    "filterTier": "Tier",
+    "filterStatus": "Status",
+    "all": "All",
+    "active": "Active",
+    "inactive": "Inactive",
+    "secret": "Secret",
+    "earned": "earned",
+    "badgesCount": "badges",
+    "empty": "No badges created yet.",
+    "createFirst": "Create first badge",
+    "createSuccess": "Badge created successfully.",
+    "createError": "Could not create badge.",
+    "updateSuccess": "Badge updated successfully.",
+    "updateError": "Could not update badge.",
+    "deleteSuccess": "Badge deleted successfully.",
+    "deleteError": "Could not delete badge.",
+    "categories": {
+      "milestone": "Milestone",
+      "social": "Social",
+      "mastery": "Mastery",
+      "streak": "Streak",
+      "special": "Special",
+      "collection": "Collection",
+      "creator": "Creator"
+    },
+    "tiers": {
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold",
+      "platinum": "Platinum",
+      "diamond": "Diamond"
+    },
+    "rarities": {
+      "common": "Common",
+      "uncommon": "Uncommon",
+      "rare": "Rare",
+      "epic": "Epic",
+      "legendary": "Legendary"
+    },
+    "form": {
+      "name": "Name",
+      "slug": "Slug",
+      "description": "Description",
+      "category": "Category",
+      "tier": "Tier",
+      "rarity": "Rarity",
+      "pointsReward": "Points reward",
+      "displayOrder": "Display order",
+      "iconUrl": "Icon URL",
+      "isActive": "Active",
+      "isSecret": "Secret",
+      "trigger": "Trigger",
+      "triggerType": "Trigger type",
+      "triggerConditions": "Conditions (JSON)",
+      "triggerConditionsHint": "Enter conditions as valid JSON.",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "saving": "Saving...",
+      "create": "Create badge"
+    },
+    "deleteDialog": {
+      "title": "Delete badge",
+      "description": "Are you sure you want to delete '{{name}}'? This action cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    }
+  },
+  "courseContent": {
+    "errorTitle": "Error loading course",
+    "errorDescription": "Course not found or insufficient permissions.",
+    "backToCourses": "Back to my courses",
+    "reviews": "reviews",
+    "students": "students",
+    "createdBy": "Created by",
+    "updatedAt": "Updated",
+    "yourProgress": "Your progress",
+    "lessonsCompleted": "{{completed}} of {{total}} lessons completed",
+    "continueLearning": "Continue learning",
+    "startCourse": "Start course",
+    "courseIncludes": "This course includes:",
+    "videoDemand": "{{hours}} of on-demand video",
+    "totalLessons": "{{count}} total lessons",
+    "interactiveQuizzes": "{{count}} interactive quizzes",
+    "certificate": "Certificate of completion",
+    "whatYouLearn": "What you'll learn",
+    "courseContentSection": "Course content",
+    "sectionsSummary": "{{sections}} sections · {{lessons}} lessons",
+    "sectionsSummaryWithHours": "{{sections}} sections · {{lessons}} lessons · {{hours}}",
+    "noContent": "No content available yet",
+    "noContentDesc": "The instructor is preparing the material. Check back soon.",
+    "lessonsLabel": "lessons",
+    "previewBadge": "Preview",
+    "noLessonsInSection": "No lessons in this section",
+    "descriptionSection": "Description",
+    "instructorSection": "Instructor",
+    "videosLabel": "videos",
+    "minLabel": "min"
   }
 }

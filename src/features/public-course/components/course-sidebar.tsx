@@ -85,7 +85,7 @@ export function CourseSidebar({
                     whileTap={{ scale: 0.95 }}
                     className='flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-2xl backdrop-blur-sm transition-all hover:bg-white'
                   >
-                    <Play className='ml-1 h-8 w-8 fill-current text-gray-900' />
+                    <Play className='ml-1 h-8 w-8 fill-current text-foreground' />
                   </motion.div>
                   
                   {/* Preview Badge */}

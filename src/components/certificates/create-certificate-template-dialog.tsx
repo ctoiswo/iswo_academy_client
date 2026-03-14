@@ -402,7 +402,7 @@ export function CreateCertificateTemplateDialog({
                         }
                       />
                       {backgroundImage && (
-                        <p className='mt-1 text-sm text-gray-600'>
+                        <p className='mt-1 text-sm text-muted-foreground'>
                           {backgroundImage.name}
                         </p>
                       )}
@@ -418,7 +418,7 @@ export function CreateCertificateTemplateDialog({
                         onChange={(e) => setLogo(e.target.files?.[0] || null)}
                       />
                       {logo && (
-                        <p className='mt-1 text-sm text-gray-600'>
+                        <p className='mt-1 text-sm text-muted-foreground'>
                           {logo.name}
                         </p>
                       )}
@@ -577,7 +577,7 @@ export function CreateCertificateTemplateDialog({
                               field.onChange(Number(e.target.value))
                             }
                           />
-                          <span className='text-gray-600'>%</span>
+                          <span className='text-muted-foreground'>%</span>
                         </div>
                       </FormControl>
                       <FormDescription>
@@ -606,7 +606,7 @@ export function CreateCertificateTemplateDialog({
                               field.onChange(Number(e.target.value))
                             }
                           />
-                          <span className='text-gray-600'>%</span>
+                          <span className='text-muted-foreground'>%</span>
                         </div>
                       </FormControl>
                       <FormDescription>

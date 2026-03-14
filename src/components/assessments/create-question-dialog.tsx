@@ -249,7 +249,7 @@ export function CreateQuestionDialog({
                 ))}
               </div>
 
-              <p className='text-xs text-gray-500'>
+              <p className='text-xs text-muted-foreground'>
                 {questionType === 'multiple_choice' &&
                   'Marca la casilla de la respuesta correcta'}
                 {questionType === 'multiple_select' &&

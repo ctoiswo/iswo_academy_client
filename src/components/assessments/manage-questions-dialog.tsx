@@ -102,11 +102,11 @@ export function ManageQuestionsDialog({
             <div className='flex items-center justify-between rounded-lg bg-gray-50 p-4'>
               <div className='flex gap-6 text-sm'>
                 <div>
-                  <p className='text-gray-600'>Total Preguntas</p>
+                  <p className='text-muted-foreground'>Total Preguntas</p>
                   <p className='text-2xl font-bold'>{questions?.length || 0}</p>
                 </div>
                 <div>
-                  <p className='text-gray-600'>Puntos Totales</p>
+                  <p className='text-muted-foreground'>Puntos Totales</p>
                   <p className='text-2xl font-bold'>{totalPoints}</p>
                 </div>
               </div>
@@ -119,7 +119,7 @@ export function ManageQuestionsDialog({
             {/* Lista de preguntas */}
             <ScrollArea className='h-[400px] rounded-lg border'>
               {isLoading ? (
-                <div className='p-8 text-center text-gray-500'>
+                <div className='p-8 text-center text-muted-foreground'>
                   Cargando preguntas...
                 </div>
               ) : questions && questions.length > 0 ? (
@@ -130,7 +130,7 @@ export function ManageQuestionsDialog({
                       className='flex items-start gap-3 p-4 hover:bg-gray-50'
                     >
                       <div className='flex items-center gap-2'>
-                        <GripVertical className='h-5 w-5 text-gray-400' />
+                        <GripVertical className='h-5 w-5 text-muted-foreground' />
                         <div className='flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600'>
                           {index + 1}
                         </div>
@@ -151,7 +151,7 @@ export function ManageQuestionsDialog({
                                 {question.points === 1 ? 'punto' : 'puntos'}
                               </Badge>
                               {question.answers && (
-                                <span className='text-sm text-gray-500'>
+                                <span className='text-sm text-muted-foreground'>
                                   {question.answers.length} opciones
                                 </span>
                               )}
@@ -198,7 +198,7 @@ export function ManageQuestionsDialog({
                         )}
 
                         {question.explanation && (
-                          <p className='mt-2 text-sm text-gray-600 italic'>
+                          <p className='mt-2 text-sm text-muted-foreground italic'>
                             Explicación: {question.explanation}
                           </p>
                         )}
@@ -207,7 +207,7 @@ export function ManageQuestionsDialog({
                   ))}
                 </div>
               ) : (
-                <div className='p-12 text-center text-gray-500'>
+                <div className='p-12 text-center text-muted-foreground'>
                   <p className='mb-4 text-lg font-medium'>
                     Aún no hay preguntas
                   </p>

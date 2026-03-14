@@ -1,8 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import CourseAssignmentsPage from '@/pages/course-assignments'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute(
   '/_authenticated/academy/$academySlug/courses/$courseSlug/assignments'
-)({
-  component: CourseAssignmentsPage,
-})
+)({ component: () => <Outlet /> })

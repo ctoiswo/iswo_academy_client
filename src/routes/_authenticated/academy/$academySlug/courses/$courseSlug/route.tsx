@@ -1,9 +1,19 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Outlet, useMatches } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
 function CourseLayoutRoute() {
   const { user, currentAcademy } = useAuthStore()
+  const matches = useMatches()
+
+  // Lesson viewer is full-screen — bypass DashboardLayout
+  const isLessonViewer = matches.some((m) =>
+    (m.routeId as string).includes('$lessonId')
+  )
+
+  if (isLessonViewer) {
+    return <Outlet />
+  }
 
   return (
     <DashboardLayout

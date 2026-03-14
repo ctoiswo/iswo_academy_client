@@ -27,8 +27,59 @@ export function AcademySwitcher({ fallback }: AcademySwitcherProps) {
   const { isMobile } = useSidebar()
   const { currentAcademy, academyData, switchAcademy } = useAuthStore()
 
-  // Show fallback if user has no academies or only one academy
-  if (!academyData || academyData.count <= 1) {
+  // Show fallback if user has no academies
+  if (!academyData || academyData.count === 0) {
+    return fallback ? <>{fallback}</> : null
+  }
+
+  // Single academy — show academy logo without switcher dropdown
+  if (academyData.count === 1 && currentAcademy) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            size='lg'
+            className='cursor-default hover:bg-transparent active:bg-transparent'
+          >
+            <div className='flex-shrink-0'>
+              {currentAcademy.logo_url ? (
+                <img
+                  src={currentAcademy.logo_url}
+                  alt={`${currentAcademy.name} logo`}
+                  className='size-8 rounded-lg object-cover'
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.style.display = 'none'
+                    const fallbackEl =
+                      target.nextElementSibling as HTMLElement
+                    if (fallbackEl) fallbackEl.style.display = 'flex'
+                  }}
+                />
+              ) : null}
+              <div
+                className={`bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg ${
+                  currentAcademy.logo_url ? 'hidden' : ''
+                }`}
+              >
+                <Building className='size-4' />
+              </div>
+            </div>
+            <div className='grid flex-1 text-start text-sm leading-tight'>
+              <span className='truncate font-semibold'>
+                {currentAcademy.name}
+              </span>
+              <span className='text-muted-foreground truncate text-xs'>
+                {currentAcademy.user_role_display}
+              </span>
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    )
+  }
+
+  // Fallback for single academy without currentAcademy set
+  if (academyData.count <= 1) {
     return fallback ? <>{fallback}</> : null
   }
 

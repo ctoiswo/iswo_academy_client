@@ -16,7 +16,7 @@ import {
   useDeleteCertificateTemplate,
   useSetDefaultTemplate,
 } from '@/hooks/use-certificate-templates'
-import { useCourseBySlug } from '@/hooks/use-courses'
+import { useCourse } from '@/hooks/use-courses'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,7 +47,6 @@ export default function CourseCertificatesPage() {
     courseSlug: string
   }
   const { academySlug, courseSlug } = params
-  const { currentAcademy } = useAuthStore()
 
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
@@ -57,12 +56,11 @@ export default function CourseCertificatesPage() {
     null
   )
 
-  const academyId = currentAcademy?.id
   const {
     data: course,
     isLoading: courseLoading,
     error: courseError,
-  } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  } = useCourse(courseSlug)
   const { data: templates, isLoading: templatesLoading } =
     useCertificateTemplates(academySlug)
   const deleteTemplate = useDeleteCertificateTemplate(academySlug)
@@ -113,7 +111,7 @@ export default function CourseCertificatesPage() {
           <h3 className='mb-2 text-lg font-bold text-red-600'>
             Error al Cargar el Curso
           </h3>
-          <p className='text-gray-600'>
+          <p className='text-muted-foreground'>
             Curso no encontrado o no tienes permiso para acceder
           </p>
           <Link
@@ -147,7 +145,7 @@ export default function CourseCertificatesPage() {
           </Button>
         </Link>
         <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
-        <p className='text-gray-600'>
+        <p className='text-muted-foreground'>
           Configura las plantillas de certificados de finalización
         </p>
       </div>
@@ -189,7 +187,7 @@ export default function CourseCertificatesPage() {
       <div className='mb-6 flex items-center justify-between'>
         <div>
           <h2 className='text-xl font-semibold'>Plantillas de Certificados</h2>
-          <p className='text-sm text-gray-600'>
+          <p className='text-sm text-muted-foreground'>
             {templates?.length || 0}{' '}
             {templates?.length === 1 ? 'plantilla' : 'plantillas'} configuradas
           </p>
@@ -203,7 +201,7 @@ export default function CourseCertificatesPage() {
       {/* Default Template */}
       {defaultTemplate && (
         <div className='mb-6'>
-          <h3 className='mb-3 flex items-center gap-2 text-sm font-medium text-gray-700'>
+          <h3 className='mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground'>
             <Star className='h-4 w-4 fill-yellow-500 text-yellow-500' />
             Plantilla Predeterminada
           </h3>
@@ -249,35 +247,35 @@ export default function CourseCertificatesPage() {
             <CardContent>
               <div className='grid grid-cols-2 gap-4 text-sm md:grid-cols-4'>
                 <div>
-                  <span className='text-gray-600'>Orientación:</span>
+                  <span className='text-muted-foreground'>Orientación:</span>
                   <p className='font-medium capitalize'>
                     {defaultTemplate.design.layout}
                   </p>
                 </div>
                 <div>
-                  <span className='text-gray-600'>Estilo de Borde:</span>
+                  <span className='text-muted-foreground'>Estilo de Borde:</span>
                   <p className='font-medium capitalize'>
                     {defaultTemplate.design.border_style}
                   </p>
                 </div>
                 <div>
-                  <span className='text-gray-600'>Firmas:</span>
+                  <span className='text-muted-foreground'>Firmas:</span>
                   <p className='font-medium'>
                     {defaultTemplate.design.signature_count}
                   </p>
                 </div>
                 <div>
-                  <span className='text-gray-600'>Usos:</span>
+                  <span className='text-muted-foreground'>Usos:</span>
                   <p className='font-medium'>{defaultTemplate.usage_count}</p>
                 </div>
               </div>
               {defaultTemplate.requirements &&
                 Object.keys(defaultTemplate.requirements).length > 0 && (
                   <div className='mt-4 rounded-lg bg-gray-50 p-3'>
-                    <p className='mb-2 text-sm font-medium text-gray-700'>
+                    <p className='mb-2 text-sm font-medium text-muted-foreground'>
                       Requisitos:
                     </p>
-                    <ul className='space-y-1 text-sm text-gray-600'>
+                    <ul className='space-y-1 text-sm text-muted-foreground'>
                       {defaultTemplate.requirements.lessons_completion && (
                         <li>
                           • Completar{' '}
@@ -302,7 +300,7 @@ export default function CourseCertificatesPage() {
       {/* Other Templates */}
       {otherTemplates.length > 0 && (
         <div>
-          <h3 className='mb-3 flex items-center gap-2 text-sm font-medium text-gray-700'>
+          <h3 className='mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground'>
             <FileText className='h-4 w-4' />
             Otras Plantillas
           </h3>
@@ -329,13 +327,13 @@ export default function CourseCertificatesPage() {
                 <CardContent>
                   <div className='mb-3 grid grid-cols-2 gap-3 text-xs'>
                     <div>
-                      <span className='text-gray-600'>Orientación:</span>
+                      <span className='text-muted-foreground'>Orientación:</span>
                       <p className='font-medium capitalize'>
                         {template.design.layout}
                       </p>
                     </div>
                     <div>
-                      <span className='text-gray-600'>Usos:</span>
+                      <span className='text-muted-foreground'>Usos:</span>
                       <p className='font-medium'>{template.usage_count}</p>
                     </div>
                   </div>
@@ -385,11 +383,11 @@ export default function CourseCertificatesPage() {
       {!templates || templates.length === 0 ? (
         <Card>
           <CardContent className='py-12 text-center'>
-            <Award className='mx-auto mb-4 h-12 w-12 text-gray-400' />
+            <Award className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
             <h3 className='mb-2 text-lg font-medium'>
               No hay plantillas configuradas
             </h3>
-            <p className='mb-4 text-gray-600'>
+            <p className='mb-4 text-muted-foreground'>
               Crea tu primera plantilla de certificado para que los estudiantes
               puedan obtenerlos al completar el curso
             </p>

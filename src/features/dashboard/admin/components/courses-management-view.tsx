@@ -221,7 +221,7 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
         <h3 className='mb-2 text-lg font-bold text-red-600'>
           Error al Cargar Cursos
         </h3>
-        <p className='text-gray-600'>Por favor intenta refrescar la página</p>
+        <p className='text-muted-foreground'>Por favor intenta refrescar la página</p>
       </div>
     )
   }
@@ -232,7 +232,7 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
       <div className='mb-8 flex items-center justify-between'>
         <div>
           <h1 className='text-3xl font-bold'>Cursos</h1>
-          <p className='mt-2 text-gray-600'>
+          <p className='mt-2 text-muted-foreground'>
             Crea y gestiona cursos para tu academia
           </p>
         </div>
@@ -308,11 +308,11 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
         difficultyFilter === 'all' &&
         typeFilter === 'all' && (
           <div className='rounded-lg border-2 border-dashed border-gray-200 py-12 text-center'>
-            <BookOpen className='mx-auto mb-4 h-12 w-12 text-gray-400' />
-            <h3 className='mb-2 text-lg font-medium text-gray-900'>
+            <BookOpen className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
+            <h3 className='mb-2 text-lg font-medium text-foreground'>
               Aún no hay cursos
             </h3>
-            <p className='mb-6 text-gray-500'>
+            <p className='mb-6 text-muted-foreground'>
               Crea tu primer curso para comenzar
             </p>
             <Button
@@ -336,11 +336,11 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
           difficultyFilter !== 'all' ||
           typeFilter !== 'all') && (
           <div className='py-12 text-center'>
-            <BookOpen className='mx-auto mb-4 h-12 w-12 text-gray-400' />
-            <h3 className='mb-2 text-lg font-medium text-gray-900'>
+            <BookOpen className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
+            <h3 className='mb-2 text-lg font-medium text-foreground'>
               No se encontraron cursos
             </h3>
-            <p className='text-gray-500'>
+            <p className='text-muted-foreground'>
               Intenta ajustar tu búsqueda o filtros
             </p>
           </div>
@@ -365,7 +365,7 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
                   />
                 ) : (
                   <div className='flex h-full items-center justify-center'>
-                    <BookOpen className='h-16 w-16 text-gray-400' />
+                    <BookOpen className='h-16 w-16 text-muted-foreground' />
                   </div>
                 )}
 
@@ -415,7 +415,7 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
 
               <CardContent className='space-y-3'>
                 {/* Estadísticas del curso */}
-                <div className='flex items-center justify-between text-sm text-gray-600'>
+                <div className='flex items-center justify-between text-sm text-muted-foreground'>
                   <div className='flex items-center gap-1'>
                     <Clock className='h-4 w-4' />
                     <span>{formatDuration(course.duration_minutes)}</span>
@@ -427,7 +427,7 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
                 </div>
 
                 {/* Contenido del curso */}
-                <div className='text-sm text-gray-600'>
+                <div className='text-sm text-muted-foreground'>
                   <span>
                     {course.sections_count || 0} secciones •{' '}
                     {course.lessons_count || 0} lecciones
@@ -437,7 +437,7 @@ export function CoursesManagementView({ academy }: CoursesManagementViewProps) {
                 {/* Precio y acción */}
                 <div className='flex items-center justify-between border-t pt-3'>
                   <div className='flex items-center gap-2'>
-                    <DollarSign className='h-4 w-4 text-gray-500' />
+                    <DollarSign className='h-4 w-4 text-muted-foreground' />
                     {formatPrice(course.price, course.is_free)}
                   </div>
                   <div className='flex gap-2'>

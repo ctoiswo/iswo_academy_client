@@ -148,7 +148,7 @@ export default function MyCoursesPage() {
             <h3 className='mb-2 text-lg font-bold text-red-600'>
               {t('myCourses.errorTitle')}
             </h3>
-            <p className='text-gray-600'>{t('myCourses.errorDescription')}</p>
+            <p className='text-muted-foreground'>{t('myCourses.errorDescription')}</p>
           </div>
         </div>
       </DashboardLayout>
@@ -201,7 +201,7 @@ export default function MyCoursesPage() {
         <div className='flex flex-col gap-4 sm:flex-row'>
           <div className='flex-1'>
             <div className='relative'>
-              <Search className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400' />
+              <Search className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-muted-foreground' />
               <Input
                 placeholder={t('myCourses.searchPlaceholder')}
                 value={searchQuery}
@@ -259,11 +259,11 @@ export default function MyCoursesPage() {
           wishlistCourses.length === 0 ? (
             <Card className='py-12 text-center'>
               <CardContent>
-                <BookOpen className='mx-auto mb-4 h-12 w-12 text-gray-400' />
-                <h3 className='mb-2 text-lg font-medium text-gray-900'>
+                <BookOpen className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
+                <h3 className='mb-2 text-lg font-medium text-foreground'>
                   {t('myCourses.wishlist.title')}
                 </h3>
-                <p className='mb-4 text-gray-500'>
+                <p className='mb-4 text-muted-foreground'>
                   {t('myCourses.wishlist.description')}
                 </p>
                 <Button
@@ -308,7 +308,7 @@ export default function MyCoursesPage() {
                   </CardHeader>
 
                   <CardContent className='space-y-4'>
-                    <p className='text-sm text-gray-600'>
+                    <p className='text-sm text-muted-foreground'>
                       {t('myCourses.wishlist.addedOn')}{' '}
                       {new Date(item.addedAt).toLocaleDateString()}
                     </p>
@@ -336,11 +336,11 @@ export default function MyCoursesPage() {
         filteredEnrollments.length === 0 ? (
           <Card className='py-12 text-center'>
             <CardContent>
-              <BookOpen className='mx-auto mb-4 h-12 w-12 text-gray-400' />
-              <h3 className='mb-2 text-lg font-medium text-gray-900'>
+              <BookOpen className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
+              <h3 className='mb-2 text-lg font-medium text-foreground'>
                 {t('myCourses.noCoursesTitle')}
               </h3>
-              <p className='mb-4 text-gray-500'>
+              <p className='mb-4 text-muted-foreground'>
                 {searchQuery || filters.status
                   ? t('myCourses.noCoursesDescription')
                   : t('myCourses.notEnrolledYet')}
@@ -451,7 +451,7 @@ export default function MyCoursesPage() {
                   </div>
 
                   {/* Course Info */}
-                  <div className='flex justify-between text-sm text-gray-500'>
+                  <div className='flex justify-between text-sm text-muted-foreground'>
                     <span>
                       {t('myCourses.duration')}:{' '}
                       {formatDuration(enrollment.course.duration_minutes)}
@@ -478,7 +478,10 @@ export default function MyCoursesPage() {
                         onClick={() =>
                           handleContinueCourse(
                             enrollment.course.slug,
-                            enrollment.course.academy?.slug || ''
+                            enrollment.course.academy?.slug ||
+                              (enrollment.course as any).academy_slug ||
+                              academySlug ||
+                              ''
                           )
                         }
                         className='w-full'

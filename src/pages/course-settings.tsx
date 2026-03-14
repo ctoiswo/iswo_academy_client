@@ -6,7 +6,7 @@ import { useParams, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Save, Trash2, Archive } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import {
-  useCourseBySlug,
+  useCourse,
   useUpdateCourse,
   useDeleteCourse,
 } from '@/hooks/use-courses'
@@ -54,18 +54,16 @@ export default function CourseSettingsPage() {
     courseSlug: string
   }
   const { academySlug, courseSlug } = params
-  const { currentAcademy } = useAuthStore()
   const navigate = useNavigate()
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false)
 
-  const academyId = currentAcademy?.id
   const {
     data: course,
     isLoading,
     error,
-  } = useCourseBySlug(academyId ? Number(academyId) : 0, courseSlug)
+  } = useCourse(courseSlug)
   const updateCourse = useUpdateCourse(academySlug)
   const deleteCourse = useDeleteCourse(academySlug)
 
@@ -142,7 +140,7 @@ export default function CourseSettingsPage() {
           <h3 className='mb-2 text-lg font-bold text-red-600'>
             Error al Cargar el Curso
           </h3>
-          <p className='text-gray-600'>
+          <p className='text-muted-foreground'>
             Curso no encontrado o no tienes permiso para acceder
           </p>
           <a
@@ -169,7 +167,7 @@ export default function CourseSettingsPage() {
           </Button>
         </a>
         <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
-        <p className='text-gray-600'>
+        <p className='text-muted-foreground'>
           Ajustes avanzados y configuración del curso
         </p>
       </div>
@@ -312,7 +310,7 @@ export default function CourseSettingsPage() {
           <div className='flex items-center justify-between rounded-lg border border-red-200 p-3'>
             <div>
               <p className='font-medium'>Archivar Curso</p>
-              <p className='text-sm text-gray-600'>
+              <p className='text-sm text-muted-foreground'>
                 El curso no será visible pero se conservarán los datos
               </p>
             </div>
@@ -328,7 +326,7 @@ export default function CourseSettingsPage() {
           <div className='flex items-center justify-between rounded-lg border border-red-200 p-3'>
             <div>
               <p className='font-medium'>Eliminar Curso</p>
-              <p className='text-sm text-gray-600'>
+              <p className='text-sm text-muted-foreground'>
                 Eliminar permanentemente el curso y todo su contenido
               </p>
             </div>

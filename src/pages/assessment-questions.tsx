@@ -4,7 +4,7 @@ import type { Question } from '@/types'
 import { ArrowLeft, Plus, GripVertical, Edit, Trash2 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { useAssessments } from '@/hooks/use-assessments'
-import { useCourseBySlug } from '@/hooks/use-courses'
+import { useCourse } from '@/hooks/use-courses'
 import { useQuestions, useDeleteQuestion } from '@/hooks/use-questions'
 import {
   AlertDialog,
@@ -36,7 +36,6 @@ export default function AssessmentQuestionsPage() {
     assessmentId: string
   }
   const { academySlug, courseSlug, assessmentId } = params
-  const { currentAcademy } = useAuthStore()
 
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null)
   const [deletingQuestionId, setDeletingQuestionId] = useState<number | null>(
@@ -44,11 +43,7 @@ export default function AssessmentQuestionsPage() {
   )
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
-  const academyId = currentAcademy?.id
-  const { data: course, isLoading: loadingCourse } = useCourseBySlug(
-    academyId ? Number(academyId) : 0,
-    courseSlug
-  )
+  const { data: course, isLoading: loadingCourse } = useCourse(courseSlug)
 
   const { data: assessments } = useAssessments(academySlug, courseSlug, {})
   const assessment = assessments?.find((a) => a.id === Number(assessmentId))
@@ -108,7 +103,7 @@ export default function AssessmentQuestionsPage() {
           <h3 className='mb-2 text-lg font-bold text-red-600'>
             Error al Cargar
           </h3>
-          <p className='text-gray-600'>No se pudo cargar la evaluación</p>
+          <p className='text-muted-foreground'>No se pudo cargar la evaluación</p>
         </div>
       </div>
     )
@@ -137,7 +132,7 @@ export default function AssessmentQuestionsPage() {
                 {isQuiz ? '📝 Quiz' : '🎓 Examen'}
               </Badge>
             </div>
-            <p className='text-gray-600'>
+            <p className='text-muted-foreground'>
               Gestiona las preguntas de esta evaluación
             </p>
           </div>
@@ -194,7 +189,7 @@ export default function AssessmentQuestionsPage() {
                   <CardContent className='pt-6'>
                     <div className='flex items-start gap-3'>
                       <div className='flex items-center gap-2'>
-                        <GripVertical className='h-5 w-5 cursor-move text-gray-400' />
+                        <GripVertical className='h-5 w-5 cursor-move text-muted-foreground' />
                         <div className='flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600'>
                           {index + 1}
                         </div>
@@ -215,7 +210,7 @@ export default function AssessmentQuestionsPage() {
                                 {question.points === 1 ? 'punto' : 'puntos'}
                               </Badge>
                               {question.answers && (
-                                <span className='text-sm text-gray-500'>
+                                <span className='text-sm text-muted-foreground'>
                                   {question.answers.length} opciones
                                 </span>
                               )}
@@ -262,7 +257,7 @@ export default function AssessmentQuestionsPage() {
                         )}
 
                         {question.explanation && (
-                          <p className='mt-3 rounded bg-blue-50 p-2 text-sm text-gray-600 italic'>
+                          <p className='mt-3 rounded bg-blue-50 p-2 text-sm text-muted-foreground italic'>
                             💡 Explicación: {question.explanation}
                           </p>
                         )}
@@ -273,7 +268,7 @@ export default function AssessmentQuestionsPage() {
               ))}
             </div>
           ) : (
-            <div className='py-12 text-center text-gray-500'>
+            <div className='py-12 text-center text-muted-foreground'>
               <p className='mb-4 text-lg font-medium'>Aún no hay preguntas</p>
               <p className='mb-4'>
                 Comienza añadiendo preguntas a esta evaluación

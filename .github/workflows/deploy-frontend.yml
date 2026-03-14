@@ -1,5 +1,9 @@
 name: Deploy Frontend to GCP
 
+permissions:
+  contents: read
+  id-token: write
+
 on:
   push:
     branches: [ main ]
@@ -62,21 +66,36 @@ jobs:
 
     - name: Build application
       env:
-        VITE_API_URL: https://api.34-139-56-65.nip.io
+        VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        VITE_CABLE_URL: ${{ secrets.VITE_CABLE_URL }}
+        VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
       run: pnpm build
 
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2
       with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
+        workload_identity_provider: projects/1087321066171/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+        service_account: iswo-academy-sa@gifted-monitor-490019-j7.iam.gserviceaccount.com
 
     - name: Set up Google Cloud CLI
       uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: gifted-monitor-490019-j7
 
     - name: Deploy to Cloud Storage
       run: |
-        # Sync files to bucket
-        gsutil -m rsync -r -d ./dist gs://app-iswo-academy
+        # Upload hashed assets with long-lived cache (1 year)
+        gsutil -m -h "Cache-Control:public, max-age=31536000, immutable" \
+          rsync -r -d ./dist/assets gs://app-iswo-academy/assets
+
+        # Upload index.html and other root files with no-cache so updates are picked up immediately
+        gsutil -m -h "Cache-Control:no-cache, no-store, must-revalidate" \
+          rsync -r -d -x "^assets/" ./dist gs://app-iswo-academy
+
+    - name: Configure bucket for static website hosting
+      run: |
+        gsutil web set -m index.html -e index.html gs://app-iswo-academy
+        gsutil iam ch allUsers:objectViewer gs://app-iswo-academy || true
         
         # Set public read permissions
         gsutil -m acl ch -r -u AllUsers:R gs://app-iswo-academy

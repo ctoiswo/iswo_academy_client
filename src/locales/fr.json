@@ -332,6 +332,25 @@
       "advanced": "Avancé"
     }
   },
+  "courseInfo": {
+    "errorTitle": "Erreur de chargement du cours",
+    "errorDescription": "Cours introuvable ou vous n'avez pas la permission d'y accéder",
+    "backToCourses": "Retour aux cours",
+    "editCourse": "Modifier le cours",
+    "generalInfo": "Informations générales",
+    "generalInfoDesc": "Détails et configuration du cours",
+    "status": "Statut",
+    "level": "Niveau",
+    "price": "Prix",
+    "duration": "Durée",
+    "createdAt": "Date de création",
+    "updatedAt": "Dernière mise à jour",
+    "thumbnail": "Miniature du cours",
+    "free": "Gratuit",
+    "statusPublished": "Publié",
+    "statusDraft": "Brouillon",
+    "statusArchived": "Archivé"
+  },
   "coursesLanding": {
     "hero": {
       "badge": "{{count}}+ cours disponibles",
@@ -1236,5 +1255,214 @@
     "system_alert": {
       "title": "Alerte système"
     }
+  },
+  "academyUsers": {
+    "subtitle": "Gérez les membres de votre académie",
+    "searchPlaceholder": "Rechercher par nom ou e-mail...",
+    "empty": "Aucun utilisateur trouvé.",
+    "roleUpdated": "Rôle mis à jour avec succès.",
+    "roleUpdateError": "Impossible de mettre à jour le rôle.",
+    "userRemoved": "Utilisateur retiré de l'académie.",
+    "removeError": "Impossible de retirer l'utilisateur.",
+    "enrollments": "inscriptions",
+    "courses": "cours",
+    "pagination": "Affichage {{from}}-{{to}} sur {{total}}",
+    "titles": {
+      "all": "Tous les Utilisateurs",
+      "admins": "Administrateurs",
+      "teachers": "Enseignants",
+      "students": "Étudiants"
+    },
+    "tabs": {
+      "all": "Tous",
+      "admins": "Admins",
+      "teachers": "Enseignants",
+      "students": "Étudiants"
+    },
+    "columns": {
+      "name": "Nom",
+      "email": "E-mail",
+      "role": "Rôle",
+      "joined": "Rejoint le",
+      "activity": "Activité"
+    },
+    "roles": {
+      "admin": "Admin",
+      "teacher": "Enseignant",
+      "student": "Étudiant"
+    },
+    "actions": {
+      "makeAdmin": "Rendre Admin",
+      "makeTeacher": "Rendre Enseignant",
+      "makeStudent": "Rendre Étudiant",
+      "remove": "Retirer de l'académie"
+    },
+    "removeDialog": {
+      "title": "Retirer l'utilisateur",
+      "description": "Êtes-vous sûr de vouloir retirer {{name}} de l'académie ? Cette action est irréversible.",
+      "confirm": "Retirer"
+    }
+  },
+  "academySettings": {
+    "title": "Paramètres de l'Académie",
+    "subtitle": "Gérez les informations et les fonctionnalités de votre académie",
+    "tabs": {
+      "general": "Informations Générales",
+      "features": "Fonctionnalités"
+    },
+    "generalInfo": {
+      "name": "Nom de l'Académie",
+      "namePlaceholder": "Mon Académie",
+      "nameError": "Le nom doit comporter au moins 3 caractères.",
+      "description": "Description",
+      "descriptionPlaceholder": "Décrivez votre académie...",
+      "descriptionError": "La description doit comporter au moins 10 caractères.",
+      "slug": "Identifiant URL",
+      "slugDescription": "Identifiant unique dans l'URL : /academy/{{slug}}",
+      "website": "Site Web",
+      "websitePlaceholder": "https://monacademie.com",
+      "websiteError": "Veuillez saisir une URL valide.",
+      "category": "Catégorie",
+      "categoryPlaceholder": "Sélectionnez une catégorie",
+      "mission": "Mission",
+      "missionPlaceholder": "Quelle est la mission de votre académie ?",
+      "vision": "Vision",
+      "visionPlaceholder": "Quelle est la vision de votre académie ?",
+      "isPublic": "Académie Publique",
+      "isPublicDescription": "Permet à tout utilisateur de trouver et voir cette académie.",
+      "subscriptionRequired": "Abonnement Requis",
+      "subscriptionRequiredDescription": "Les étudiants doivent payer un abonnement pour accéder.",
+      "monthlyPrice": "Prix Mensuel",
+      "annualPrice": "Prix Annuel",
+      "logo": "Logo",
+      "changeLogo": "Changer le Logo",
+      "uploadLogo": "Télécharger le Logo",
+      "banner": "Bannière",
+      "changeBanner": "Changer la Bannière",
+      "uploadBanner": "Télécharger la Bannière",
+      "save": "Enregistrer les Modifications",
+      "saving": "Enregistrement...",
+      "saveSuccess": "Académie mise à jour avec succès.",
+      "saveError": "Impossible de mettre à jour l'académie. Veuillez réessayer."
+    },
+    "features": {
+      "gamification": "Gamification",
+      "gamificationDescription": "Activez les points, badges et classements pour motiver les étudiants.",
+      "certificates": "Certificats",
+      "certificatesDescription": "Permettre la génération de certificats de fin de cours.",
+      "discussions": "Discussions",
+      "discussionsDescription": "Activez les forums et commentaires sur les cours et leçons.",
+      "progressTracking": "Suivi de Progression",
+      "progressTrackingDescription": "Suivez et affichez la progression de chaque étudiant dans les cours.",
+      "save": "Enregistrer les Modifications",
+      "saving": "Enregistrement...",
+      "saveSuccess": "Fonctionnalités mises à jour avec succès.",
+      "saveError": "Impossible de mettre à jour les fonctionnalités."
+    }
+  },
+  "academyBadges": {
+    "title": "Badges",
+    "subtitle": "Créez et gérez les badges de motivation de votre académie",
+    "newBadge": "Nouveau badge",
+    "editBadge": "Modifier le badge",
+    "searchPlaceholder": "Rechercher des badges...",
+    "filterCategory": "Catégorie",
+    "filterTier": "Niveau",
+    "filterStatus": "Statut",
+    "all": "Tous",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "secret": "Secret",
+    "earned": "obtenus",
+    "badgesCount": "badges",
+    "empty": "Aucun badge créé pour l'instant.",
+    "createFirst": "Créer le premier badge",
+    "createSuccess": "Badge créé avec succès.",
+    "createError": "Impossible de créer le badge.",
+    "updateSuccess": "Badge mis à jour avec succès.",
+    "updateError": "Impossible de mettre à jour le badge.",
+    "deleteSuccess": "Badge supprimé avec succès.",
+    "deleteError": "Impossible de supprimer le badge.",
+    "categories": {
+      "milestone": "Étape",
+      "social": "Social",
+      "mastery": "Maîtrise",
+      "streak": "Série",
+      "special": "Spécial",
+      "collection": "Collection",
+      "creator": "Créateur"
+    },
+    "tiers": {
+      "bronze": "Bronze",
+      "silver": "Argent",
+      "gold": "Or",
+      "platinum": "Platine",
+      "diamond": "Diamant"
+    },
+    "rarities": {
+      "common": "Commun",
+      "uncommon": "Peu commun",
+      "rare": "Rare",
+      "epic": "Épique",
+      "legendary": "Légendaire"
+    },
+    "form": {
+      "name": "Nom",
+      "slug": "Slug",
+      "description": "Description",
+      "category": "Catégorie",
+      "tier": "Niveau",
+      "rarity": "Rareté",
+      "pointsReward": "Points de récompense",
+      "displayOrder": "Ordre d'affichage",
+      "iconUrl": "URL de l'icône",
+      "isActive": "Actif",
+      "isSecret": "Secret",
+      "trigger": "Déclencheur",
+      "triggerType": "Type de déclencheur",
+      "triggerConditions": "Conditions (JSON)",
+      "triggerConditionsHint": "Saisissez les conditions en JSON valide.",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "saving": "Enregistrement...",
+      "create": "Créer le badge"
+    },
+    "deleteDialog": {
+      "title": "Supprimer le badge",
+      "description": "Êtes-vous sûr de vouloir supprimer '{{name}}' ? Cette action est irréversible.",
+      "cancel": "Annuler",
+      "confirm": "Supprimer"
+    }
+  },
+  "courseContent": {
+    "errorTitle": "Erreur lors du chargement du cours",
+    "errorDescription": "Cours introuvable ou accès non autorisé.",
+    "backToCourses": "Retour à mes cours",
+    "reviews": "avis",
+    "students": "étudiants",
+    "createdBy": "Créé par",
+    "updatedAt": "Mis à jour",
+    "yourProgress": "Votre progression",
+    "lessonsCompleted": "{{completed}} sur {{total}} leçons terminées",
+    "continueLearning": "Continuer l'apprentissage",
+    "startCourse": "Commencer le cours",
+    "courseIncludes": "Ce cours comprend :",
+    "videoDemand": "{{hours}} de vidéo à la demande",
+    "totalLessons": "{{count}} leçons au total",
+    "interactiveQuizzes": "{{count}} quiz interactifs",
+    "certificate": "Certificat d'achèvement",
+    "whatYouLearn": "Ce que vous apprendrez",
+    "courseContentSection": "Contenu du cours",
+    "sectionsSummary": "{{sections}} sections · {{lessons}} leçons",
+    "sectionsSummaryWithHours": "{{sections}} sections · {{lessons}} leçons · {{hours}}",
+    "noContent": "Aucun contenu disponible pour l'instant",
+    "noContentDesc": "L'instructeur prépare le matériel. Revenez bientôt.",
+    "lessonsLabel": "leçons",
+    "previewBadge": "Aperçu",
+    "noLessonsInSection": "Aucune leçon dans cette section",
+    "descriptionSection": "Description",
+    "instructorSection": "Instructeur",
+    "videosLabel": "vidéos",
+    "minLabel": "min"
   }
 }

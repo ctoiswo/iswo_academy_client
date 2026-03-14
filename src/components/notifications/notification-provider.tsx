@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { toast } from 'sonner'
 import { useBadgeNotifications } from '@/hooks/use-badge-notifications'
 import { useNotifications } from '@/hooks/use-notifications'
 import { BadgeModal } from '@/components/gamification/badge-modal'
@@ -43,9 +42,9 @@ export function NotificationProvider({
     if (!showToasts) return
 
     if (notificationsConnected && badgeConnected) {
-      toast.success('✅ Conectado a notificaciones')
+      console.log('✅ Conectado a notificaciones')
     } else if (notificationsError) {
-      toast.error(`❌ Error de notificaciones: ${notificationsError}`)
+      console.error(`❌ Error de notificaciones: ${notificationsError}`)
     }
   }, [notificationsConnected, badgeConnected, notificationsError, showToasts])
 
