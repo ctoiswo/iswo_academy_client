@@ -96,9 +96,6 @@ jobs:
       run: |
         gsutil web set -m index.html -e index.html gs://app-iswo-academy
         gsutil iam ch allUsers:objectViewer gs://app-iswo-academy || true
-        
-        # Set public read permissions
-        gsutil -m acl ch -r -u AllUsers:R gs://app-iswo-academy
 
     - name: Invalidate CDN cache (optional)
       run: |
