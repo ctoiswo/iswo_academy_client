@@ -102,7 +102,11 @@ function PasswordStrength({ password }: { password: string }) {
   )
 }
 
-export function SignUpForm() {
+interface SignUpFormProps {
+  redirectTo?: string
+}
+
+export function SignUpForm({ redirectTo }: SignUpFormProps) {
   const [showPassword, setShowPassword] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [focusedField, setFocusedField] = useState<string | null>(null)
@@ -142,6 +146,9 @@ export function SignUpForm() {
   async function onSubmit(data: FormValues) {
     try {
       await registerUser(data)
+      if (redirectTo) {
+        sessionStorage.setItem('postAuthRedirect', redirectTo)
+      }
       navigate({ to: '/sign-up-success' })
       toast.success('¡Cuenta creada exitosamente!', {
         description: 'Revisa tu correo para confirmar tu cuenta.',
@@ -413,6 +420,7 @@ export function SignUpForm() {
         Ya tienes una cuenta?{' '}
         <Link
           to='/sign-in'
+          search={redirectTo ? { redirect: redirectTo } : undefined}
           className='text-primary font-medium hover:text-primary/80 transition-colors'
         >
           Inicia sesion aqui

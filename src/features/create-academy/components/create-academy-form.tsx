@@ -1,11 +1,12 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { ArrowLeft, ArrowRight, Loader2, Rocket } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Loader2, Rocket, RefreshCw } from 'lucide-react'
 import { academyService } from '@/services/academy-service'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import type { Academy } from '@/types'
@@ -14,14 +15,13 @@ import { StepBranding } from './step-branding'
 import { StepSettings } from './step-settings'
 import { StepSuccess } from './step-success'
 import { StepIndicator } from './step-indicator'
+import { StepAccount } from './step-account'
 
 const createAcademySchema = z.object({
   name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
   description: z.string().min(10, 'La descripción debe tener al menos 10 caracteres'),
   academy_category_id: z.number().optional(),
   slug: z.string().optional(),
-  logo_url: z.string().url('Ingresa una URL válida').optional().or(z.literal('')),
-  banner_url: z.string().url('Ingresa una URL válida').optional().or(z.literal('')),
   is_public: z.boolean(),
   subscription_required: z.boolean(),
   monthly_price: z.number().min(0).optional(),
@@ -31,17 +31,33 @@ const createAcademySchema = z.object({
 
 export type CreateAcademyFormValues = z.infer<typeof createAcademySchema>
 
-const STEPS = ['basicInfo', 'branding', 'settings'] as const
-type Step = (typeof STEPS)[number]
+const ACADEMY_STEPS = ['basicInfo', 'branding', 'settings'] as const
+type AcademyStep = (typeof ACADEMY_STEPS)[number]
+type Step = 'account' | AcademyStep
 
-const STEP_LABELS = ['Información', 'Branding', 'Configuración']
+const STEP_LABELS_WITH_ACCOUNT = ['Cuenta', 'Información', 'Branding', 'Configuración']
+const STEP_LABELS_NO_ACCOUNT = ['Información', 'Branding', 'Configuración']
 
 export function CreateAcademyForm() {
   const { t } = useTranslation()
-  const [currentStep, setCurrentStep] = useState<Step>('basicInfo')
+  const { isAuthenticated, isInitialized } = useAuthStore()
+  // Start conservatively at 'account'; useEffect will advance to 'basicInfo'
+  // once the auth store finishes initializing (avoids the race on page reload).
+  const [currentStep, setCurrentStep] = useState<Step>('account')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [createdAcademy, setCreatedAcademy] = useState<Academy | null>(null)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [bannerFile, setBannerFile] = useState<File | null>(null)
+
+  // Once the auth store resolves, skip the account step if already logged in.
+  useEffect(() => {
+    if (isInitialized && isAuthenticated && currentStep === 'account') {
+      setCurrentStep('basicInfo')
+    }
+  }, [isInitialized, isAuthenticated])
+
+  const needsAccount = !isAuthenticated
 
   const form = useForm<CreateAcademyFormValues>({
     resolver: zodResolver(createAcademySchema),
@@ -50,8 +66,6 @@ export function CreateAcademyForm() {
       description: '',
       is_public: true,
       subscription_required: false,
-      logo_url: '',
-      banner_url: '',
       slug: '',
       mission: '',
       vision: '',
@@ -59,7 +73,10 @@ export function CreateAcademyForm() {
     mode: 'onTouched',
   })
 
-  const currentStepIndex = STEPS.indexOf(currentStep)
+  const stepLabels = needsAccount ? STEP_LABELS_WITH_ACCOUNT : STEP_LABELS_NO_ACCOUNT
+  const currentStepIndex = currentStep === 'account'
+    ? 0
+    : (needsAccount ? 1 : 0) + ACADEMY_STEPS.indexOf(currentStep as AcademyStep)
 
   const goToStep = useCallback((newStep: Step) => {
     setIsTransitioning(true)
@@ -79,13 +96,16 @@ export function CreateAcademyForm() {
   }
 
   const handleNext = async () => {
-    const stepFields: Record<Step, (keyof CreateAcademyFormValues)[]> = {
+    const stepFields: Partial<Record<Step, (keyof CreateAcademyFormValues)[]>> = {
       basicInfo: ['name', 'description'],
-      branding: ['slug', 'logo_url', 'banner_url'],
+      branding: ['slug'],
       settings: ['is_public', 'subscription_required', 'monthly_price', 'mission', 'vision'],
     }
-    const valid = await form.trigger(stepFields[currentStep])
-    if (!valid) return
+    const fields = stepFields[currentStep]
+    if (fields) {
+      const valid = await form.trigger(fields)
+      if (!valid) return
+    }
 
     if (currentStep === 'basicInfo') {
       syncSlug()
@@ -98,6 +118,7 @@ export function CreateAcademyForm() {
   const handleBack = () => {
     if (currentStep === 'branding') goToStep('basicInfo')
     else if (currentStep === 'settings') goToStep('branding')
+    else if (currentStep === 'basicInfo' && needsAccount) goToStep('account')
   }
 
   const onSubmit = async (values: CreateAcademyFormValues) => {
@@ -108,8 +129,6 @@ export function CreateAcademyForm() {
         description: values.description,
         ...(values.academy_category_id && { academy_category_id: values.academy_category_id }),
         ...(values.slug && { slug: values.slug }),
-        ...(values.logo_url && { logo_url: values.logo_url }),
-        ...(values.banner_url && { banner_url: values.banner_url }),
         is_public: values.is_public,
         subscription_required: values.subscription_required,
         ...(values.monthly_price && { monthly_price: values.monthly_price }),
@@ -117,6 +136,15 @@ export function CreateAcademyForm() {
         ...(values.vision && { vision: values.vision }),
       }
       const academy = await academyService.createAcademy(payload)
+
+      // Upload logo and banner as polymorphic Attachment records
+      if (logoFile) {
+        await academyService.uploadAttachment(academy.slug, logoFile, 'logo', 'Academy Logo')
+      }
+      if (bannerFile) {
+        await academyService.uploadAttachment(academy.slug, bannerFile, 'banner', 'Academy Banner')
+      }
+
       setCreatedAcademy(academy)
       toast.success(t('createAcademy.success.toastMessage'))
     } catch (error: unknown) {
@@ -133,13 +161,24 @@ export function CreateAcademyForm() {
     return <StepSuccess academy={createdAcademy} />
   }
 
+  // Show spinner while auth store is still reading localStorage / refreshing tokens.
+  // Without this guard the wizard always starts at step 'account' on reload.
+  if (!isInitialized) {
+    return (
+      <div className='flex flex-col items-center justify-center gap-3 py-24 text-muted-foreground'>
+        <RefreshCw className='size-6 animate-spin text-primary' />
+        <span className='text-sm'>Verificando sesión...</span>
+      </div>
+    )
+  }
+
   return (
     <div className='flex flex-col gap-8 w-full'>
       {/* Step indicator */}
       <StepIndicator
         currentStep={currentStepIndex + 1}
-        totalSteps={3}
-        labels={STEP_LABELS}
+        totalSteps={stepLabels.length}
+        labels={stepLabels}
       />
 
       {/* Form card */}
@@ -152,13 +191,25 @@ export function CreateAcademyForm() {
           className='transition-opacity duration-150 ease-in-out'
           style={{ opacity: isTransitioning ? 0 : 1 }}
         >
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              {currentStep === 'basicInfo' && <StepBasicInfo form={form} />}
-              {currentStep === 'branding' && <StepBranding form={form} />}
-              {currentStep === 'settings' && <StepSettings form={form} />}
-            </form>
-          </Form>
+          {currentStep === 'account' ? (
+            <StepAccount onSuccess={() => goToStep('basicInfo')} />
+          ) : (
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                {currentStep === 'basicInfo' && <StepBasicInfo form={form} />}
+                {currentStep === 'branding' && (
+                  <StepBranding
+                    form={form}
+                    logoFile={logoFile}
+                    onLogoChange={setLogoFile}
+                    bannerFile={bannerFile}
+                    onBannerChange={setBannerFile}
+                  />
+                )}
+                {currentStep === 'settings' && <StepSettings form={form} />}
+              </form>
+            </Form>
+          )}
         </div>
       </div>
 
@@ -168,14 +219,14 @@ export function CreateAcademyForm() {
           type='button'
           variant='ghost'
           onClick={handleBack}
-          disabled={currentStep === 'basicInfo'}
+          disabled={currentStep === (needsAccount ? 'account' : 'basicInfo')}
           className='gap-2 text-muted-foreground hover:text-foreground disabled:opacity-0 transition-all duration-300'
         >
           <ArrowLeft className='size-4' />
           {t('createAcademy.actions.back')}
         </Button>
 
-        {currentStep !== 'settings' ? (
+        {currentStep !== 'settings' && currentStep !== 'account' ? (
           <Button
             type='button'
             onClick={handleNext}
@@ -184,6 +235,9 @@ export function CreateAcademyForm() {
             {t('createAcademy.actions.next')}
             <ArrowRight className='size-4' />
           </Button>
+        ) : currentStep === 'account' ? (
+          // account step has its own submit button inside StepAccount
+          <span />
         ) : (
           <Button
             type='button'

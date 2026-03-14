@@ -1,42 +1,74 @@
-import { Link, useRouter } from '@tanstack/react-router'
-import { motion } from 'framer-motion'
-import { ArrowLeft } from 'lucide-react'
+import { Link, useParams } from '@tanstack/react-router'
+import { LayoutDashboard } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { LargeLogo } from '@/components/large-logo'
+import { useAuthStore } from '@/stores/auth-store'
+import { useDashboardPath } from '@/hooks/use-dashboard-path'
 
 export function PageHeader() {
-  const router = useRouter()
+  const { isAuthenticated, currentAcademy } = useAuthStore()
+  const dashboardPath = useDashboardPath()
+  const { slug } = useParams({ strict: false })
+
+  const myAcademySlug = slug ?? currentAcademy?.slug
+
+  const navLinks = [
+    { href: '/courses',   label: 'Cursos' },
+    { href: '/academies', label: 'Academias' },
+    ...(isAuthenticated && myAcademySlug
+      ? [{ href: `/academies/${myAcademySlug}`, label: 'Tu Academia' }]
+      : [{ href: '/create-academy-landing',     label: 'Crea tu Academia' }]),
+  ]
 
   return (
     <header className='bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 border-b backdrop-blur'>
-      <div className='container flex h-16 items-center justify-between'>
-        <div className='flex items-center space-x-4'>
-          <Button
-            variant='ghost'
-            size='sm'
-            onClick={() => router.history.back()}
-          >
-            <ArrowLeft className='mr-2 h-4 w-4' />
-            Volver
-          </Button>
-        </div>
+      <div className='container flex h-16 items-center justify-between gap-4'>
+        {/* Left — logo */}
+        <Link to='/'>
+          <LargeLogo className='h-7 w-auto dark:invert' />
+        </Link>
 
-        <motion.div
-          className='flex items-center space-x-2'
-          whileHover={{ scale: 1.05 }}
-        >
-          <LargeLogo />
-        </motion.div>
+        {/* Centre — navigation links */}
+        <nav className='hidden md:flex items-center gap-1'>
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className={cn(
+                'px-3.5 py-2 text-sm font-medium rounded-lg transition-colors',
+                isAuthenticated && myAcademySlug && link.href === `/academies/${myAcademySlug}`
+                  ? 'text-primary hover:text-primary/80 hover:bg-primary/5'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/40'
+              )}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-        <div className='flex items-center space-x-4'>
-          <Button variant='ghost' asChild>
-            <Link to='/sign-in'>Iniciar Sesión</Link>
-          </Button>
-          <Button asChild>
-            <Link to='/sign-up'>Registrarse</Link>
-          </Button>
+        {/* Right — auth CTA */}
+        <div className='flex items-center gap-2 shrink-0'>
+          {isAuthenticated && dashboardPath ? (
+            <Link to={dashboardPath}>
+              <Button size='sm' className='text-sm'>
+                <LayoutDashboard className='mr-1.5 size-4' />
+                Dashboard
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Button variant='ghost' size='sm' asChild>
+                <Link to='/sign-in'>Iniciar Sesión</Link>
+              </Button>
+              <Button size='sm' asChild>
+                <Link to='/sign-up'>Registrarse</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>
   )
 }
+

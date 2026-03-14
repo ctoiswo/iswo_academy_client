@@ -85,7 +85,16 @@ export function AcademyCard({ academy, onSelect }: AcademyCardProps) {
                   src={academy.logo_url}
                   alt={`${academy.name} logo`}
                   className='border-muted h-16 w-16 rounded-xl border-2 object-cover shadow-md'
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.style.display = 'none'
+                    const fallback = target.nextElementSibling as HTMLElement
+                    if (fallback) fallback.style.display = 'flex'
+                  }}
                 />
+                <div className='from-primary/20 to-primary/5 border-primary/20 hidden h-16 w-16 items-center justify-center rounded-xl border-2 bg-gradient-to-br shadow-md'>
+                  <Building className='text-primary h-8 w-8' />
+                </div>
                 <div className='bg-primary absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full'>
                   <Sparkles className='h-3 w-3 text-white' />
                 </div>

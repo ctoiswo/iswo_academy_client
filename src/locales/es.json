@@ -818,6 +818,8 @@
       "title": "¡Academia creada!",
       "subtitle": "Tu academia ha sido creada y está lista para configurar.",
       "inactiveBadge": "Inactiva",
+      "courses": "Cursos",
+      "students": "Estudiantes",
       "activateTitle": "Próximo paso: activa tu academia",
       "activateDescription": "Para que tus estudiantes puedan acceder, debes activar tu academia pagando la suscripción anual de administrador.",
       "goHome": "Ir al inicio",

@@ -10,6 +10,7 @@ import {
   PageFooter,
 } from './components'
 import { Footer, Navbar } from '@/components'
+import { Particles } from '@/components/ui/particles'
 
 export function AcademySelectionPage() {
   const navigate = useNavigate()
@@ -40,9 +41,16 @@ export function AcademySelectionPage() {
   }
 
   return (
-    <div className='min-h-screen flex flex-col bg-background'>
+    <div className='relative min-h-screen flex flex-col bg-background'>
+      <Particles
+        className='absolute inset-0 z-0 pointer-events-none'
+        quantity={120}
+        ease={80}
+        size={0.4}
+        staticity={50}
+      />
       <Navbar />
-      <main className='flex-1 container mx-auto max-w-7xl px-4 py-16'>
+      <main className='relative z-10 flex-1 container mx-auto max-w-7xl px-4 py-16'>
         <PageHeader userName={user.first_name} />
 
         {academyData.count === 0 ? (

@@ -3,19 +3,28 @@ import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { GraduationCap, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Menu, X } from 'lucide-react'
 import { LanguageToggle } from '@/components/language-toggle'
+import { LargeLogo } from '@/components/large-logo'
+import { useAuthStore } from '@/stores/auth-store'
+import { useDashboardPath } from '@/hooks/use-dashboard-path'
 
 export function Navbar() {
   const { t } = useTranslation()
+  const { isAuthenticated, currentAcademy } = useAuthStore()
+  const dashboardPath = useDashboardPath()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
+  const myAcademySlug = currentAcademy?.slug
+
   const navLinks = [
-    { href: '/',                       label: t('navigation.home') },
-    { href: '/courses',                label: t('navigation.courses') },
-    { href: '/academies',              label: t('navigation.exploreAcademies') },
-    { href: '/create-academy-landing', label: t('navigation.createAcademy') },
+    { href: '/',         label: t('navigation.home') },
+    { href: '/courses',  label: t('navigation.courses') },
+    { href: '/academies', label: t('navigation.exploreAcademies') },
+    ...(isAuthenticated && myAcademySlug
+      ? [{ href: `/academies/${myAcademySlug}`, label: 'Tu Academia' }]
+      : [{ href: '/create-academy-landing',     label: t('navigation.createAcademy') }]),
   ]
 
   useEffect(() => {
@@ -35,13 +44,8 @@ export function Navbar() {
     >
       <nav className='max-w-7xl mx-auto flex items-center justify-between px-4 lg:px-8 h-16'>
         {/* Logo */}
-        <Link to='/' className='flex items-center gap-2.5 group'>
-          <div className='flex items-center justify-center size-9 rounded-xl bg-primary/10 border border-primary/20 group-hover:border-primary/40 transition-colors'>
-            <GraduationCap className='size-5 text-primary' />
-          </div>
-          <span className='text-lg font-bold text-foreground tracking-tight' style={{ fontFamily: 'var(--font-heading)' }}>
-            ISWO<span className='text-primary'>Academy</span>
-          </span>
+        <Link to='/' className='flex items-center'>
+          <LargeLogo className='h-7 w-auto dark:invert' />
         </Link>
 
         {/* Desktop Nav */}
@@ -52,7 +56,7 @@ export function Navbar() {
               to={link.href}
               className={cn(
                 'px-3.5 py-2 text-sm font-medium rounded-lg transition-colors',
-                link.href === '/create-academy-landing'
+                link.href === '/create-academy-landing' || (isAuthenticated && myAcademySlug && link.href === `/academies/${myAcademySlug}`)
                   ? 'text-primary hover:text-primary/80 hover:bg-primary/5'
                   : 'text-muted-foreground hover:text-foreground hover:bg-secondary/40'
               )}
@@ -65,16 +69,27 @@ export function Navbar() {
         {/* CTA buttons */}
         <div className='hidden md:flex items-center gap-2'>
           <LanguageToggle />
-          <Link to='/sign-in'>
-            <Button variant='ghost' size='sm' className='text-sm bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_16px_rgba(99,102,241,0.2)]'>
-              {t('navigation.login')}
-            </Button>
-          </Link>
-          <Link to='/sign-up'>
-            <Button variant='ghost' size='sm' className='text-sm bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_16px_rgba(99,102,241,0.2)]'>
-              {t('navigation.register')}
-            </Button>
-          </Link>
+          {isAuthenticated && dashboardPath ? (
+            <Link to={dashboardPath}>
+              <Button size='sm' className='text-sm bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_16px_rgba(99,102,241,0.2)]'>
+                <LayoutDashboard className='mr-1.5 size-4' />
+                {t('navigation.dashboard')}
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link to='/sign-in'>
+                <Button variant='ghost' size='sm' className='text-sm bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_16px_rgba(99,102,241,0.2)]'>
+                  {t('navigation.login')}
+                </Button>
+              </Link>
+              <Link to='/sign-up'>
+                <Button variant='ghost' size='sm' className='text-sm bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_16px_rgba(99,102,241,0.2)]'>
+                  {t('navigation.register')}
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -105,11 +120,21 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
+
           <div className='flex items-center justify-between pt-3 mt-2 border-t border-border/40'>
             <LanguageToggle variant='outline' size='sm' />
-            <Link to='/sign-in'>
-              <Button variant='ghost' className='text-sm'>{t('navigation.login')}</Button>
-            </Link>
+            {isAuthenticated && dashboardPath ? (
+              <Link to={dashboardPath} onClick={() => setMobileOpen(false)}>
+                <Button size='sm' className='text-sm'>
+                  <LayoutDashboard className='mr-1.5 size-4' />
+                  {t('navigation.dashboard')}
+                </Button>
+              </Link>
+            ) : (
+              <Link to='/sign-in' onClick={() => setMobileOpen(false)}>
+                <Button variant='ghost' className='text-sm'>{t('navigation.login')}</Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

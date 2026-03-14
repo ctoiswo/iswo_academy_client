@@ -132,7 +132,12 @@ export function ConfirmEmail() {
   }, [token, t])
 
   const handleGoToLogin = () => {
-    navigate({ to: '/sign-in' })
+    const pending = sessionStorage.getItem('postAuthRedirect')
+    if (pending) {
+      navigate({ to: '/sign-in', search: { redirect: pending } })
+    } else {
+      navigate({ to: '/sign-in' })
+    }
   }
 
   const handleRetry = () => {

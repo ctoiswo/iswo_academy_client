@@ -78,6 +78,7 @@ export function UserAuthForm({ redirectTo }: UserAuthFormProps) {
       const credentials: LoginCredentials = { email: data.email, password: data.password }
       const result = await login(credentials)
       toast.success(t('auth.signIn.successMessage', { email: data.email }))
+      sessionStorage.removeItem('postAuthRedirect')
       if (result.shouldRedirect && result.redirectPath) {
         navigate({ to: result.redirectPath, replace: true })
       } else {

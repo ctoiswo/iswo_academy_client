@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Check, Sparkles } from 'lucide-react'
+import { PlanCtaModal } from './plan-cta-modal'
 
 const planPrices = {
   starter: { monthly: 29, yearly: 19 },
@@ -19,6 +19,13 @@ const popularPlan: PlanKey = 'pro'
 export function PricingSection() {
   const { t } = useTranslation()
   const [yearly, setYearly] = useState(true)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [selectedPlan, setSelectedPlan] = useState('')
+
+  const openModal = (planName: string) => {
+    setSelectedPlan(planName)
+    setModalOpen(true)
+  }
 
   const plans = planKeys.map((key) => {
     const prices = planPrices[key]
@@ -140,8 +147,8 @@ export function PricingSection() {
                 ))}
               </ul>
 
-              <Link to='/sign-in' className='w-full'>
-                <Button
+              <Button
+                  onClick={() => openModal(plan.name)}
                   className={cn(
                     'w-full h-11 text-sm font-semibold transition-all duration-300',
                     plan.popular
@@ -151,11 +158,16 @@ export function PricingSection() {
                 >
                   {plan.cta}
                 </Button>
-              </Link>
             </article>
           ))}
         </div>
       </div>
+
+      <PlanCtaModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        planName={selectedPlan}
+      />
     </section>
   )
 }

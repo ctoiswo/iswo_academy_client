@@ -818,6 +818,8 @@
       "title": "Academy created!",
       "subtitle": "Your academy has been created and is ready to configure.",
       "inactiveBadge": "Inactive",
+      "courses": "Courses",
+      "students": "Students",
       "activateTitle": "Next step: activate your academy",
       "activateDescription": "For your students to access it, you need to activate your academy by paying the annual admin subscription.",
       "goHome": "Go home",

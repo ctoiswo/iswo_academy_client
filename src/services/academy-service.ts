@@ -168,6 +168,40 @@ class AcademyService {
   }
 
   /**
+   * Upload a logo or banner attachment for an academy
+   * @param academySlug - Academy slug
+   * @param file - File to upload
+   * @param type - 'logo' | 'banner'
+   * @param title - Optional title for the attachment
+   */
+  async uploadAttachment(
+    academySlug: string,
+    file: File,
+    type: 'logo' | 'banner',
+    title?: string
+  ): Promise<{ id: number; attachment_type: string; file_url: string }> {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('attachment_type', type)
+    if (title) formData.append('title', title)
+    const response = await apiClient.post(
+      `/academies/${academySlug}/attachments`,
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    )
+    return response.data
+  }
+
+  /**
+   * Delete an attachment from an academy
+   * @param academySlug - Academy slug
+   * @param attachmentId - Attachment ID
+   */
+  async deleteAttachment(academySlug: string, attachmentId: number): Promise<void> {
+    await apiClient.delete(`/academies/${academySlug}/attachments/${attachmentId}`)
+  }
+
+  /**
    * Delete an academy (requires admin)
    * @param id - Academy ID
    * @returns Promise with success message
