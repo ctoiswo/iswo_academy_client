@@ -154,6 +154,7 @@ export function StepAccount({
     try {
       await registerUser(data)
       setPendingEmail(data.email)
+      resetLoginForm({ email: data.email, password: '' })
       setPhase('verify')
       toast.success('¡Cuenta creada!', {
         description: 'Revisa tu correo para confirmar tu cuenta.',
@@ -181,10 +182,11 @@ export function StepAccount({
     register: regLogin,
     handleSubmit: handleLoginSubmit,
     setError: setLoginError,
+    reset: resetLoginForm,
     formState: { errors: loginErrors, isSubmitting: isLoginSubmitting },
   } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: pendingEmail },
+    defaultValues: { email: '', password: '' },
   })
 
   async function onLogin(data: LoginValues) {
@@ -224,6 +226,7 @@ export function StepAccount({
                 id='login-email'
                 type='email'
                 placeholder='tu@correo.com'
+                autoComplete='email'
                 className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pl-10'
                 {...regLogin('email')}
               />
@@ -243,6 +246,7 @@ export function StepAccount({
                 id='login-password'
                 type={showPassword ? 'text' : 'password'}
                 placeholder='Tu contraseña'
+                autoComplete='current-password'
                 className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pr-10 pl-10'
                 {...regLogin('password')}
               />
@@ -320,6 +324,7 @@ export function StepAccount({
               <Input
                 id='login-email'
                 type='email'
+                autoComplete='email'
                 className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pl-10'
                 {...regLogin('email')}
               />
@@ -338,6 +343,7 @@ export function StepAccount({
               <Input
                 id='login-password'
                 type={showPassword ? 'text' : 'password'}
+                autoComplete='current-password'
                 className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pr-10 pl-10'
                 {...regLogin('password')}
               />
@@ -455,6 +461,7 @@ export function StepAccount({
               id='password'
               type={showPassword ? 'text' : 'password'}
               placeholder='Mínimo 8 caracteres'
+              autoComplete='new-password'
               className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pr-10 pl-10'
               {...register('password')}
             />
@@ -487,6 +494,7 @@ export function StepAccount({
               id='password_confirmation'
               type='password'
               placeholder='Repite tu contraseña'
+              autoComplete='new-password'
               className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pl-10'
               {...register('password_confirmation')}
             />

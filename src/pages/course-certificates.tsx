@@ -8,8 +8,11 @@ import {
   Trash2,
   Star,
   Settings,
+  Layout,
+  RotateCcw,
   FileText,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import {
   useCertificateTemplates,
   useDeleteCertificateTemplate,
@@ -26,15 +29,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CertificatePreviewDialog } from '@/components/certificates/certificate-preview-dialog'
 import { CreateCertificateTemplateDialog } from '@/components/certificates/create-certificate-template-dialog'
@@ -97,310 +92,322 @@ export default function CourseCertificatesPage() {
 
   if (isLoading) {
     return (
-      <div className='container mx-auto py-8'>
-        <Skeleton className='h-64' />
+      <div className='space-y-4 p-6'>
+        <Skeleton className='h-32 w-full rounded-2xl' />
+        <div className='grid grid-cols-3 gap-3'>
+          <Skeleton className='h-20 rounded-xl' />
+          <Skeleton className='h-20 rounded-xl' />
+          <Skeleton className='h-20 rounded-xl' />
+        </div>
+        <Skeleton className='h-48 rounded-xl' />
       </div>
     )
   }
 
   if (error || !course) {
     return (
-      <div className='container mx-auto py-8'>
-        <div className='py-12 text-center'>
-          <h3 className='mb-2 text-lg font-bold text-red-600'>
-            Error al Cargar el Curso
-          </h3>
-          <p className='text-muted-foreground'>
-            Curso no encontrado o no tienes permiso para acceder
-          </p>
-          <Link
-            to='/academy/$academySlug/courses'
-            params={{ academySlug }}
-            className='mt-4 inline-block'
-          >
-            <Button variant='outline'>
-              <ArrowLeft className='mr-2 h-4 w-4' />
-              Volver a Cursos
-            </Button>
-          </Link>
-        </div>
+      <div className='p-6 text-center'>
+        <h3 className='mb-2 text-lg font-bold text-red-500'>Error al cargar el curso</h3>
+        <p className='text-muted-foreground mb-4'>No encontrado o sin permiso de acceso</p>
+        <Link to='/academy/$academySlug/admin/courses' params={{ academySlug }}>
+          <Button variant='outline'>
+            <ArrowLeft className='mr-2 h-4 w-4' />
+            Volver a Cursos
+          </Button>
+        </Link>
       </div>
     )
   }
 
   const defaultTemplate = templates?.find((t) => t.is_default)
   const otherTemplates = templates?.filter((t) => !t.is_default) || []
+  const totalTemplates = templates?.length ?? 0
+  const activeCount = templates?.filter((t) => t.is_active).length ?? 0
 
   return (
-    <div className='container mx-auto py-8'>
-      <div className='mb-6'>
-        <Link
-          to='/academy/$academySlug/courses/$courseSlug'
-          params={{ academySlug, courseSlug }}
-        >
-          <Button variant='ghost' size='sm' className='mb-4'>
-            <ArrowLeft className='mr-2 h-4 w-4' />
-            Volver al Curso
+    <div className='flex flex-col gap-6 p-6'>
+      {/* Header */}
+      <div className='border-border/60 from-card via-card to-primary/5 relative overflow-hidden rounded-2xl border bg-gradient-to-br p-6'>
+        <div className='bg-primary/10 absolute top-0 right-0 h-48 w-48 translate-x-1/3 -translate-y-1/3 rounded-full blur-[80px]' />
+        <div className='relative z-10 flex items-start justify-between gap-4'>
+          <div className='flex flex-col gap-2'>
+            <Link
+              to='/academy/$academySlug/courses/$courseSlug'
+              params={{ academySlug, courseSlug }}
+              className='text-muted-foreground hover:text-foreground flex w-fit items-center gap-1.5 text-sm transition-colors'
+            >
+              <ArrowLeft className='size-3.5' />
+              Volver al curso
+            </Link>
+            <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
+              {course.title}
+            </h1>
+            <p className='text-muted-foreground text-sm'>
+              Configura las plantillas de certificados de finalización
+            </p>
+          </div>
+          <Button
+            onClick={() => setCreateDialogOpen(true)}
+            className='bg-primary text-primary-foreground hover:bg-primary/90 shrink-0 font-semibold shadow-[0_0_20px_rgba(99,102,241,0.2)] transition-all hover:shadow-[0_0_28px_rgba(99,102,241,0.35)]'
+          >
+            <Plus className='mr-2 h-4 w-4' />
+            Nueva Plantilla
           </Button>
-        </Link>
-        <h1 className='mb-2 text-3xl font-bold'>{course.title}</h1>
-        <p className='text-muted-foreground'>
-          Configura las plantillas de certificados de finalización
-        </p>
+        </div>
       </div>
 
-      {/* Info Card */}
-      <Card className='mb-6 border-blue-200 bg-blue-50'>
-        <CardContent className='pt-6'>
-          <div className='flex items-start gap-3'>
-            <Award className='mt-0.5 h-5 w-5 text-blue-600' />
-            <div>
-              <h3 className='mb-1 font-semibold text-blue-900'>
-                Acerca de los Certificados
-              </h3>
-              <p className='mb-2 text-sm text-blue-800'>
-                Los certificados se generan automáticamente cuando los
-                estudiantes completan el curso según los requisitos
-                establecidos.
-              </p>
-              <ul className='list-inside list-disc space-y-1 text-sm text-blue-700'>
-                <li>
-                  Tamaño recomendado: A4 (210 x 297mm) o Letter (216 x 279mm)
-                </li>
-                <li>
-                  Formato: Orientación horizontal (landscape) o vertical
-                  (portrait)
-                </li>
-                <li>El fondo blanco permite mejor impresión y visualización</li>
-                <li>
-                  Usa placeholders como {'{{student_name}}'} o{' '}
-                  {'{{course_title}}'} para datos dinámicos
-                </li>
-              </ul>
-            </div>
+      {/* Stat cards */}
+      <div className='grid grid-cols-3 gap-3'>
+        {/* Total */}
+        <div className='border-border/60 bg-card group relative flex items-center gap-3 rounded-xl border p-4'>
+          <div className='bg-primary/10 rounded-lg p-2'>
+            <Award className='text-primary size-4' />
           </div>
-        </CardContent>
-      </Card>
+          <div className='min-w-0'>
+            <p className='text-muted-foreground text-xs'>Total</p>
+            <p className='text-foreground text-xl font-bold leading-none'>{totalTemplates}</p>
+          </div>
+        </div>
+        {/* Default */}
+        <div className='border-border/60 bg-card group relative flex items-center gap-3 rounded-xl border p-4'>
+          <div className='rounded-lg bg-amber-500/10 p-2'>
+            <Star className='size-4 text-amber-400' />
+          </div>
+          <div className='min-w-0'>
+            <p className='text-muted-foreground text-xs'>Predeterminada</p>
+            <p className='text-foreground text-xl font-bold leading-none'>
+              {defaultTemplate ? '1' : '0'}
+            </p>
+          </div>
+        </div>
+        {/* Active */}
+        <div className='border-border/60 bg-card group relative flex items-center gap-3 rounded-xl border p-4'>
+          <div className='rounded-lg bg-emerald-500/10 p-2'>
+            <FileText className='size-4 text-emerald-400' />
+          </div>
+          <div className='min-w-0'>
+            <p className='text-muted-foreground text-xs'>Activas</p>
+            <p className='text-foreground text-xl font-bold leading-none'>{activeCount}</p>
+          </div>
+        </div>
+      </div>
 
-      {/* Actions */}
-      <div className='mb-6 flex items-center justify-between'>
+      {/* Info banner */}
+      <div className='border-primary/20 bg-primary/5 flex items-start gap-3 rounded-xl border p-4'>
+        <Award className='text-primary mt-0.5 size-4 shrink-0' />
         <div>
-          <h2 className='text-xl font-semibold'>Plantillas de Certificados</h2>
-          <p className='text-muted-foreground text-sm'>
-            {templates?.length || 0}{' '}
-            {templates?.length === 1 ? 'plantilla' : 'plantillas'} configuradas
+          <p className='text-primary text-sm font-semibold'>Acerca de los certificados</p>
+          <p className='text-muted-foreground mt-0.5 text-xs'>
+            Se generan automáticamente al completar el curso. Usa{' '}
+            <span className='font-mono'>{'{{student_name}}'}</span> y{' '}
+            <span className='font-mono'>{'{{course_title}}'}</span> como datos dinámicos.
+            Tamaño recomendado: A4 o Letter en orientación landscape.
           </p>
         </div>
-        <Button onClick={() => setCreateDialogOpen(true)}>
-          <Plus className='mr-2 h-4 w-4' />
-          Nueva Plantilla
-        </Button>
       </div>
 
       {/* Default Template */}
       {defaultTemplate && (
-        <div className='mb-6'>
-          <h3 className='text-muted-foreground mb-3 flex items-center gap-2 text-sm font-medium'>
-            <Star className='h-4 w-4 fill-yellow-500 text-yellow-500' />
-            Plantilla Predeterminada
-          </h3>
-          <Card>
-            <CardHeader>
-              <div className='flex items-start justify-between'>
-                <div className='flex-1'>
-                  <div className='mb-1 flex items-center gap-2'>
-                    <CardTitle className='text-lg'>
-                      {defaultTemplate.name}
-                    </CardTitle>
-                    <Badge variant='default' className='bg-yellow-500'>
-                      Predeterminada
-                    </Badge>
-                    {defaultTemplate.is_active && (
-                      <Badge variant='outline'>Activa</Badge>
+        <div className='flex flex-col gap-3'>
+          <p className='text-muted-foreground flex items-center gap-2 text-sm font-medium'>
+            <Star className='size-4 fill-amber-400 text-amber-400' />
+            Plantilla predeterminada
+          </p>
+          <div className='border-amber-500/30 bg-card rounded-xl border p-5'>
+            <div className='mb-4 flex items-start justify-between gap-4'>
+              <div className='flex flex-col gap-1'>
+                <div className='flex items-center gap-2'>
+                  <span className='text-base font-semibold'>{defaultTemplate.name}</span>
+                  <span className='rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-400'>
+                    Predeterminada
+                  </span>
+                  {defaultTemplate.is_active && (
+                    <span className='rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-400'>
+                      Activa
+                    </span>
+                  )}
+                </div>
+                {defaultTemplate.description && (
+                  <p className='text-muted-foreground text-sm'>{defaultTemplate.description}</p>
+                )}
+              </div>
+              <div className='flex shrink-0 gap-2'>
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={() => handlePreview(defaultTemplate.id)}
+                >
+                  <Eye className='mr-1.5 h-3.5 w-3.5' />
+                  Vista Previa
+                </Button>
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={() => handleEdit(defaultTemplate.id)}
+                >
+                  <Settings className='mr-1.5 h-3.5 w-3.5' />
+                  Configurar
+                </Button>
+              </div>
+            </div>
+            <div className='grid grid-cols-2 gap-3 md:grid-cols-4'>
+              <div className='bg-muted/40 rounded-lg p-3'>
+                <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
+                  <Layout className='size-3' />
+                  Orientación
+                </div>
+                <p className='text-sm font-semibold capitalize'>{defaultTemplate.design.layout}</p>
+              </div>
+              <div className='bg-muted/40 rounded-lg p-3'>
+                <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
+                  <FileText className='size-3' />
+                  Borde
+                </div>
+                <p className='text-sm font-semibold capitalize'>{defaultTemplate.design.border_style}</p>
+              </div>
+              <div className='bg-muted/40 rounded-lg p-3'>
+                <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
+                  <Settings className='size-3' />
+                  Firmas
+                </div>
+                <p className='text-sm font-semibold'>{defaultTemplate.design.signature_count}</p>
+              </div>
+              <div className='bg-muted/40 rounded-lg p-3'>
+                <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
+                  <RotateCcw className='size-3' />
+                  Usos
+                </div>
+                <p className='text-sm font-semibold'>{defaultTemplate.usage_count}</p>
+              </div>
+            </div>
+            {defaultTemplate.requirements &&
+              (defaultTemplate.requirements.lessons_completion ||
+                defaultTemplate.requirements.minimum_score) && (
+                <div className='border-border/40 mt-3 rounded-lg border p-3'>
+                  <p className='text-muted-foreground mb-1.5 text-xs font-medium'>Requisitos</p>
+                  <div className='flex flex-wrap gap-3 text-sm'>
+                    {defaultTemplate.requirements.lessons_completion && (
+                      <span className='text-muted-foreground'>
+                        Completar{' '}
+                        <span className='text-foreground font-semibold'>
+                          {defaultTemplate.requirements.lessons_completion}%
+                        </span>{' '}
+                        de las lecciones
+                      </span>
+                    )}
+                    {defaultTemplate.requirements.minimum_score && (
+                      <span className='text-muted-foreground'>
+                        Puntaje mínimo{' '}
+                        <span className='text-foreground font-semibold'>
+                          {defaultTemplate.requirements.minimum_score}%
+                        </span>
+                      </span>
                     )}
                   </div>
-                  <CardDescription>
-                    {defaultTemplate.description || 'Sin descripción'}
-                  </CardDescription>
                 </div>
-                <div className='flex gap-2'>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handlePreview(defaultTemplate.id)}
-                  >
-                    <Eye className='mr-2 h-4 w-4' />
-                    Vista Previa
-                  </Button>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleEdit(defaultTemplate.id)}
-                  >
-                    <Settings className='mr-2 h-4 w-4' />
-                    Configurar
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className='grid grid-cols-2 gap-4 text-sm md:grid-cols-4'>
-                <div>
-                  <span className='text-muted-foreground'>Orientación:</span>
-                  <p className='font-medium capitalize'>
-                    {defaultTemplate.design.layout}
-                  </p>
-                </div>
-                <div>
-                  <span className='text-muted-foreground'>
-                    Estilo de Borde:
-                  </span>
-                  <p className='font-medium capitalize'>
-                    {defaultTemplate.design.border_style}
-                  </p>
-                </div>
-                <div>
-                  <span className='text-muted-foreground'>Firmas:</span>
-                  <p className='font-medium'>
-                    {defaultTemplate.design.signature_count}
-                  </p>
-                </div>
-                <div>
-                  <span className='text-muted-foreground'>Usos:</span>
-                  <p className='font-medium'>{defaultTemplate.usage_count}</p>
-                </div>
-              </div>
-              {defaultTemplate.requirements &&
-                Object.keys(defaultTemplate.requirements).length > 0 && (
-                  <div className='mt-4 rounded-lg bg-gray-50 p-3'>
-                    <p className='text-muted-foreground mb-2 text-sm font-medium'>
-                      Requisitos:
-                    </p>
-                    <ul className='text-muted-foreground space-y-1 text-sm'>
-                      {defaultTemplate.requirements.lessons_completion && (
-                        <li>
-                          • Completar{' '}
-                          {defaultTemplate.requirements.lessons_completion}% de
-                          las lecciones
-                        </li>
-                      )}
-                      {defaultTemplate.requirements.minimum_score && (
-                        <li>
-                          • Puntaje mínimo:{' '}
-                          {defaultTemplate.requirements.minimum_score}%
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-                )}
-            </CardContent>
-          </Card>
+              )}
+          </div>
         </div>
       )}
 
       {/* Other Templates */}
       {otherTemplates.length > 0 && (
-        <div>
-          <h3 className='text-muted-foreground mb-3 flex items-center gap-2 text-sm font-medium'>
-            <FileText className='h-4 w-4' />
-            Otras Plantillas
-          </h3>
+        <div className='flex flex-col gap-3'>
+          <p className='text-muted-foreground flex items-center gap-2 text-sm font-medium'>
+            <FileText className='size-4' />
+            Otras plantillas
+          </p>
           <div className='grid gap-4 md:grid-cols-2'>
             {otherTemplates.map((template) => (
-              <Card key={template.id}>
-                <CardHeader>
-                  <div className='flex items-start justify-between'>
-                    <div className='flex-1'>
-                      <div className='mb-1 flex items-center gap-2'>
-                        <CardTitle className='text-base'>
-                          {template.name}
-                        </CardTitle>
-                        {template.is_active && (
-                          <Badge variant='outline'>Activa</Badge>
-                        )}
-                      </div>
-                      <CardDescription className='text-xs'>
-                        {template.description || 'Sin descripción'}
-                      </CardDescription>
+              <div
+                key={template.id}
+                className='border-border/60 bg-card rounded-xl border p-4'
+              >
+                <div className='mb-3 flex items-start justify-between gap-3'>
+                  <div className='flex flex-col gap-0.5'>
+                    <div className='flex items-center gap-2'>
+                      <span className='font-semibold'>{template.name}</span>
+                      {template.is_active && (
+                        <span className='rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-400'>
+                          Activa
+                        </span>
+                      )}
                     </div>
+                    {template.description && (
+                      <p className='text-muted-foreground text-xs'>{template.description}</p>
+                    )}
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className='mb-3 grid grid-cols-2 gap-3 text-xs'>
-                    <div>
-                      <span className='text-muted-foreground'>
-                        Orientación:
-                      </span>
-                      <p className='font-medium capitalize'>
-                        {template.design.layout}
-                      </p>
-                    </div>
-                    <div>
-                      <span className='text-muted-foreground'>Usos:</span>
-                      <p className='font-medium'>{template.usage_count}</p>
-                    </div>
+                </div>
+                <div className='mb-3 grid grid-cols-2 gap-2'>
+                  <div className='bg-muted/40 rounded-lg p-2.5'>
+                    <p className='text-muted-foreground text-xs'>Orientación</p>
+                    <p className='text-sm font-semibold capitalize'>{template.design.layout}</p>
                   </div>
-                  <div className='flex gap-2'>
-                    <Button
-                      variant='outline'
-                      size='sm'
-                      onClick={() => handlePreview(template.id)}
-                      className='flex-1'
-                    >
-                      <Eye className='mr-1 h-3 w-3' />
-                      Vista Previa
-                    </Button>
-                    <Button
-                      variant='outline'
-                      size='sm'
-                      onClick={() => handleSetDefault(template.id)}
-                      className='flex-1'
-                    >
-                      <Star className='mr-1 h-3 w-3' />
-                      Predeterminar
-                    </Button>
-                    <Button
-                      variant='outline'
-                      size='sm'
-                      onClick={() => handleEdit(template.id)}
-                    >
-                      <Settings className='h-3 w-3' />
-                    </Button>
-                    <Button
-                      variant='outline'
-                      size='sm'
-                      onClick={() => handleDelete(template.id)}
-                      className='text-red-600 hover:text-red-700'
-                    >
-                      <Trash2 className='h-3 w-3' />
-                    </Button>
+                  <div className='bg-muted/40 rounded-lg p-2.5'>
+                    <p className='text-muted-foreground text-xs'>Usos</p>
+                    <p className='text-sm font-semibold'>{template.usage_count}</p>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className='flex gap-2'>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => handlePreview(template.id)}
+                    className='flex-1'
+                  >
+                    <Eye className='mr-1 h-3.5 w-3.5' />
+                    Vista Previa
+                  </Button>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => handleSetDefault(template.id)}
+                    className='flex-1'
+                  >
+                    <Star className='mr-1 h-3.5 w-3.5' />
+                    Predeterminar
+                  </Button>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => handleEdit(template.id)}
+                  >
+                    <Settings className='h-3.5 w-3.5' />
+                  </Button>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => handleDelete(template.id)}
+                    className='text-destructive hover:text-destructive'
+                  >
+                    <Trash2 className='h-3.5 w-3.5' />
+                  </Button>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       )}
 
       {/* Empty State */}
-      {!templates || templates.length === 0 ? (
-        <Card>
-          <CardContent className='py-12 text-center'>
-            <Award className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
-            <h3 className='mb-2 text-lg font-medium'>
-              No hay plantillas configuradas
-            </h3>
-            <p className='text-muted-foreground mb-4'>
-              Crea tu primera plantilla de certificado para que los estudiantes
-              puedan obtenerlos al completar el curso
+      {totalTemplates === 0 && (
+        <div className='border-border/40 bg-card/50 flex flex-col items-center gap-3 rounded-2xl border border-dashed py-16 text-center'>
+          <div className='bg-primary/10 rounded-xl p-4'>
+            <Award className='text-primary size-8' />
+          </div>
+          <div>
+            <h3 className='font-semibold'>Aún no hay plantillas</h3>
+            <p className='text-muted-foreground mx-auto mt-1 max-w-sm text-sm'>
+              Crea tu primera plantilla de certificado para que los estudiantes puedan obtenerlos
+              al completar el curso
             </p>
-            <Button onClick={() => setCreateDialogOpen(true)}>
-              <Plus className='mr-2 h-4 w-4' />
-              Crear Primera Plantilla
-            </Button>
-          </CardContent>
-        </Card>
-      ) : null}
+          </div>
+          <Button onClick={() => setCreateDialogOpen(true)} className='mt-2'>
+            <Plus className='mr-2 h-4 w-4' />
+            Crear Primera Plantilla
+          </Button>
+        </div>
+      )}
 
       {/* Dialogs */}
       <CreateCertificateTemplateDialog
@@ -440,7 +447,7 @@ export default function CourseCertificatesPage() {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
-              className='bg-red-600 hover:bg-red-700'
+              className='bg-destructive hover:bg-destructive/90'
             >
               Eliminar
             </AlertDialogAction>

@@ -38,14 +38,13 @@ class AssessmentService {
       queryParams.append('section_id', params.section_id.toString())
     if (params?.status) queryParams.append('status', params.status)
 
-    const url = `/academies/${academySlug}/courses/${courseSlug}/assessments${
-      queryParams.toString() ? `?${queryParams.toString()}` : ''
-    }`
+    const url = `/academies/${academySlug}/courses/${courseSlug}/assessments${queryParams.toString() ? `?${queryParams.toString()}` : ''
+      }`
 
-    const response = await apiClient.get<{ assessments: AssessmentSummary[] }>(
+    const response = await apiClient.get<{ data: AssessmentSummary[] }>(
       url
     )
-    return response.data?.assessments || []
+    return response.data?.data || []
   }
 
   /**
@@ -161,9 +160,8 @@ class AssessmentService {
     assessmentId: number,
     status?: 'completed' | 'in_progress'
   ): Promise<AssessmentAttempt[]> {
-    const url = `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/attempts${
-      status ? `?status=${status}` : ''
-    }`
+    const url = `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/attempts${status ? `?status=${status}` : ''
+      }`
     const response = await apiClient.get<{ attempts: AssessmentAttempt[] }>(url)
     return response.data?.attempts || []
   }

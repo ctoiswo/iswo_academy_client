@@ -10,7 +10,13 @@ import {
   Clock,
   Award,
   HelpCircle,
+  BookOpen,
+  GraduationCap,
+  Shuffle,
+  Eye,
+  CheckSquare,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { useDeleteAssessment } from '@/hooks/use-assessments'
 import {
   AlertDialog,
@@ -22,15 +28,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -69,169 +67,185 @@ export function AssessmentCard({
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <div className='flex items-start justify-between'>
-            <div className='flex-1'>
-              <div className='mb-2 flex items-center gap-2'>
-                <CardTitle className='text-lg'>{assessment.title}</CardTitle>
-                <Badge variant={isQuiz ? 'default' : 'destructive'}>
-                  {isQuiz ? '📝 Quiz' : '🎓 Examen'}
-                </Badge>
-                {assessment.published ? (
-                  <Badge variant='outline' className='bg-green-50'>
-                    Publicado
-                  </Badge>
-                ) : (
-                  <Badge variant='secondary'>Borrador</Badge>
-                )}
+      <div className='border-border/60 bg-card flex flex-col gap-4 rounded-xl border p-5 transition-all duration-200 hover:shadow-[0_0_16px_rgba(99,102,241,0.06)]'>
+        {/* Header row */}
+        <div className='flex items-start justify-between gap-3'>
+          <div className='flex min-w-0 items-center gap-3'>
+            <div
+              className={cn(
+                'shrink-0 rounded-lg p-2',
+                isQuiz ? 'bg-emerald-500/10' : 'bg-amber-500/10'
+              )}
+            >
+              {isQuiz ? (
+                <BookOpen className='size-4 text-emerald-400' />
+              ) : (
+                <GraduationCap className='size-4 text-amber-400' />
+              )}
+            </div>
+            <div className='min-w-0'>
+              <div className='flex flex-wrap items-center gap-2'>
+                <h3 className='text-foreground truncate text-sm font-semibold'>
+                  {assessment.title}
+                </h3>
+                <span
+                  className={cn(
+                    'rounded-md px-2 py-0.5 text-xs font-medium',
+                    isQuiz
+                      ? 'bg-emerald-500/10 text-emerald-400'
+                      : 'bg-amber-500/10 text-amber-400'
+                  )}
+                >
+                  {isQuiz ? 'Quiz' : 'Examen'}
+                </span>
+                <span
+                  className={cn(
+                    'rounded-md px-2 py-0.5 text-xs font-medium',
+                    assessment.published
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-muted-foreground bg-muted'
+                  )}
+                >
+                  {assessment.published ? 'Publicado' : 'Borrador'}
+                </span>
               </div>
               {assessment.description && (
-                <CardDescription>{assessment.description}</CardDescription>
+                <p className='text-muted-foreground mt-0.5 line-clamp-1 text-xs'>
+                  {assessment.description}
+                </p>
               )}
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant='ghost' size='icon'>
-                  <MoreVertical className='h-4 w-4' />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align='end'>
-                <DropdownMenuItem
-                  onClick={() =>
-                    navigate({
-                      to: '/academy/$academySlug/courses/$courseSlug/assessments/$assessmentId/questions',
-                      params: {
-                        academySlug,
-                        courseSlug,
-                        assessmentId: String(assessment.id),
-                      },
-                    })
-                  }
-                >
-                  <HelpCircle className='mr-2 h-4 w-4' />
-                  Gestionar Preguntas
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onEdit(assessment)}>
-                  <Edit className='mr-2 h-4 w-4' />
-                  Editar
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onViewStats(assessment)}>
-                  <BarChart3 className='mr-2 h-4 w-4' />
-                  Ver Estadísticas
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onViewAttempts(assessment)}>
-                  <Users className='mr-2 h-4 w-4' />
-                  Ver Intentos
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => setShowDeleteDialog(true)}
-                  className='text-red-600'
-                  disabled={assessment.attempts_count > 0}
-                >
-                  <Trash2 className='mr-2 h-4 w-4' />
-                  Eliminar
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className='space-y-4'>
-            {/* Información */}
-            <div className='grid grid-cols-2 gap-4 text-sm md:grid-cols-4'>
-              <div className='flex items-center gap-2'>
-                <Award className='text-muted-foreground h-4 w-4' />
-                <div>
-                  <p className='text-muted-foreground'>Puntaje Mínimo</p>
-                  <p className='font-semibold'>{assessment.passing_score}%</p>
-                </div>
-              </div>
-              <div className='flex items-center gap-2'>
-                <Users className='text-muted-foreground h-4 w-4' />
-                <div>
-                  <p className='text-muted-foreground'>Intentos</p>
-                  <p className='font-semibold'>
-                    {assessment.attempts_allowed ?? 'Ilimitados'}
-                  </p>
-                </div>
-              </div>
-              <div className='flex items-center gap-2'>
-                <Clock className='text-muted-foreground h-4 w-4' />
-                <div>
-                  <p className='text-muted-foreground'>Tiempo Límite</p>
-                  <p className='font-semibold'>
-                    {assessment.time_limit_minutes
-                      ? `${assessment.time_limit_minutes} min`
-                      : 'Sin límite'}
-                  </p>
-                </div>
-              </div>
-              <div>
-                <p className='text-muted-foreground'>Peso</p>
-                <p className='font-semibold'>{assessment.weight_percentage}%</p>
-              </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' size='icon' className='shrink-0'>
+                <MoreVertical className='size-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate({
+                    to: '/academy/$academySlug/courses/$courseSlug/assessments/$assessmentId/questions',
+                    params: {
+                      academySlug,
+                      courseSlug,
+                      assessmentId: String(assessment.id),
+                    },
+                  })
+                }
+              >
+                <HelpCircle className='mr-2 size-4' />
+                Gestionar preguntas
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onEdit(assessment)}>
+                <Edit className='mr-2 size-4' />
+                Editar
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onViewStats(assessment)}>
+                <BarChart3 className='mr-2 size-4' />
+                Ver estadísticas
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onViewAttempts(assessment)}>
+                <Users className='mr-2 size-4' />
+                Ver intentos
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setShowDeleteDialog(true)}
+                className='text-destructive focus:text-destructive'
+                disabled={assessment.attempts_count > 0}
+              >
+                <Trash2 className='mr-2 size-4' />
+                Eliminar
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        {/* Stats row */}
+        <div className='grid grid-cols-2 gap-3 sm:grid-cols-4'>
+          <div className='bg-muted/40 flex items-center gap-2 rounded-lg px-3 py-2'>
+            <Award className='text-muted-foreground size-3.5 shrink-0' />
+            <div className='min-w-0'>
+              <p className='text-muted-foreground text-[10px]'>Mínimo</p>
+              <p className='text-foreground text-xs font-semibold'>{assessment.passing_score}%</p>
             </div>
-
-            {/* Sección */}
-            {assessment.section && (
-              <div className='text-sm'>
-                <span className='text-muted-foreground'>Sección: </span>
-                <span className='font-medium'>{assessment.section.title}</span>
-              </div>
-            )}
-
-            {/* Preguntas e Intentos */}
-            <div className='flex gap-4 border-t pt-4 text-sm'>
-              <div>
-                <span className='text-muted-foreground'>Preguntas: </span>
-                <span className='font-semibold'>
-                  {assessment.questions_count}
-                </span>
-                <span className='text-muted-foreground'>
-                  {' '}
+          </div>
+          <div className='bg-muted/40 flex items-center gap-2 rounded-lg px-3 py-2'>
+            <Users className='text-muted-foreground size-3.5 shrink-0' />
+            <div className='min-w-0'>
+              <p className='text-muted-foreground text-[10px]'>Intentos</p>
+              <p className='text-foreground text-xs font-semibold'>
+                {assessment.attempts_allowed ?? '∞'}
+              </p>
+            </div>
+          </div>
+          <div className='bg-muted/40 flex items-center gap-2 rounded-lg px-3 py-2'>
+            <Clock className='text-muted-foreground size-3.5 shrink-0' />
+            <div className='min-w-0'>
+              <p className='text-muted-foreground text-[10px]'>Tiempo</p>
+              <p className='text-foreground text-xs font-semibold'>
+                {assessment.time_limit_minutes
+                  ? `${assessment.time_limit_minutes} min`
+                  : '—'}
+              </p>
+            </div>
+          </div>
+          <div className='bg-muted/40 flex items-center gap-2 rounded-lg px-3 py-2'>
+            <HelpCircle className='text-muted-foreground size-3.5 shrink-0' />
+            <div className='min-w-0'>
+              <p className='text-muted-foreground text-[10px]'>Preguntas</p>
+              <p className='text-foreground text-xs font-semibold'>
+                {assessment.questions_count}{' '}
+                <span className='text-muted-foreground font-normal'>
                   ({assessment.total_points} pts)
                 </span>
-              </div>
-              <div>
-                <span className='text-muted-foreground'>Intentos: </span>
-                <span className='font-semibold'>
-                  {assessment.attempts_count}
-                </span>
-              </div>
-            </div>
-
-            {/* Características */}
-            <div className='flex flex-wrap gap-2'>
-              {assessment.randomize_questions && (
-                <Badge variant='outline' className='text-xs'>
-                  Preguntas Aleatorias
-                </Badge>
-              )}
-              {assessment.show_correct_answers && (
-                <Badge variant='outline' className='text-xs'>
-                  Muestra Respuestas
-                </Badge>
-              )}
-              {assessment.require_all_sections_complete && (
-                <Badge variant='outline' className='text-xs'>
-                  Requiere Completar Todo
-                </Badge>
-              )}
+              </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Delete Confirmation Dialog */}
+        {/* Footer row */}
+        <div className='border-border/50 flex flex-wrap items-center justify-between gap-2 border-t pt-3'>
+          <div className='flex flex-wrap gap-1.5'>
+            {assessment.section && (
+              <span className='text-muted-foreground bg-muted rounded-md px-2 py-0.5 text-xs'>
+                {assessment.section.title}
+              </span>
+            )}
+            {assessment.randomize_questions && (
+              <span className='text-muted-foreground flex items-center gap-1 text-xs'>
+                <Shuffle className='size-3' />
+                Aleatorio
+              </span>
+            )}
+            {assessment.show_correct_answers && (
+              <span className='text-muted-foreground flex items-center gap-1 text-xs'>
+                <Eye className='size-3' />
+                Muestra respuestas
+              </span>
+            )}
+            {assessment.require_all_sections_complete && (
+              <span className='text-muted-foreground flex items-center gap-1 text-xs'>
+                <CheckSquare className='size-3' />
+                Requiere completar todo
+              </span>
+            )}
+          </div>
+          <span className='text-muted-foreground text-xs'>
+            {assessment.attempts_count} intento{assessment.attempts_count !== 1 ? 's' : ''}
+          </span>
+        </div>
+      </div>
+
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>¿Eliminar Evaluación?</AlertDialogTitle>
+            <AlertDialogTitle>¿Eliminar evaluación?</AlertDialogTitle>
             <AlertDialogDescription>
               {assessment.attempts_count > 0 ? (
                 <>
-                  No se puede eliminar esta evaluación porque ya tiene{' '}
+                  No se puede eliminar porque ya tiene{' '}
                   <strong>{assessment.attempts_count}</strong> intento(s).
                 </>
               ) : (
@@ -247,7 +261,7 @@ export function AssessmentCard({
             {assessment.attempts_count === 0 && (
               <AlertDialogAction
                 onClick={handleDelete}
-                className='bg-red-600 hover:bg-red-700'
+                className='bg-destructive hover:bg-destructive/90'
               >
                 Eliminar
               </AlertDialogAction>
