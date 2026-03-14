@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { Footer, Navbar } from '@/components'
+import { COURSE_CATEGORIES } from '@/constants/home-constants'
 import { usePublicCoursesInfinite } from '@/hooks/use-courses'
 import { useDebounce } from '@/hooks/use-debounce'
-import { CoursesHero } from './containers/courses-hero'
+import { Particles } from '@/components/ui/particles'
 import { CoursesFilter } from './containers/courses-filter'
 import { CoursesGrid } from './containers/courses-grid'
-import { COURSE_CATEGORIES } from '@/constants/home-constants'
-import { Particles } from '@/components/ui/particles'
+import { CoursesHero } from './containers/courses-hero'
 
 export function CoursesLandingPage() {
   const [search, setSearch] = useState('')
@@ -15,17 +15,12 @@ export function CoursesLandingPage() {
   // Debounce search to avoid a request on every keystroke
   const debouncedSearch = useDebounce(search, 350)
 
-  const {
-    data,
-    isLoading,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasNextPage,
-  } = usePublicCoursesInfinite({
-    search: debouncedSearch || undefined,
-    category: activeCategory !== 'Todos' ? activeCategory : undefined,
-    per_page: 12,
-  })
+  const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    usePublicCoursesInfinite({
+      search: debouncedSearch || undefined,
+      category: activeCategory !== 'Todos' ? activeCategory : undefined,
+      per_page: 12,
+    })
 
   // Flatten all pages into a single courses array
   const courses = data?.pages.flatMap((page) => page.data) ?? []
@@ -57,9 +52,9 @@ export function CoursesLandingPage() {
   }
 
   return (
-    <div className='min-h-screen flex flex-col bg-background'>
+    <div className='bg-background flex min-h-screen flex-col'>
       <Particles
-        className='fixed inset-0 z-0 pointer-events-none'
+        className='pointer-events-none fixed inset-0 z-0'
         quantity={120}
         ease={80}
         size={0.4}
@@ -72,7 +67,7 @@ export function CoursesLandingPage() {
         totalCourses={totalCount}
       />
 
-      <main className='flex-1 max-w-7xl mx-auto w-full px-4 lg:px-8 pb-24'>
+      <main className='mx-auto w-full max-w-7xl flex-1 px-4 pb-24 lg:px-8'>
         <CoursesFilter
           categories={COURSE_CATEGORIES}
           activeCategory={activeCategory}

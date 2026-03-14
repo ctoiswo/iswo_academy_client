@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import type { UsersMeta } from '@/lib/super-admin-api'
 import { useTranslation } from '@/hooks/use-translation'
+import { Button } from '@/components/ui/button'
 
 interface UserPaginationProps {
   meta: UsersMeta
@@ -17,7 +17,10 @@ export function UserPagination({
   const { t } = useTranslation()
   if (meta.total_pages <= 1) return null
 
-  const pages = Array.from({ length: meta.total_pages }, (_, i) => i + 1).filter(
+  const pages = Array.from(
+    { length: meta.total_pages },
+    (_, i) => i + 1
+  ).filter(
     (p) =>
       p === 1 ||
       p === meta.total_pages ||
@@ -48,9 +51,7 @@ export function UserPagination({
             const gap = idx > 0 && p - arr[idx - 1] > 1
             return (
               <div key={p} className='flex items-center gap-1'>
-                {gap && (
-                  <span className='text-muted-foreground px-1'>...</span>
-                )}
+                {gap && <span className='text-muted-foreground px-1'>...</span>}
                 <Button
                   variant={currentPage === p ? 'default' : 'outline'}
                   size='sm'

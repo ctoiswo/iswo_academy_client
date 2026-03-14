@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/hooks/use-translation'
-import { Navbar } from '@/components/common/navbar'
 import { Particles } from '@/components/ui/particles'
+import { Navbar } from '@/components/common/navbar'
 import { AnimatedCheck } from './components/animated-check'
 import { HelpText } from './components/help-text'
+import { ActionsSection } from './containers/actions-section'
 import { EmailVerificationCard } from './containers/email-verification-card'
 import { WhatsNextSection } from './containers/whats-next-section'
-import { ActionsSection } from './containers/actions-section'
 
 export function SignUpSuccess() {
   const [mounted, setMounted] = useState(false)
@@ -19,26 +19,25 @@ export function SignUpSuccess() {
   }, [])
 
   return (
-    <div className='min-h-screen flex flex-col bg-background relative overflow-hidden'>
+    <div className='bg-background relative flex min-h-screen flex-col overflow-hidden'>
       <Particles
-        className='fixed inset-0 z-0 pointer-events-none'
+        className='pointer-events-none fixed inset-0 z-0'
         quantity={120}
         ease={80}
         size={0.4}
         staticity={50}
       />
 
-      <div className='relative z-10 flex flex-col flex-1'>
+      <div className='relative z-10 flex flex-1 flex-col'>
         <Navbar />
 
-        <main className='flex-1 flex items-center justify-center px-4 pb-16 pt-20'>
-          <div className='flex flex-col items-center gap-10 w-full max-w-lg text-center'>
-
+        <main className='flex flex-1 items-center justify-center px-4 pt-20 pb-16'>
+          <div className='flex w-full max-w-lg flex-col items-center gap-10 text-center'>
             {/* Animated check */}
             <div
               className={cn(
                 'transition-all duration-700',
-                mounted ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
+                mounted ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
               )}
             >
               <AnimatedCheck />
@@ -47,17 +46,19 @@ export function SignUpSuccess() {
             {/* Main message */}
             <div
               className={cn(
-                'flex flex-col items-center gap-4 transition-all duration-700 delay-300',
-                mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                'flex flex-col items-center gap-4 transition-all delay-300 duration-700',
+                mounted
+                  ? 'translate-y-0 opacity-100'
+                  : 'translate-y-6 opacity-0'
               )}
             >
               <h1
-                className='text-3xl sm:text-4xl font-bold text-foreground tracking-tight text-balance leading-tight'
+                className='text-foreground text-3xl leading-tight font-bold tracking-tight text-balance sm:text-4xl'
                 style={{ fontFamily: 'var(--font-heading)' }}
               >
                 {t('auth.signUpSuccess.title')}
               </h1>
-              <p className='text-base text-muted-foreground leading-relaxed max-w-md'>
+              <p className='text-muted-foreground max-w-md text-base leading-relaxed'>
                 {t('auth.signUpSuccess.subtitle')}
               </p>
             </div>
@@ -66,7 +67,6 @@ export function SignUpSuccess() {
             <WhatsNextSection mounted={mounted} />
             <ActionsSection mounted={mounted} />
             <HelpText mounted={mounted} onResend={() => {}} />
-
           </div>
         </main>
       </div>

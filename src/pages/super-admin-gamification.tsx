@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { useAuthStore } from '@/stores/auth-store'
-import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import academyService from '@/services/academy-service'
 import superAdminGamificationService from '@/services/super-admin-gamification-service'
 import type { GamificationOverview } from '@/types'
@@ -16,6 +14,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -43,6 +42,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
 export default function SuperAdminGamification() {
   const { user } = useAuthStore()
@@ -191,301 +191,308 @@ export default function SuperAdminGamification() {
       subtitle='Gestiona la configuración de gamificación y badges en todas las academias'
     >
       <div className='space-y-6'>
-
-      {/* Overview Stats */}
-      {overview && (
-        <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-          <Card>
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>
-                Total de Badges
-              </CardTitle>
-              <Award className='text-muted-foreground h-4 w-4' />
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>{overview.total_badges}</div>
-              <p className='text-muted-foreground text-xs'>
-                En todas las academias
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>
-                Badges Ganados
-              </CardTitle>
-              <Trophy className='text-muted-foreground h-4 w-4' />
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>
-                {overview.total_user_badges}
-              </div>
-              <p className='text-muted-foreground text-xs'>
-                Por todos los usuarios
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>
-                Academias Activas
-              </CardTitle>
-              <Users className='text-muted-foreground h-4 w-4' />
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>
-                {overview.academies_with_gamification}
-              </div>
-              <p className='text-muted-foreground text-xs'>
-                Con gamificación habilitada
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>
-                Total de Puntos
-              </CardTitle>
-              <TrendingUp className='text-muted-foreground h-4 w-4' />
-            </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>
-                {overview.total_points_awarded.toLocaleString()}
-              </div>
-              <p className='text-muted-foreground text-xs'>Puntos otorgados</p>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* Academies Management */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Configuración de Gamificación por Academia</CardTitle>
-          <CardDescription>
-            Habilita o deshabilita la gamificación para cada academia
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {/* Filters */}
-          <div className='mb-4 flex gap-4'>
-            <div className='relative flex-1'>
-              <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2' />
-              <Input
-                placeholder='Buscar academias...'
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className='pl-9'
-              />
-            </div>
-            <Select
-              value={filterStatus}
-              onValueChange={(value: any) => setFilterStatus(value)}
-            >
-              <SelectTrigger className='w-[180px]'>
-                <Filter className='mr-2 h-4 w-4' />
-                <SelectValue placeholder='Estado de gamificación' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='all'>Todas las Academias</SelectItem>
-                <SelectItem value='enabled'>Gamificación Habilitada</SelectItem>
-                <SelectItem value='disabled'>
-                  Gamificación Deshabilitada
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Academies Table */}
-          <div className='rounded-md border'>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Academia</TableHead>
-                  <TableHead>Estado</TableHead>
-                  <TableHead>Badges</TableHead>
-                  <TableHead className='text-right'>Acciones</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {academies.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={4} className='text-center'>
-                      No se encontraron academias
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  academies.map((academy) => {
-                    const gamificationEnabled = Boolean(
-                      academy.academy_configuration?.enable_gamification
-                    )
-                    return (
-                      <TableRow key={academy.id}>
-                        <TableCell>
-                          <div>
-                            <div className='font-medium'>{academy.name}</div>
-                            <div className='text-muted-foreground text-sm'>
-                              {academy.slug}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className='flex items-center gap-2'>
-                            <Switch
-                              checked={gamificationEnabled}
-                              onCheckedChange={() =>
-                                handleToggleGamification(
-                                  academy.slug,
-                                  gamificationEnabled
-                                )
-                              }
-                            />
-                            <Badge
-                              variant={
-                                gamificationEnabled ? 'default' : 'secondary'
-                              }
-                            >
-                              {gamificationEnabled
-                                ? 'Habilitada'
-                                : 'Deshabilitada'}
-                            </Badge>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <span className='text-sm'>
-                            {academy.badges_count || 0} badges
-                          </span>
-                        </TableCell>
-                        <TableCell className='text-right'>
-                          <Button
-                            variant='outline'
-                            size='sm'
-                            onClick={() =>
-                              navigate({
-                                to: `/super-admin/gamification/academies/${academy.slug}/badges`,
-                              })
-                            }
-                          >
-                            <Award className='mr-2 h-4 w-4' />
-                            Gestionar Badges
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </div>
-
-          {/* Pagination */}
-          {pagination.total_pages > 1 && (
-            <div className='mt-4 flex flex-col items-center justify-between gap-4 sm:flex-row'>
-              <div className='text-muted-foreground text-sm'>
-                Mostrando{' '}
-                {(pagination.current_page - 1) * pagination.per_page + 1} a{' '}
-                {Math.min(
-                  pagination.current_page * pagination.per_page,
-                  pagination.total_count
-                )}{' '}
-                de {pagination.total_count} academias
-              </div>
-              <div className='flex items-center gap-2'>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={() => fetchData(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className='h-4 w-4' />
-                  Anterior
-                </Button>
-                <div className='flex items-center gap-1'>
-                  {Array.from(
-                    { length: pagination.total_pages },
-                    (_, i) => i + 1
-                  )
-                    .filter((page) => {
-                      return (
-                        page === 1 ||
-                        page === pagination.total_pages ||
-                        (page >= currentPage - 1 && page <= currentPage + 1)
-                      )
-                    })
-                    .map((page, index, array) => {
-                      const showEllipsisBefore =
-                        index > 0 && page - array[index - 1] > 1
-                      return (
-                        <div key={page} className='flex items-center gap-1'>
-                          {showEllipsisBefore && (
-                            <span className='text-muted-foreground px-2'>
-                              ...
-                            </span>
-                          )}
-                          <Button
-                            variant={
-                              currentPage === page ? 'default' : 'outline'
-                            }
-                            size='sm'
-                            onClick={() => fetchData(page)}
-                            className='w-10'
-                          >
-                            {page}
-                          </Button>
-                        </div>
-                      )
-                    })}
+        {/* Overview Stats */}
+        {overview && (
+          <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
+            <Card>
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-sm font-medium'>
+                  Total de Badges
+                </CardTitle>
+                <Award className='text-muted-foreground h-4 w-4' />
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {overview.total_badges}
                 </div>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={() => fetchData(currentPage + 1)}
-                  disabled={currentPage === pagination.total_pages}
-                >
-                  Siguiente
-                  <ChevronRight className='h-4 w-4' />
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                <p className='text-muted-foreground text-xs'>
+                  En todas las academias
+                </p>
+              </CardContent>
+            </Card>
 
-      {/* Top Academies */}
-      {overview && overview.top_academies.length > 0 && (
+            <Card>
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-sm font-medium'>
+                  Badges Ganados
+                </CardTitle>
+                <Trophy className='text-muted-foreground h-4 w-4' />
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {overview.total_user_badges}
+                </div>
+                <p className='text-muted-foreground text-xs'>
+                  Por todos los usuarios
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-sm font-medium'>
+                  Academias Activas
+                </CardTitle>
+                <Users className='text-muted-foreground h-4 w-4' />
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {overview.academies_with_gamification}
+                </div>
+                <p className='text-muted-foreground text-xs'>
+                  Con gamificación habilitada
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-sm font-medium'>
+                  Total de Puntos
+                </CardTitle>
+                <TrendingUp className='text-muted-foreground h-4 w-4' />
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {overview.total_points_awarded.toLocaleString()}
+                </div>
+                <p className='text-muted-foreground text-xs'>
+                  Puntos otorgados
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Academies Management */}
         <Card>
           <CardHeader>
-            <CardTitle>Top Academias por Badges</CardTitle>
-            <CardDescription>Academias con más badges creados</CardDescription>
+            <CardTitle>Configuración de Gamificación por Academia</CardTitle>
+            <CardDescription>
+              Habilita o deshabilita la gamificación para cada academia
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className='space-y-4'>
-              {overview.top_academies.map((academy, index) => (
-                <div
-                  key={academy.id}
-                  className='flex items-center justify-between'
-                >
-                  <div className='flex items-center gap-3'>
-                    <div className='bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold'>
-                      {index + 1}
-                    </div>
-                    <div>
-                      <div className='font-medium'>{academy.name}</div>
-                      <div className='text-muted-foreground text-sm'>
-                        {academy.badge_count} badges
-                      </div>
-                    </div>
-                  </div>
-                  <Trophy className='h-5 w-5 text-yellow-500' />
-                </div>
-              ))}
+            {/* Filters */}
+            <div className='mb-4 flex gap-4'>
+              <div className='relative flex-1'>
+                <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2' />
+                <Input
+                  placeholder='Buscar academias...'
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className='pl-9'
+                />
+              </div>
+              <Select
+                value={filterStatus}
+                onValueChange={(value: any) => setFilterStatus(value)}
+              >
+                <SelectTrigger className='w-[180px]'>
+                  <Filter className='mr-2 h-4 w-4' />
+                  <SelectValue placeholder='Estado de gamificación' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='all'>Todas las Academias</SelectItem>
+                  <SelectItem value='enabled'>
+                    Gamificación Habilitada
+                  </SelectItem>
+                  <SelectItem value='disabled'>
+                    Gamificación Deshabilitada
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+
+            {/* Academies Table */}
+            <div className='rounded-md border'>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Academia</TableHead>
+                    <TableHead>Estado</TableHead>
+                    <TableHead>Badges</TableHead>
+                    <TableHead className='text-right'>Acciones</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {academies.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} className='text-center'>
+                        No se encontraron academias
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    academies.map((academy) => {
+                      const gamificationEnabled = Boolean(
+                        academy.academy_configuration?.enable_gamification
+                      )
+                      return (
+                        <TableRow key={academy.id}>
+                          <TableCell>
+                            <div>
+                              <div className='font-medium'>{academy.name}</div>
+                              <div className='text-muted-foreground text-sm'>
+                                {academy.slug}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className='flex items-center gap-2'>
+                              <Switch
+                                checked={gamificationEnabled}
+                                onCheckedChange={() =>
+                                  handleToggleGamification(
+                                    academy.slug,
+                                    gamificationEnabled
+                                  )
+                                }
+                              />
+                              <Badge
+                                variant={
+                                  gamificationEnabled ? 'default' : 'secondary'
+                                }
+                              >
+                                {gamificationEnabled
+                                  ? 'Habilitada'
+                                  : 'Deshabilitada'}
+                              </Badge>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <span className='text-sm'>
+                              {academy.badges_count || 0} badges
+                            </span>
+                          </TableCell>
+                          <TableCell className='text-right'>
+                            <Button
+                              variant='outline'
+                              size='sm'
+                              onClick={() =>
+                                navigate({
+                                  to: `/super-admin/gamification/academies/${academy.slug}/badges`,
+                                })
+                              }
+                            >
+                              <Award className='mr-2 h-4 w-4' />
+                              Gestionar Badges
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Pagination */}
+            {pagination.total_pages > 1 && (
+              <div className='mt-4 flex flex-col items-center justify-between gap-4 sm:flex-row'>
+                <div className='text-muted-foreground text-sm'>
+                  Mostrando{' '}
+                  {(pagination.current_page - 1) * pagination.per_page + 1} a{' '}
+                  {Math.min(
+                    pagination.current_page * pagination.per_page,
+                    pagination.total_count
+                  )}{' '}
+                  de {pagination.total_count} academias
+                </div>
+                <div className='flex items-center gap-2'>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => fetchData(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className='h-4 w-4' />
+                    Anterior
+                  </Button>
+                  <div className='flex items-center gap-1'>
+                    {Array.from(
+                      { length: pagination.total_pages },
+                      (_, i) => i + 1
+                    )
+                      .filter((page) => {
+                        return (
+                          page === 1 ||
+                          page === pagination.total_pages ||
+                          (page >= currentPage - 1 && page <= currentPage + 1)
+                        )
+                      })
+                      .map((page, index, array) => {
+                        const showEllipsisBefore =
+                          index > 0 && page - array[index - 1] > 1
+                        return (
+                          <div key={page} className='flex items-center gap-1'>
+                            {showEllipsisBefore && (
+                              <span className='text-muted-foreground px-2'>
+                                ...
+                              </span>
+                            )}
+                            <Button
+                              variant={
+                                currentPage === page ? 'default' : 'outline'
+                              }
+                              size='sm'
+                              onClick={() => fetchData(page)}
+                              className='w-10'
+                            >
+                              {page}
+                            </Button>
+                          </div>
+                        )
+                      })}
+                  </div>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => fetchData(currentPage + 1)}
+                    disabled={currentPage === pagination.total_pages}
+                  >
+                    Siguiente
+                    <ChevronRight className='h-4 w-4' />
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
-      )}
+
+        {/* Top Academies */}
+        {overview && overview.top_academies.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Top Academias por Badges</CardTitle>
+              <CardDescription>
+                Academias con más badges creados
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='space-y-4'>
+                {overview.top_academies.map((academy, index) => (
+                  <div
+                    key={academy.id}
+                    className='flex items-center justify-between'
+                  >
+                    <div className='flex items-center gap-3'>
+                      <div className='bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold'>
+                        {index + 1}
+                      </div>
+                      <div>
+                        <div className='font-medium'>{academy.name}</div>
+                        <div className='text-muted-foreground text-sm'>
+                          {academy.badge_count} badges
+                        </div>
+                      </div>
+                    </div>
+                    <Trophy className='h-5 w-5 text-yellow-500' />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </DashboardLayout>
   )

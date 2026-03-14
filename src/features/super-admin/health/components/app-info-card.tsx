@@ -1,14 +1,17 @@
 import { Code2, Server } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import type { SystemHealth } from '@/lib/super-admin-api'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface AppInfoCardProps {
   health: SystemHealth
 }
 
 export function AppInfoCard({ health }: AppInfoCardProps) {
-  const ENV_VARIANT: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+  const ENV_VARIANT: Record<
+    string,
+    'default' | 'secondary' | 'destructive' | 'outline'
+  > = {
     production: 'default',
     staging: 'secondary',
     development: 'outline',

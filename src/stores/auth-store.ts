@@ -342,7 +342,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       // Fetch user profile if we have valid tokens
       try {
         const user = await authService.getCurrentUser()
-        set({ user, isAuthenticated: true, isLoading: false, isInitialized: true })
+        set({
+          user,
+          isAuthenticated: true,
+          isLoading: false,
+          isInitialized: true,
+        })
 
         // Refresh academy data after successful profile fetch
         await get().refreshAcademies()
@@ -382,7 +387,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       const { isAuthenticated } = get()
       if (!isAuthenticated) return
 
-      const academyData = (await academyService.getUserAcademies()) as unknown as UserAcademiesResponse
+      const academyData =
+        (await academyService.getUserAcademies()) as unknown as UserAcademiesResponse
       set({ academyData: academyData as unknown as AcademyData })
 
       // If user had a currentAcademy stored, try to restore it
@@ -394,14 +400,20 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         if (academy) {
           set({ currentAcademy: academy as unknown as AcademyMembership })
         } else if (academyData.count === 1) {
-          set({ currentAcademy: academyData.academies[0] as unknown as AcademyMembership })
+          set({
+            currentAcademy: academyData
+              .academies[0] as unknown as AcademyMembership,
+          })
           localStorage.setItem(
             CURRENT_ACADEMY_KEY,
             academyData.academies[0].id.toString()
           )
         }
       } else if (academyData.count === 1) {
-        set({ currentAcademy: academyData.academies[0] as unknown as AcademyMembership })
+        set({
+          currentAcademy: academyData
+            .academies[0] as unknown as AcademyMembership,
+        })
         localStorage.setItem(
           CURRENT_ACADEMY_KEY,
           academyData.academies[0].id.toString()
@@ -417,7 +429,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     set({ academyData: academyData as unknown as AcademyData | null })
   },
 
-  setCurrentAcademy: (academy: AcademyMembership | AcademySummaryLight | null) => {
+  setCurrentAcademy: (
+    academy: AcademyMembership | AcademySummaryLight | null
+  ) => {
     set({ currentAcademy: academy as AcademyMembership | null })
   },
 

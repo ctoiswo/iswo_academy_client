@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,7 +9,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { useTranslation } from '@/hooks/use-translation'
 import type { RefundTarget } from '../types'
 
 interface RefundDialogProps {
@@ -18,17 +18,26 @@ interface RefundDialogProps {
   onClose: () => void
 }
 
-export function RefundDialog({ target, loading, onConfirm, onClose }: RefundDialogProps) {
+export function RefundDialog({
+  target,
+  loading,
+  onConfirm,
+  onClose,
+}: RefundDialogProps) {
   const { t } = useTranslation()
 
   return (
     <AlertDialog open={!!target} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('superAdmin.payments.dialog.title')}</AlertDialogTitle>
+          <AlertDialogTitle>
+            {t('superAdmin.payments.dialog.title')}
+          </AlertDialogTitle>
           <AlertDialogDescription>
             {t('superAdmin.payments.dialog.description', {
-              name: target?.payment.user?.full_name ?? t('superAdmin.payments.dialog.thisUser'),
+              name:
+                target?.payment.user?.full_name ??
+                t('superAdmin.payments.dialog.thisUser'),
             })}
           </AlertDialogDescription>
         </AlertDialogHeader>

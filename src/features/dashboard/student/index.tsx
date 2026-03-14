@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
+import { useStudentDashboard } from '@/hooks/use-student-dashboard'
 import type { DashboardProps } from '@/components/dashboard-router'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
-import { useStudentDashboard } from '@/hooks/use-student-dashboard'
-import { WelcomeHero } from './containers/welcome-hero'
-import { StatsSection } from './containers/stats-section'
-import { ContinueLearning } from './containers/continue-learning'
-import { PendingTasks } from './containers/pending-tasks'
-import { LearningPathsSection } from './containers/learning-paths-section'
 import { AchievementsSection } from './containers/achievements-section'
+import { ContinueLearning } from './containers/continue-learning'
+import { LearningPathsSection } from './containers/learning-paths-section'
+import { PendingTasks } from './containers/pending-tasks'
+import { StatsSection } from './containers/stats-section'
+import { WelcomeHero } from './containers/welcome-hero'
 
 export function StudentDashboard({ user, academy }: DashboardProps) {
   const [mounted, setMounted] = useState(false)

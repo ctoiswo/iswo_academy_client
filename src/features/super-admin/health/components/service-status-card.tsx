@@ -1,7 +1,7 @@
 import { CheckCircle2, XCircle, AlertCircle } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import type { ServiceHealth, ServiceHealthStatus } from '@/lib/super-admin-api'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface ServiceStatusCardProps {
   label: string
@@ -11,7 +11,12 @@ interface ServiceStatusCardProps {
 
 const STATUS_CONFIG: Record<
   ServiceHealthStatus,
-  { icon: typeof CheckCircle2; color: string; badge: 'default' | 'secondary' | 'destructive' | 'outline'; label: string }
+  {
+    icon: typeof CheckCircle2
+    color: string
+    badge: 'default' | 'secondary' | 'destructive' | 'outline'
+    label: string
+  }
 > = {
   healthy: {
     icon: CheckCircle2,
@@ -33,7 +38,11 @@ const STATUS_CONFIG: Record<
   },
 }
 
-export function ServiceStatusCard({ label, health, detail }: ServiceStatusCardProps) {
+export function ServiceStatusCard({
+  label,
+  health,
+  detail,
+}: ServiceStatusCardProps) {
   const cfg = STATUS_CONFIG[health.status] ?? STATUS_CONFIG['not_configured']
   const Icon = cfg.icon
 
@@ -51,17 +60,19 @@ export function ServiceStatusCard({ label, health, detail }: ServiceStatusCardPr
           </p>
         )}
         {health.type && (
-          <p className='text-muted-foreground text-xs capitalize'>{health.type}</p>
+          <p className='text-muted-foreground text-xs capitalize'>
+            {health.type}
+          </p>
         )}
         {health.service && (
-          <p className='text-muted-foreground text-xs capitalize'>{health.service}</p>
+          <p className='text-muted-foreground text-xs capitalize'>
+            {health.service}
+          </p>
         )}
         {health.error && (
-          <p className='text-xs text-red-500 break-all'>{health.error}</p>
+          <p className='text-xs break-all text-red-500'>{health.error}</p>
         )}
-        {detail && (
-          <p className='text-muted-foreground text-xs'>{detail}</p>
-        )}
+        {detail && <p className='text-muted-foreground text-xs'>{detail}</p>}
       </CardContent>
     </Card>
   )

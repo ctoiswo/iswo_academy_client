@@ -8,18 +8,19 @@ interface EmptyCoursesStateProps {
 export function EmptyCoursesState({ onClearFilters }: EmptyCoursesStateProps) {
   return (
     <div className='flex flex-col items-center justify-center gap-4 py-24 text-center'>
-      <div className='flex items-center justify-center size-16 rounded-2xl bg-muted/50 border border-border/40'>
-        <Search className='size-7 text-muted-foreground' />
+      <div className='bg-muted/50 border-border/40 flex size-16 items-center justify-center rounded-2xl border'>
+        <Search className='text-muted-foreground size-7' />
       </div>
       <div className='flex flex-col gap-2'>
         <h3
-          className='text-lg font-semibold text-foreground'
+          className='text-foreground text-lg font-semibold'
           style={{ fontFamily: 'var(--font-heading)' }}
         >
           Sin resultados
         </h3>
-        <p className='text-sm text-muted-foreground max-w-sm'>
-          No encontramos cursos con ese criterio. Intenta con otra palabra clave o categoria.
+        <p className='text-muted-foreground max-w-sm text-sm'>
+          No encontramos cursos con ese criterio. Intenta con otra palabra clave
+          o categoria.
         </p>
       </div>
       <Button variant='outline' size='sm' onClick={onClearFilters}>

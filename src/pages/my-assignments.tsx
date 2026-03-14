@@ -120,13 +120,18 @@ export default function MyAssignmentsPage() {
   const { currentAcademy } = useAuthStore()
 
   return (
-    <DashboardLayout user={user} academy={currentAcademy} variant='sidebar' dashboardType='student'>
+    <DashboardLayout
+      user={user}
+      academy={currentAcademy}
+      variant='sidebar'
+      dashboardType='student'
+    >
       <div className='space-y-6'>
         {/* Header with stats */}
         <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
           <div>
-            <h1 className='text-3xl font-bold text-foreground'>Mis Tareas</h1>
-            <p className='mt-1 text-muted-foreground'>
+            <h1 className='text-foreground text-3xl font-bold'>Mis Tareas</h1>
+            <p className='text-muted-foreground mt-1'>
               Gestiona todas tus asignaciones pendientes
             </p>
           </div>
@@ -158,16 +163,16 @@ export default function MyAssignmentsPage() {
           <div className='grid gap-4 md:grid-cols-4'>
             <Card>
               <CardHeader className='flex flex-row items-center justify-between pb-2'>
-                <CardTitle className='text-sm font-medium text-muted-foreground'>
+                <CardTitle className='text-muted-foreground text-sm font-medium'>
                   Total
                 </CardTitle>
-                <ClipboardList className='h-4 w-4 text-muted-foreground' />
+                <ClipboardList className='text-muted-foreground h-4 w-4' />
               </CardHeader>
               <CardContent>
                 <div className='text-2xl font-bold'>
                   {assignmentsData.summary.total_assignments}
                 </div>
-                <p className='mt-1 text-xs text-muted-foreground'>
+                <p className='text-muted-foreground mt-1 text-xs'>
                   {assignmentsData.summary.courses_with_assignments} cursos
                 </p>
               </CardContent>
@@ -175,7 +180,7 @@ export default function MyAssignmentsPage() {
 
             <Card>
               <CardHeader className='flex flex-row items-center justify-between pb-2'>
-                <CardTitle className='text-sm font-medium text-muted-foreground'>
+                <CardTitle className='text-muted-foreground text-sm font-medium'>
                   Próximas
                 </CardTitle>
                 <CalendarClock className='h-4 w-4 text-blue-400' />
@@ -184,13 +189,15 @@ export default function MyAssignmentsPage() {
                 <div className='text-2xl font-bold text-blue-600'>
                   {assignmentsData.summary.upcoming}
                 </div>
-                <p className='mt-1 text-xs text-muted-foreground'>Próximos 7 días</p>
+                <p className='text-muted-foreground mt-1 text-xs'>
+                  Próximos 7 días
+                </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className='flex flex-row items-center justify-between pb-2'>
-                <CardTitle className='text-sm font-medium text-muted-foreground'>
+                <CardTitle className='text-muted-foreground text-sm font-medium'>
                   Vencidas
                 </CardTitle>
                 <AlertCircle className='h-4 w-4 text-red-400' />
@@ -199,13 +206,15 @@ export default function MyAssignmentsPage() {
                 <div className='text-2xl font-bold text-red-600'>
                   {assignmentsData.summary.past_due}
                 </div>
-                <p className='mt-1 text-xs text-muted-foreground'>Requieren atención</p>
+                <p className='text-muted-foreground mt-1 text-xs'>
+                  Requieren atención
+                </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className='flex flex-row items-center justify-between pb-2'>
-                <CardTitle className='text-sm font-medium text-muted-foreground'>
+                <CardTitle className='text-muted-foreground text-sm font-medium'>
                   Cursos
                 </CardTitle>
                 <BookOpen className='h-4 w-4 text-purple-400' />
@@ -214,7 +223,9 @@ export default function MyAssignmentsPage() {
                 <div className='text-2xl font-bold text-purple-600'>
                   {assignmentsData.summary.courses_with_assignments}
                 </div>
-                <p className='mt-1 text-xs text-muted-foreground'>Con asignaciones</p>
+                <p className='text-muted-foreground mt-1 text-xs'>
+                  Con asignaciones
+                </p>
               </CardContent>
             </Card>
           </div>
@@ -249,11 +260,11 @@ export default function MyAssignmentsPage() {
           <Card>
             <CardContent className='py-12'>
               <div className='text-center'>
-                <ClipboardList className='mx-auto h-12 w-12 text-muted-foreground' />
-                <h3 className='mt-4 text-lg font-semibold text-foreground'>
+                <ClipboardList className='text-muted-foreground mx-auto h-12 w-12' />
+                <h3 className='text-foreground mt-4 text-lg font-semibold'>
                   No hay tareas
                 </h3>
-                <p className='mt-2 text-muted-foreground'>
+                <p className='text-muted-foreground mt-2'>
                   {filterStatus === 'all'
                     ? 'No tienes asignaciones en este momento.'
                     : `No hay tareas ${
@@ -305,7 +316,7 @@ function CourseAssignmentsCard({
               <CardTitle className='text-xl'>
                 {courseData.course.title}
               </CardTitle>
-              <p className='mt-1 text-sm text-muted-foreground'>
+              <p className='text-muted-foreground mt-1 text-sm'>
                 {courseData.assignments.length}{' '}
                 {courseData.assignments.length === 1
                   ? 'asignación'
@@ -339,15 +350,15 @@ function CourseAssignmentsCard({
               <div className='flex-1'>
                 <div className='flex items-start justify-between gap-4'>
                   <div className='flex-1'>
-                    <h4 className='font-semibold text-foreground'>
+                    <h4 className='text-foreground font-semibold'>
                       {assignment.title}
                     </h4>
                     {assignment.description && (
-                      <p className='mt-1 line-clamp-2 text-sm text-muted-foreground'>
+                      <p className='text-muted-foreground mt-1 line-clamp-2 text-sm'>
                         {assignment.description}
                       </p>
                     )}
-                    <div className='mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground'>
+                    <div className='text-muted-foreground mt-3 flex flex-wrap items-center gap-3 text-sm'>
                       {assignment.section && (
                         <span className='flex items-center gap-1'>
                           <BookOpen className='h-4 w-4' />
@@ -368,7 +379,7 @@ function CourseAssignmentsCard({
                   </div>
                   <div className='flex flex-col items-end gap-2'>
                     {getStatusBadge(assignment)}
-                    <span className='text-sm font-medium text-muted-foreground'>
+                    <span className='text-muted-foreground text-sm font-medium'>
                       {assignment.max_points} pts
                     </span>
                   </div>

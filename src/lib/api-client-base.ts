@@ -9,8 +9,8 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from 'axios'
 import type { AuthTokens } from '@/stores/auth-store'
-import { tokenStorage } from '@/lib/token-storage'
 import { getLocale } from '@/stores/locale-store'
+import { tokenStorage } from '@/lib/token-storage'
 
 // Get API base URL from environment
 const API_BASE_URL =
@@ -234,11 +234,17 @@ class APIClient {
     this.client.interceptors.response.use(
       (response: AxiosResponse) => response,
       async (error) => {
-        const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
+        const originalRequest = error.config as InternalAxiosRequestConfig & {
+          _retry?: boolean
+        }
 
         // PRIMERO: Verificar si es un 401 y tenemos refresh token
         // Esto debe hacerse ANTES de formatear el error para no bloquear el refresh
-        if (error.response?.status === 401 && !originalRequest._retry && tokenManager.getRefreshToken()) {
+        if (
+          error.response?.status === 401 &&
+          !originalRequest._retry &&
+          tokenManager.getRefreshToken()
+        ) {
           // Marcar que ya intentamos refrescar este request
           originalRequest._retry = true
 
@@ -281,7 +287,9 @@ class APIClient {
                 window.location.href = '/sign-in'
               }
 
-              return Promise.reject(new Error('Session expired. Please login again.'))
+              return Promise.reject(
+                new Error('Session expired. Please login again.')
+              )
             } finally {
               this.isRefreshing = false
             }
@@ -296,7 +304,7 @@ class APIClient {
               },
               reject: (error: Error) => {
                 reject(error)
-              }
+              },
             })
           })
         }

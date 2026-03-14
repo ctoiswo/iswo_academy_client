@@ -1,4 +1,6 @@
 import { MoreVertical, RefreshCw, CalendarDays, Tag } from 'lucide-react'
+import type { SuperAdminPayment, PaymentStatus } from '@/lib/super-admin-api'
+import { useTranslation } from '@/hooks/use-translation'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,11 +11,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { TableCell, TableRow } from '@/components/ui/table'
-import { useTranslation } from '@/hooks/use-translation'
-import type { SuperAdminPayment, PaymentStatus } from '@/lib/super-admin-api'
 import type { RefundTarget } from '../types'
 
-const STATUS_VARIANTS: Record<PaymentStatus, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+const STATUS_VARIANTS: Record<
+  PaymentStatus,
+  'default' | 'secondary' | 'destructive' | 'outline'
+> = {
   completed: 'default',
   pending: 'secondary',
   failed: 'destructive',

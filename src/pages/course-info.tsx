@@ -30,11 +30,7 @@ export default function CourseInfoPage() {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
-  const {
-    data: course,
-    isLoading,
-    error,
-  } = useCourse(courseSlug)
+  const { data: course, isLoading, error } = useCourse(courseSlug)
 
   if (isLoading) {
     return (
@@ -52,7 +48,7 @@ export default function CourseInfoPage() {
     return (
       <div className='container mx-auto py-8'>
         <div className='py-12 text-center'>
-          <h3 className='mb-2 text-lg font-bold text-destructive'>
+          <h3 className='text-destructive mb-2 text-lg font-bold'>
             {t('courseInfo.errorTitle')}
           </h3>
           <p className='text-muted-foreground'>
@@ -99,17 +95,17 @@ export default function CourseInfoPage() {
         <Card>
           <CardHeader>
             <CardTitle>{t('courseInfo.generalInfo')}</CardTitle>
-            <CardDescription>
-              {t('courseInfo.generalInfoDesc')}
-            </CardDescription>
+            <CardDescription>{t('courseInfo.generalInfoDesc')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className='grid grid-cols-2 gap-6 md:grid-cols-4'>
               {/* Estado */}
               <div className='flex flex-col'>
-                <div className='mb-2 flex items-center gap-2 text-muted-foreground'>
+                <div className='text-muted-foreground mb-2 flex items-center gap-2'>
                   <BarChart3 className='h-4 w-4' />
-                  <span className='text-sm font-medium'>{t('courseInfo.status')}</span>
+                  <span className='text-sm font-medium'>
+                    {t('courseInfo.status')}
+                  </span>
                 </div>
                 <Badge
                   variant={
@@ -127,20 +123,26 @@ export default function CourseInfoPage() {
 
               {/* Nivel de Dificultad */}
               <div className='flex flex-col'>
-                <div className='mb-2 flex items-center gap-2 text-muted-foreground'>
+                <div className='text-muted-foreground mb-2 flex items-center gap-2'>
                   <BarChart3 className='h-4 w-4' />
-                  <span className='text-sm font-medium'>{t('courseInfo.level')}</span>
+                  <span className='text-sm font-medium'>
+                    {t('courseInfo.level')}
+                  </span>
                 </div>
                 <Badge variant='outline' className='w-fit'>
-                  {t(`myCourses.difficulty.${course.difficulty_level}`, { defaultValue: course.difficulty_level })}
+                  {t(`myCourses.difficulty.${course.difficulty_level}`, {
+                    defaultValue: course.difficulty_level,
+                  })}
                 </Badge>
               </div>
 
               {/* Precio */}
               <div className='flex flex-col'>
-                <div className='mb-2 flex items-center gap-2 text-muted-foreground'>
+                <div className='text-muted-foreground mb-2 flex items-center gap-2'>
                   <DollarSign className='h-4 w-4' />
-                  <span className='text-sm font-medium'>{t('courseInfo.price')}</span>
+                  <span className='text-sm font-medium'>
+                    {t('courseInfo.price')}
+                  </span>
                 </div>
                 <p className='text-lg font-semibold text-emerald-500'>
                   {course.is_free
@@ -151,11 +153,13 @@ export default function CourseInfoPage() {
 
               {/* Duración */}
               <div className='flex flex-col'>
-                <div className='mb-2 flex items-center gap-2 text-muted-foreground'>
+                <div className='text-muted-foreground mb-2 flex items-center gap-2'>
                   <Clock className='h-4 w-4' />
-                  <span className='text-sm font-medium'>{t('courseInfo.duration')}</span>
+                  <span className='text-sm font-medium'>
+                    {t('courseInfo.duration')}
+                  </span>
                 </div>
-                <p className='text-lg font-semibold text-foreground'>
+                <p className='text-foreground text-lg font-semibold'>
                   {Math.floor(course.duration_minutes / 60)}h{' '}
                   {course.duration_minutes % 60}m
                 </p>
@@ -165,11 +169,13 @@ export default function CourseInfoPage() {
             {/* Fechas */}
             <div className='mt-6 grid grid-cols-2 gap-6 border-t pt-6'>
               <div className='flex flex-col'>
-                <div className='mb-1 flex items-center gap-2 text-muted-foreground'>
+                <div className='text-muted-foreground mb-1 flex items-center gap-2'>
                   <Calendar className='h-4 w-4' />
-                  <span className='text-sm font-medium'>{t('courseInfo.createdAt')}</span>
+                  <span className='text-sm font-medium'>
+                    {t('courseInfo.createdAt')}
+                  </span>
                 </div>
-                <p className='text-sm text-foreground'>
+                <p className='text-foreground text-sm'>
                   {new Date(course.created_at).toLocaleDateString(undefined, {
                     year: 'numeric',
                     month: 'long',
@@ -178,13 +184,13 @@ export default function CourseInfoPage() {
                 </p>
               </div>
               <div className='flex flex-col'>
-                <div className='mb-1 flex items-center gap-2 text-muted-foreground'>
+                <div className='text-muted-foreground mb-1 flex items-center gap-2'>
                   <Calendar className='h-4 w-4' />
                   <span className='text-sm font-medium'>
                     {t('courseInfo.updatedAt')}
                   </span>
                 </div>
-                <p className='text-sm text-foreground'>
+                <p className='text-foreground text-sm'>
                   {new Date(course.updated_at).toLocaleDateString(undefined, {
                     year: 'numeric',
                     month: 'long',
@@ -196,7 +202,7 @@ export default function CourseInfoPage() {
 
             {course.thumbnail_url && (
               <div className='mt-6 border-t pt-6'>
-                <h4 className='mb-3 text-sm font-medium text-muted-foreground'>
+                <h4 className='text-muted-foreground mb-3 text-sm font-medium'>
                   {t('courseInfo.thumbnail')}
                 </h4>
                 <img

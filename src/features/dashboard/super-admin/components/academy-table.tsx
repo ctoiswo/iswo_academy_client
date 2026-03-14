@@ -50,15 +50,21 @@ export function AcademyTable({
   }
 
   return (
-    <div className='rounded-md border overflow-x-auto'>
+    <div className='overflow-x-auto rounded-md border'>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>{t('super_admin.academies.colName')}</TableHead>
             <TableHead>{t('super_admin.academies.colStatus')}</TableHead>
-            <TableHead className='hidden sm:table-cell text-right'>{t('super_admin.academies.colUsers')}</TableHead>
-            <TableHead className='hidden md:table-cell text-right'>{t('super_admin.academies.colCourses')}</TableHead>
-            <TableHead className='text-right'>{t('super_admin.academies.colRevenue')}</TableHead>
+            <TableHead className='hidden text-right sm:table-cell'>
+              {t('super_admin.academies.colUsers')}
+            </TableHead>
+            <TableHead className='hidden text-right md:table-cell'>
+              {t('super_admin.academies.colCourses')}
+            </TableHead>
+            <TableHead className='text-right'>
+              {t('super_admin.academies.colRevenue')}
+            </TableHead>
             <TableHead className='w-[50px]' />
           </TableRow>
         </TableHeader>

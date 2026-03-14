@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react'
 import superAdminGamificationService from '@/services/super-admin-gamification-service'
-import type {
-  BadgeDetail,
-  UpdateSuperAdminBadgeRequest,
-} from '@/types'
+import type { BadgeDetail, UpdateSuperAdminBadgeRequest } from '@/types'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {

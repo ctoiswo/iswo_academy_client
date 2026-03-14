@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { StatCard } from '@/components/dashboard/stat-card'
-import { DashboardCard } from '@/components/dashboard/dashboard-card'
 import { Users, BookOpen, DollarSign, UserCheck } from 'lucide-react'
-import { academyAdminQueries } from '@/lib/api/academy-admin'
 import type { AcademyMembership } from '@/stores/auth-store'
-
+import { academyAdminQueries } from '@/lib/api/academy-admin'
+import { DashboardCard } from '@/components/dashboard/dashboard-card'
+import { StatCard } from '@/components/dashboard/stat-card'
 
 export interface AcademyStats {
   totalStudents: number
@@ -60,7 +59,7 @@ export function AcademyStatsOverview({
   return (
     <div className='space-y-6'>
       {/* Main Statistics Grid */}
-      <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
+      <div className='grid grid-cols-2 gap-3 lg:grid-cols-4'>
         <StatCard
           label='Total Estudiantes'
           value={isLoading ? '—' : (stats?.totalStudents ?? 0).toLocaleString()}
@@ -119,16 +118,19 @@ export function AcademyStatsOverview({
           loading={isLoading}
         >
           {stats?.enrollmentTrends && (
-            <div className="space-y-3">
+            <div className='space-y-3'>
               {stats.enrollmentTrends.slice(-3).map((trend) => (
-                <div key={trend.month} className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{trend.month}</span>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-24 bg-muted rounded-full h-2">
-                      <div 
-                        className="bg-primary h-2 rounded-full transition-all duration-300"
-                        style={{ 
-                          width: `${(trend.enrollments / Math.max(...stats.enrollmentTrends.map(t => t.enrollments))) * 100}%` 
+                <div
+                  key={trend.month}
+                  className='flex items-center justify-between'
+                >
+                  <span className='text-sm font-medium'>{trend.month}</span>
+                  <div className='flex items-center space-x-2'>
+                    <div className='bg-muted h-2 w-24 rounded-full'>
+                      <div
+                        className='bg-primary h-2 rounded-full transition-all duration-300'
+                        style={{
+                          width: `${(trend.enrollments / Math.max(...stats.enrollmentTrends.map((t) => t.enrollments))) * 100}%`,
                         }}
                       />
                     </div>

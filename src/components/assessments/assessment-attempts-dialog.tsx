@@ -175,11 +175,11 @@ export function AssessmentAttemptsDialog({
                             <span className='font-semibold'>
                               {attempt.score}
                             </span>
-                            <span className='text-sm text-muted-foreground'>
+                            <span className='text-muted-foreground text-sm'>
                               {' '}
                               / {assessment.total_points}
                             </span>
-                            <div className='text-xs text-muted-foreground'>
+                            <div className='text-muted-foreground text-xs'>
                               {attempt.percentage !== null
                                 ? `${attempt.percentage.toFixed(1)}%`
                                 : ''}
@@ -208,7 +208,7 @@ export function AssessmentAttemptsDialog({
               </Table>
             </div>
           ) : (
-            <div className='py-12 text-center text-muted-foreground'>
+            <div className='text-muted-foreground py-12 text-center'>
               <Clock className='mx-auto mb-2 h-12 w-12 opacity-30' />
               <p className='font-medium'>
                 {statusFilter === 'all' && 'No hay intentos registrados aún'}

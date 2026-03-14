@@ -15,7 +15,11 @@ export function getGuestSidebar(
   showOnboarding: boolean,
   t: (key: string) => string
 ): SidebarData['navGroups'] {
-  const generalItems: { title: string; url: string; icon: typeof LayoutDashboard }[] = [
+  const generalItems: {
+    title: string
+    url: string
+    icon: typeof LayoutDashboard
+  }[] = [
     {
       title: t('sidebar.items.dashboard'),
       url: '/dashboard/student',

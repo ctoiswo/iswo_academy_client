@@ -1,4 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
+import type { DashboardLPEnrollment } from '@/types'
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
@@ -6,7 +7,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { LearningPathCard } from '../components/learning-path-card'
-import type { DashboardLPEnrollment } from '@/types'
 
 interface LearningPathsSectionProps {
   mounted: boolean
@@ -15,7 +15,12 @@ interface LearningPathsSectionProps {
   isLoading: boolean
 }
 
-export function LearningPathsSection({ mounted, academySlug, enrollments, isLoading }: LearningPathsSectionProps) {
+export function LearningPathsSection({
+  mounted,
+  academySlug,
+  enrollments,
+  isLoading,
+}: LearningPathsSectionProps) {
   const { t } = useTranslation()
   const lp = 'dashboard.student.learningPaths'
   const navigate = useNavigate()
@@ -23,13 +28,15 @@ export function LearningPathsSection({ mounted, academySlug, enrollments, isLoad
   return (
     <section
       className={cn(
-        'transition-all duration-700 delay-[400ms]',
-        mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4',
+        'transition-all delay-[400ms] duration-700',
+        mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
       )}
     >
-      <div className='flex items-center justify-between mb-4'>
+      <div className='mb-4 flex items-center justify-between'>
         <div className='flex items-center gap-2'>
-          <h2 className='text-lg font-semibold text-foreground'>{t(`${lp}.title`)}</h2>
+          <h2 className='text-foreground text-lg font-semibold'>
+            {t(`${lp}.title`)}
+          </h2>
           {!isLoading && (
             <Badge variant='secondary' className='text-xs'>
               {enrollments.length}
@@ -39,7 +46,7 @@ export function LearningPathsSection({ mounted, academySlug, enrollments, isLoad
         <Button
           variant='ghost'
           size='sm'
-          className='text-xs text-muted-foreground hover:text-foreground gap-1'
+          className='text-muted-foreground hover:text-foreground gap-1 text-xs'
           onClick={() =>
             navigate({
               to: '/academy/$academySlug/learning-paths',
@@ -58,7 +65,9 @@ export function LearningPathsSection({ mounted, academySlug, enrollments, isLoad
             <Skeleton key={i} className='h-[200px] rounded-xl' />
           ))
         ) : enrollments.length === 0 ? (
-          <p className='text-sm text-muted-foreground py-2 col-span-3'>{t(`${lp}.empty`)}</p>
+          <p className='text-muted-foreground col-span-3 py-2 text-sm'>
+            {t(`${lp}.empty`)}
+          </p>
         ) : (
           enrollments.map((path, index) => (
             <LearningPathCard

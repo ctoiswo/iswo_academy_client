@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 import { courseService } from '@/services/course-service'
 import type {
   CourseFilters,
@@ -136,7 +141,9 @@ export function usePublicCourses(filters?: CourseFilters) {
  * Fetches courses page by page as the user scrolls.
  * Works for both guests and authenticated users.
  */
-export function usePublicCoursesInfinite(filters?: Omit<CourseFilters, 'page'>) {
+export function usePublicCoursesInfinite(
+  filters?: Omit<CourseFilters, 'page'>
+) {
   return useInfiniteQuery({
     queryKey: ['public-courses-infinite', filters],
     queryFn: ({ pageParam }) =>

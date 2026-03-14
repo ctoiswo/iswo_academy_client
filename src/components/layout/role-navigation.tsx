@@ -17,10 +17,10 @@ import {
   Activity,
 } from 'lucide-react'
 import type { AuthUser, AcademyMembership } from '@/stores/auth-store'
+import type { Permission } from '@/lib/permissions'
 import { cn } from '@/lib/utils'
 import { useAcademyPermissions } from '@/hooks/use-academy-permissions'
 import type { DashboardType } from '@/components/dashboard-router'
-import type { Permission } from '@/lib/permissions'
 
 export interface NavigationItem {
   label: string
@@ -222,9 +222,7 @@ function NavigationLink({
 /**
  * Get navigation items based on dashboard type with enhanced role-based configuration
  */
-function getNavigationItems(
-  dashboardType: DashboardType
-): NavigationItem[] {
+function getNavigationItems(dashboardType: DashboardType): NavigationItem[] {
   const baseItems: Record<DashboardType, NavigationItem[]> = {
     'super-admin': [
       {

@@ -57,7 +57,8 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const [mounted, setMounted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
+  const [showPasswordConfirmation, setShowPasswordConfirmation] =
+    useState(false)
   const [focusedField, setFocusedField] = useState<string | null>(null)
 
   useEffect(() => {
@@ -79,7 +80,11 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     try {
       setIsLoading(true)
 
-      await authApi.resetPassword(token, data.password, data.password_confirmation)
+      await authApi.resetPassword(
+        token,
+        data.password,
+        data.password_confirmation
+      )
 
       form.reset()
       navigate({ to: '/password-changed' })
@@ -121,19 +126,19 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       <div
         className={cn(
           'flex flex-col gap-3 transition-all duration-500',
-          mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
         )}
       >
-        <div className='flex items-center justify-center size-14 rounded-2xl bg-primary/10 border border-primary/20 mx-auto mb-1'>
-          <KeyRound className='size-7 text-primary' />
+        <div className='bg-primary/10 border-primary/20 mx-auto mb-1 flex size-14 items-center justify-center rounded-2xl border'>
+          <KeyRound className='text-primary size-7' />
         </div>
         <h1
-          className='text-2xl sm:text-3xl font-bold text-foreground tracking-tight text-center'
+          className='text-foreground text-center text-2xl font-bold tracking-tight sm:text-3xl'
           style={{ fontFamily: 'var(--font-heading)' }}
         >
           {t('auth.resetPassword.title')}
         </h1>
-        <p className='text-sm text-muted-foreground leading-relaxed text-center max-w-sm mx-auto'>
+        <p className='text-muted-foreground mx-auto max-w-sm text-center text-sm leading-relaxed'>
           {t('auth.resetPassword.subtitle')}
         </p>
       </div>
@@ -142,19 +147,19 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(
-          'flex flex-col gap-5 transition-all duration-500 delay-150',
-          mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          'flex flex-col gap-5 transition-all delay-150 duration-500',
+          mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
         )}
       >
         {/* Password */}
         <div className='flex flex-col gap-2'>
-          <Label htmlFor='password' className='text-sm text-foreground/80'>
+          <Label htmlFor='password' className='text-foreground/80 text-sm'>
             {t('auth.resetPassword.password')}
           </Label>
-          <div className='relative group'>
+          <div className='group relative'>
             <Lock
               className={cn(
-                'absolute left-3 top-1/2 -translate-y-1/2 size-4 transition-colors duration-200',
+                'absolute top-1/2 left-3 size-4 -translate-y-1/2 transition-colors duration-200',
                 focusedField === 'password'
                   ? 'text-primary'
                   : 'text-muted-foreground/50'
@@ -165,7 +170,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
               type={showPassword ? 'text' : 'password'}
               placeholder={t('auth.resetPassword.passwordPlaceholder')}
               disabled={isLoading}
-              className='pl-10 pr-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
+              className='bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card h-11 pr-10 pl-10 transition-all duration-200'
               onFocus={() => setFocusedField('password')}
               {...form.register('password')}
             />
@@ -178,14 +183,14 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
               disabled={isLoading}
             >
               {showPassword ? (
-                <EyeOff className='size-4 text-muted-foreground/50' />
+                <EyeOff className='text-muted-foreground/50 size-4' />
               ) : (
-                <Eye className='size-4 text-muted-foreground/50' />
+                <Eye className='text-muted-foreground/50 size-4' />
               )}
             </Button>
           </div>
           {form.formState.errors.password && (
-            <p className='text-xs text-destructive'>
+            <p className='text-destructive text-xs'>
               {form.formState.errors.password.message}
             </p>
           )}
@@ -195,14 +200,14 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         <div className='flex flex-col gap-2'>
           <Label
             htmlFor='password_confirmation'
-            className='text-sm text-foreground/80'
+            className='text-foreground/80 text-sm'
           >
             {t('auth.resetPassword.passwordConfirmation')}
           </Label>
-          <div className='relative group'>
+          <div className='group relative'>
             <Lock
               className={cn(
-                'absolute left-3 top-1/2 -translate-y-1/2 size-4 transition-colors duration-200',
+                'absolute top-1/2 left-3 size-4 -translate-y-1/2 transition-colors duration-200',
                 focusedField === 'password_confirmation'
                   ? 'text-primary'
                   : 'text-muted-foreground/50'
@@ -211,9 +216,11 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             <Input
               id='password_confirmation'
               type={showPasswordConfirmation ? 'text' : 'password'}
-              placeholder={t('auth.resetPassword.passwordConfirmationPlaceholder')}
+              placeholder={t(
+                'auth.resetPassword.passwordConfirmationPlaceholder'
+              )}
               disabled={isLoading}
-              className='pl-10 pr-10 h-11 bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card transition-all duration-200'
+              className='bg-card/50 border-border/50 focus:border-primary/60 focus:bg-card h-11 pr-10 pl-10 transition-all duration-200'
               onFocus={() => setFocusedField('password_confirmation')}
               {...form.register('password_confirmation')}
             />
@@ -228,14 +235,14 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
               disabled={isLoading}
             >
               {showPasswordConfirmation ? (
-                <EyeOff className='size-4 text-muted-foreground/50' />
+                <EyeOff className='text-muted-foreground/50 size-4' />
               ) : (
-                <Eye className='size-4 text-muted-foreground/50' />
+                <Eye className='text-muted-foreground/50 size-4' />
               )}
             </Button>
           </div>
           {form.formState.errors.password_confirmation && (
-            <p className='text-xs text-destructive'>
+            <p className='text-destructive text-xs'>
               {form.formState.errors.password_confirmation.message}
             </p>
           )}
@@ -245,14 +252,14 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         <Button
           type='submit'
           disabled={isLoading}
-          className='w-full h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:shadow-[0_0_28px_rgba(99,102,241,0.35)] transition-all duration-300 disabled:shadow-none'
+          className='bg-primary text-primary-foreground hover:bg-primary/90 h-11 w-full text-sm font-semibold shadow-[0_0_20px_rgba(99,102,241,0.2)] transition-all duration-300 hover:shadow-[0_0_28px_rgba(99,102,241,0.35)] disabled:shadow-none'
         >
           {isLoading ? (
             <Loader2 className='size-4 animate-spin' />
           ) : (
             <>
               {t('auth.resetPassword.button')}
-              <ArrowRight className='size-4 ml-2' />
+              <ArrowRight className='ml-2 size-4' />
             </>
           )}
         </Button>
@@ -261,15 +268,15 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       {/* Back to sign in */}
       <div
         className={cn(
-          'flex flex-col items-center gap-4 transition-all duration-500 delay-200',
+          'flex flex-col items-center gap-4 transition-all delay-200 duration-500',
           mounted ? 'opacity-100' : 'opacity-0'
         )}
       >
         <Link
           to='/sign-in'
-          className='flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group'
+          className='text-muted-foreground hover:text-foreground group flex items-center gap-2 text-sm transition-colors'
         >
-          <ArrowLeft className='size-3.5 group-hover:-translate-x-0.5 transition-transform' />
+          <ArrowLeft className='size-3.5 transition-transform group-hover:-translate-x-0.5' />
           {t('auth.resetPassword.signIn')}
         </Link>
       </div>

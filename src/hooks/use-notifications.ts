@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { createConsumer } from '@rails/actioncable'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
-import { useTranslation } from 'react-i18next'
 
 interface Notification {
   id: number
@@ -47,33 +47,45 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
   const subscriptionRef = useRef<any>(null)
 
   // Manejar nueva notificación recibida
-  const handleNewNotification = useCallback((data: any) => {
-    const newNotification = data.notification
-    if (!newNotification) {
-      return
-    }
-
-    // Agregar notificación al estado
-    setNotifications(prev => [newNotification, ...prev])
-    setUnreadCount(prev => prev + 1)
-
-    // Mostrar toast si está habilitado
-    if (showToasts) {
-      const emoji = getCategoryEmoji(newNotification.category, newNotification.type || newNotification.notification_type)
-      const notifiableName = newNotification.notifiable?.title || newNotification.actor?.full_name || ''
-      const message = t(`notifications.${newNotification.notification_type}.title`, {
-        name: notifiableName,
-        defaultValue: newNotification.title,
-      })
-      const duration = getPriorityDuration(newNotification.priority)
-
-      if (newNotification.priority >= 3) {
-        toast.success(`${emoji} ${message}`, { duration })
-      } else {
-        toast.info(`${emoji} ${message}`, { duration })
+  const handleNewNotification = useCallback(
+    (data: any) => {
+      const newNotification = data.notification
+      if (!newNotification) {
+        return
       }
-    }
-  }, [showToasts])
+
+      // Agregar notificación al estado
+      setNotifications((prev) => [newNotification, ...prev])
+      setUnreadCount((prev) => prev + 1)
+
+      // Mostrar toast si está habilitado
+      if (showToasts) {
+        const emoji = getCategoryEmoji(
+          newNotification.category,
+          newNotification.type || newNotification.notification_type
+        )
+        const notifiableName =
+          newNotification.notifiable?.title ||
+          newNotification.actor?.full_name ||
+          ''
+        const message = t(
+          `notifications.${newNotification.notification_type}.title`,
+          {
+            name: notifiableName,
+            defaultValue: newNotification.title,
+          }
+        )
+        const duration = getPriorityDuration(newNotification.priority)
+
+        if (newNotification.priority >= 3) {
+          toast.success(`${emoji} ${message}`, { duration })
+        } else {
+          toast.info(`${emoji} ${message}`, { duration })
+        }
+      }
+    },
+    [showToasts]
+  )
 
   // Obtener emoji por categoría
   const getCategoryEmoji = (category: string, type?: string) => {
@@ -241,7 +253,10 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
             },
 
             received(data: any) {
-              if (data.type === 'notification_created' || data.type === 'new_notification') {
+              if (
+                data.type === 'notification_created' ||
+                data.type === 'new_notification'
+              ) {
                 handleNewNotification(data)
               } else {
                 handleWebSocketMessage(data)

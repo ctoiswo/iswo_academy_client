@@ -56,11 +56,7 @@ export default function CourseLessonsPage() {
   } | null>(null)
   const [localSections, setLocalSections] = useState<Section[]>([])
 
-  const {
-    data: course,
-    isLoading,
-    error,
-  } = useCourse(courseSlug)
+  const { data: course, isLoading, error } = useCourse(courseSlug)
   const { data: sectionsData, isLoading: sectionsLoading } = useSections(
     academySlug,
     courseSlug
@@ -180,7 +176,7 @@ export default function CourseLessonsPage() {
         </CardHeader>
         <CardContent>
           {sections.length === 0 ? (
-            <div className='py-12 text-center text-muted-foreground'>
+            <div className='text-muted-foreground py-12 text-center'>
               <FolderOpen className='mx-auto mb-4 h-12 w-12' />
               {isStudent ? (
                 <>

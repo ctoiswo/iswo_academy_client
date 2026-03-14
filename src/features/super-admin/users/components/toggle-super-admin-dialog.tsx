@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,7 +10,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import type { ConfirmTarget } from '../types'
-import { useTranslation } from '@/hooks/use-translation'
 
 interface ToggleSuperAdminDialogProps {
   target: ConfirmTarget | null
@@ -38,8 +38,12 @@ export function ToggleSuperAdminDialog({
           </AlertDialogTitle>
           <AlertDialogDescription>
             {isPromoting
-              ? t('superAdmin.users.dialog.promoteDesc', { name: target?.user.full_name })
-              : t('superAdmin.users.dialog.demoteDesc', { name: target?.user.full_name })}
+              ? t('superAdmin.users.dialog.promoteDesc', {
+                  name: target?.user.full_name,
+                })
+              : t('superAdmin.users.dialog.demoteDesc', {
+                  name: target?.user.full_name,
+                })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

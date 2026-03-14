@@ -17,6 +17,7 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useAuthStore } from '@/stores/auth-store'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -27,7 +28,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { useAuthStore } from '@/stores/auth-store'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
 const categories = [
@@ -38,10 +38,22 @@ const categories = [
     color: 'text-blue-500',
     bg: 'bg-blue-500/10',
     links: [
-      { labelKey: 'helpCenter.categories.gettingStarted.links.dashboard', to: '/dashboard' },
-      { labelKey: 'helpCenter.categories.gettingStarted.links.onboarding', to: '/onboarding' },
-      { labelKey: 'helpCenter.categories.gettingStarted.links.exploreCourses', to: '/courses' },
-      { labelKey: 'helpCenter.categories.gettingStarted.links.exploreAcademies', to: '/academies' },
+      {
+        labelKey: 'helpCenter.categories.gettingStarted.links.dashboard',
+        to: '/dashboard',
+      },
+      {
+        labelKey: 'helpCenter.categories.gettingStarted.links.onboarding',
+        to: '/onboarding',
+      },
+      {
+        labelKey: 'helpCenter.categories.gettingStarted.links.exploreCourses',
+        to: '/courses',
+      },
+      {
+        labelKey: 'helpCenter.categories.gettingStarted.links.exploreAcademies',
+        to: '/academies',
+      },
     ],
   },
   {
@@ -51,9 +63,18 @@ const categories = [
     color: 'text-purple-500',
     bg: 'bg-purple-500/10',
     links: [
-      { labelKey: 'helpCenter.categories.academy.links.createAcademy', to: '/academy/create' },
-      { labelKey: 'helpCenter.categories.academy.links.manageAcademy', to: '/dashboard' },
-      { labelKey: 'helpCenter.categories.academy.links.academyMembers', to: '/dashboard' },
+      {
+        labelKey: 'helpCenter.categories.academy.links.createAcademy',
+        to: '/academy/create',
+      },
+      {
+        labelKey: 'helpCenter.categories.academy.links.manageAcademy',
+        to: '/dashboard',
+      },
+      {
+        labelKey: 'helpCenter.categories.academy.links.academyMembers',
+        to: '/dashboard',
+      },
     ],
   },
   {
@@ -63,9 +84,18 @@ const categories = [
     color: 'text-green-500',
     bg: 'bg-green-500/10',
     links: [
-      { labelKey: 'helpCenter.categories.courses.links.browseCourses', to: '/courses' },
-      { labelKey: 'helpCenter.categories.courses.links.myCourses', to: '/my-courses' },
-      { labelKey: 'helpCenter.categories.courses.links.certificates', to: '/my-courses' },
+      {
+        labelKey: 'helpCenter.categories.courses.links.browseCourses',
+        to: '/courses',
+      },
+      {
+        labelKey: 'helpCenter.categories.courses.links.myCourses',
+        to: '/my-courses',
+      },
+      {
+        labelKey: 'helpCenter.categories.courses.links.certificates',
+        to: '/my-courses',
+      },
     ],
   },
   {
@@ -75,10 +105,22 @@ const categories = [
     color: 'text-orange-500',
     bg: 'bg-orange-500/10',
     links: [
-      { labelKey: 'helpCenter.categories.account.links.profile', to: '/settings/profile' },
-      { labelKey: 'helpCenter.categories.account.links.account', to: '/settings/account' },
-      { labelKey: 'helpCenter.categories.account.links.appearance', to: '/settings/appearance' },
-      { labelKey: 'helpCenter.categories.account.links.notifications', to: '/settings/notifications' },
+      {
+        labelKey: 'helpCenter.categories.account.links.profile',
+        to: '/settings/profile',
+      },
+      {
+        labelKey: 'helpCenter.categories.account.links.account',
+        to: '/settings/account',
+      },
+      {
+        labelKey: 'helpCenter.categories.account.links.appearance',
+        to: '/settings/appearance',
+      },
+      {
+        labelKey: 'helpCenter.categories.account.links.notifications',
+        to: '/settings/notifications',
+      },
     ],
   },
   {
@@ -88,9 +130,18 @@ const categories = [
     color: 'text-pink-500',
     bg: 'bg-pink-500/10',
     links: [
-      { labelKey: 'helpCenter.categories.billing.links.purchaseCourse', to: '/courses' },
-      { labelKey: 'helpCenter.categories.billing.links.accessCode', to: '/redeem-access-code' },
-      { labelKey: 'helpCenter.categories.billing.links.refunds', to: '/dashboard' },
+      {
+        labelKey: 'helpCenter.categories.billing.links.purchaseCourse',
+        to: '/courses',
+      },
+      {
+        labelKey: 'helpCenter.categories.billing.links.accessCode',
+        to: '/redeem-access-code',
+      },
+      {
+        labelKey: 'helpCenter.categories.billing.links.refunds',
+        to: '/dashboard',
+      },
     ],
   },
   {
@@ -100,19 +151,40 @@ const categories = [
     color: 'text-red-500',
     bg: 'bg-red-500/10',
     links: [
-      { labelKey: 'helpCenter.categories.security.links.privacy', to: '/privacy' },
+      {
+        labelKey: 'helpCenter.categories.security.links.privacy',
+        to: '/privacy',
+      },
       { labelKey: 'helpCenter.categories.security.links.terms', to: '/terms' },
-      { labelKey: 'helpCenter.categories.security.links.settings', to: '/settings/account' },
+      {
+        labelKey: 'helpCenter.categories.security.links.settings',
+        to: '/settings/account',
+      },
     ],
   },
 ]
 
 const faqs = [
-  { qKey: 'helpCenter.faq.items.howToCreate.q', aKey: 'helpCenter.faq.items.howToCreate.a' },
-  { qKey: 'helpCenter.faq.items.howToEnroll.q', aKey: 'helpCenter.faq.items.howToEnroll.a' },
-  { qKey: 'helpCenter.faq.items.certificate.q', aKey: 'helpCenter.faq.items.certificate.a' },
-  { qKey: 'helpCenter.faq.items.refund.q', aKey: 'helpCenter.faq.items.refund.a' },
-  { qKey: 'helpCenter.faq.items.multipleAcademies.q', aKey: 'helpCenter.faq.items.multipleAcademies.a' },
+  {
+    qKey: 'helpCenter.faq.items.howToCreate.q',
+    aKey: 'helpCenter.faq.items.howToCreate.a',
+  },
+  {
+    qKey: 'helpCenter.faq.items.howToEnroll.q',
+    aKey: 'helpCenter.faq.items.howToEnroll.a',
+  },
+  {
+    qKey: 'helpCenter.faq.items.certificate.q',
+    aKey: 'helpCenter.faq.items.certificate.a',
+  },
+  {
+    qKey: 'helpCenter.faq.items.refund.q',
+    aKey: 'helpCenter.faq.items.refund.a',
+  },
+  {
+    qKey: 'helpCenter.faq.items.multipleAcademies.q',
+    aKey: 'helpCenter.faq.items.multipleAcademies.a',
+  },
 ]
 
 export function HelpCenterPage() {
@@ -134,14 +206,18 @@ export function HelpCenterPage() {
             <HelpCircle className='text-primary h-8 w-8' />
           </div>
           <h1 className='text-3xl font-bold'>{t('helpCenter.hero.title')}</h1>
-          <p className='text-muted-foreground mt-2 text-lg'>{t('helpCenter.hero.subtitle')}</p>
+          <p className='text-muted-foreground mt-2 text-lg'>
+            {t('helpCenter.hero.subtitle')}
+          </p>
         </div>
 
         {/* Quick Links */}
         <div>
           <div className='mb-4 flex items-center gap-2'>
             <LayoutDashboard className='text-primary h-5 w-5' />
-            <h2 className='text-xl font-semibold'>{t('helpCenter.quickLinks.title')}</h2>
+            <h2 className='text-xl font-semibold'>
+              {t('helpCenter.quickLinks.title')}
+            </h2>
           </div>
           <div className='flex flex-wrap gap-2'>
             {[
@@ -167,21 +243,32 @@ export function HelpCenterPage() {
         <div>
           <div className='mb-4 flex items-center gap-2'>
             <BookOpen className='text-primary h-5 w-5' />
-            <h2 className='text-xl font-semibold'>{t('helpCenter.categories.title')}</h2>
+            <h2 className='text-xl font-semibold'>
+              {t('helpCenter.categories.title')}
+            </h2>
           </div>
           <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
             {categories.map((cat) => {
               const Icon = cat.icon
               return (
-                <Card key={cat.titleKey} className='transition-shadow hover:shadow-md'>
+                <Card
+                  key={cat.titleKey}
+                  className='transition-shadow hover:shadow-md'
+                >
                   <CardHeader className='pb-3'>
                     <div className='flex items-center gap-3'>
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${cat.bg}`}>
+                      <div
+                        className={`flex h-10 w-10 items-center justify-center rounded-lg ${cat.bg}`}
+                      >
                         <Icon className={`h-5 w-5 ${cat.color}`} />
                       </div>
                       <div>
-                        <CardTitle className='text-base'>{t(cat.titleKey)}</CardTitle>
-                        <CardDescription className='text-xs'>{t(cat.descriptionKey)}</CardDescription>
+                        <CardTitle className='text-base'>
+                          {t(cat.titleKey)}
+                        </CardTitle>
+                        <CardDescription className='text-xs'>
+                          {t(cat.descriptionKey)}
+                        </CardDescription>
                       </div>
                     </div>
                   </CardHeader>
@@ -212,14 +299,18 @@ export function HelpCenterPage() {
         <div>
           <div className='mb-4 flex items-center gap-2'>
             <MessageCircle className='text-primary h-5 w-5' />
-            <h2 className='text-xl font-semibold'>{t('helpCenter.faq.title')}</h2>
+            <h2 className='text-xl font-semibold'>
+              {t('helpCenter.faq.title')}
+            </h2>
             <Badge variant='secondary'>{faqs.length}</Badge>
           </div>
           <div className='space-y-3'>
             {faqs.map((faq, i) => (
               <Card key={i}>
                 <CardHeader className='pb-2'>
-                  <CardTitle className='text-base font-medium'>{t(faq.qKey)}</CardTitle>
+                  <CardTitle className='text-base font-medium'>
+                    {t(faq.qKey)}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className='text-muted-foreground text-sm'>{t(faq.aKey)}</p>
@@ -240,14 +331,21 @@ export function HelpCenterPage() {
                   <Mail className='text-primary h-5 w-5' />
                 </div>
                 <div>
-                  <CardTitle className='text-base'>{t('helpCenter.contact.email.title')}</CardTitle>
-                  <CardDescription className='text-xs'>{t('helpCenter.contact.email.description')}</CardDescription>
+                  <CardTitle className='text-base'>
+                    {t('helpCenter.contact.email.title')}
+                  </CardTitle>
+                  <CardDescription className='text-xs'>
+                    {t('helpCenter.contact.email.description')}
+                  </CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
               <Button variant='outline' size='sm' asChild>
-                <a href='mailto:support@iswoacademy.com' className='flex items-center gap-1'>
+                <a
+                  href='mailto:support@iswoacademy.com'
+                  className='flex items-center gap-1'
+                >
                   support@iswoacademy.com
                   <ExternalLink className='h-3 w-3' />
                 </a>
@@ -262,8 +360,12 @@ export function HelpCenterPage() {
                   <GraduationCap className='text-muted-foreground h-5 w-5' />
                 </div>
                 <div>
-                  <CardTitle className='text-base'>{t('helpCenter.contact.docs.title')}</CardTitle>
-                  <CardDescription className='text-xs'>{t('helpCenter.contact.docs.description')}</CardDescription>
+                  <CardTitle className='text-base'>
+                    {t('helpCenter.contact.docs.title')}
+                  </CardTitle>
+                  <CardDescription className='text-xs'>
+                    {t('helpCenter.contact.docs.description')}
+                  </CardDescription>
                 </div>
               </div>
             </CardHeader>

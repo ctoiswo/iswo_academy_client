@@ -118,7 +118,7 @@ export interface CreateAcademyRequest {
   vision?: string
 }
 
-export interface UpdateAcademyRequest extends Partial<CreateAcademyRequest> { }
+export interface UpdateAcademyRequest extends Partial<CreateAcademyRequest> {}
 
 // Section Requests
 
@@ -128,7 +128,7 @@ export interface CreateSectionRequest {
   position?: number
 }
 
-export interface UpdateSectionRequest extends Partial<CreateSectionRequest> { }
+export interface UpdateSectionRequest extends Partial<CreateSectionRequest> {}
 
 // ============================================
 
@@ -182,7 +182,7 @@ export interface CreateAssessmentRequest {
 }
 
 export interface UpdateAssessmentRequest
-  extends Partial<CreateAssessmentRequest> { }
+  extends Partial<CreateAssessmentRequest> {}
 
 // ============================================
 
@@ -199,7 +199,7 @@ export interface CreateQuestionRequest {
   }>
 }
 
-export interface UpdateQuestionRequest extends Partial<CreateQuestionRequest> { }
+export interface UpdateQuestionRequest extends Partial<CreateQuestionRequest> {}
 
 // ============================================
 // Assignment Requests
@@ -236,7 +236,7 @@ export interface CreateAssignmentRequest {
 }
 
 export interface UpdateAssignmentRequest
-  extends Partial<CreateAssignmentRequest> { }
+  extends Partial<CreateAssignmentRequest> {}
 
 // ============================================
 // Learning Path Requests (Basic)
@@ -250,7 +250,7 @@ export interface CreateLearningPathRequestBasic {
 }
 
 export interface UpdateLearningPathRequestBasic
-  extends Partial<CreateLearningPathRequestBasic> { }
+  extends Partial<CreateLearningPathRequestBasic> {}
 
 // ============================================
 // Access Code Requests
@@ -286,7 +286,7 @@ export interface CreateBadgeRequest {
   points?: number
 }
 
-export interface UpdateBadgeRequest extends Partial<CreateBadgeRequest> { }
+export interface UpdateBadgeRequest extends Partial<CreateBadgeRequest> {}
 
 // ============================================
 // Super Admin Badge Requests
@@ -312,7 +312,7 @@ export interface CreateSuperAdminBadgeRequest {
 }
 
 export interface UpdateSuperAdminBadgeRequest
-  extends Partial<CreateSuperAdminBadgeRequest> { }
+  extends Partial<CreateSuperAdminBadgeRequest> {}
 
 export interface ToggleGamificationRequest {
   enabled?: boolean
@@ -353,7 +353,7 @@ export interface CreateCertificateTemplateRequest {
 }
 
 export interface UpdateCertificateTemplateRequest
-  extends Partial<CreateCertificateTemplateRequest> { }
+  extends Partial<CreateCertificateTemplateRequest> {}
 
 // ============================================
 // Enrollment Requests

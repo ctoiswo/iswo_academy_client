@@ -319,7 +319,7 @@ export function TeacherDashboard({ user, academy }: DashboardProps) {
         </div>
 
         {/* Teacher Statistics */}
-        <div className='grid grid-cols-2 lg:grid-cols-5 gap-3'>
+        <div className='grid grid-cols-2 gap-3 lg:grid-cols-5'>
           <StatCard
             label='Mis Cursos'
             value={mockTeacherStats.totalCourses}

@@ -167,7 +167,10 @@ export function CreateCertificateTemplateDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit as any)} className='space-y-6'>
+          <form
+            onSubmit={form.handleSubmit(onSubmit as any)}
+            className='space-y-6'
+          >
             <Tabs defaultValue='basic' className='w-full'>
               <TabsList className='grid w-full grid-cols-4'>
                 <TabsTrigger value='basic'>Básico</TabsTrigger>
@@ -402,7 +405,7 @@ export function CreateCertificateTemplateDialog({
                         }
                       />
                       {backgroundImage && (
-                        <p className='mt-1 text-sm text-muted-foreground'>
+                        <p className='text-muted-foreground mt-1 text-sm'>
                           {backgroundImage.name}
                         </p>
                       )}
@@ -418,7 +421,7 @@ export function CreateCertificateTemplateDialog({
                         onChange={(e) => setLogo(e.target.files?.[0] || null)}
                       />
                       {logo && (
-                        <p className='mt-1 text-sm text-muted-foreground'>
+                        <p className='text-muted-foreground mt-1 text-sm'>
                           {logo.name}
                         </p>
                       )}

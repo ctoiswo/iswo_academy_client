@@ -6,7 +6,6 @@
  */
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from '@tanstack/react-router'
-import { cn } from '@/lib/utils'
 import {
   ChevronLeft,
   ChevronRight,
@@ -14,6 +13,7 @@ import {
   Pause,
   Play,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 /** A single slide: maps to one category with its cards */
 export interface CarouselSlide {
@@ -121,7 +121,7 @@ export function FeaturedCarousel({
           description={sectionDescription}
           controls={null}
         />
-        <div className='h-[320px] animate-pulse rounded-xl border border-border/60 bg-card' />
+        <div className='border-border/60 bg-card h-[320px] animate-pulse rounded-xl border' />
       </section>
     )
   }
@@ -141,7 +141,7 @@ export function FeaturedCarousel({
             {slides.length > 1 && (
               <button
                 onClick={() => setIsPaused((p) => !p)}
-                className='flex items-center justify-center size-8 rounded-lg border border-border/60 bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors'
+                className='border-border/60 bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 flex size-8 items-center justify-center rounded-lg border transition-colors'
                 aria-label={isPaused ? 'Reanudar' : 'Pausar'}
               >
                 {isPaused ? (
@@ -153,14 +153,14 @@ export function FeaturedCarousel({
             )}
             <button
               onClick={goPrev}
-              className='flex items-center justify-center size-8 rounded-lg border border-border/60 bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors'
+              className='border-border/60 bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 flex size-8 items-center justify-center rounded-lg border transition-colors'
               aria-label='Slide anterior'
             >
               <ChevronLeft className='size-4' />
             </button>
             <button
               onClick={goNext}
-              className='flex items-center justify-center size-8 rounded-lg border border-border/60 bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors'
+              className='border-border/60 bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 flex size-8 items-center justify-center rounded-lg border transition-colors'
               aria-label='Siguiente slide'
             >
               <ChevronRight className='size-4' />
@@ -170,23 +170,23 @@ export function FeaturedCarousel({
       />
 
       {/* ── Main carousel card ───────────────────────────────────────────── */}
-      <div className='relative rounded-xl border border-border/60 bg-card overflow-hidden'>
+      <div className='border-border/60 bg-card relative overflow-hidden rounded-xl border'>
         {/* Progress indicators (one bar per slide) */}
         {slides.length > 1 && (
-          <div className='absolute top-0 inset-x-0 z-20 flex gap-1 px-5 pt-4'>
+          <div className='absolute inset-x-0 top-0 z-20 flex gap-1 px-5 pt-4'>
             {slides.map((s, i) => (
               <button
                 key={s.id}
                 onClick={() => goTo(i)}
-                className='relative flex-1 h-1 rounded-full overflow-hidden bg-foreground/10 transition-colors'
+                className='bg-foreground/10 relative h-1 flex-1 overflow-hidden rounded-full transition-colors'
                 aria-label={`Ir a ${s.title}`}
               >
                 {i < activeIndex && (
-                  <span className='absolute inset-0 bg-primary rounded-full' />
+                  <span className='bg-primary absolute inset-0 rounded-full' />
                 )}
                 {i === activeIndex && (
                   <span
-                    className='absolute inset-y-0 left-0 bg-primary rounded-full transition-[width] duration-100 ease-linear'
+                    className='bg-primary absolute inset-y-0 left-0 rounded-full transition-[width] duration-100 ease-linear'
                     style={{ width: `${progress}%` }}
                   />
                 )}
@@ -208,10 +208,10 @@ export function FeaturedCarousel({
         {/* Content */}
         <div
           className={cn(
-            'relative z-10 flex flex-col lg:flex-row h-full transition-all duration-280',
+            'relative z-10 flex h-full flex-col transition-all duration-280 lg:flex-row',
             isTransitioning
-              ? 'opacity-0 translate-y-2'
-              : 'opacity-100 translate-y-0'
+              ? 'translate-y-2 opacity-0'
+              : 'translate-y-0 opacity-100'
           )}
         >
           {/* Left panel */}
@@ -219,24 +219,26 @@ export function FeaturedCarousel({
             <div className='flex flex-col gap-0.5'>
               <span
                 className={cn(
-                  'text-lg font-bold text-foreground leading-tight',
+                  'text-foreground text-lg leading-tight font-bold'
                 )}
               >
                 {slide.title}
               </span>
               {slide.meta && (
-                <span className='text-xs text-muted-foreground'>{slide.meta}</span>
+                <span className='text-muted-foreground text-xs'>
+                  {slide.meta}
+                </span>
               )}
             </div>
 
             {slide.tagline && (
-              <p className='text-[13px] font-semibold text-foreground/80 leading-snug'>
+              <p className='text-foreground/80 text-[13px] leading-snug font-semibold'>
                 {slide.tagline}
               </p>
             )}
 
             {slide.description && (
-              <p className='text-xs text-muted-foreground leading-relaxed'>
+              <p className='text-muted-foreground text-xs leading-relaxed'>
                 {slide.description}
               </p>
             )}
@@ -244,28 +246,28 @@ export function FeaturedCarousel({
             {viewAllTo && (
               <Link
                 to={viewAllTo as any}
-                className='flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors mt-1 w-fit group/link'
+                className='text-primary hover:text-primary/80 group/link mt-1 flex w-fit items-center gap-1.5 text-xs font-medium transition-colors'
               >
                 {viewAllLabel}
-                <ArrowRight className='size-3.5 group-hover/link:translate-x-0.5 transition-transform' />
+                <ArrowRight className='size-3.5 transition-transform group-hover/link:translate-x-0.5' />
               </Link>
             )}
           </div>
 
           {/* Vertical divider */}
-          <div className='hidden lg:block w-px bg-border/40 my-6' />
+          <div className='bg-border/40 my-6 hidden w-px lg:block' />
 
           {/* Right scroll area */}
-          <div className='flex-1 relative px-2 pb-6 pt-2 lg:pt-10 overflow-hidden'>
+          <div className='relative flex-1 overflow-hidden px-2 pt-2 pb-6 lg:pt-10'>
             <div
               ref={scrollContainerRef}
-              className='flex gap-3 overflow-x-auto px-4 pb-2 snap-x snap-mandatory'
+              className='flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2'
               style={{ scrollbarWidth: 'none' }}
             >
               {slide.cards.map((card, i) => (
                 <div
                   key={i}
-                  className='snap-start shrink-0'
+                  className='shrink-0 snap-start'
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
                   {card}
@@ -273,14 +275,14 @@ export function FeaturedCarousel({
               ))}
             </div>
             {/* Right fade */}
-            <div className='pointer-events-none absolute top-0 right-0 bottom-0 w-16 bg-gradient-to-l from-card to-transparent z-10' />
+            <div className='from-card pointer-events-none absolute top-0 right-0 bottom-0 z-10 w-16 bg-gradient-to-l to-transparent' />
           </div>
         </div>
       </div>
 
       {/* Dot navigation (when few slides) */}
       {slides.length > 1 && slides.length <= 8 && (
-        <div className='flex justify-center gap-1.5 mt-1'>
+        <div className='mt-1 flex justify-center gap-1.5'>
           {slides.map((s, i) => (
             <button
               key={s.id}
@@ -288,8 +290,8 @@ export function FeaturedCarousel({
               className={cn(
                 'rounded-full transition-all duration-300',
                 i === activeIndex
-                  ? 'w-5 h-1.5 bg-primary'
-                  : 'w-1.5 h-1.5 bg-foreground/20 hover:bg-foreground/40'
+                  ? 'bg-primary h-1.5 w-5'
+                  : 'bg-foreground/20 hover:bg-foreground/40 h-1.5 w-1.5'
               )}
               aria-label={`Ir a ${s.title}`}
             />
@@ -314,9 +316,9 @@ function SectionHeader({
   return (
     <div className='flex items-start justify-between gap-4'>
       <div className='flex flex-col gap-0.5'>
-        <h2 className='text-base font-semibold text-foreground'>{title}</h2>
+        <h2 className='text-foreground text-base font-semibold'>{title}</h2>
         {description && (
-          <p className='text-xs text-muted-foreground'>{description}</p>
+          <p className='text-muted-foreground text-xs'>{description}</p>
         )}
       </div>
       {controls}

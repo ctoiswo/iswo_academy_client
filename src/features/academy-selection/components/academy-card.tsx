@@ -1,3 +1,4 @@
+import type { AcademyMembership } from '@/types'
 import { motion } from 'framer-motion'
 import {
   Building,
@@ -10,7 +11,6 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { AcademyMembership } from '@/types'
 
 interface AcademyCardProps {
   academy: AcademyMembership
@@ -71,7 +71,7 @@ export function AcademyCard({ academy, onSelect }: AcademyCardProps) {
       whileHover={{ y: -4 }}
     >
       <Card
-        className='academy-card hover:border-primary/40 group relative h-full cursor-pointer overflow-hidden border border-border/40 bg-card/60 backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:bg-card/80'
+        className='academy-card hover:border-primary/40 group border-border/40 bg-card/60 hover:bg-card/80 relative h-full cursor-pointer overflow-hidden border backdrop-blur-sm transition-all duration-300 hover:shadow-2xl'
         onClick={() => onSelect(academy)}
       >
         {/* Gradient background effect */}

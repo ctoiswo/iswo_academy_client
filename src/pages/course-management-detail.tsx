@@ -35,11 +35,7 @@ export default function CourseManagementDetailPage() {
   }
   const { academySlug, courseSlug } = params
 
-  const {
-    data: course,
-    isLoading,
-    error,
-  } = useCourse(courseSlug)
+  const { data: course, isLoading, error } = useCourse(courseSlug)
 
   // Tab state
   const [activeTab, setActiveTab] = useState('info')
@@ -112,7 +108,7 @@ export default function CourseManagementDetailPage() {
                         : 'Archivado'}
                   </Badge>
                 </div>
-                <p className='mb-4 text-base text-muted-foreground'>
+                <p className='text-muted-foreground mb-4 text-base'>
                   {course.description}
                 </p>
                 <div className='flex gap-2'>
@@ -156,7 +152,7 @@ export default function CourseManagementDetailPage() {
           <CardContent className='pt-6'>
             <div className='flex items-center justify-between'>
               <div>
-                <p className='mb-1 text-sm font-medium text-muted-foreground'>
+                <p className='text-muted-foreground mb-1 text-sm font-medium'>
                   Estudiantes
                 </p>
                 <p className='text-3xl font-bold'>
@@ -174,7 +170,7 @@ export default function CourseManagementDetailPage() {
           <CardContent className='pt-6'>
             <div className='flex items-center justify-between'>
               <div>
-                <p className='mb-1 text-sm font-medium text-muted-foreground'>
+                <p className='text-muted-foreground mb-1 text-sm font-medium'>
                   Lecciones
                 </p>
                 <p className='text-3xl font-bold'>
@@ -192,12 +188,12 @@ export default function CourseManagementDetailPage() {
           <CardContent className='pt-6'>
             <div className='flex items-center justify-between'>
               <div>
-                <p className='mb-1 text-sm font-medium text-muted-foreground'>
+                <p className='text-muted-foreground mb-1 text-sm font-medium'>
                   Duración Total
                 </p>
                 <p className='text-3xl font-bold'>
                   {Math.floor(course.duration_minutes / 60)}
-                  <span className='text-lg text-muted-foreground'>h</span>
+                  <span className='text-muted-foreground text-lg'>h</span>
                 </p>
               </div>
               <div className='flex h-12 w-12 items-center justify-center rounded-full bg-orange-100'>
@@ -211,7 +207,7 @@ export default function CourseManagementDetailPage() {
           <CardContent className='pt-6'>
             <div className='flex items-center justify-between'>
               <div>
-                <p className='mb-1 text-sm font-medium text-muted-foreground'>
+                <p className='text-muted-foreground mb-1 text-sm font-medium'>
                   Secciones
                 </p>
                 <p className='text-3xl font-bold'>
@@ -276,13 +272,13 @@ export default function CourseManagementDetailPage() {
               <CardContent className='space-y-6'>
                 <div className='grid grid-cols-2 gap-6'>
                   <div>
-                    <h4 className='mb-1 text-sm font-medium text-muted-foreground'>
+                    <h4 className='text-muted-foreground mb-1 text-sm font-medium'>
                       Título
                     </h4>
                     <p className='text-base'>{course.title}</p>
                   </div>
                   <div>
-                    <h4 className='mb-1 text-sm font-medium text-muted-foreground'>
+                    <h4 className='text-muted-foreground mb-1 text-sm font-medium'>
                       Estado
                     </h4>
                     <Badge
@@ -300,17 +296,17 @@ export default function CourseManagementDetailPage() {
                 </div>
 
                 <div>
-                  <h4 className='mb-1 text-sm font-medium text-muted-foreground'>
+                  <h4 className='text-muted-foreground mb-1 text-sm font-medium'>
                     Descripción
                   </h4>
-                  <p className='text-base text-muted-foreground'>
+                  <p className='text-muted-foreground text-base'>
                     {course.description}
                   </p>
                 </div>
 
                 <div className='grid grid-cols-3 gap-6'>
                   <div>
-                    <h4 className='mb-1 text-sm font-medium text-muted-foreground'>
+                    <h4 className='text-muted-foreground mb-1 text-sm font-medium'>
                       Nivel de Dificultad
                     </h4>
                     <Badge variant='outline'>
@@ -322,7 +318,7 @@ export default function CourseManagementDetailPage() {
                     </Badge>
                   </div>
                   <div>
-                    <h4 className='mb-1 text-sm font-medium text-muted-foreground'>
+                    <h4 className='text-muted-foreground mb-1 text-sm font-medium'>
                       Precio
                     </h4>
                     <p className='text-base font-semibold text-green-600'>
@@ -330,7 +326,7 @@ export default function CourseManagementDetailPage() {
                     </p>
                   </div>
                   <div>
-                    <h4 className='mb-1 text-sm font-medium text-muted-foreground'>
+                    <h4 className='text-muted-foreground mb-1 text-sm font-medium'>
                       Duración Estimada
                     </h4>
                     <p className='text-base'>
@@ -342,7 +338,7 @@ export default function CourseManagementDetailPage() {
 
                 {course.thumbnail_url && (
                   <div>
-                    <h4 className='mb-2 text-sm font-medium text-muted-foreground'>
+                    <h4 className='text-muted-foreground mb-2 text-sm font-medium'>
                       Miniatura
                     </h4>
                     <img
@@ -399,7 +395,7 @@ export default function CourseManagementDetailPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className='py-12 text-center text-muted-foreground'>
+              <div className='text-muted-foreground py-12 text-center'>
                 <PlayCircle className='mx-auto mb-4 h-12 w-12' />
                 <h3 className='mb-2 text-lg font-medium'>
                   Aún no hay lecciones
@@ -434,7 +430,7 @@ export default function CourseManagementDetailPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className='py-12 text-center text-muted-foreground'>
+              <div className='text-muted-foreground py-12 text-center'>
                 <CheckSquare className='mx-auto mb-4 h-12 w-12' />
                 <h3 className='mb-2 text-lg font-medium'>Aún no hay tareas</h3>
                 <p className='mb-4'>
@@ -468,7 +464,7 @@ export default function CourseManagementDetailPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className='py-12 text-center text-muted-foreground'>
+              <div className='text-muted-foreground py-12 text-center'>
                 <FileQuestion className='mx-auto mb-4 h-12 w-12' />
                 <h3 className='mb-2 text-lg font-medium'>
                   Aún no hay exámenes
@@ -504,7 +500,7 @@ export default function CourseManagementDetailPage() {
             </CardHeader>
             <CardContent>
               {course.enrollment_count === 0 ? (
-                <div className='py-12 text-center text-muted-foreground'>
+                <div className='text-muted-foreground py-12 text-center'>
                   <Users className='mx-auto mb-4 h-12 w-12' />
                   <h3 className='mb-2 text-lg font-medium'>
                     No hay estudiantes inscritos
@@ -516,13 +512,13 @@ export default function CourseManagementDetailPage() {
                 </div>
               ) : (
                 <div className='space-y-4'>
-                  <p className='text-sm text-muted-foreground'>
+                  <p className='text-muted-foreground text-sm'>
                     {course.enrollment_count} estudiante
                     {course.enrollment_count !== 1 ? 's' : ''} inscrito
                     {course.enrollment_count !== 1 ? 's' : ''}
                   </p>
                   {/* TODO: Add student list component */}
-                  <div className='py-8 text-center text-muted-foreground'>
+                  <div className='text-muted-foreground py-8 text-center'>
                     <p>Interfaz de gestión de estudiantes próximamente...</p>
                   </div>
                 </div>
@@ -549,7 +545,7 @@ export default function CourseManagementDetailPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className='py-12 text-center text-muted-foreground'>
+              <div className='text-muted-foreground py-12 text-center'>
                 <Award className='mx-auto mb-4 h-12 w-12' />
                 <h3 className='mb-2 text-lg font-medium'>
                   No hay certificado configurado
@@ -586,7 +582,7 @@ export default function CourseManagementDetailPage() {
                     <div className='flex items-center justify-between rounded-lg border p-3'>
                       <div>
                         <p className='font-medium'>Estado de Publicación</p>
-                        <p className='text-sm text-muted-foreground'>
+                        <p className='text-muted-foreground text-sm'>
                           Controla si el curso es visible para estudiantes
                         </p>
                       </div>
@@ -605,7 +601,7 @@ export default function CourseManagementDetailPage() {
                     <div className='flex items-center justify-between rounded-lg border p-3'>
                       <div>
                         <p className='font-medium'>Tipo de Acceso</p>
-                        <p className='text-sm text-muted-foreground'>
+                        <p className='text-muted-foreground text-sm'>
                           Controla cómo los estudiantes acceden al curso
                         </p>
                       </div>
@@ -626,25 +622,25 @@ export default function CourseManagementDetailPage() {
                         <p className='font-medium'>
                           Certificado de Finalización
                         </p>
-                        <p className='text-sm text-muted-foreground'>
+                        <p className='text-muted-foreground text-sm'>
                           Otorgar certificado al completar
                         </p>
                       </div>
                       <Badge variant='outline'>
-                        {course.certificate_enabled ? 'Activado' : 'Desactivado'}
+                        {course.certificate_enabled
+                          ? 'Activado'
+                          : 'Desactivado'}
                       </Badge>
                     </div>
                     <div className='flex items-center justify-between rounded-lg border p-3'>
                       <div>
                         <p className='font-medium'>Inscripción</p>
-                        <p className='text-sm text-muted-foreground'>
+                        <p className='text-muted-foreground text-sm'>
                           Permitir que estudiantes se inscriban
                         </p>
                       </div>
                       <Badge variant='outline'>
-                        {course.status === 'published'
-                          ? 'Abierta'
-                          : 'Cerrada'}
+                        {course.status === 'published' ? 'Abierta' : 'Cerrada'}
                       </Badge>
                     </div>
                   </div>
@@ -670,7 +666,7 @@ export default function CourseManagementDetailPage() {
                 <div className='flex items-center justify-between rounded-lg border border-red-200 p-3'>
                   <div>
                     <p className='font-medium'>Archivar Curso</p>
-                    <p className='text-sm text-muted-foreground'>
+                    <p className='text-muted-foreground text-sm'>
                       El curso no será visible pero se conservarán los datos
                     </p>
                   </div>
@@ -684,7 +680,7 @@ export default function CourseManagementDetailPage() {
                 <div className='flex items-center justify-between rounded-lg border border-red-200 p-3'>
                   <div>
                     <p className='font-medium'>Eliminar Curso</p>
-                    <p className='text-sm text-muted-foreground'>
+                    <p className='text-muted-foreground text-sm'>
                       Eliminar permanentemente el curso y todo su contenido
                     </p>
                   </div>

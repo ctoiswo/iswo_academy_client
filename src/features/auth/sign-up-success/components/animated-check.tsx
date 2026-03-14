@@ -14,15 +14,15 @@ export function AnimatedCheck() {
     <div className='relative'>
       {/* Outer pulsing ring */}
       <div
-        className='absolute inset-[-16px] rounded-full bg-primary/10 animate-ping'
+        className='bg-primary/10 absolute inset-[-16px] animate-ping rounded-full'
         style={{ animationDuration: '2s' }}
       />
       {/* Glow */}
-      <div className='absolute inset-[-8px] rounded-full bg-primary/20 blur-xl animate-pulse' />
+      <div className='bg-primary/20 absolute inset-[-8px] animate-pulse rounded-full blur-xl' />
       {/* Circle */}
       <div
         className={cn(
-          'relative flex items-center justify-center size-28 rounded-full border-2 transition-all duration-700',
+          'relative flex size-28 items-center justify-center rounded-full border-2 transition-all duration-700',
           show
             ? 'bg-primary/10 border-primary/40 scale-100'
             : 'bg-primary/5 border-primary/10 scale-75'
@@ -30,28 +30,28 @@ export function AnimatedCheck() {
       >
         <CheckCircle2
           className={cn(
-            'size-14 text-primary transition-all duration-500 delay-200',
-            show ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
+            'text-primary size-14 transition-all delay-200 duration-500',
+            show ? 'scale-100 opacity-100' : 'scale-50 opacity-0'
           )}
         />
       </div>
       {/* Floating sparkles */}
       <Sparkles
         className={cn(
-          'absolute -top-3 -right-3 size-5 text-primary transition-all duration-500 delay-500',
-          show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+          'text-primary absolute -top-3 -right-3 size-5 transition-all delay-500 duration-500',
+          show ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
         )}
       />
       <Sparkles
         className={cn(
-          'absolute -bottom-2 -left-4 size-4 text-primary/60 transition-all duration-500 delay-700',
-          show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+          'text-primary/60 absolute -bottom-2 -left-4 size-4 transition-all delay-700 duration-500',
+          show ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
         )}
       />
       <Sparkles
         className={cn(
-          'absolute top-0 -left-5 size-3 text-primary/40 transition-all duration-500 delay-[900ms]',
-          show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+          'text-primary/40 absolute top-0 -left-5 size-3 transition-all delay-[900ms] duration-500',
+          show ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
         )}
       />
     </div>

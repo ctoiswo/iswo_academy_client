@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router'
+import { type AcademySummaryLight } from '@/types'
 import { BookOpen, Users } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
-import { type AcademySummaryLight } from '@/types'
 import { getCategoryIcon, getGradientByIndex } from '../utils/category-styles'
 
 interface AcademyCardProps {
@@ -18,9 +18,9 @@ export function AcademyCard({ academy, index }: AcademyCardProps) {
   const creatorName = academy.creator?.name ?? ''
 
   return (
-    <article className='group relative flex flex-col rounded-xl border border-border/40 bg-secondary/20 overflow-hidden transition-all duration-300 hover:border-primary/30 hover:bg-secondary/40 hover:shadow-[0_0_20px_rgba(99,102,241,0.06)] hover:-translate-y-0.5'>
+    <article className='group border-border/40 bg-secondary/20 hover:border-primary/30 hover:bg-secondary/40 relative flex flex-col overflow-hidden rounded-xl border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(99,102,241,0.06)]'>
       {/* Banner image / accent bar */}
-      <div className='relative h-28 w-full overflow-hidden shrink-0'>
+      <div className='relative h-28 w-full shrink-0 overflow-hidden'>
         {academy.banner_url ? (
           <img
             src={academy.banner_url}
@@ -36,18 +36,24 @@ export function AcademyCard({ academy, index }: AcademyCardProps) {
       <div className='flex flex-col gap-3 p-5'>
         {/* Icon + name */}
         <div className='flex items-center gap-3'>
-          <div className={cn('flex items-center justify-center size-10 rounded-xl bg-gradient-to-br shrink-0', from, to)}>
-            <Icon className='size-5 text-foreground' />
+          <div
+            className={cn(
+              'flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br',
+              from,
+              to
+            )}
+          >
+            <Icon className='text-foreground size-5' />
           </div>
-          <div className='flex flex-col min-w-0'>
+          <div className='flex min-w-0 flex-col'>
             <h3
-              className='text-sm font-semibold text-foreground leading-snug line-clamp-1'
+              className='text-foreground line-clamp-1 text-sm leading-snug font-semibold'
               style={{ fontFamily: 'var(--font-heading)' }}
             >
               {academy.name}
             </h3>
             {academy.academy_category?.name && (
-              <span className='text-[10px] text-muted-foreground'>
+              <span className='text-muted-foreground text-[10px]'>
                 {academy.academy_category.name}
               </span>
             )}
@@ -55,19 +61,21 @@ export function AcademyCard({ academy, index }: AcademyCardProps) {
         </div>
 
         {academy.description && (
-          <p className='text-xs text-muted-foreground leading-relaxed line-clamp-2'>
+          <p className='text-muted-foreground line-clamp-2 text-xs leading-relaxed'>
             {academy.description}
           </p>
         )}
 
         {creatorName && (
-          <p className='text-xs text-muted-foreground/70'>
+          <p className='text-muted-foreground/70 text-xs'>
             {t('academiesLanding.card.by')}{' '}
-            <span className='text-foreground/60 font-medium'>{creatorName}</span>
+            <span className='text-foreground/60 font-medium'>
+              {creatorName}
+            </span>
           </p>
         )}
 
-        <div className='flex items-center gap-4 text-[11px] text-muted-foreground pt-2 border-t border-border/20'>
+        <div className='text-muted-foreground border-border/20 flex items-center gap-4 border-t pt-2 text-[11px]'>
           <span className='flex items-center gap-1'>
             <BookOpen className='size-3' />
             {academy.courses_count} {t('academiesLanding.card.courses')}
@@ -79,7 +87,7 @@ export function AcademyCard({ academy, index }: AcademyCardProps) {
         </div>
 
         <Link to='/sign-in'>
-          <button className='mt-1 w-full h-8 flex items-center justify-center rounded-lg border border-primary/20 bg-primary/5 text-xs font-medium text-primary hover:bg-primary/10 transition-colors'>
+          <button className='border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 mt-1 flex h-8 w-full items-center justify-center rounded-lg border text-xs font-medium transition-colors'>
             {t('academiesLanding.card.viewAcademy')}
           </button>
         </Link>

@@ -1,7 +1,7 @@
 import type { PlatformStats, StatItem, Course } from '@/types'
 import { type ClassValue, clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
 import { Users, BookOpen, Award } from 'lucide-react'
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -66,15 +66,25 @@ export function formatStat(value: number): string {
   return value.toLocaleString('es-ES') + '+'
 }
 
-
 export function buildStatItems(stats: PlatformStats): StatItem[] {
   return [
-    { icon: Users, value: formatStat(stats.total_students), label: 'Estudiantes activos' },
-    { icon: BookOpen, value: formatStat(stats.total_courses), label: 'Cursos disponibles' },
-    { icon: Award, value: formatStat(stats.total_academies), label: 'Academias creadas' },
+    {
+      icon: Users,
+      value: formatStat(stats.total_students),
+      label: 'Estudiantes activos',
+    },
+    {
+      icon: BookOpen,
+      value: formatStat(stats.total_courses),
+      label: 'Cursos disponibles',
+    },
+    {
+      icon: Award,
+      value: formatStat(stats.total_academies),
+      label: 'Academias creadas',
+    },
   ]
 }
-
 
 export function formatDuration(minutes?: number | null): string {
   if (!minutes) return ''

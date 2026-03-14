@@ -67,7 +67,7 @@ class LessonService {
     // Si es FormData, enviar directamente (ya tiene lesson[campo] en cada key)
     // Si es objeto, envolverlo en { lesson: data }
     const payload = data instanceof FormData ? data : { lesson: data }
-    
+
     const response = await apiClient.post(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}/lessons`,
       payload
@@ -94,7 +94,7 @@ class LessonService {
     // Si es FormData, enviar directamente (ya tiene lesson[campo] en cada key)
     // Si es objeto, envolverlo en { lesson: data }
     const payload = data instanceof FormData ? data : { lesson: data }
-    
+
     const response = await apiClient.patch(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}`,
       payload

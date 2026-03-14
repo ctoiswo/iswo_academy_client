@@ -1,8 +1,8 @@
+import type { DashboardAssignment } from '@/types'
 import { Calendar, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
-import type { DashboardAssignment } from '@/types'
 
 interface TaskItemProps {
   task: DashboardAssignment
@@ -13,7 +13,11 @@ export function TaskItem({ task, index }: TaskItemProps) {
   const { t } = useTranslation()
   const tk = 'dashboard.student.tasks'
 
-  function formatDueDate(dueAt: string | null, daysUntil: number | null, isPastDue: boolean): string {
+  function formatDueDate(
+    dueAt: string | null,
+    daysUntil: number | null,
+    isPastDue: boolean
+  ): string {
     if (!dueAt) return t(`${tk}.noDate`)
     if (isPastDue) return t(`${tk}.overdue`)
     if (daysUntil === 0) return t(`${tk}.today`)
@@ -22,35 +26,46 @@ export function TaskItem({ task, index }: TaskItemProps) {
     return t(`${tk}.noDate`)
   }
 
-  const isUrgent = task.is_past_due || task.status === 'past_due' || (task.days_until_due !== null && task.days_until_due <= 1)
-  const dueLabel = formatDueDate(task.due_at, task.days_until_due, task.is_past_due)
+  const isUrgent =
+    task.is_past_due ||
+    task.status === 'past_due' ||
+    (task.days_until_due !== null && task.days_until_due <= 1)
+  const dueLabel = formatDueDate(
+    task.due_at,
+    task.days_until_due,
+    task.is_past_due
+  )
 
   return (
     <div
       className={cn(
-        'group flex items-center gap-4 p-4 rounded-xl border border-border/60 bg-card',
-        'transition-all duration-300 hover:border-primary/30 hover:shadow-[0_0_16px_rgba(99,102,241,0.06)]',
-        isUrgent && 'border-amber-500/30 bg-amber-500/5',
+        'group border-border/60 bg-card flex items-center gap-4 rounded-xl border p-4',
+        'hover:border-primary/30 transition-all duration-300 hover:shadow-[0_0_16px_rgba(99,102,241,0.06)]',
+        isUrgent && 'border-amber-500/30 bg-amber-500/5'
       )}
       style={{ transitionDelay: `${index * 50}ms` }}
     >
-      <div className='flex items-center justify-center size-10 rounded-lg shrink-0 bg-primary/10'>
-        <FileText className='size-5 text-primary' />
+      <div className='bg-primary/10 flex size-10 shrink-0 items-center justify-center rounded-lg'>
+        <FileText className='text-primary size-5' />
       </div>
 
-      <div className='flex-1 min-w-0'>
+      <div className='min-w-0 flex-1'>
         <div className='flex items-center gap-2'>
-          <h4 className='text-sm font-medium text-foreground truncate'>{task.title}</h4>
+          <h4 className='text-foreground truncate text-sm font-medium'>
+            {task.title}
+          </h4>
           {isUrgent && (
-            <Badge className='bg-amber-500/20 text-amber-400 border-amber-500/30 text-[10px] px-1.5'>
+            <Badge className='border-amber-500/30 bg-amber-500/20 px-1.5 text-[10px] text-amber-400'>
               {task.is_past_due ? t(`${tk}.overdue`) : t(`${tk}.urgent`)}
             </Badge>
           )}
         </div>
-        <p className='text-xs text-muted-foreground truncate'>{task.course_title}</p>
+        <p className='text-muted-foreground truncate text-xs'>
+          {task.course_title}
+        </p>
       </div>
 
-      <div className='flex items-center gap-1 text-xs text-muted-foreground shrink-0'>
+      <div className='text-muted-foreground flex shrink-0 items-center gap-1 text-xs'>
         <Calendar className='size-3.5' />
         {dueLabel}
       </div>

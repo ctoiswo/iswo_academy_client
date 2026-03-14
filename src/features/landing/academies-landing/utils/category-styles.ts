@@ -1,4 +1,11 @@
-import { type Globe, Palette, Brain, Cloud, Shield, GraduationCap } from 'lucide-react'
+import {
+  type Globe,
+  Palette,
+  Brain,
+  Cloud,
+  Shield,
+  GraduationCap,
+} from 'lucide-react'
 
 // Maps slug keywords → icon component
 const SLUG_ICON_MAP: Array<[string, typeof Globe]> = [

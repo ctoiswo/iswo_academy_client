@@ -101,7 +101,9 @@ describe('Token Refresh Mechanism', () => {
       jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Refresh failed'))
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 
@@ -130,7 +132,9 @@ describe('Token Refresh Mechanism', () => {
       jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Network error'))
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 
@@ -153,7 +157,9 @@ describe('Token Refresh Mechanism', () => {
         },
       })
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 
@@ -172,7 +178,9 @@ describe('Token Refresh Mechanism', () => {
         },
       })
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 
@@ -251,7 +259,9 @@ describe('Token Refresh Mechanism', () => {
       jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Refresh failed'))
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 
@@ -317,7 +327,9 @@ describe('Token Refresh Mechanism', () => {
       jest.mocked(tokenStorage.getRefreshToken).mockReturnValue('refresh-token')
       mockedAxios.post.mockRejectedValue(new Error('Network error'))
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
 
       const result = await tokenManager.refreshTokens()
 

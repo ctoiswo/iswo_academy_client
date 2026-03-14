@@ -7,7 +7,7 @@ declare module '@rails/actioncable' {
 
   export interface Subscriptions {
     create(
-      channel: string | { channel: string;[key: string]: any },
+      channel: string | { channel: string; [key: string]: any },
       callbacks?: {
         connected?(): void
         disconnected?(): void

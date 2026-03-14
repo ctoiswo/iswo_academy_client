@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router'
+import type { LessonType } from '@/types'
 import {
   ArrowLeft,
   Video,
@@ -11,17 +13,15 @@ import {
   Sparkles,
   X,
 } from 'lucide-react'
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router'
+import { cn } from '@/lib/utils'
 import { useCreateLesson } from '@/hooks/use-lessons'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Switch } from '@/components/ui/switch'
-import { Badge } from '@/components/ui/badge'
 import { RichTextEditor } from '@/components/editor/rich-text-editor'
-import { cn } from '@/lib/utils'
-import type { LessonType } from '@/types'
 
 type VideoSourceType = 'url' | 'file'
 
@@ -99,7 +99,8 @@ export default function CreateLessonPage() {
   }
 
   const detectProvider = (url: string): string => {
-    if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube'
+    if (url.includes('youtube.com') || url.includes('youtu.be'))
+      return 'youtube'
     if (url.includes('vimeo.com')) return 'vimeo'
     return 'youtube'
   }
@@ -175,7 +176,7 @@ export default function CreateLessonPage() {
   ]
 
   return (
-    <div className='min-h-screen bg-background relative'>
+    <div className='bg-background relative min-h-screen'>
       {/* Background decoration */}
       <div
         className='pointer-events-none fixed inset-0 opacity-[0.02]'
@@ -187,25 +188,27 @@ export default function CreateLessonPage() {
         aria-hidden='true'
       />
       <div
-        className='pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] opacity-15 blur-[140px] rounded-full bg-primary'
+        className='bg-primary pointer-events-none fixed top-0 left-1/2 h-[300px] w-[700px] -translate-x-1/2 rounded-full opacity-15 blur-[140px]'
         aria-hidden='true'
       />
 
       {/* Header */}
-      <header className='sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl'>
-        <div className='max-w-5xl mx-auto px-4 lg:px-8 h-16 flex items-center justify-between gap-4'>
+      <header className='border-border/40 bg-background/80 sticky top-0 z-50 border-b backdrop-blur-xl'>
+        <div className='mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-4 lg:px-8'>
           <div className='flex items-center gap-4'>
             <button
               type='button'
               onClick={handleBack}
-              className='flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors'
+              className='text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors'
             >
               <ArrowLeft className='size-4' />
               <span className='hidden sm:inline'>Volver</span>
             </button>
-            <div className='h-6 w-px bg-border/60' />
+            <div className='bg-border/60 h-6 w-px' />
             <div className='flex flex-col'>
-              <span className='text-xs text-muted-foreground'>Nueva Leccion</span>
+              <span className='text-muted-foreground text-xs'>
+                Nueva Leccion
+              </span>
             </div>
           </div>
 
@@ -214,7 +217,7 @@ export default function CreateLessonPage() {
               type='button'
               variant='ghost'
               size='sm'
-              className='gap-2 text-muted-foreground'
+              className='text-muted-foreground gap-2'
               disabled={!title}
             >
               <Eye className='size-4' />
@@ -223,11 +226,11 @@ export default function CreateLessonPage() {
             <Button
               onClick={handleSubmit}
               disabled={isLoading || createLesson.isPending || !title.trim()}
-              className='gap-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_16px_rgba(99,102,241,0.2)]'
+              className='bg-primary text-primary-foreground hover:bg-primary/90 gap-2 shadow-[0_0_16px_rgba(99,102,241,0.2)]'
             >
               {isLoading || createLesson.isPending ? (
                 <>
-                  <div className='size-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin' />
+                  <div className='border-primary-foreground/30 border-t-primary-foreground size-4 animate-spin rounded-full border-2' />
                   Guardando...
                 </>
               ) : (
@@ -242,17 +245,19 @@ export default function CreateLessonPage() {
       </header>
 
       {/* Main content */}
-      <main className='relative z-10 max-w-5xl mx-auto px-4 lg:px-8 py-8'>
+      <main className='relative z-10 mx-auto max-w-5xl px-4 py-8 lg:px-8'>
         <form onSubmit={handleSubmit} className='flex flex-col gap-8'>
           {/* Title & basics */}
-          <section className='flex flex-col gap-6 p-6 rounded-xl border border-border/60 bg-card animate-in fade-in-0 slide-in-from-bottom-4'>
+          <section className='border-border/60 bg-card animate-in fade-in-0 slide-in-from-bottom-4 flex flex-col gap-6 rounded-xl border p-6'>
             <div className='flex items-center gap-3'>
-              <div className='flex items-center justify-center size-10 rounded-lg bg-primary/10'>
-                <Sparkles className='size-5 text-primary' />
+              <div className='bg-primary/10 flex size-10 items-center justify-center rounded-lg'>
+                <Sparkles className='text-primary size-5' />
               </div>
               <div>
-                <h1 className='text-lg font-semibold text-foreground'>Nueva Leccion</h1>
-                <p className='text-sm text-muted-foreground'>
+                <h1 className='text-foreground text-lg font-semibold'>
+                  Nueva Leccion
+                </h1>
+                <p className='text-muted-foreground text-sm'>
                   Agrega contenido educativo a tu curso
                 </p>
               </div>
@@ -267,18 +272,18 @@ export default function CreateLessonPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder='ej. Introduccion a los Hooks de React'
-                className='h-12 text-base bg-secondary/40 border-border/60 focus:border-primary/50'
+                className='bg-secondary/40 border-border/60 focus:border-primary/50 h-12 text-base'
                 required
               />
             </div>
 
-            <div className='grid sm:grid-cols-2 gap-4'>
+            <div className='grid gap-4 sm:grid-cols-2'>
               <div className='space-y-2'>
                 <Label htmlFor='duration' className='text-sm font-medium'>
                   Duracion estimada
                 </Label>
                 <div className='relative'>
-                  <Clock className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground' />
+                  <Clock className='text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2' />
                   <Input
                     id='duration'
                     type='number'
@@ -286,23 +291,23 @@ export default function CreateLessonPage() {
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
                     placeholder='30'
-                    className='pl-10 h-11 bg-secondary/40 border-border/60'
+                    className='bg-secondary/40 border-border/60 h-11 pl-10'
                   />
-                  <span className='absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground'>
+                  <span className='text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 text-sm'>
                     min
                   </span>
                 </div>
               </div>
 
-              <div className='flex items-center justify-between p-4 rounded-lg border border-border/60 bg-secondary/20'>
+              <div className='border-border/60 bg-secondary/20 flex items-center justify-between rounded-lg border p-4'>
                 <div className='space-y-0.5'>
                   <Label
                     htmlFor='is_free'
-                    className='text-sm font-medium cursor-pointer'
+                    className='cursor-pointer text-sm font-medium'
                   >
                     Leccion gratuita
                   </Label>
-                  <p className='text-xs text-muted-foreground'>
+                  <p className='text-muted-foreground text-xs'>
                     Disponible sin inscripcion
                   </p>
                 </div>
@@ -316,11 +321,11 @@ export default function CreateLessonPage() {
           </section>
 
           {/* Lesson type selector */}
-          <section className='flex flex-col gap-4 p-6 rounded-xl border border-border/60 bg-card animate-in fade-in-0 slide-in-from-bottom-4 delay-100'>
+          <section className='border-border/60 bg-card animate-in fade-in-0 slide-in-from-bottom-4 flex flex-col gap-4 rounded-xl border p-6 delay-100'>
             <Label className='text-sm font-medium'>
               Tipo de contenido <span className='text-destructive'>*</span>
             </Label>
-            <div className='grid sm:grid-cols-3 gap-3'>
+            <div className='grid gap-3 sm:grid-cols-3'>
               {lessonTypeConfig.map((config) => {
                 const Icon = config.icon
                 const isSelected = lessonType === config.type
@@ -330,7 +335,7 @@ export default function CreateLessonPage() {
                     type='button'
                     onClick={() => setLessonType(config.type)}
                     className={cn(
-                      'flex flex-col items-center gap-3 p-5 rounded-xl border-2 transition-all duration-300',
+                      'flex flex-col items-center gap-3 rounded-xl border-2 p-5 transition-all duration-300',
                       'hover:border-primary/30 hover:bg-primary/5',
                       isSelected
                         ? `${config.borderColor} ${config.bgColor} shadow-[0_0_20px_rgba(99,102,241,0.1)]`
@@ -339,7 +344,7 @@ export default function CreateLessonPage() {
                   >
                     <div
                       className={cn(
-                        'flex items-center justify-center size-12 rounded-xl transition-all duration-300',
+                        'flex size-12 items-center justify-center rounded-xl transition-all duration-300',
                         isSelected ? config.bgColor : 'bg-secondary/60'
                       )}
                     >
@@ -354,12 +359,14 @@ export default function CreateLessonPage() {
                       <p
                         className={cn(
                           'font-medium transition-colors',
-                          isSelected ? 'text-foreground' : 'text-muted-foreground'
+                          isSelected
+                            ? 'text-foreground'
+                            : 'text-muted-foreground'
                         )}
                       >
                         {config.label}
                       </p>
-                      <p className='text-xs text-muted-foreground mt-0.5'>
+                      <p className='text-muted-foreground mt-0.5 text-xs'>
                         {config.description}
                       </p>
                     </div>
@@ -375,19 +382,19 @@ export default function CreateLessonPage() {
           </section>
 
           {/* Content section */}
-          <section className='flex flex-col gap-6 p-6 rounded-xl border border-border/60 bg-card animate-in fade-in-0 slide-in-from-bottom-4 delay-200'>
+          <section className='border-border/60 bg-card animate-in fade-in-0 slide-in-from-bottom-4 flex flex-col gap-6 rounded-xl border p-6 delay-200'>
             {/* Video */}
             {lessonType === 'video' && (
               <>
                 <div className='flex items-center gap-3'>
-                  <div className='flex items-center justify-center size-10 rounded-lg bg-blue-500/10'>
+                  <div className='flex size-10 items-center justify-center rounded-lg bg-blue-500/10'>
                     <Video className='size-5 text-blue-400' />
                   </div>
                   <div>
-                    <h2 className='text-base font-semibold text-foreground'>
+                    <h2 className='text-foreground text-base font-semibold'>
                       Contenido de Video
                     </h2>
-                    <p className='text-sm text-muted-foreground'>
+                    <p className='text-muted-foreground text-sm'>
                       Sube un video o usa una URL de YouTube/Vimeo
                     </p>
                   </div>
@@ -396,36 +403,38 @@ export default function CreateLessonPage() {
                 <RadioGroup
                   value={videoSource}
                   onValueChange={(v) => setVideoSource(v as VideoSourceType)}
-                  className='grid sm:grid-cols-2 gap-3'
+                  className='grid gap-3 sm:grid-cols-2'
                 >
                   <label
                     className={cn(
-                      'flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all',
+                      'flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all',
                       videoSource === 'url'
                         ? 'border-primary/50 bg-primary/5'
                         : 'border-border/60 bg-secondary/20 hover:border-border'
                     )}
                   >
                     <RadioGroupItem value='url' id='url' />
-                    <LinkIcon className='size-4 text-muted-foreground' />
+                    <LinkIcon className='text-muted-foreground size-4' />
                     <div>
                       <p className='text-sm font-medium'>URL del video</p>
-                      <p className='text-xs text-muted-foreground'>YouTube, Vimeo</p>
+                      <p className='text-muted-foreground text-xs'>
+                        YouTube, Vimeo
+                      </p>
                     </div>
                   </label>
                   <label
                     className={cn(
-                      'flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all',
+                      'flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-all',
                       videoSource === 'file'
                         ? 'border-primary/50 bg-primary/5'
                         : 'border-border/60 bg-secondary/20 hover:border-border'
                     )}
                   >
                     <RadioGroupItem value='file' id='file' />
-                    <Upload className='size-4 text-muted-foreground' />
+                    <Upload className='text-muted-foreground size-4' />
                     <div>
                       <p className='text-sm font-medium'>Subir archivo</p>
-                      <p className='text-xs text-muted-foreground'>MP4, WebM</p>
+                      <p className='text-muted-foreground text-xs'>MP4, WebM</p>
                     </div>
                   </label>
                 </RadioGroup>
@@ -446,10 +455,10 @@ export default function CreateLessonPage() {
                     {videoPreview && (
                       <div className='space-y-2'>
                         <Label>Vista previa</Label>
-                        <div className='relative aspect-video w-full overflow-hidden rounded-lg border border-border/60 bg-black'>
+                        <div className='border-border/60 relative aspect-video w-full overflow-hidden rounded-lg border bg-black'>
                           <iframe
                             src={videoPreview}
-                            className='absolute inset-0 w-full h-full'
+                            className='absolute inset-0 h-full w-full'
                             allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                             allowFullScreen
                           />
@@ -461,19 +470,23 @@ export default function CreateLessonPage() {
                   <div className='space-y-4'>
                     <div
                       className={cn(
-                        'flex flex-col items-center justify-center gap-4 p-8 rounded-lg border-2 border-dashed transition-all',
+                        'flex flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed p-8 transition-all',
                         'hover:border-primary/50 hover:bg-primary/5',
-                        videoFile ? 'border-primary/50 bg-primary/5' : 'border-border/60'
+                        videoFile
+                          ? 'border-primary/50 bg-primary/5'
+                          : 'border-border/60'
                       )}
                     >
                       {videoFile ? (
                         <>
-                          <div className='flex items-center justify-center size-14 rounded-full bg-primary/10'>
-                            <Video className='size-7 text-primary' />
+                          <div className='bg-primary/10 flex size-14 items-center justify-center rounded-full'>
+                            <Video className='text-primary size-7' />
                           </div>
                           <div className='text-center'>
-                            <p className='font-medium text-foreground'>{videoFile.name}</p>
-                            <p className='text-sm text-muted-foreground'>
+                            <p className='text-foreground font-medium'>
+                              {videoFile.name}
+                            </p>
+                            <p className='text-muted-foreground text-sm'>
                               {(videoFile.size / 1024 / 1024).toFixed(2)} MB
                             </p>
                           </div>
@@ -484,20 +497,20 @@ export default function CreateLessonPage() {
                             onClick={() => setVideoFile(null)}
                             className='text-destructive hover:text-destructive'
                           >
-                            <X className='size-4 mr-1' />
+                            <X className='mr-1 size-4' />
                             Quitar archivo
                           </Button>
                         </>
                       ) : (
                         <>
-                          <div className='flex items-center justify-center size-14 rounded-full bg-secondary/60'>
-                            <Upload className='size-7 text-muted-foreground' />
+                          <div className='bg-secondary/60 flex size-14 items-center justify-center rounded-full'>
+                            <Upload className='text-muted-foreground size-7' />
                           </div>
                           <div className='text-center'>
-                            <p className='font-medium text-foreground'>
+                            <p className='text-foreground font-medium'>
                               Arrastra un video aqui
                             </p>
-                            <p className='text-sm text-muted-foreground'>
+                            <p className='text-muted-foreground text-sm'>
                               o haz clic para seleccionar
                             </p>
                           </div>
@@ -521,14 +534,14 @@ export default function CreateLessonPage() {
             {lessonType === 'text' && (
               <>
                 <div className='flex items-center gap-3'>
-                  <div className='flex items-center justify-center size-10 rounded-lg bg-emerald-500/10'>
+                  <div className='flex size-10 items-center justify-center rounded-lg bg-emerald-500/10'>
                     <FileText className='size-5 text-emerald-400' />
                   </div>
                   <div>
-                    <h2 className='text-base font-semibold text-foreground'>
+                    <h2 className='text-foreground text-base font-semibold'>
                       Contenido de Lectura
                     </h2>
-                    <p className='text-sm text-muted-foreground'>
+                    <p className='text-muted-foreground text-sm'>
                       Usa el editor para crear articulos con formato enriquecido
                     </p>
                   </div>
@@ -545,27 +558,23 @@ export default function CreateLessonPage() {
           </section>
 
           {/* Actions footer */}
-          <div className='flex items-center justify-between pt-4 border-t border-border/40'>
+          <div className='border-border/40 flex items-center justify-between border-t pt-4'>
             <Button type='button' variant='ghost' onClick={handleBack}>
               Cancelar
             </Button>
             <div className='flex items-center gap-3'>
-              <Button
-                type='button'
-                variant='outline'
-                disabled={!title}
-              >
-                <Eye className='size-4 mr-2' />
+              <Button type='button' variant='outline' disabled={!title}>
+                <Eye className='mr-2 size-4' />
                 Vista previa
               </Button>
               <Button
                 type='submit'
                 disabled={isLoading || createLesson.isPending || !title.trim()}
-                className='gap-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_16px_rgba(99,102,241,0.2)]'
+                className='bg-primary text-primary-foreground hover:bg-primary/90 gap-2 shadow-[0_0_16px_rgba(99,102,241,0.2)]'
               >
                 {isLoading || createLesson.isPending ? (
                   <>
-                    <div className='size-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin' />
+                    <div className='border-primary-foreground/30 border-t-primary-foreground size-4 animate-spin rounded-full border-2' />
                     Guardando...
                   </>
                 ) : (

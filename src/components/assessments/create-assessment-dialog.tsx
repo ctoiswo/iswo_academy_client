@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import type {
-  CreateAssessmentRequest,
-  AssessmentType,
-} from '@/types'
+import type { CreateAssessmentRequest, AssessmentType } from '@/types'
 import { Plus } from 'lucide-react'
 import { useCreateAssessment } from '@/hooks/use-assessments'
 import { Button } from '@/components/ui/button'

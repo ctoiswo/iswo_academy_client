@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { Footer, Navbar } from '@/components'
 import { usePublicAcademiesInfinite } from '@/hooks/use-academies'
-import { useAcademyCategories } from '@/hooks/use-featured-content'
 import { useDebounce } from '@/hooks/use-debounce'
-import { AcademiesHero } from './containers/academies-hero'
+import { useAcademyCategories } from '@/hooks/use-featured-content'
+import { Particles } from '@/components/ui/particles'
+import { AcademiesCta } from './components/academies-cta'
 import { AcademiesFilter } from './containers/academies-filter'
 import { AcademiesGrid } from './containers/academies-grid'
-import { AcademiesCta } from './components/academies-cta'
-import { Particles } from '@/components/ui/particles'
+import { AcademiesHero } from './containers/academies-hero'
 
 export function AcademiesLandingPage() {
   const [search, setSearch] = useState('')
@@ -15,17 +15,12 @@ export function AcademiesLandingPage() {
 
   const debouncedSearch = useDebounce(search, 350)
 
-  const {
-    data,
-    isLoading,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasNextPage,
-  } = usePublicAcademiesInfinite({
-    search: debouncedSearch || undefined,
-    category: activeCategory ?? undefined,
-    per_page: 12,
-  })
+  const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    usePublicAcademiesInfinite({
+      search: debouncedSearch || undefined,
+      category: activeCategory ?? undefined,
+      per_page: 12,
+    })
 
   const { data: categories = [] } = useAcademyCategories()
 
@@ -59,9 +54,9 @@ export function AcademiesLandingPage() {
   }
 
   return (
-    <div className='min-h-screen flex flex-col bg-background'>
+    <div className='bg-background flex min-h-screen flex-col'>
       <Particles
-        className='fixed inset-0 z-0 pointer-events-none'
+        className='pointer-events-none fixed inset-0 z-0'
         quantity={120}
         ease={80}
         size={0.4}
@@ -74,7 +69,7 @@ export function AcademiesLandingPage() {
         totalAcademies={totalCount}
       />
 
-      <main className='flex-1 max-w-7xl mx-auto w-full px-4 lg:px-8 pb-24'>
+      <main className='mx-auto w-full max-w-7xl flex-1 px-4 pb-24 lg:px-8'>
         <AcademiesFilter
           categories={categories}
           activeCategory={activeCategory}

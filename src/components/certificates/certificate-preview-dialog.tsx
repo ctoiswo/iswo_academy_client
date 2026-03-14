@@ -69,9 +69,9 @@ export function CertificatePreviewDialog({
               }}
             />
           ) : (
-            <div className='py-12 text-center text-muted-foreground'>
+            <div className='text-muted-foreground py-12 text-center'>
               <p>No se pudo cargar la vista previa</p>
-              <p className='mt-2 text-sm text-muted-foreground'>
+              <p className='text-muted-foreground mt-2 text-sm'>
                 Haz clic en "Abrir en Nueva Pestaña" para ver el certificado
                 completo
               </p>

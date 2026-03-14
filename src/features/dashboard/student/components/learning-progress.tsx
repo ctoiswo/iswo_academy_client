@@ -165,7 +165,7 @@ export function LearningProgress({
       >
         {progressData.length === 0 ? (
           <div className='py-8 text-center'>
-            <BookOpen className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
+            <BookOpen className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
             <p className='text-muted-foreground'>No progress data available</p>
           </div>
         ) : (
@@ -174,7 +174,7 @@ export function LearningProgress({
               <div key={progress.course_id} className='rounded-lg border p-4'>
                 <div className='mb-3 flex items-center justify-between'>
                   <h3 className='font-medium'>{progress.course_title}</h3>
-                  <span className='text-sm text-muted-foreground'>
+                  <span className='text-muted-foreground text-sm'>
                     {Math.round(progress.progress_percentage)}% complete
                   </span>
                 </div>
@@ -184,7 +184,7 @@ export function LearningProgress({
                   className='mb-3'
                 />
 
-                <div className='flex items-center justify-between text-sm text-muted-foreground'>
+                <div className='text-muted-foreground flex items-center justify-between text-sm'>
                   <span>
                     {progress.completed_lessons} of {progress.total_lessons}{' '}
                     lessons completed

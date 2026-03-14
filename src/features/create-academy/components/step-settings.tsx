@@ -1,6 +1,6 @@
 import type { UseFormReturn } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 import { DollarSign, Eye, Lock, Target, Telescope } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import {
   FormControl,
   FormField,
@@ -9,8 +9,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
 import type { CreateAcademyFormValues } from './create-academy-form'
 
 interface StepSettingsProps {
@@ -22,12 +22,12 @@ export function StepSettings({ form }: StepSettingsProps) {
   const subscriptionRequired = form.watch('subscription_required')
 
   return (
-    <div className='flex flex-col gap-6 animate-in fade-in-0 slide-in-from-right-4 duration-500'>
+    <div className='animate-in fade-in-0 slide-in-from-right-4 flex flex-col gap-6 duration-500'>
       <div className='flex flex-col gap-1.5'>
         <h2 className='text-2xl font-bold tracking-tight'>
           {t('createAcademy.steps.settings')}
         </h2>
-        <p className='text-sm text-muted-foreground leading-relaxed'>
+        <p className='text-muted-foreground text-sm leading-relaxed'>
           Configura el acceso y la identidad de tu academia
         </p>
       </div>
@@ -37,16 +37,16 @@ export function StepSettings({ form }: StepSettingsProps) {
           control={form.control}
           name='is_public'
           render={({ field }) => (
-            <FormItem className='flex flex-row items-center justify-between rounded-xl border border-border bg-secondary/20 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-secondary/30'>
+            <FormItem className='border-border bg-secondary/20 hover:border-primary/30 hover:bg-secondary/30 flex flex-row items-center justify-between rounded-xl border p-4 transition-all duration-300'>
               <div className='flex items-center gap-3'>
-                <div className='flex items-center justify-center size-9 rounded-lg bg-primary/10'>
-                  <Eye className='size-4 text-primary' />
+                <div className='bg-primary/10 flex size-9 items-center justify-center rounded-lg'>
+                  <Eye className='text-primary size-4' />
                 </div>
                 <div className='flex flex-col gap-0.5'>
-                  <FormLabel className='text-sm font-medium leading-none cursor-pointer'>
+                  <FormLabel className='cursor-pointer text-sm leading-none font-medium'>
                     {t('createAcademy.fields.isPublic')}
                   </FormLabel>
-                  <p className='text-xs text-muted-foreground'>
+                  <p className='text-muted-foreground text-xs'>
                     {t('createAcademy.fields.isPublicHelp')}
                   </p>
                 </div>
@@ -65,16 +65,16 @@ export function StepSettings({ form }: StepSettingsProps) {
           control={form.control}
           name='subscription_required'
           render={({ field }) => (
-            <FormItem className='flex flex-row items-center justify-between rounded-xl border border-border bg-secondary/20 p-4 transition-all duration-300 hover:border-primary/30 hover:bg-secondary/30'>
+            <FormItem className='border-border bg-secondary/20 hover:border-primary/30 hover:bg-secondary/30 flex flex-row items-center justify-between rounded-xl border p-4 transition-all duration-300'>
               <div className='flex items-center gap-3'>
-                <div className='flex items-center justify-center size-9 rounded-lg bg-primary/10'>
-                  <Lock className='size-4 text-primary' />
+                <div className='bg-primary/10 flex size-9 items-center justify-center rounded-lg'>
+                  <Lock className='text-primary size-4' />
                 </div>
                 <div className='flex flex-col gap-0.5'>
-                  <FormLabel className='text-sm font-medium leading-none cursor-pointer'>
+                  <FormLabel className='cursor-pointer text-sm leading-none font-medium'>
                     {t('createAcademy.fields.subscriptionRequired')}
                   </FormLabel>
-                  <p className='text-xs text-muted-foreground'>
+                  <p className='text-muted-foreground text-xs'>
                     {t('createAcademy.fields.subscriptionRequiredHelp')}
                   </p>
                 </div>
@@ -95,13 +95,13 @@ export function StepSettings({ form }: StepSettingsProps) {
             name='monthly_price'
             render={({ field }) => (
               <FormItem className='flex flex-col gap-2'>
-                <FormLabel className='flex items-center gap-1.5 text-sm text-foreground'>
-                  <DollarSign className='size-4 text-primary' />
+                <FormLabel className='text-foreground flex items-center gap-1.5 text-sm'>
+                  <DollarSign className='text-primary size-4' />
                   {t('createAcademy.fields.monthlyPrice')}
                 </FormLabel>
                 <FormControl>
                   <div className='relative'>
-                    <span className='absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground select-none pointer-events-none'>
+                    <span className='text-muted-foreground pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-sm select-none'>
                       $
                     </span>
                     <Input
@@ -109,13 +109,13 @@ export function StepSettings({ form }: StepSettingsProps) {
                       min={0}
                       step={1000}
                       placeholder='50000'
-                      className='h-11 pl-7 bg-secondary/50 border-border focus-visible:border-primary focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 transition-all duration-300'
+                      className='bg-secondary/50 border-border focus-visible:border-primary focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 h-11 pl-7 transition-all duration-300'
                       {...field}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     />
                   </div>
                 </FormControl>
-                <p className='text-xs text-muted-foreground'>
+                <p className='text-muted-foreground text-xs'>
                   {t('createAcademy.fields.monthlyPriceHelp')}
                 </p>
                 <FormMessage />
@@ -129,8 +129,8 @@ export function StepSettings({ form }: StepSettingsProps) {
           name='mission'
           render={({ field }) => (
             <FormItem className='flex flex-col gap-2'>
-              <FormLabel className='flex items-center gap-1.5 text-sm text-foreground'>
-                <Target className='size-4 text-primary' />
+              <FormLabel className='text-foreground flex items-center gap-1.5 text-sm'>
+                <Target className='text-primary size-4' />
                 {t('createAcademy.fields.mission')}
               </FormLabel>
               <FormControl>
@@ -151,8 +151,8 @@ export function StepSettings({ form }: StepSettingsProps) {
           name='vision'
           render={({ field }) => (
             <FormItem className='flex flex-col gap-2'>
-              <FormLabel className='flex items-center gap-1.5 text-sm text-foreground'>
-                <Telescope className='size-4 text-primary' />
+              <FormLabel className='text-foreground flex items-center gap-1.5 text-sm'>
+                <Telescope className='text-primary size-4' />
                 {t('createAcademy.fields.vision')}
               </FormLabel>
               <FormControl>

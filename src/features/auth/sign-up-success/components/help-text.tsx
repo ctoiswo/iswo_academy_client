@@ -12,7 +12,7 @@ export function HelpText({ mounted, onResend }: HelpTextProps) {
   return (
     <p
       className={cn(
-        'text-xs text-muted-foreground/60 transition-all duration-700 delay-[1100ms]',
+        'text-muted-foreground/60 text-xs transition-all delay-[1100ms] duration-700',
         mounted ? 'opacity-100' : 'opacity-0'
       )}
     >

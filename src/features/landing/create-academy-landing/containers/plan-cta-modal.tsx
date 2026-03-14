@@ -27,7 +27,7 @@ export function PlanCtaModal({
           <DialogTitle className='text-xl font-bold'>
             Empezar con {planName}
           </DialogTitle>
-          <DialogDescription className='text-sm text-muted-foreground'>
+          <DialogDescription className='text-muted-foreground text-sm'>
             ¿Cómo quieres continuar?
           </DialogDescription>
         </DialogHeader>
@@ -41,16 +41,16 @@ export function PlanCtaModal({
           >
             <Button
               variant='outline'
-              className='w-full h-auto py-4 flex items-start gap-4 text-left border-border/60 hover:border-primary/40 hover:bg-secondary/50 transition-all duration-200'
+              className='border-border/60 hover:border-primary/40 hover:bg-secondary/50 flex h-auto w-full items-start gap-4 py-4 text-left transition-all duration-200'
             >
-              <div className='flex items-center justify-center size-9 rounded-lg bg-secondary shrink-0 mt-0.5'>
-                <LogIn className='size-4 text-muted-foreground' />
+              <div className='bg-secondary mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg'>
+                <LogIn className='text-muted-foreground size-4' />
               </div>
               <div className='flex flex-col gap-0.5'>
-                <span className='text-sm font-semibold text-foreground'>
+                <span className='text-foreground text-sm font-semibold'>
                   Ya tengo una cuenta
                 </span>
-                <span className='text-xs text-muted-foreground font-normal leading-relaxed'>
+                <span className='text-muted-foreground text-xs leading-relaxed font-normal'>
                   Inicia sesión y te llevamos directamente al wizard de creación
                 </span>
               </div>
@@ -58,21 +58,16 @@ export function PlanCtaModal({
           </Link>
 
           {/* Option 2: Create new account */}
-          <Link
-            to='/create-academy'
-            onClick={() => onOpenChange(false)}
-          >
-            <Button
-              className='w-full h-auto py-4 flex items-start gap-4 text-left bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:shadow-[0_0_28px_rgba(99,102,241,0.35)] transition-all duration-200'
-            >
-              <div className='flex items-center justify-center size-9 rounded-lg bg-primary-foreground/10 shrink-0 mt-0.5'>
+          <Link to='/create-academy' onClick={() => onOpenChange(false)}>
+            <Button className='bg-primary text-primary-foreground hover:bg-primary/90 flex h-auto w-full items-start gap-4 py-4 text-left shadow-[0_0_20px_rgba(99,102,241,0.2)] transition-all duration-200 hover:shadow-[0_0_28px_rgba(99,102,241,0.35)]'>
+              <div className='bg-primary-foreground/10 mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg'>
                 <UserPlus className='size-4' />
               </div>
               <div className='flex flex-col gap-0.5'>
                 <span className='text-sm font-semibold'>
                   Crear cuenta nueva
                 </span>
-                <span className='text-xs text-primary-foreground/70 font-normal leading-relaxed'>
+                <span className='text-primary-foreground/70 text-xs leading-relaxed font-normal'>
                   Regístrate y configura tu academia en un solo flujo
                 </span>
               </div>

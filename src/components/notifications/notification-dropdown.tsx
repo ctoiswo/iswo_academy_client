@@ -102,7 +102,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
               {/* Notifications List */}
               <ScrollArea className='max-h-96'>
                 {notifications.length === 0 ? (
-                  <div className='p-8 text-center text-muted-foreground'>
+                  <div className='text-muted-foreground p-8 text-center'>
                     <Bell size={32} className='mx-auto mb-2 opacity-50' />
                     <p>No tienes notificaciones</p>
                   </div>
@@ -145,13 +145,13 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                             </div>
 
                             {notification.body && (
-                              <p className='mt-1 line-clamp-2 text-xs text-muted-foreground'>
+                              <p className='text-muted-foreground mt-1 line-clamp-2 text-xs'>
                                 {notification.body}
                               </p>
                             )}
 
                             <div className='mt-2 flex items-center justify-between'>
-                              <span className='text-xs text-muted-foreground'>
+                              <span className='text-muted-foreground text-xs'>
                                 {formatDistanceToNow(
                                   new Date(notification.created_at),
                                   {
@@ -172,10 +172,10 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                             {/* Actor Info */}
                             {notification.actor && (
                               <div className='mt-1 flex items-center gap-1'>
-                                <span className='text-xs text-muted-foreground'>
+                                <span className='text-muted-foreground text-xs'>
                                   por
                                 </span>
-                                <span className='text-xs font-medium text-muted-foreground'>
+                                <span className='text-muted-foreground text-xs font-medium'>
                                   {notification.actor.full_name}
                                 </span>
                               </div>

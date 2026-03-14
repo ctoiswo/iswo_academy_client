@@ -3,16 +3,19 @@ import { useNavigate } from '@tanstack/react-router'
 import { PlayCircle, ArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
+import { useUserEnrollments } from '@/hooks/use-enrollments'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { useUserEnrollments } from '@/hooks/use-enrollments'
 
 interface ContinueLearningProps {
   mounted: boolean
   academySlug: string
 }
 
-export function ContinueLearning({ mounted, academySlug }: ContinueLearningProps) {
+export function ContinueLearning({
+  mounted,
+  academySlug,
+}: ContinueLearningProps) {
   const { t } = useTranslation()
   const c = 'dashboard.student.continueLearning'
   const navigate = useNavigate()
@@ -36,60 +39,64 @@ export function ContinueLearning({ mounted, academySlug }: ContinueLearningProps
     <section
       id='continue'
       className={cn(
-        'transition-all duration-700 delay-200',
-        mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4',
+        'transition-all delay-200 duration-700',
+        mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
       )}
     >
-      <h2 className='text-lg font-semibold text-foreground mb-4'>
+      <h2 className='text-foreground mb-4 text-lg font-semibold'>
         {t(`${c}.title`)}
       </h2>
 
-      <div className='group relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-primary/5 via-card to-card hover:border-primary/40 transition-all duration-500 hover:shadow-[0_0_40px_rgba(99,102,241,0.1)]'>
+      <div className='group border-border/60 from-primary/5 via-card to-card hover:border-primary/40 relative overflow-hidden rounded-2xl border bg-gradient-to-br transition-all duration-500 hover:shadow-[0_0_40px_rgba(99,102,241,0.1)]'>
         <div className='flex flex-col md:flex-row'>
-          <div className='relative w-full md:w-72 h-40 md:h-auto bg-gradient-to-br from-indigo-500/30 to-indigo-600/10 shrink-0'>
+          <div className='relative h-40 w-full shrink-0 bg-gradient-to-br from-indigo-500/30 to-indigo-600/10 md:h-auto md:w-72'>
             <div className='absolute inset-0 flex items-center justify-center'>
-              <div className='size-20 rounded-2xl bg-primary/20 flex items-center justify-center backdrop-blur-sm border border-primary/20'>
-                <PlayCircle className='size-10 text-primary' />
+              <div className='bg-primary/20 border-primary/20 flex size-20 items-center justify-center rounded-2xl border backdrop-blur-sm'>
+                <PlayCircle className='text-primary size-10' />
               </div>
             </div>
-            <div className='absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-card to-transparent md:hidden' />
-            <div className='hidden md:block absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-card to-transparent' />
+            <div className='from-card absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t to-transparent md:hidden' />
+            <div className='from-card absolute inset-y-0 right-0 hidden w-16 bg-gradient-to-l to-transparent md:block' />
           </div>
 
-          <div className='flex-1 p-6 flex flex-col justify-center gap-4'>
+          <div className='flex flex-1 flex-col justify-center gap-4 p-6'>
             <div className='flex flex-col gap-2'>
               <Badge
                 variant='outline'
-                className='w-fit gap-1 text-[10px] bg-primary/10 border-primary/25 text-primary'
+                className='bg-primary/10 border-primary/25 text-primary w-fit gap-1 text-[10px]'
               >
                 <PlayCircle className='size-3' />
                 {t(`${c}.inProgress`)}
               </Badge>
-              <h3 className='text-xl md:text-2xl font-bold text-foreground'>
+              <h3 className='text-foreground text-xl font-bold md:text-2xl'>
                 {lastCourse.title}
               </h3>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 {t(`${c}.completedPercent`, { progress: lastCourse.progress })}
               </p>
             </div>
 
             <div className='flex flex-col gap-2'>
               <div className='flex items-center justify-between text-xs'>
-                <span className='text-muted-foreground'>{t(`${c}.courseProgress`)}</span>
-                <span className='text-primary font-semibold'>{lastCourse.progress}%</span>
+                <span className='text-muted-foreground'>
+                  {t(`${c}.courseProgress`)}
+                </span>
+                <span className='text-primary font-semibold'>
+                  {lastCourse.progress}%
+                </span>
               </div>
-              <div className='relative h-3 rounded-full bg-secondary overflow-hidden'>
+              <div className='bg-secondary relative h-3 overflow-hidden rounded-full'>
                 <div
-                  className='absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/80 rounded-full transition-all duration-1000 ease-out'
+                  className='from-primary to-primary/80 absolute inset-y-0 left-0 rounded-full bg-gradient-to-r transition-all duration-1000 ease-out'
                   style={{ width: mounted ? `${lastCourse.progress}%` : '0%' }}
                 />
-                <div className='absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse' />
+                <div className='absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent' />
               </div>
             </div>
 
             <Button
               size='lg'
-              className='w-full md:w-auto gap-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] group/btn'
+              className='bg-primary text-primary-foreground hover:bg-primary/90 group/btn w-full gap-2 transition-all duration-300 hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] md:w-auto'
               onClick={() =>
                 navigate({
                   to: '/academy/$academySlug/my-courses',
@@ -100,7 +107,7 @@ export function ContinueLearning({ mounted, academySlug }: ContinueLearningProps
             >
               <PlayCircle className='size-5' />
               {t(`${c}.continue`)}
-              <ArrowRight className='size-4 group-hover/btn:translate-x-1 transition-transform' />
+              <ArrowRight className='size-4 transition-transform group-hover/btn:translate-x-1' />
             </Button>
           </div>
         </div>

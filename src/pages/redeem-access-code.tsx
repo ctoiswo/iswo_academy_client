@@ -35,14 +35,16 @@ export default function RedeemAccessCodePage() {
           <h1 className='mb-4 text-3xl font-bold'>
             {t('accessCode.redeem.title')}
           </h1>
-          <p className='text-muted-foreground'>{t('accessCode.redeem.description')}</p>
+          <p className='text-muted-foreground'>
+            {t('accessCode.redeem.description')}
+          </p>
         </div>
 
         {/* Redemption component */}
         <AccessCodeRedemption onSuccess={handleSuccess} />
 
         {/* Help section */}
-        <div className='mt-8 text-center text-sm text-muted-foreground'>
+        <div className='text-muted-foreground mt-8 text-center text-sm'>
           <p>
             {t('accessCode.redeem.helpText')}
             <br />

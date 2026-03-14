@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { useAssignments } from '@/hooks/use-assignments'
 import { useCourse } from '@/hooks/use-courses'
 import { useSections } from '@/hooks/use-sections'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -21,7 +22,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Button } from '@/components/ui/button'
 import { AssignmentCard } from '@/components/assignments/assignment-card'
 
 export default function CourseAssignmentsPage() {
@@ -43,7 +43,6 @@ export default function CourseAssignmentsPage() {
     error: courseError,
   } = useCourse(courseSlug)
   const { data: sections = [] } = useSections(academySlug, courseSlug)
-
 
   const assignmentParams = {
     status: statusFilter === 'all' ? undefined : statusFilter,
@@ -193,7 +192,7 @@ export default function CourseAssignmentsPage() {
               <Skeleton className='h-48' />
             </div>
           ) : filteredAssignments.length === 0 ? (
-            <div className='py-12 text-center text-muted-foreground'>
+            <div className='text-muted-foreground py-12 text-center'>
               <CheckSquare className='mx-auto mb-4 h-12 w-12' />
               <h3 className='mb-2 text-lg font-medium'>
                 {assignments.length === 0

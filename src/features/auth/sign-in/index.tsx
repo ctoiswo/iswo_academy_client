@@ -12,7 +12,11 @@ export function SignIn() {
     if (error) {
       toast.error(decodeURIComponent(error))
       // Remove the error from the URL without adding a history entry
-      navigate({ to: '/sign-in', search: redirect ? { redirect } : {}, replace: true })
+      navigate({
+        to: '/sign-in',
+        search: redirect ? { redirect } : {},
+        replace: true,
+      })
     }
   }, [error, redirect, navigate])
 

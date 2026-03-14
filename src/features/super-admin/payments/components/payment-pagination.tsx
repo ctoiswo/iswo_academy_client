@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { useTranslation } from '@/hooks/use-translation'
 import type { PaymentsMeta } from '@/lib/super-admin-api'
+import { useTranslation } from '@/hooks/use-translation'
+import { Button } from '@/components/ui/button'
 
 interface PaymentPaginationProps {
   meta: PaymentsMeta
@@ -18,7 +18,10 @@ export function PaymentPagination({
 
   if (meta.total_pages <= 1) return null
 
-  const pages = Array.from({ length: meta.total_pages }, (_, i) => i + 1).filter(
+  const pages = Array.from(
+    { length: meta.total_pages },
+    (_, i) => i + 1
+  ).filter(
     (p) =>
       p === 1 ||
       p === meta.total_pages ||

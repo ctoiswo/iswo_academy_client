@@ -1,10 +1,14 @@
-import type { SuperAdminUser, UsersMeta, GetUsersParams } from '@/lib/super-admin-api'
-import type { FilterType, ConfirmTarget } from '../types'
-import { UserStatsCards } from '../components/user-stats-cards'
-import { UserFilters } from '../components/user-filters'
-import { UserTable } from '../components/user-table'
-import { UserPagination } from '../components/user-pagination'
+import type {
+  SuperAdminUser,
+  UsersMeta,
+  GetUsersParams,
+} from '@/lib/super-admin-api'
 import { ToggleSuperAdminDialog } from '../components/toggle-super-admin-dialog'
+import { UserFilters } from '../components/user-filters'
+import { UserPagination } from '../components/user-pagination'
+import { UserStatsCards } from '../components/user-stats-cards'
+import { UserTable } from '../components/user-table'
+import type { FilterType, ConfirmTarget } from '../types'
 
 interface UserManagementPanelProps {
   users: SuperAdminUser[]

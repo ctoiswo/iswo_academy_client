@@ -31,14 +31,14 @@ export function WhatsNextSection({ mounted }: WhatsNextSectionProps) {
   return (
     <div
       className={cn(
-        'w-full flex flex-col gap-4 transition-all duration-700 delay-700',
-        mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+        'flex w-full flex-col gap-4 transition-all delay-700 duration-700',
+        mounted ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
       )}
     >
-      <p className='text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+      <p className='text-muted-foreground text-xs font-medium tracking-wider uppercase'>
         {t('auth.signUpSuccess.whatAwaits')}
       </p>
-      <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
+      <div className='grid grid-cols-1 gap-3 sm:grid-cols-3'>
         {features.map((item, i) => (
           <FeatureCard
             key={item.title}

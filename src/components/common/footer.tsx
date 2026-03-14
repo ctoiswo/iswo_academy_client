@@ -57,14 +57,10 @@ export function Footer() {
           >
             <h4 className='font-semibold'>{t('landing.footer.product')}</h4>
             <div className='space-y-2 text-sm'>
-              <button
-                className='text-muted-foreground hover:text-primary block transition-colors'
-              >
+              <button className='text-muted-foreground hover:text-primary block transition-colors'>
                 {t('landing.footer.features')}
               </button>
-              <button
-                className='text-muted-foreground hover:text-primary block transition-colors'
-              >
+              <button className='text-muted-foreground hover:text-primary block transition-colors'>
                 {t('landing.footer.pricing')}
               </button>
               <DemoDialog
@@ -87,9 +83,7 @@ export function Footer() {
           >
             <h4 className='font-semibold'>{t('landing.footer.company')}</h4>
             <div className='space-y-2 text-sm'>
-              <button
-                className='text-muted-foreground hover:text-primary block transition-colors'
-              >
+              <button className='text-muted-foreground hover:text-primary block transition-colors'>
                 {t('landing.footer.testimonials')}
               </button>
               <a

@@ -303,7 +303,9 @@ describe('AcademySelectionPage', () => {
     })
 
     it('should handle errors during academy selection gracefully', async () => {
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
       const errorMessage = 'Selection failed'
       mockSelectAcademy.mockImplementation(() => {
         throw new Error(errorMessage)

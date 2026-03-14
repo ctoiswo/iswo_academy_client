@@ -54,14 +54,14 @@ class AcademyService {
     view?: TView
   ): Promise<
     TView extends 'minimal'
-    ? AcademyMinimal
-    : TView extends 'summary_light'
-    ? AcademySummaryLight
-    : TView extends 'summary'
-    ? AcademySummary
-    : TView extends 'full'
-    ? AcademyFull
-    : AcademySummary
+      ? AcademyMinimal
+      : TView extends 'summary_light'
+        ? AcademySummaryLight
+        : TView extends 'summary'
+          ? AcademySummary
+          : TView extends 'full'
+            ? AcademyFull
+            : AcademySummary
   > {
     const params = view ? { view } : {}
     const response = await apiClient.get(`/academies/${slug}`, { params })
@@ -99,12 +99,12 @@ class AcademyService {
     data: (TView extends 'minimal'
       ? AcademyMinimal
       : TView extends 'summary_light'
-      ? AcademySummaryLight
-      : TView extends 'summary'
-      ? AcademySummary
-      : TView extends 'full'
-      ? AcademyFull
-      : AcademySummaryLight)[]
+        ? AcademySummaryLight
+        : TView extends 'summary'
+          ? AcademySummary
+          : TView extends 'full'
+            ? AcademyFull
+            : AcademySummaryLight)[]
     meta: PaginationMeta
   }> {
     const queryParams = {
@@ -197,8 +197,13 @@ class AcademyService {
    * @param academySlug - Academy slug
    * @param attachmentId - Attachment ID
    */
-  async deleteAttachment(academySlug: string, attachmentId: number): Promise<void> {
-    await apiClient.delete(`/academies/${academySlug}/attachments/${attachmentId}`)
+  async deleteAttachment(
+    academySlug: string,
+    attachmentId: number
+  ): Promise<void> {
+    await apiClient.delete(
+      `/academies/${academySlug}/attachments/${attachmentId}`
+    )
   }
 
   /**

@@ -7,8 +7,8 @@ interface AcademyCardsRowProps {
 
 export function AcademyCardsRow({ category }: AcademyCardsRowProps) {
   return (
-    <div className='flex-1 flex items-center px-4 pt-6 pb-8 lg:pt-8 lg:pb-8 lg:px-6 overflow-hidden'>
-      <div className='flex gap-4 overflow-x-auto pb-1 snap-x snap-mandatory no-scrollbar w-full'>
+    <div className='flex flex-1 items-center overflow-hidden px-4 pt-6 pb-8 lg:px-6 lg:pt-8 lg:pb-8'>
+      <div className='no-scrollbar flex w-full snap-x snap-mandatory gap-4 overflow-x-auto pb-1'>
         {category.academies.map((academy, i) => (
           <AcademyCard
             key={academy.id}

@@ -1,20 +1,12 @@
-import { useEditor, EditorContent, type Editor } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
-import Link from '@tiptap/extension-link'
+import { useState, useCallback } from 'react'
+import Highlight from '@tiptap/extension-highlight'
 import Image from '@tiptap/extension-image'
+import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import TextAlign from '@tiptap/extension-text-align'
-import Highlight from '@tiptap/extension-highlight'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { Input } from '@/components/ui/input'
-import { Separator } from '@/components/ui/separator'
+import Underline from '@tiptap/extension-underline'
+import { useEditor, EditorContent, type Editor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
 import {
   Bold,
   Italic,
@@ -39,7 +31,15 @@ import {
   Code2,
   RemoveFormatting,
 } from 'lucide-react'
-import { useState, useCallback } from 'react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Separator } from '@/components/ui/separator'
 
 interface RichTextEditorProps {
   content?: string
@@ -68,9 +68,9 @@ function ToolbarButton({
       disabled={disabled}
       title={title}
       className={cn(
-        'flex items-center justify-center size-8 rounded-md transition-all duration-200',
+        'flex size-8 items-center justify-center rounded-md transition-all duration-200',
         'hover:bg-primary/10 hover:text-primary',
-        'disabled:opacity-40 disabled:cursor-not-allowed',
+        'disabled:cursor-not-allowed disabled:opacity-40',
         isActive &&
           'bg-primary/15 text-primary shadow-[0_0_8px_rgba(99,102,241,0.15)]'
       )}
@@ -90,7 +90,12 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
       editor.chain().focus().extendMarkRange('link').unsetLink().run()
       return
     }
-    editor.chain().focus().extendMarkRange('link').setLink({ href: linkUrl }).run()
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange('link')
+      .setLink({ href: linkUrl })
+      .run()
     setLinkUrl('')
   }, [editor, linkUrl])
 
@@ -103,7 +108,7 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
   if (!editor) return null
 
   return (
-    <div className='flex items-center gap-0.5 flex-wrap p-2 border-b border-border/60 bg-secondary/20 rounded-t-lg'>
+    <div className='border-border/60 bg-secondary/20 flex flex-wrap items-center gap-0.5 rounded-t-lg border-b p-2'>
       <ToolbarButton
         onClick={() => editor.chain().focus().undo().run()}
         disabled={!editor.can().undo()}
@@ -119,7 +124,7 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
         <Redo className='size-4' />
       </ToolbarButton>
 
-      <Separator orientation='vertical' className='h-6 mx-1 bg-border/60' />
+      <Separator orientation='vertical' className='bg-border/60 mx-1 h-6' />
 
       <ToolbarButton
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -143,7 +148,7 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
         <Heading3 className='size-4' />
       </ToolbarButton>
 
-      <Separator orientation='vertical' className='h-6 mx-1 bg-border/60' />
+      <Separator orientation='vertical' className='bg-border/60 mx-1 h-6' />
 
       <ToolbarButton
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -181,7 +186,7 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
         <Highlighter className='size-4' />
       </ToolbarButton>
 
-      <Separator orientation='vertical' className='h-6 mx-1 bg-border/60' />
+      <Separator orientation='vertical' className='bg-border/60 mx-1 h-6' />
 
       <ToolbarButton
         onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -198,7 +203,7 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
         <ListOrdered className='size-4' />
       </ToolbarButton>
 
-      <Separator orientation='vertical' className='h-6 mx-1 bg-border/60' />
+      <Separator orientation='vertical' className='bg-border/60 mx-1 h-6' />
 
       <ToolbarButton
         onClick={() => editor.chain().focus().setTextAlign('left').run()}
@@ -222,7 +227,7 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
         <AlignRight className='size-4' />
       </ToolbarButton>
 
-      <Separator orientation='vertical' className='h-6 mx-1 bg-border/60' />
+      <Separator orientation='vertical' className='bg-border/60 mx-1 h-6' />
 
       <ToolbarButton
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -246,14 +251,14 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
         <Code2 className='size-4' />
       </ToolbarButton>
 
-      <Separator orientation='vertical' className='h-6 mx-1 bg-border/60' />
+      <Separator orientation='vertical' className='bg-border/60 mx-1 h-6' />
 
       <Popover>
         <PopoverTrigger asChild>
           <button
             type='button'
             className={cn(
-              'flex items-center justify-center size-8 rounded-md transition-all duration-200',
+              'flex size-8 items-center justify-center rounded-md transition-all duration-200',
               'hover:bg-primary/10 hover:text-primary',
               editor.isActive('link') && 'bg-primary/15 text-primary'
             )}
@@ -263,11 +268,11 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
           </button>
         </PopoverTrigger>
         <PopoverContent
-          className='w-80 p-3 bg-card border-border/60'
+          className='bg-card border-border/60 w-80 p-3'
           align='start'
         >
           <div className='flex flex-col gap-2'>
-            <label className='text-xs font-medium text-muted-foreground'>
+            <label className='text-muted-foreground text-xs font-medium'>
               URL del enlace
             </label>
             <div className='flex gap-2'>
@@ -276,7 +281,7 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
                 placeholder='https://ejemplo.com'
                 value={linkUrl}
                 onChange={(e) => setLinkUrl(e.target.value)}
-                className='h-8 text-sm bg-secondary/40'
+                className='bg-secondary/40 h-8 text-sm'
               />
               <Button size='sm' onClick={setLink} className='h-8 px-3'>
                 Aplicar
@@ -287,7 +292,7 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
                 variant='ghost'
                 size='sm'
                 onClick={() => editor.chain().focus().unsetLink().run()}
-                className='text-xs h-7'
+                className='h-7 text-xs'
               >
                 Quitar enlace
               </Button>
@@ -301,7 +306,7 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
           <button
             type='button'
             className={cn(
-              'flex items-center justify-center size-8 rounded-md transition-all duration-200',
+              'flex size-8 items-center justify-center rounded-md transition-all duration-200',
               'hover:bg-primary/10 hover:text-primary'
             )}
             title='Imagen'
@@ -310,11 +315,11 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
           </button>
         </PopoverTrigger>
         <PopoverContent
-          className='w-80 p-3 bg-card border-border/60'
+          className='bg-card border-border/60 w-80 p-3'
           align='start'
         >
           <div className='flex flex-col gap-2'>
-            <label className='text-xs font-medium text-muted-foreground'>
+            <label className='text-muted-foreground text-xs font-medium'>
               URL de la imagen
             </label>
             <div className='flex gap-2'>
@@ -323,7 +328,7 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
                 placeholder='https://ejemplo.com/imagen.jpg'
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
-                className='h-8 text-sm bg-secondary/40'
+                className='bg-secondary/40 h-8 text-sm'
               />
               <Button size='sm' onClick={addImage} className='h-8 px-3'>
                 Insertar
@@ -333,7 +338,7 @@ function EditorToolbar({ editor }: { editor: Editor | null }) {
         </PopoverContent>
       </Popover>
 
-      <Separator orientation='vertical' className='h-6 mx-1 bg-border/60' />
+      <Separator orientation='vertical' className='bg-border/60 mx-1 h-6' />
 
       <ToolbarButton
         onClick={() => editor.chain().focus().setHorizontalRule().run()}
@@ -417,8 +422,8 @@ export function RichTextEditor({
   return (
     <div
       className={cn(
-        'rounded-lg border border-border/60 bg-card overflow-hidden',
-        'focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/40',
+        'border-border/60 bg-card overflow-hidden rounded-lg border',
+        'focus-within:ring-primary/20 focus-within:border-primary/40 focus-within:ring-2',
         'transition-all duration-300',
         className
       )}

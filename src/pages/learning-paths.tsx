@@ -150,8 +150,8 @@ export default function LearningPathsPage() {
     return (
       <div className='container mx-auto py-8'>
         <div className='py-12 text-center'>
-          <Book className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
-          <h3 className='mb-2 text-lg font-medium text-foreground'>
+          <Book className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
+          <h3 className='text-foreground mb-2 text-lg font-medium'>
             No Academy Selected
           </h3>
           <p className='text-muted-foreground'>
@@ -170,7 +170,9 @@ export default function LearningPathsPage() {
           <h3 className='mb-2 text-lg font-bold text-red-600'>
             Error Loading Learning Paths
           </h3>
-          <p className='text-muted-foreground'>Please try refreshing the page</p>
+          <p className='text-muted-foreground'>
+            Please try refreshing the page
+          </p>
         </div>
       </div>
     )
@@ -182,7 +184,7 @@ export default function LearningPathsPage() {
       <div className='mb-8 flex items-center justify-between'>
         <div>
           <h1 className='text-3xl font-bold'>Learning Paths</h1>
-          <p className='mt-2 text-muted-foreground'>
+          <p className='text-muted-foreground mt-2'>
             Create and manage structured learning journeys for your students
           </p>
         </div>
@@ -239,11 +241,11 @@ export default function LearningPathsPage() {
         filteredLearningPaths.length === 0 &&
         learningPaths.length === 0 && (
           <div className='rounded-lg border-2 border-dashed border-gray-200 py-12 text-center'>
-            <Book className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
-            <h3 className='mb-2 text-lg font-medium text-foreground'>
+            <Book className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
+            <h3 className='text-foreground mb-2 text-lg font-medium'>
               No learning paths yet
             </h3>
-            <p className='mb-6 text-muted-foreground'>
+            <p className='text-muted-foreground mb-6'>
               Create your first learning path to get started
             </p>
             <Button onClick={() => setIsCreateModalOpen(true)}>
@@ -258,8 +260,8 @@ export default function LearningPathsPage() {
         filteredLearningPaths.length === 0 &&
         learningPaths.length > 0 && (
           <div className='py-12 text-center'>
-            <Book className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
-            <h3 className='mb-2 text-lg font-medium text-foreground'>
+            <Book className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
+            <h3 className='text-foreground mb-2 text-lg font-medium'>
               No learning paths found
             </h3>
             <p className='text-muted-foreground'>
@@ -309,7 +311,7 @@ export default function LearningPathsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className='grid grid-cols-3 gap-4 text-sm text-muted-foreground'>
+                <div className='text-muted-foreground grid grid-cols-3 gap-4 text-sm'>
                   <div className='flex items-center gap-1'>
                     <Book className='h-4 w-4' />
                     <span>{learningPath.courses_count} courses</span>

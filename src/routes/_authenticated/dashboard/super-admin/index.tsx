@@ -1,7 +1,6 @@
-
 import { createFileRoute } from '@tanstack/react-router'
-import { SuperAdminDashboard } from '@/features/dashboard/super-admin'
 import { useAuthStore } from '@/stores/auth-store'
+import { SuperAdminDashboard } from '@/features/dashboard/super-admin'
 
 function SuperAdminDashboardRoute() {
   const { user } = useAuthStore()

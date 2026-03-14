@@ -20,7 +20,7 @@ export function CategoryProgressBars({
         <button
           key={cat.id}
           onClick={() => onGoTo(i)}
-          className='relative flex-1 h-[3px] rounded-full overflow-hidden bg-foreground/[0.08]'
+          className='bg-foreground/[0.08] relative h-[3px] flex-1 overflow-hidden rounded-full'
           aria-label={`Ir a ${cat.name}`}
         >
           {i < activeIndex && (

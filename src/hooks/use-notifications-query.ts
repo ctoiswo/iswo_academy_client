@@ -1,5 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { notificationService, type Notification } from '@/services/notification-service'
+import {
+  notificationService,
+  type Notification,
+} from '@/services/notification-service'
 import { useAuthStore } from '@/stores/auth-store'
 
 interface UseNotificationsListOptions {
@@ -13,7 +16,9 @@ interface UseNotificationsListOptions {
 /**
  * Hook para obtener la lista de notificaciones con paginación
  */
-export function useNotificationsList(options: UseNotificationsListOptions = {}) {
+export function useNotificationsList(
+  options: UseNotificationsListOptions = {}
+) {
   const { currentAcademy } = useAuthStore()
   const { enabled = true, ...params } = options
 
@@ -73,11 +78,14 @@ export function useMarkAsRead() {
   const { currentAcademy } = useAuthStore()
 
   return useMutation({
-    mutationFn: (notificationId: number) => notificationService.markAsRead(notificationId),
+    mutationFn: (notificationId: number) =>
+      notificationService.markAsRead(notificationId),
     onSuccess: () => {
       // Invalidar queries relacionadas
       queryClient.invalidateQueries({ queryKey: ['notifications', 'list'] })
-      queryClient.invalidateQueries({ queryKey: ['notifications', 'unread', currentAcademy?.id] })
+      queryClient.invalidateQueries({
+        queryKey: ['notifications', 'unread', currentAcademy?.id],
+      })
       queryClient.invalidateQueries({ queryKey: ['notifications', 'stats'] })
     },
   })
@@ -106,7 +114,8 @@ export function useArchiveNotification() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (notificationId: number) => notificationService.archiveNotification(notificationId),
+    mutationFn: (notificationId: number) =>
+      notificationService.archiveNotification(notificationId),
     onSuccess: () => {
       // Invalidar queries
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
@@ -130,7 +139,9 @@ export function useOptimisticMarkAsRead() {
         return {
           ...old,
           data: old.data.map((n: Notification) =>
-            n.id === notificationId ? { ...n, read: true, read_at: new Date().toISOString() } : n
+            n.id === notificationId
+              ? { ...n, read: true, read_at: new Date().toISOString() }
+              : n
           ),
           meta: {
             ...old.meta,

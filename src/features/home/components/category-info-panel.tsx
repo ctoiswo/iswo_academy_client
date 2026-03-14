@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
 import { ArrowRight, type LucideIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import type { CategoryWithVisual } from '@/constants/home-constants'
 
@@ -16,7 +16,7 @@ export function CategoryInfoPanel({ category, Icon }: CategoryInfoPanelProps) {
       <div className='flex items-center gap-3'>
         <div
           className={cn(
-            'flex items-center justify-center size-11 rounded-xl bg-gradient-to-br shadow-lg',
+            'flex size-11 items-center justify-center rounded-xl bg-gradient-to-br shadow-lg',
             category.accentFrom,
             category.accentTo
           )}
@@ -25,24 +25,30 @@ export function CategoryInfoPanel({ category, Icon }: CategoryInfoPanelProps) {
         </div>
         <div className='flex flex-col'>
           <span
-            className='text-xl font-bold text-foreground leading-tight'
+            className='text-foreground text-xl leading-tight font-bold'
             style={{ fontFamily: 'var(--font-heading)' }}
           >
             {category.name}
           </span>
-          <span className='text-xs text-muted-foreground'>
-            {t('pages.home.academies.countLabel', { count: category.academies.length })}
+          <span className='text-muted-foreground text-xs'>
+            {t('pages.home.academies.countLabel', {
+              count: category.academies.length,
+            })}
           </span>
         </div>
       </div>
-      <p className='text-sm font-semibold text-foreground/90'>{category.tagline}</p>
-      <p className='text-xs text-muted-foreground leading-relaxed'>{category.description}</p>
+      <p className='text-foreground/90 text-sm font-semibold'>
+        {category.tagline}
+      </p>
+      <p className='text-muted-foreground text-xs leading-relaxed'>
+        {category.description}
+      </p>
       <Link
         to='/academies'
-        className='flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors w-fit group/link'
+        className='text-primary hover:text-primary/80 group/link flex w-fit items-center gap-1.5 text-sm font-medium transition-colors'
       >
         {t('pages.home.academies.viewAll')}
-        <ArrowRight className='size-3.5 group-hover/link:translate-x-0.5 transition-transform' />
+        <ArrowRight className='size-3.5 transition-transform group-hover/link:translate-x-0.5' />
       </Link>
     </div>
   )

@@ -1,6 +1,6 @@
-import { StudentDashboard } from '@/features/dashboard/student'
-import { useAuthStore } from '@/stores/auth-store'
 import { createFileRoute } from '@tanstack/react-router'
+import { useAuthStore } from '@/stores/auth-store'
+import { StudentDashboard } from '@/features/dashboard/student'
 
 function StudentDashboardRoute() {
   const { user, currentAcademy } = useAuthStore()

@@ -1,7 +1,13 @@
-import { DollarSign, CheckCircle, Clock, XCircle, RefreshCw } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useTranslation } from '@/hooks/use-translation'
+import {
+  DollarSign,
+  CheckCircle,
+  Clock,
+  XCircle,
+  RefreshCw,
+} from 'lucide-react'
 import type { PaymentsMeta } from '@/lib/super-admin-api'
+import { useTranslation } from '@/hooks/use-translation'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface PaymentStatsCardsProps {
   meta: PaymentsMeta
@@ -69,7 +75,8 @@ export function PaymentStatsCards({ meta }: PaymentStatsCardsProps) {
             </div>
             {'subKey' in card && card.subKey && (
               <p className='text-muted-foreground text-xs'>
-                {formatCurrency(meta[card.subKey!])} {t('superAdmin.payments.stats.thisMonth')}
+                {formatCurrency(meta[card.subKey!])}{' '}
+                {t('superAdmin.payments.stats.thisMonth')}
               </p>
             )}
           </CardContent>

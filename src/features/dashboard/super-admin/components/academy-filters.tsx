@@ -45,7 +45,9 @@ export function AcademyFilters({
               {t('super_admin.academies.statusLabel')}:{' '}
               {statusFilter === 'all'
                 ? t('super_admin.academies.statusAll')
-                : t(`super_admin.academies.status${statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1)}`)}
+                : t(
+                    `super_admin.academies.status${statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1)}`
+                  )}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -65,7 +67,9 @@ export function AcademyFilters({
         </DropdownMenu>
       </div>
 
-      <p className='text-muted-foreground text-sm'>{t('super_admin.academies.totalCount', { count: totalCount })}</p>
+      <p className='text-muted-foreground text-sm'>
+        {t('super_admin.academies.totalCount', { count: totalCount })}
+      </p>
     </div>
   )
 }

@@ -1,9 +1,6 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import type {
-  Assessment,
-  UpdateAssessmentRequest,
-} from '@/types'
+import type { Assessment, UpdateAssessmentRequest } from '@/types'
 import { useUpdateAssessment } from '@/hooks/use-assessments'
 import { Button } from '@/components/ui/button'
 import {
@@ -120,7 +117,7 @@ export function EditAssessmentDialog({
                 <p className='text-sm font-medium'>
                   {isQuiz ? 'Quiz de Sección' : 'Examen Final'}
                 </p>
-                <p className='text-xs text-muted-foreground'>
+                <p className='text-muted-foreground text-xs'>
                   {isQuiz
                     ? 'Evaluación de sección con múltiples intentos'
                     : 'Evaluación final del curso completo'}
@@ -247,7 +244,7 @@ export function EditAssessmentDialog({
                   <Label htmlFor='published' className='cursor-pointer'>
                     Publicado
                   </Label>
-                  <p className='text-xs text-muted-foreground'>
+                  <p className='text-muted-foreground text-xs'>
                     Los estudiantes pueden ver y realizar esta evaluación
                   </p>
                 </div>
@@ -266,7 +263,7 @@ export function EditAssessmentDialog({
                   >
                     Preguntas Aleatorias
                   </Label>
-                  <p className='text-xs text-muted-foreground'>
+                  <p className='text-muted-foreground text-xs'>
                     Mezclar el orden de las preguntas
                   </p>
                 </div>
@@ -287,7 +284,7 @@ export function EditAssessmentDialog({
                   >
                     Mostrar Respuestas Correctas
                   </Label>
-                  <p className='text-xs text-muted-foreground'>
+                  <p className='text-muted-foreground text-xs'>
                     Mostrar las respuestas correctas después de completar
                   </p>
                 </div>
@@ -309,7 +306,7 @@ export function EditAssessmentDialog({
                     >
                       Requiere Todas las Secciones Completas
                     </Label>
-                    <p className='text-xs text-muted-foreground'>
+                    <p className='text-muted-foreground text-xs'>
                       El estudiante debe completar todas las secciones primero
                     </p>
                   </div>

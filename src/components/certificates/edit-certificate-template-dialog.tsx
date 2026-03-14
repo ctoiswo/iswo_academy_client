@@ -20,7 +20,7 @@ export function EditCertificateTemplateDialog({ open, onOpenChange }: Props) {
         <DialogHeader>
           <DialogTitle>Editar Plantilla de Certificado</DialogTitle>
         </DialogHeader>
-        <div className='p-6 text-center text-muted-foreground'>
+        <div className='text-muted-foreground p-6 text-center'>
           <p>Funcionalidad de edición en desarrollo</p>
           <Button onClick={() => onOpenChange(false)} className='mt-4'>
             Cerrar

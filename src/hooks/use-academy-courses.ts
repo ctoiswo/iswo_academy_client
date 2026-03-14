@@ -7,7 +7,10 @@ import type { CourseFilters } from '@/types'
  * @param academySlug - The academy slug
  * @param filters - Optional filters for courses
  */
-export function useAcademyCourses(academySlug: string | undefined, filters?: CourseFilters) {
+export function useAcademyCourses(
+  academySlug: string | undefined,
+  filters?: CourseFilters
+) {
   return useQuery({
     queryKey: ['academy-courses', academySlug, filters],
     queryFn: async () => {

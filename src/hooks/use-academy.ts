@@ -46,7 +46,9 @@ export function useAcademy(slug: string) {
           setAcademy(academyData)
         } catch (error) {
           setError(
-            error instanceof Error ? error.message : 'Error al cargar la academia'
+            error instanceof Error
+              ? error.message
+              : 'Error al cargar la academia'
           )
         } finally {
           setLoading(false)

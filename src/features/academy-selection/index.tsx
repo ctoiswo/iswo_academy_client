@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import { Footer, Navbar } from '@/components'
 import type { AcademyMembership } from '@/types'
 import { useAuthStore } from '@/stores/auth-store'
+import { Particles } from '@/components/ui/particles'
 import {
   LoadingSpinner,
   PageHeader,
@@ -9,8 +11,6 @@ import {
   EmptyState,
   PageFooter,
 } from './components'
-import { Footer, Navbar } from '@/components'
-import { Particles } from '@/components/ui/particles'
 
 export function AcademySelectionPage() {
   const navigate = useNavigate()
@@ -41,16 +41,16 @@ export function AcademySelectionPage() {
   }
 
   return (
-    <div className='relative min-h-screen flex flex-col bg-background'>
+    <div className='bg-background relative flex min-h-screen flex-col'>
       <Particles
-        className='absolute inset-0 z-0 pointer-events-none'
+        className='pointer-events-none absolute inset-0 z-0'
         quantity={120}
         ease={80}
         size={0.4}
         staticity={50}
       />
       <Navbar />
-      <main className='relative z-10 flex-1 container mx-auto max-w-7xl px-4 py-16'>
+      <main className='relative z-10 container mx-auto max-w-7xl flex-1 px-4 py-16'>
         <PageHeader userName={user.first_name} />
 
         {academyData.count === 0 ? (

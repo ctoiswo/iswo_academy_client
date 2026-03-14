@@ -23,8 +23,8 @@ export function LanguageToggle({
   const { locale, setLocale } = useLocaleStore()
 
   const languages = [
-    { code: 'es', name: 'Español',  flag: '🇪🇸' },
-    { code: 'en', name: 'English',  flag: '🇺🇸' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
+    { code: 'en', name: 'English', flag: '🇺🇸' },
     { code: 'fr', name: 'Français', flag: '🇫🇷' },
     { code: 'it', name: 'Italiano', flag: '🇮🇹' },
   ] as const

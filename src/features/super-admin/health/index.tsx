@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useAuthStore } from '@/stores/auth-store'
-import { DashboardLayout } from '@/components/layout/dashboard-layout'
-import { superAdminApi, type SystemHealth } from '@/lib/super-admin-api'
-import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
 import { RefreshCw } from 'lucide-react'
+import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
+import { superAdminApi, type SystemHealth } from '@/lib/super-admin-api'
+import { Button } from '@/components/ui/button'
+import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { HealthDashboardPanel } from './containers/health-dashboard-panel'
 
 export function SuperAdminHealthPage() {
@@ -48,14 +48,18 @@ export function SuperAdminHealthPage() {
             onClick={() => loadHealth(true)}
             disabled={refreshing || loading}
           >
-            <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`}
+            />
             {refreshing ? 'Actualizando...' : 'Actualizar'}
           </Button>
         </div>
 
         {loading ? (
           <div className='py-20 text-center'>
-            <p className='text-muted-foreground'>Verificando estado del sistema...</p>
+            <p className='text-muted-foreground'>
+              Verificando estado del sistema...
+            </p>
           </div>
         ) : health ? (
           <HealthDashboardPanel health={health} />

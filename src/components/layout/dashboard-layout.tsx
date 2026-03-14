@@ -4,6 +4,7 @@ import { getCookie } from '@/lib/cookies'
 import { cn } from '@/lib/utils'
 import { LayoutProvider } from '@/context/layout-provider'
 import { SearchProvider } from '@/context/search-provider'
+import { Particles } from '@/components/ui/particles'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { ConfigDrawer } from '@/components/config-drawer'
 import type { DashboardType } from '@/components/dashboard-router'
@@ -16,7 +17,6 @@ import { NotificationDropdown } from '@/components/notifications'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { SkipToMain } from '@/components/skip-to-main'
-import { Particles } from '@/components/ui/particles'
 
 export type DashboardLayoutVariant = 'full' | 'sidebar' | 'compact'
 
@@ -143,7 +143,7 @@ function FullLayout({
       <LayoutProvider>
         <div className={cn('bg-background relative min-h-screen', className)}>
           <Particles
-            className='absolute inset-0 z-0 pointer-events-none'
+            className='pointer-events-none absolute inset-0 z-0'
             quantity={120}
             ease={80}
             size={0.4}
@@ -156,7 +156,7 @@ function FullLayout({
             <div className='flex w-full items-center justify-between'>
               <div className='flex items-center space-x-4'>
                 <div className='flex flex-col'>
-                  <h1 className='text-xl font-semibold leading-tight'>
+                  <h1 className='text-xl leading-tight font-semibold'>
                     {title ?? (academy ? academy.name : 'ISWO Academy')}
                   </h1>
                   {subtitle && (
@@ -202,9 +202,14 @@ function CompactLayout({
   return (
     <SearchProvider>
       <LayoutProvider>
-        <div className={cn('bg-background relative min-h-screen min-w-full', className)}>
+        <div
+          className={cn(
+            'bg-background relative min-h-screen min-w-full',
+            className
+          )}
+        >
           <Particles
-            className='absolute inset-0 z-0 pointer-events-none'
+            className='pointer-events-none absolute inset-0 z-0'
             quantity={120}
             ease={80}
             size={0.4}
@@ -216,7 +221,7 @@ function CompactLayout({
           <Header className='bg-card/50 supports-[backdrop-filter]:bg-card/50 border-b backdrop-blur'>
             <div className='flex w-full items-center justify-between'>
               <div className='flex flex-col'>
-                <h1 className='text-lg font-medium leading-tight'>
+                <h1 className='text-lg leading-tight font-medium'>
                   {title ?? (academy ? academy.name : 'My Learning')}
                 </h1>
                 {subtitle && (
@@ -302,7 +307,7 @@ function SidebarLayout({
               )}
             >
               <Particles
-                className='absolute inset-0 z-0 pointer-events-none'
+                className='pointer-events-none absolute inset-0 z-0'
                 quantity={120}
                 ease={80}
                 size={0.4}
@@ -314,9 +319,13 @@ function SidebarLayout({
                   <div className='flex items-center space-x-4'>
                     {title && (
                       <div className='flex flex-col'>
-                        <h1 className='text-xl font-semibold leading-tight'>{title}</h1>
+                        <h1 className='text-xl leading-tight font-semibold'>
+                          {title}
+                        </h1>
                         {subtitle && (
-                          <p className='text-muted-foreground text-xs'>{subtitle}</p>
+                          <p className='text-muted-foreground text-xs'>
+                            {subtitle}
+                          </p>
                         )}
                       </div>
                     )}

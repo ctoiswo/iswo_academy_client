@@ -1,4 +1,6 @@
 import { Search } from 'lucide-react'
+import type { GetUsersParams } from '@/lib/super-admin-api'
+import { useTranslation } from '@/hooks/use-translation'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -8,8 +10,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import type { FilterType } from '../types'
-import type { GetUsersParams } from '@/lib/super-admin-api'
-import { useTranslation } from '@/hooks/use-translation'
 
 interface UserFiltersProps {
   searchInput: string
@@ -46,13 +46,23 @@ export function UserFilters({
         onValueChange={(v) => onFilterChange(v as FilterType)}
       >
         <SelectTrigger className='w-full sm:w-48'>
-          <SelectValue placeholder={t('superAdmin.users.filters.filterPlaceholder')} />
+          <SelectValue
+            placeholder={t('superAdmin.users.filters.filterPlaceholder')}
+          />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value='all'>{t('superAdmin.users.filters.all')}</SelectItem>
-          <SelectItem value='confirmed'>{t('superAdmin.users.filters.confirmed')}</SelectItem>
-          <SelectItem value='unconfirmed'>{t('superAdmin.users.filters.unconfirmed')}</SelectItem>
-          <SelectItem value='super_admin'>{t('superAdmin.users.filters.superAdmin')}</SelectItem>
+          <SelectItem value='all'>
+            {t('superAdmin.users.filters.all')}
+          </SelectItem>
+          <SelectItem value='confirmed'>
+            {t('superAdmin.users.filters.confirmed')}
+          </SelectItem>
+          <SelectItem value='unconfirmed'>
+            {t('superAdmin.users.filters.unconfirmed')}
+          </SelectItem>
+          <SelectItem value='super_admin'>
+            {t('superAdmin.users.filters.superAdmin')}
+          </SelectItem>
         </SelectContent>
       </Select>
 
@@ -61,13 +71,23 @@ export function UserFilters({
         onValueChange={(v) => onSortChange(v as GetUsersParams['sort'])}
       >
         <SelectTrigger className='w-full sm:w-48'>
-          <SelectValue placeholder={t('superAdmin.users.filters.sortPlaceholder')} />
+          <SelectValue
+            placeholder={t('superAdmin.users.filters.sortPlaceholder')}
+          />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value='created_at'>{t('superAdmin.users.filters.sortDate')}</SelectItem>
-          <SelectItem value='last_login_at'>{t('superAdmin.users.filters.sortLastLogin')}</SelectItem>
-          <SelectItem value='first_name'>{t('superAdmin.users.filters.sortName')}</SelectItem>
-          <SelectItem value='email'>{t('superAdmin.users.filters.sortEmail')}</SelectItem>
+          <SelectItem value='created_at'>
+            {t('superAdmin.users.filters.sortDate')}
+          </SelectItem>
+          <SelectItem value='last_login_at'>
+            {t('superAdmin.users.filters.sortLastLogin')}
+          </SelectItem>
+          <SelectItem value='first_name'>
+            {t('superAdmin.users.filters.sortName')}
+          </SelectItem>
+          <SelectItem value='email'>
+            {t('superAdmin.users.filters.sortEmail')}
+          </SelectItem>
         </SelectContent>
       </Select>
     </div>

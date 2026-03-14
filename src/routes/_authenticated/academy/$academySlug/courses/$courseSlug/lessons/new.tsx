@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
+import { createFileRoute } from '@tanstack/react-router'
 import CreateLessonPage from '@/pages/create-lesson'
 
 export const Route = createFileRoute(

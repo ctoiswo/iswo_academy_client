@@ -51,7 +51,7 @@ export function StatsWidget({
         return <TrendingDown className='h-4 w-4 text-red-600' />
       case 'neutral':
       default:
-        return <Minus className='h-4 w-4 text-muted-foreground' />
+        return <Minus className='text-muted-foreground h-4 w-4' />
     }
   }
 

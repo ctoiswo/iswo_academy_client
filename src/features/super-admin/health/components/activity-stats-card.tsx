@@ -1,6 +1,6 @@
 import { Users, Activity } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { SystemHealth } from '@/lib/super-admin-api'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface ActivityStatsCardProps {
   health: SystemHealth

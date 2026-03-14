@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router'
 import { GraduationCap, LayoutDashboard } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/stores/auth-store'
 import { useDashboardPath } from '@/hooks/use-dashboard-path'
+import { Button } from '@/components/ui/button'
 
 export function PageFooter() {
   const { isAuthenticated } = useAuthStore()

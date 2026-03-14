@@ -41,11 +41,11 @@ export function Certificates({
         description='Your earned certificates and achievements'
       >
         <div className='py-8 text-center'>
-          <Award className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
-          <h3 className='mb-2 text-lg font-medium text-foreground'>
+          <Award className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
+          <h3 className='text-foreground mb-2 text-lg font-medium'>
             No certificates yet
           </h3>
-          <p className='mb-4 text-muted-foreground'>
+          <p className='text-muted-foreground mb-4'>
             Complete your courses to earn certificates and showcase your
             achievements.
           </p>
@@ -136,7 +136,7 @@ export function Certificates({
                       </Badge>
                     </div>
 
-                    <div className='space-y-2 text-sm text-muted-foreground'>
+                    <div className='text-muted-foreground space-y-2 text-sm'>
                       <div className='flex items-center gap-4'>
                         <span>
                           Certificate #: {certificate.certificate_number}
@@ -155,7 +155,7 @@ export function Certificates({
                 </div>
 
                 <div className='mt-4 flex items-center justify-between border-t pt-4'>
-                  <div className='text-xs text-muted-foreground'>
+                  <div className='text-muted-foreground text-xs'>
                     Valid certificate • Blockchain verified
                   </div>
                   <div className='flex gap-2'>
@@ -210,8 +210,8 @@ export function Certificates({
                 <div className='flex items-start justify-between'>
                   <div className='flex-1'>
                     <div className='mb-2 flex items-center gap-2'>
-                      <Award className='h-5 w-5 text-muted-foreground' />
-                      <h3 className='text-lg font-semibold text-muted-foreground'>
+                      <Award className='text-muted-foreground h-5 w-5' />
+                      <h3 className='text-muted-foreground text-lg font-semibold'>
                         {certificate.course.title}
                       </h3>
                       <Badge className='border-red-200 bg-red-100 text-red-800'>
@@ -219,7 +219,7 @@ export function Certificates({
                       </Badge>
                     </div>
 
-                    <div className='space-y-2 text-sm text-muted-foreground'>
+                    <div className='text-muted-foreground space-y-2 text-sm'>
                       <div className='flex items-center gap-4'>
                         <span>
                           Certificate #: {certificate.certificate_number}
@@ -285,7 +285,7 @@ export function Certificates({
                       {certificate.revoked_at ? 'Revoked' : 'Active'}
                     </Badge>
                   </div>
-                  <p className='text-sm text-muted-foreground'>
+                  <p className='text-muted-foreground text-sm'>
                     {certificate.revoked_at ? 'Revoked' : 'Earned'} on{' '}
                     {new Date(
                       certificate.revoked_at || certificate.issued_at

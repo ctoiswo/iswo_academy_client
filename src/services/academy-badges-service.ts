@@ -54,17 +54,33 @@ export interface AdminBadgesParams {
 }
 
 const academyBadgesService = {
-  async getBadges(academySlug: string, params?: AdminBadgesParams): Promise<AdminBadge[]> {
-    const response = await apiClient.get(`/academies/${academySlug}/admin/badges`, { params })
+  async getBadges(
+    academySlug: string,
+    params?: AdminBadgesParams
+  ): Promise<AdminBadge[]> {
+    const response = await apiClient.get(
+      `/academies/${academySlug}/admin/badges`,
+      { params }
+    )
     return response.data.data
   },
 
-  async createBadge(academySlug: string, data: BadgeFormData): Promise<AdminBadge> {
-    const response = await apiClient.post(`/academies/${academySlug}/admin/badges`, { badge: data })
+  async createBadge(
+    academySlug: string,
+    data: BadgeFormData
+  ): Promise<AdminBadge> {
+    const response = await apiClient.post(
+      `/academies/${academySlug}/admin/badges`,
+      { badge: data }
+    )
     return response.data.data
   },
 
-  async updateBadge(academySlug: string, badgeId: number, data: Partial<BadgeFormData>): Promise<AdminBadge> {
+  async updateBadge(
+    academySlug: string,
+    badgeId: number,
+    data: Partial<BadgeFormData>
+  ): Promise<AdminBadge> {
     const response = await apiClient.patch(
       `/academies/${academySlug}/admin/badges/${badgeId}`,
       { badge: data }

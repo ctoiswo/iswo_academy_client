@@ -134,7 +134,6 @@ export function DashboardRouter({
   return <DashboardComponent user={user} academy={currentAcademy} />
 }
 
-
 function getDashboardConfig(dashboardType: DashboardType): DashboardConfig {
   const configs: Record<DashboardType, DashboardConfig> = {
     'super-admin': {

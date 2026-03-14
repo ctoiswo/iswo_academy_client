@@ -44,9 +44,12 @@ class AcademyAdminService {
     academySlug: string,
     params?: AcademyUsersParams
   ): Promise<AcademyUsersResponse> {
-    const response = await apiClient.get(`/academies/${academySlug}/admin/users`, {
-      params,
-    })
+    const response = await apiClient.get(
+      `/academies/${academySlug}/admin/users`,
+      {
+        params,
+      }
+    )
     return response.data
   }
 

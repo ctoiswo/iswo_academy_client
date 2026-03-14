@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
 import type { AssessmentType, Assessment, AssessmentFull } from '@/types'
 import { ArrowLeft, FileQuestion } from 'lucide-react'
-import { useCourse } from '@/hooks/use-courses'
 import { useAssessments } from '@/hooks/use-assessments'
+import { useCourse } from '@/hooks/use-courses'
 import { useSections } from '@/hooks/use-sections'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -34,11 +34,7 @@ export default function CourseExamsPage() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   // Hooks de datos
-  const {
-    data: course,
-    isLoading,
-    error,
-  } = useCourse(courseSlug)
+  const { data: course, isLoading, error } = useCourse(courseSlug)
   const { data: sections } = useSections(academySlug, courseSlug)
 
   const { data: assessments, isLoading: assessmentsLoading } = useAssessments(
@@ -167,8 +163,8 @@ export default function CourseExamsPage() {
 
       {!assessmentsLoading && filteredAssessments.length === 0 && (
         <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 py-16 text-center'>
-          <FileQuestion className='mx-auto mb-4 h-16 w-16 text-muted-foreground' />
-          <h3 className='mb-2 text-xl font-semibold text-muted-foreground'>
+          <FileQuestion className='text-muted-foreground mx-auto mb-4 h-16 w-16' />
+          <h3 className='text-muted-foreground mb-2 text-xl font-semibold'>
             {filterType === 'all' && 'Aún no hay evaluaciones'}
             {filterType === 'Quiz' && 'Aún no hay quizzes'}
             {filterType === 'Exam' &&
@@ -176,7 +172,7 @@ export default function CourseExamsPage() {
                 ? 'Ya existe un examen final'
                 : 'Aún no hay exámenes finales')}
           </h3>
-          <p className='mx-auto mb-6 max-w-md text-muted-foreground'>
+          <p className='text-muted-foreground mx-auto mb-6 max-w-md'>
             {filterType === 'all' &&
               'Crea quizzes para evaluar secciones individuales o exámenes finales para evaluar todo el curso'}
             {filterType === 'Quiz' &&

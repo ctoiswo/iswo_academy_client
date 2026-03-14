@@ -176,7 +176,7 @@ export default function NotificationsPage() {
             <Card className='p-12 text-center'>
               <div className='flex flex-col items-center gap-2'>
                 <div className='rounded-full bg-gray-100 p-4 dark:bg-gray-800'>
-                  <Bell className='h-8 w-8 text-muted-foreground' />
+                  <Bell className='text-muted-foreground h-8 w-8' />
                 </div>
                 <h3 className='text-lg font-semibold'>No hay notificaciones</h3>
                 <p className='text-muted-foreground'>

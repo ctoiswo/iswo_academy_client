@@ -375,9 +375,9 @@ describe('AuthStore', () => {
     })
 
     it('should handle token manager throwing error', async () => {
-      jest.mocked(tokenManager.refreshTokens).mockRejectedValue(
-        new Error('Token manager error')
-      )
+      jest
+        .mocked(tokenManager.refreshTokens)
+        .mockRejectedValue(new Error('Token manager error'))
 
       const { refreshTokens } = useAuthStore.getState()
       const result = await refreshTokens()
@@ -581,7 +581,8 @@ describe('AuthStore', () => {
 
       // Mock profile fetch failure, then successful refresh and retry
       const { userApi } = await import('@/lib/api-client')
-      jest.mocked(userApi.getProfile)
+      jest
+        .mocked(userApi.getProfile)
         .mockRejectedValueOnce(new Error('Profile fetch failed'))
         .mockResolvedValueOnce(mockUser)
 
@@ -615,9 +616,9 @@ describe('AuthStore', () => {
 
       // Mock profile fetch failure and refresh failure
       const { userApi } = await import('@/lib/api-client')
-      jest.mocked(userApi.getProfile).mockRejectedValue(
-        new Error('Profile fetch failed')
-      )
+      jest
+        .mocked(userApi.getProfile)
+        .mockRejectedValue(new Error('Profile fetch failed'))
 
       // Mock the refresh to fail
       jest.mocked(tokenManager.refreshTokens).mockResolvedValue(false)
@@ -640,7 +641,9 @@ describe('AuthStore', () => {
         throw new Error('Storage error')
       })
 
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
       const mockRefreshStore = useAuthStore.getState()
       const resetSpy = jest.spyOn(mockRefreshStore, 'reset')
 
@@ -874,9 +877,9 @@ describe('AuthStore', () => {
 
       it('should refresh academy data successfully', async () => {
         const { academyApi } = await import('@/lib/api-client')
-        jest.mocked(academyApi.getUserAcademies).mockResolvedValue(
-          mockSingleAcademyData
-        )
+        jest
+          .mocked(academyApi.getUserAcademies)
+          .mockResolvedValue(mockSingleAcademyData)
 
         const { refreshAcademies } = useAuthStore.getState()
         await refreshAcademies()
@@ -889,9 +892,9 @@ describe('AuthStore', () => {
 
       it('should handle refresh failure gracefully', async () => {
         const { academyApi } = await import('@/lib/api-client')
-        jest.mocked(academyApi.getUserAcademies).mockRejectedValue(
-          new Error('Network error')
-        )
+        jest
+          .mocked(academyApi.getUserAcademies)
+          .mockRejectedValue(new Error('Network error'))
 
         const consoleSpy = jest
           .spyOn(console, 'error')

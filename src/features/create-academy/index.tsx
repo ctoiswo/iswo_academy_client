@@ -1,13 +1,13 @@
 import { GraduationCap } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { CreateAcademyForm } from './components/create-academy-form'
 import { Particles } from '@/components/ui/particles'
+import { CreateAcademyForm } from './components/create-academy-form'
 
 export function CreateAcademyPage() {
   const { t } = useTranslation()
 
   return (
-    <main className='relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12 bg-background overflow-hidden'>
+    <main className='bg-background relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-12 sm:px-6 lg:px-8'>
       {/* Particles background */}
       <Particles
         className='pointer-events-none fixed inset-0 z-0'
@@ -31,20 +31,20 @@ export function CreateAcademyPage() {
 
       {/* Top glow */}
       <div
-        className='pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] opacity-20 blur-[120px] rounded-full bg-primary'
+        className='bg-primary pointer-events-none fixed top-0 left-1/2 h-[300px] w-[600px] -translate-x-1/2 rounded-full opacity-20 blur-[120px]'
         aria-hidden='true'
       />
 
-      <div className='relative z-10 flex flex-col items-center gap-8 w-full max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl'>
+      <div className='relative z-10 flex w-full max-w-lg flex-col items-center gap-8 md:max-w-xl lg:max-w-2xl xl:max-w-3xl'>
         {/* Header */}
         <div className='flex flex-col items-center gap-3 text-center'>
-          <div className='flex items-center justify-center size-14 rounded-2xl bg-primary/10 border border-primary/20'>
-            <GraduationCap className='size-7 text-primary' />
+          <div className='bg-primary/10 border-primary/20 flex size-14 items-center justify-center rounded-2xl border'>
+            <GraduationCap className='text-primary size-7' />
           </div>
-          <h1 className='text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-balance'>
+          <h1 className='text-3xl font-bold tracking-tight text-balance md:text-4xl lg:text-5xl'>
             {t('createAcademy.title')}
           </h1>
-          <p className='text-sm md:text-base text-muted-foreground max-w-md lg:max-w-lg leading-relaxed'>
+          <p className='text-muted-foreground max-w-md text-sm leading-relaxed md:text-base lg:max-w-lg'>
             {t('createAcademy.subtitle')}
           </p>
         </div>

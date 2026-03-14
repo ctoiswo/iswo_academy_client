@@ -1,4 +1,6 @@
 import { CalendarDays, Clock, Building2 } from 'lucide-react'
+import type { SuperAdminUser } from '@/lib/super-admin-api'
+import { useTranslation } from '@/hooks/use-translation'
 import { Card } from '@/components/ui/card'
 import {
   Table,
@@ -7,10 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import type { SuperAdminUser } from '@/lib/super-admin-api'
 import type { ConfirmTarget } from '../types'
 import { UserRow } from './user-row'
-import { useTranslation } from '@/hooks/use-translation'
 
 interface UserTableProps {
   users: SuperAdminUser[]
@@ -33,7 +33,9 @@ export function UserTable({
     return (
       <Card>
         <div className='py-16 text-center'>
-          <p className='text-muted-foreground'>{t('superAdmin.users.table.loading')}</p>
+          <p className='text-muted-foreground'>
+            {t('superAdmin.users.table.loading')}
+          </p>
         </div>
       </Card>
     )
@@ -58,8 +60,12 @@ export function UserTable({
       <Table className='table-fixed'>
         <TableHeader>
           <TableRow>
-            <TableHead className='w-[20%]'>{t('superAdmin.users.table.colUser')}</TableHead>
-            <TableHead className='w-[10%]'>{t('superAdmin.users.table.colStatus')}</TableHead>
+            <TableHead className='w-[20%]'>
+              {t('superAdmin.users.table.colUser')}
+            </TableHead>
+            <TableHead className='w-[10%]'>
+              {t('superAdmin.users.table.colStatus')}
+            </TableHead>
             <TableHead className='w-[30%]'>
               <span className='flex items-center gap-1'>
                 <Building2 className='h-3.5 w-3.5' />
@@ -78,7 +84,9 @@ export function UserTable({
                 {t('superAdmin.users.table.colLastLogin')}
               </span>
             </TableHead>
-            <TableHead className='w-[5%] text-right'>{t('superAdmin.users.table.colActions')}</TableHead>
+            <TableHead className='w-[5%] text-right'>
+              {t('superAdmin.users.table.colActions')}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

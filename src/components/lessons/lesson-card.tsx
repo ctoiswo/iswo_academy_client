@@ -112,7 +112,9 @@ export function LessonCard({
           <Icon
             className={cn(
               'h-5 w-5',
-              lesson.lesson_type === 'video' ? 'text-blue-600' : 'text-muted-foreground'
+              lesson.lesson_type === 'video'
+                ? 'text-blue-600'
+                : 'text-muted-foreground'
             )}
           />
         </div>

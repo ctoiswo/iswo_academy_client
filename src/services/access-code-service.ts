@@ -32,8 +32,8 @@ class AccessCodeService {
     (TView extends 'basic'
       ? AccessCodeBase
       : TView extends 'public'
-      ? AccessCodePublic
-      : AccessCodeAdmin)[]
+        ? AccessCodePublic
+        : AccessCodeAdmin)[]
   > {
     const params = {
       ...filters,
@@ -58,10 +58,10 @@ class AccessCodeService {
     view?: TView
   ): Promise<
     TView extends 'basic'
-    ? AccessCodeBase
-    : TView extends 'public'
-    ? AccessCodePublic
-    : AccessCodeAdmin
+      ? AccessCodeBase
+      : TView extends 'public'
+        ? AccessCodePublic
+        : AccessCodeAdmin
   > {
     const params = view ? { view } : {}
     const response = await apiClient.get(

@@ -1,7 +1,7 @@
 import { useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
-import { ChevronDown } from 'lucide-react'
 
 interface FaqItem {
   question: string
@@ -21,24 +21,24 @@ export function AcademyFaq() {
   }
 
   return (
-    <section className='relative py-24 bg-muted/20'>
-      <div className='max-w-7xl mx-auto px-4 lg:px-8 flex flex-col gap-12'>
+    <section className='bg-muted/20 relative py-24'>
+      <div className='mx-auto flex max-w-7xl flex-col gap-12 px-4 lg:px-8'>
         <div className='flex flex-col items-center gap-4 text-center'>
-          <span className='text-xs font-semibold uppercase tracking-widest text-primary'>
+          <span className='text-primary text-xs font-semibold tracking-widest uppercase'>
             {t('createAcademyLanding.faq.eyebrow')}
           </span>
           <h2
-            className='text-3xl sm:text-4xl font-bold text-foreground tracking-tight text-balance'
+            className='text-foreground text-3xl font-bold tracking-tight text-balance sm:text-4xl'
             style={{ fontFamily: 'var(--font-heading)' }}
           >
             {t('createAcademyLanding.faq.title')}
           </h2>
-          <p className='text-sm text-muted-foreground max-w-lg leading-relaxed'>
+          <p className='text-muted-foreground max-w-lg text-sm leading-relaxed'>
             {t('createAcademyLanding.faq.subtitle')}
           </p>
         </div>
 
-        <div className='max-w-3xl mx-auto w-full flex flex-col gap-3'>
+        <div className='mx-auto flex w-full max-w-3xl flex-col gap-3'>
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index
             return (
@@ -46,17 +46,19 @@ export function AcademyFaq() {
                 key={index}
                 className={cn(
                   'rounded-xl border transition-colors duration-200',
-                  isOpen ? 'border-primary/30 bg-card/80' : 'border-border/40 bg-card/40'
+                  isOpen
+                    ? 'border-primary/30 bg-card/80'
+                    : 'border-border/40 bg-card/40'
                 )}
               >
                 <button
-                  className='w-full flex items-center justify-between gap-4 px-6 py-5 text-left'
+                  className='flex w-full items-center justify-between gap-4 px-6 py-5 text-left'
                   onClick={() => toggle(index)}
                   aria-expanded={isOpen}
                 >
                   <span
                     className={cn(
-                      'text-sm sm:text-base font-semibold leading-snug transition-colors',
+                      'text-sm leading-snug font-semibold transition-colors sm:text-base',
                       isOpen ? 'text-primary' : 'text-foreground'
                     )}
                   >
@@ -64,8 +66,8 @@ export function AcademyFaq() {
                   </span>
                   <ChevronDown
                     className={cn(
-                      'size-4 shrink-0 text-muted-foreground transition-transform duration-300',
-                      isOpen && 'rotate-180 text-primary'
+                      'text-muted-foreground size-4 shrink-0 transition-transform duration-300',
+                      isOpen && 'text-primary rotate-180'
                     )}
                   />
                 </button>
@@ -76,7 +78,7 @@ export function AcademyFaq() {
                     isOpen ? 'max-h-96' : 'max-h-0'
                   )}
                 >
-                  <p className='px-6 pb-5 text-sm text-muted-foreground leading-relaxed'>
+                  <p className='text-muted-foreground px-6 pb-5 text-sm leading-relaxed'>
                     {faq.answer}
                   </p>
                 </div>

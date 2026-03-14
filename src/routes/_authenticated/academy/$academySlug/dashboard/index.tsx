@@ -10,11 +10,20 @@ export const Route = createFileRoute(
     const slug = params.academySlug
 
     if (role === 'admin' || role === 'owner') {
-      throw redirect({ to: `/academy/${slug}/dashboard/admin` as string, replace: true })
+      throw redirect({
+        to: `/academy/${slug}/dashboard/admin` as string,
+        replace: true,
+      })
     } else if (role === 'teacher') {
-      throw redirect({ to: `/academy/${slug}/dashboard/teacher` as string, replace: true })
+      throw redirect({
+        to: `/academy/${slug}/dashboard/teacher` as string,
+        replace: true,
+      })
     } else {
-      throw redirect({ to: `/academy/${slug}/dashboard/student` as string, replace: true })
+      throw redirect({
+        to: `/academy/${slug}/dashboard/student` as string,
+        replace: true,
+      })
     }
   },
 })

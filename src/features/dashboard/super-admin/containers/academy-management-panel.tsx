@@ -2,10 +2,14 @@ import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { DashboardCard } from '@/components/dashboard'
-import type { AcademyOverview, AcademiesMeta, AcademyStatusFilter } from '../types'
 import { AcademyFilters } from '../components/academy-filters'
-import { AcademyTable } from '../components/academy-table'
 import { AcademyPagination } from '../components/academy-pagination'
+import { AcademyTable } from '../components/academy-table'
+import type {
+  AcademyOverview,
+  AcademiesMeta,
+  AcademyStatusFilter,
+} from '../types'
 
 interface AcademyManagementPanelProps {
   academies: AcademyOverview[]
@@ -37,7 +41,9 @@ export function AcademyManagementPanel({
     return (
       <DashboardCard title={t('super_admin.academies.title')}>
         <div className='py-8 text-center'>
-          <p className='text-destructive'>{t('super_admin.academies.errorLoading', { message: error })}</p>
+          <p className='text-destructive'>
+            {t('super_admin.academies.errorLoading', { message: error })}
+          </p>
         </div>
       </DashboardCard>
     )

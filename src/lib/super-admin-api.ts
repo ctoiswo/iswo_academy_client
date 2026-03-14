@@ -242,7 +242,10 @@ export const superAdminApi = {
    */
   async getAcademies(params?: GetAcademiesParams): Promise<AcademiesResponse> {
     const response = await apiClient.get('/super_admin/academies', { params })
-    const body = response.data?.data !== undefined ? response.data : { data: response.data?.academies ?? [], meta: response.data?.meta }
+    const body =
+      response.data?.data !== undefined
+        ? response.data
+        : { data: response.data?.academies ?? [], meta: response.data?.meta }
     return body
   },
 
@@ -261,10 +264,9 @@ export const superAdminApi = {
     id: number,
     status: 'active' | 'inactive'
   ): Promise<AcademyOverview> {
-    const response = await apiClient.patch(
-      `/super_admin/academies/${id}`,
-      { status }
-    )
+    const response = await apiClient.patch(`/super_admin/academies/${id}`, {
+      status,
+    })
     return response.data
   },
 
@@ -279,7 +281,10 @@ export const superAdminApi = {
   /**
    * Update a user (toggle super_admin, etc.)
    */
-  async updateUser(id: number, data: UpdateUserRequest): Promise<SuperAdminUser> {
+  async updateUser(
+    id: number,
+    data: UpdateUserRequest
+  ): Promise<SuperAdminUser> {
     const response = await apiClient.patch(`/super_admin/users/${id}`, data)
     return response.data.data
   },

@@ -4,9 +4,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
-import { toast } from 'sonner'
-import academyService from '@/services/academy-service'
 import academyCategoryService from '@/services/academy-category-service'
+import academyService from '@/services/academy-service'
+import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { useTranslation } from '@/hooks/use-translation'
 import { Button } from '@/components/ui/button'
@@ -20,8 +20,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Switch } from '@/components/ui/switch'
 import {
   Select,
   SelectContent,
@@ -31,6 +29,8 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
 
 const generalInfoSchema = z.object({
   name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres.'),
@@ -38,7 +38,11 @@ const generalInfoSchema = z.object({
     .string()
     .min(10, 'La descripción debe tener al menos 10 caracteres.'),
   slug: z.string().optional(),
-  website_url: z.string().url('Ingresa una URL válida.').optional().or(z.literal('')),
+  website_url: z
+    .string()
+    .url('Ingresa una URL válida.')
+    .optional()
+    .or(z.literal('')),
   mission: z.string().optional(),
   vision: z.string().optional(),
   academy_category_id: z.string().optional(),
@@ -89,8 +93,12 @@ export function GeneralInfoForm() {
             : undefined,
           is_public: academy.is_public,
           subscription_required: academy.subscription_required,
-          monthly_price: academy.monthly_price ? String(academy.monthly_price) : '0',
-          annual_price: academy.annual_price ? String(academy.annual_price) : '0',
+          monthly_price: academy.monthly_price
+            ? String(academy.monthly_price)
+            : '0',
+          annual_price: academy.annual_price
+            ? String(academy.annual_price)
+            : '0',
         }
       : undefined,
   })
@@ -105,15 +113,28 @@ export function GeneralInfoForm() {
         formData.append('academy[name]', data.name)
         formData.append('academy[description]', data.description)
         if (data.slug) formData.append('academy[slug]', data.slug)
-        if (data.website_url) formData.append('academy[website_url]', data.website_url)
+        if (data.website_url)
+          formData.append('academy[website_url]', data.website_url)
         if (data.mission) formData.append('academy[mission]', data.mission)
         if (data.vision) formData.append('academy[vision]', data.vision)
         if (data.academy_category_id)
-          formData.append('academy[academy_category_id]', data.academy_category_id)
+          formData.append(
+            'academy[academy_category_id]',
+            data.academy_category_id
+          )
         formData.append('academy[is_public]', String(data.is_public))
-        formData.append('academy[subscription_required]', String(data.subscription_required))
-        formData.append('academy[monthly_price]', String(parseFloat(data.monthly_price ?? '0') || 0))
-        formData.append('academy[annual_price]', String(parseFloat(data.annual_price ?? '0') || 0))
+        formData.append(
+          'academy[subscription_required]',
+          String(data.subscription_required)
+        )
+        formData.append(
+          'academy[monthly_price]',
+          String(parseFloat(data.monthly_price ?? '0') || 0)
+        )
+        formData.append(
+          'academy[annual_price]',
+          String(parseFloat(data.annual_price ?? '0') || 0)
+        )
         if (logoFile) formData.append('academy[logo]', logoFile)
         if (bannerFile) formData.append('academy[banner]', bannerFile)
         return academyService.updateAcademyWithFiles(academySlug, formData)
@@ -188,7 +209,10 @@ export function GeneralInfoForm() {
             <FormItem>
               <FormLabel>{t('academySettings.generalInfo.name')}</FormLabel>
               <FormControl>
-                <Input placeholder={t('academySettings.generalInfo.namePlaceholder')} {...field} />
+                <Input
+                  placeholder={t('academySettings.generalInfo.namePlaceholder')}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -201,10 +225,14 @@ export function GeneralInfoForm() {
           name='description'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('academySettings.generalInfo.description')}</FormLabel>
+              <FormLabel>
+                {t('academySettings.generalInfo.description')}
+              </FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder={t('academySettings.generalInfo.descriptionPlaceholder')}
+                  placeholder={t(
+                    'academySettings.generalInfo.descriptionPlaceholder'
+                  )}
                   className='resize-none'
                   rows={4}
                   {...field}
@@ -226,7 +254,9 @@ export function GeneralInfoForm() {
                 <Input placeholder='mi-academia' {...field} />
               </FormControl>
               <FormDescription className='text-xs'>
-                {t('academySettings.generalInfo.slugDescription', { slug: field.value || 'slug' })}
+                {t('academySettings.generalInfo.slugDescription', {
+                  slug: field.value || 'slug',
+                })}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -241,7 +271,12 @@ export function GeneralInfoForm() {
             <FormItem>
               <FormLabel>{t('academySettings.generalInfo.website')}</FormLabel>
               <FormControl>
-                <Input placeholder={t('academySettings.generalInfo.websitePlaceholder')} {...field} />
+                <Input
+                  placeholder={t(
+                    'academySettings.generalInfo.websitePlaceholder'
+                  )}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -258,7 +293,11 @@ export function GeneralInfoForm() {
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger disabled={isLoadingCategories}>
-                    <SelectValue placeholder={t('academySettings.generalInfo.categoryPlaceholder')} />
+                    <SelectValue
+                      placeholder={t(
+                        'academySettings.generalInfo.categoryPlaceholder'
+                      )}
+                    />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -285,7 +324,9 @@ export function GeneralInfoForm() {
               <FormLabel>{t('academySettings.generalInfo.mission')}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder={t('academySettings.generalInfo.missionPlaceholder')}
+                  placeholder={t(
+                    'academySettings.generalInfo.missionPlaceholder'
+                  )}
                   className='resize-none'
                   rows={3}
                   {...field}
@@ -305,7 +346,9 @@ export function GeneralInfoForm() {
               <FormLabel>{t('academySettings.generalInfo.vision')}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder={t('academySettings.generalInfo.visionPlaceholder')}
+                  placeholder={t(
+                    'academySettings.generalInfo.visionPlaceholder'
+                  )}
                   className='resize-none'
                   rows={3}
                   {...field}
@@ -325,13 +368,18 @@ export function GeneralInfoForm() {
           render={({ field }) => (
             <FormItem className='flex items-center justify-between rounded-lg border p-4'>
               <div className='space-y-0.5'>
-                <FormLabel>{t('academySettings.generalInfo.isPublic')}</FormLabel>
+                <FormLabel>
+                  {t('academySettings.generalInfo.isPublic')}
+                </FormLabel>
                 <FormDescription className='text-xs'>
                   {t('academySettings.generalInfo.isPublicDescription')}
                 </FormDescription>
               </div>
               <FormControl>
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
               </FormControl>
             </FormItem>
           )}
@@ -344,13 +392,20 @@ export function GeneralInfoForm() {
           render={({ field }) => (
             <FormItem className='flex items-center justify-between rounded-lg border p-4'>
               <div className='space-y-0.5'>
-                <FormLabel>{t('academySettings.generalInfo.subscriptionRequired')}</FormLabel>
+                <FormLabel>
+                  {t('academySettings.generalInfo.subscriptionRequired')}
+                </FormLabel>
                 <FormDescription className='text-xs'>
-                  {t('academySettings.generalInfo.subscriptionRequiredDescription')}
+                  {t(
+                    'academySettings.generalInfo.subscriptionRequiredDescription'
+                  )}
                 </FormDescription>
               </div>
               <FormControl>
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
               </FormControl>
             </FormItem>
           )}
@@ -363,9 +418,17 @@ export function GeneralInfoForm() {
               name='monthly_price'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('academySettings.generalInfo.monthlyPrice')}</FormLabel>
+                  <FormLabel>
+                    {t('academySettings.generalInfo.monthlyPrice')}
+                  </FormLabel>
                   <FormControl>
-                    <Input type='number' min={0} step={0.01} placeholder='0.00' {...field} />
+                    <Input
+                      type='number'
+                      min={0}
+                      step={0.01}
+                      placeholder='0.00'
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -376,9 +439,17 @@ export function GeneralInfoForm() {
               name='annual_price'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('academySettings.generalInfo.annualPrice')}</FormLabel>
+                  <FormLabel>
+                    {t('academySettings.generalInfo.annualPrice')}
+                  </FormLabel>
                   <FormControl>
-                    <Input type='number' min={0} step={0.01} placeholder='0.00' {...field} />
+                    <Input
+                      type='number'
+                      min={0}
+                      step={0.01}
+                      placeholder='0.00'
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -396,7 +467,7 @@ export function GeneralInfoForm() {
             <img
               src={logoPreview ?? academy?.logo_url ?? ''}
               alt='Logo preview'
-              className='h-16 w-16 rounded-lg object-cover border'
+              className='h-16 w-16 rounded-lg border object-cover'
             />
           )}
           <input
@@ -412,7 +483,9 @@ export function GeneralInfoForm() {
             size='sm'
             onClick={() => logoInputRef.current?.click()}
           >
-            {academy?.logo_url ? t('academySettings.generalInfo.changeLogo') : t('academySettings.generalInfo.uploadLogo')}
+            {academy?.logo_url
+              ? t('academySettings.generalInfo.changeLogo')
+              : t('academySettings.generalInfo.uploadLogo')}
           </Button>
           {logoFile && (
             <p className='text-muted-foreground text-xs'>{logoFile.name}</p>
@@ -426,7 +499,7 @@ export function GeneralInfoForm() {
             <img
               src={bannerPreview ?? academy?.banner_url ?? ''}
               alt='Banner preview'
-              className='h-24 w-full max-w-sm rounded-lg object-cover border'
+              className='h-24 w-full max-w-sm rounded-lg border object-cover'
             />
           )}
           <input
@@ -442,7 +515,9 @@ export function GeneralInfoForm() {
             size='sm'
             onClick={() => bannerInputRef.current?.click()}
           >
-            {academy?.banner_url ? t('academySettings.generalInfo.changeBanner') : t('academySettings.generalInfo.uploadBanner')}
+            {academy?.banner_url
+              ? t('academySettings.generalInfo.changeBanner')
+              : t('academySettings.generalInfo.uploadBanner')}
           </Button>
           {bannerFile && (
             <p className='text-muted-foreground text-xs'>{bannerFile.name}</p>
@@ -450,7 +525,9 @@ export function GeneralInfoForm() {
         </div>
 
         <Button type='submit' disabled={mutation.isPending}>
-          {mutation.isPending ? t('academySettings.generalInfo.saving') : t('academySettings.generalInfo.save')}
+          {mutation.isPending
+            ? t('academySettings.generalInfo.saving')
+            : t('academySettings.generalInfo.save')}
         </Button>
       </form>
     </Form>

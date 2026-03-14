@@ -78,7 +78,9 @@ export function CourseHero({
                   />
                   <span>
                     Por{' '}
-                    <span className='font-medium'>{course.instructor.name}</span>
+                    <span className='font-medium'>
+                      {course.instructor.name}
+                    </span>
                   </span>
                 </div>
                 <div className='flex items-center gap-1'>

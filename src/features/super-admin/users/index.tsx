@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
+import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
-import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import {
   superAdminApi,
   type SuperAdminUser,
   type UsersMeta,
   type GetUsersParams,
 } from '@/lib/super-admin-api'
-import { toast } from 'sonner'
 import { useTranslation } from '@/hooks/use-translation'
-import type { FilterType, ConfirmTarget } from './types'
+import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { UserManagementPanel } from './containers/user-management-panel'
+import type { FilterType, ConfirmTarget } from './types'
 
 const DEFAULT_META: UsersMeta = {
   current_page: 1,
@@ -84,8 +84,12 @@ export function SuperAdminUsersPage() {
       })
       toast.success(
         isPromoting
-          ? t('superAdmin.users.toast.promoted', { name: confirmTarget.user.full_name })
-          : t('superAdmin.users.toast.demoted', { name: confirmTarget.user.full_name })
+          ? t('superAdmin.users.toast.promoted', {
+              name: confirmTarget.user.full_name,
+            })
+          : t('superAdmin.users.toast.demoted', {
+              name: confirmTarget.user.full_name,
+            })
       )
       setConfirmTarget(null)
       loadUsers(currentPage, searchQuery, filter)

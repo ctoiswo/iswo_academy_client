@@ -26,7 +26,7 @@ function IswoSidebarHeader({ subtitle }: { subtitle: string }) {
         >
           <LargeLogo className='h-8 w-auto dark:invert' />
           <div className='grid flex-1 text-start text-sm leading-tight'>
-            <span className='truncate text-xs text-muted-foreground'>
+            <span className='text-muted-foreground truncate text-xs'>
               {subtitle}
             </span>
           </div>

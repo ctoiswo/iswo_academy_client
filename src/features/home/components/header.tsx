@@ -29,7 +29,9 @@ export function Header() {
             <Link to='/academies'>{t('navigation.exploreAcademies')}</Link>
           </Button>
           <Button variant='ghost' size='sm' asChild>
-            <Link to='/create-academy-landing'>{t('navigation.createAcademy')}</Link>
+            <Link to='/create-academy-landing'>
+              {t('navigation.createAcademy')}
+            </Link>
           </Button>
           <LanguageToggle />
           <UserMenu />

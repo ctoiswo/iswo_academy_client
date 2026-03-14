@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
-import type {
-  CreateQuestionRequest,
-  QuestionType,
-} from '@/types'
+import type { CreateQuestionRequest, QuestionType } from '@/types'
 import { Plus, X } from 'lucide-react'
 import { useCreateQuestion } from '@/hooks/use-questions'
 import { Button } from '@/components/ui/button'
@@ -93,7 +90,9 @@ export function CreateQuestionDialog({
 
   const onSubmit = (data: CreateQuestionRequest) => {
     // Filtrar respuestas vacías
-    const validAnswers = data.answers.filter((a: { answer_text: string }) => a.answer_text.trim() !== '')
+    const validAnswers = data.answers.filter(
+      (a: { answer_text: string }) => a.answer_text.trim() !== ''
+    )
 
     createQuestion.mutate(
       { ...data, answers: validAnswers },
@@ -249,7 +248,7 @@ export function CreateQuestionDialog({
                 ))}
               </div>
 
-              <p className='text-xs text-muted-foreground'>
+              <p className='text-muted-foreground text-xs'>
                 {questionType === 'multiple_choice' &&
                   'Marca la casilla de la respuesta correcta'}
                 {questionType === 'multiple_select' &&

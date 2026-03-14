@@ -41,7 +41,9 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
     superAdminApi
       .getGlobalStats()
       .then(setGlobalStats)
-      .catch((err) => setStatsError(err?.message || 'Failed to load statistics'))
+      .catch((err) =>
+        setStatsError(err?.message || 'Failed to load statistics')
+      )
       .finally(() => setStatsLoading(false))
   }, [])
 
@@ -59,7 +61,9 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
         setAcademies(res.data)
         setAcademiesMeta(res.meta ?? null)
       })
-      .catch((err) => setAcademiesError(err?.message || 'Failed to load academies'))
+      .catch((err) =>
+        setAcademiesError(err?.message || 'Failed to load academies')
+      )
       .finally(() => setAcademiesLoading(false))
   }, [currentPage, searchTerm, statusFilter])
 

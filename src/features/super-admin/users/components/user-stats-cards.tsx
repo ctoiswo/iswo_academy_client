@@ -1,7 +1,7 @@
 import { Users, ShieldCheck, UserCheck, UserX } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { UsersMeta } from '@/lib/super-admin-api'
 import { useTranslation } from '@/hooks/use-translation'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface UserStatsCardsProps {
   meta: UsersMeta
@@ -50,7 +50,9 @@ export function UserStatsCards({ meta }: UserStatsCardsProps) {
             <div className='text-2xl font-bold'>{meta[card.key]}</div>
             {'subKey' in card && (
               <p className='text-muted-foreground text-xs'>
-                {t('superAdmin.users.stats.newThisMonth', { count: meta[card.subKey!] })}
+                {t('superAdmin.users.stats.newThisMonth', {
+                  count: meta[card.subKey!],
+                })}
               </p>
             )}
           </CardContent>

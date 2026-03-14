@@ -2,8 +2,8 @@ import { Sparkles } from 'lucide-react'
 
 export function CtaIconBadge() {
   return (
-    <div className='flex items-center justify-center size-14 rounded-2xl bg-primary/10 border border-primary/20'>
-      <Sparkles className='size-7 text-primary' />
+    <div className='bg-primary/10 border-primary/20 flex size-14 items-center justify-center rounded-2xl border'>
+      <Sparkles className='text-primary size-7' />
     </div>
   )
 }

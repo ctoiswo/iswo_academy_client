@@ -44,11 +44,7 @@ export default function CourseStudentsPage() {
   const [deletingEnrollment, setDeletingEnrollment] =
     useState<Enrollment | null>(null)
 
-  const {
-    data: course,
-    isLoading,
-    error,
-  } = useCourse(courseSlug)
+  const { data: course, isLoading, error } = useCourse(courseSlug)
   const { data: enrollments, isLoading: loadingEnrollments } =
     useCourseEnrollments(academySlug, courseSlug)
   const deleteEnrollment = useDeleteEnrollment(academySlug, courseSlug)
@@ -195,7 +191,7 @@ export default function CourseStudentsPage() {
               ))}
             </div>
           ) : !enrollments || enrollments.length === 0 ? (
-            <div className='py-12 text-center text-muted-foreground'>
+            <div className='text-muted-foreground py-12 text-center'>
               <Users className='mx-auto mb-4 h-12 w-12' />
               <h3 className='mb-2 text-lg font-medium'>
                 No hay estudiantes inscritos
@@ -235,10 +231,10 @@ export default function CourseStudentsPage() {
                                   : 'Suspendido'}
                             </Badge>
                           </div>
-                          <p className='text-sm text-muted-foreground'>
+                          <p className='text-muted-foreground text-sm'>
                             {enrollment.user.email}
                           </p>
-                          <div className='mt-2 flex items-center gap-4 text-xs text-muted-foreground'>
+                          <div className='text-muted-foreground mt-2 flex items-center gap-4 text-xs'>
                             <span>
                               Inscrito:{' '}
                               {new Date(

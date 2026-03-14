@@ -1,4 +1,6 @@
 import { Search } from 'lucide-react'
+import type { GetPaymentsParams } from '@/lib/super-admin-api'
+import { useTranslation } from '@/hooks/use-translation'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -7,9 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useTranslation } from '@/hooks/use-translation'
 import type { PaymentFilterType } from '../types'
-import type { GetPaymentsParams } from '@/lib/super-admin-api'
 
 interface PaymentFiltersProps {
   searchInput: string
@@ -47,14 +47,26 @@ export function PaymentFilters({
         onValueChange={(v) => onFilterChange(v as PaymentFilterType)}
       >
         <SelectTrigger className='w-full sm:w-48'>
-          <SelectValue placeholder={t('superAdmin.payments.filters.filterPlaceholder')} />
+          <SelectValue
+            placeholder={t('superAdmin.payments.filters.filterPlaceholder')}
+          />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value='all'>{t('superAdmin.payments.filters.filterAll')}</SelectItem>
-          <SelectItem value='completed'>{t('superAdmin.payments.filters.filterCompleted')}</SelectItem>
-          <SelectItem value='pending'>{t('superAdmin.payments.filters.filterPending')}</SelectItem>
-          <SelectItem value='failed'>{t('superAdmin.payments.filters.filterFailed')}</SelectItem>
-          <SelectItem value='refunded'>{t('superAdmin.payments.filters.filterRefunded')}</SelectItem>
+          <SelectItem value='all'>
+            {t('superAdmin.payments.filters.filterAll')}
+          </SelectItem>
+          <SelectItem value='completed'>
+            {t('superAdmin.payments.filters.filterCompleted')}
+          </SelectItem>
+          <SelectItem value='pending'>
+            {t('superAdmin.payments.filters.filterPending')}
+          </SelectItem>
+          <SelectItem value='failed'>
+            {t('superAdmin.payments.filters.filterFailed')}
+          </SelectItem>
+          <SelectItem value='refunded'>
+            {t('superAdmin.payments.filters.filterRefunded')}
+          </SelectItem>
         </SelectContent>
       </Select>
 
@@ -63,11 +75,17 @@ export function PaymentFilters({
         onValueChange={(v) => onSortChange(v as GetPaymentsParams['sort'])}
       >
         <SelectTrigger className='w-full sm:w-48'>
-          <SelectValue placeholder={t('superAdmin.payments.filters.sortPlaceholder')} />
+          <SelectValue
+            placeholder={t('superAdmin.payments.filters.sortPlaceholder')}
+          />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value='created_at'>{t('superAdmin.payments.filters.sortDate')}</SelectItem>
-          <SelectItem value='amount'>{t('superAdmin.payments.filters.sortAmount')}</SelectItem>
+          <SelectItem value='created_at'>
+            {t('superAdmin.payments.filters.sortDate')}
+          </SelectItem>
+          <SelectItem value='amount'>
+            {t('superAdmin.payments.filters.sortAmount')}
+          </SelectItem>
         </SelectContent>
       </Select>
     </div>

@@ -50,7 +50,8 @@ export function CourseSidebar({
   formatDifficulty,
 }: CourseSidebarProps) {
   const totalLessons = course.sections.reduce((sum, s) => sum + s.lessons, 0)
-  const hasPromoVideo = course.promotional_video_embedded_url || course.promotional_video_url
+  const hasPromoVideo =
+    course.promotional_video_embedded_url || course.promotional_video_url
 
   return (
     <div className='lg:col-span-1'>
@@ -66,12 +67,14 @@ export function CourseSidebar({
             {/* Preview Image */}
             <div className='from-primary/20 to-primary/5 relative aspect-video w-full overflow-hidden bg-gradient-to-br'>
               <img
-                src={(course.promotional_image_url || course.thumbnail_url) ?? ''}
+                src={
+                  (course.promotional_image_url || course.thumbnail_url) ?? ''
+                }
                 alt={course.title}
                 className='h-full w-full object-cover'
               />
               <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent' />
-              
+
               {/* Video Play Button Overlay */}
               {hasPromoVideo && onVideoClick && (
                 <button
@@ -85,12 +88,14 @@ export function CourseSidebar({
                     whileTap={{ scale: 0.95 }}
                     className='flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-2xl backdrop-blur-sm transition-all hover:bg-white'
                   >
-                    <Play className='ml-1 h-8 w-8 fill-current text-foreground' />
+                    <Play className='text-foreground ml-1 h-8 w-8 fill-current' />
                   </motion.div>
-                  
+
                   {/* Preview Badge */}
                   <div className='absolute bottom-4 left-4 rounded-lg bg-black/80 px-3 py-1.5 backdrop-blur-sm'>
-                    <p className='text-xs font-medium text-white'>Vista previa del curso</p>
+                    <p className='text-xs font-medium text-white'>
+                      Vista previa del curso
+                    </p>
                   </div>
                 </button>
               )}

@@ -70,7 +70,10 @@ class NotificationService {
   /**
    * Get only unread notifications
    */
-  async getUnreadNotifications(): Promise<{ data: Notification[]; meta: { count: number } }> {
+  async getUnreadNotifications(): Promise<{
+    data: Notification[]
+    meta: { count: number }
+  }> {
     const response = await apiClient.get('/notifications/unread')
     return response.data
   }
@@ -86,7 +89,9 @@ class NotificationService {
   /**
    * Mark a notification as read
    */
-  async markAsRead(id: number): Promise<{ data: Notification; message: string }> {
+  async markAsRead(
+    id: number
+  ): Promise<{ data: Notification; message: string }> {
     const response = await apiClient.patch(`/notifications/${id}/mark_as_read`)
     return response.data
   }
@@ -94,9 +99,11 @@ class NotificationService {
   /**
    * Mark all notifications as read
    */
-  async markAllAsRead(academyId?: number): Promise<{ message: string; count: number }> {
+  async markAllAsRead(
+    academyId?: number
+  ): Promise<{ message: string; count: number }> {
     const response = await apiClient.patch('/notifications/mark_all_as_read', {
-      academy_id: academyId
+      academy_id: academyId,
     })
     return response.data
   }
@@ -114,7 +121,7 @@ class NotificationService {
    */
   async getStats(academyId?: number): Promise<{ data: NotificationStats }> {
     const response = await apiClient.get('/notifications/stats', {
-      params: { academy_id: academyId }
+      params: { academy_id: academyId },
     })
     return response.data
   }

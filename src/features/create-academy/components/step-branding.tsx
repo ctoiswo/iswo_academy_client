@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 import { Globe, ImageIcon, RectangleHorizontal, Upload, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import {
   FormControl,
   FormField,
@@ -42,12 +42,12 @@ export function StepBranding({
   }
 
   return (
-    <div className='flex flex-col gap-6 animate-in fade-in-0 slide-in-from-right-4 duration-500'>
+    <div className='animate-in fade-in-0 slide-in-from-right-4 flex flex-col gap-6 duration-500'>
       <div className='flex flex-col gap-1.5'>
         <h2 className='text-2xl font-bold tracking-tight'>
           {t('createAcademy.steps.branding')}
         </h2>
-        <p className='text-sm text-muted-foreground leading-relaxed'>
+        <p className='text-muted-foreground text-sm leading-relaxed'>
           Define la identidad y presencia de tu academia
         </p>
       </div>
@@ -59,18 +59,18 @@ export function StepBranding({
           name='slug'
           render={({ field }) => (
             <FormItem className='flex flex-col gap-2'>
-              <FormLabel className='flex items-center gap-1.5 text-sm text-foreground'>
-                <Globe className='size-4 text-primary' />
+              <FormLabel className='text-foreground flex items-center gap-1.5 text-sm'>
+                <Globe className='text-primary size-4' />
                 {t('createAcademy.fields.slug')}
               </FormLabel>
               <FormControl>
                 <div className='relative'>
-                  <span className='absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground select-none pointer-events-none'>
+                  <span className='text-muted-foreground pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-sm select-none'>
                     iswo/
                   </span>
                   <Input
                     placeholder='mi-academia'
-                    className='h-11 pl-14 bg-secondary/50 border-border focus-visible:border-primary focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 transition-all duration-300'
+                    className='bg-secondary/50 border-border focus-visible:border-primary focus-visible:ring-primary/20 placeholder:text-muted-foreground/50 h-11 pl-14 transition-all duration-300'
                     {...field}
                     onChange={(e) =>
                       field.onChange(
@@ -84,10 +84,12 @@ export function StepBranding({
                 </div>
               </FormControl>
               {slug && (
-                <div className='bg-secondary/30 border border-border rounded-lg px-3 py-2 font-mono text-sm'>
+                <div className='bg-secondary/30 border-border rounded-lg border px-3 py-2 font-mono text-sm'>
                   <span className='text-muted-foreground'>🌐 </span>
                   <span className='text-primary font-semibold'>{slug}</span>
-                  <span className='text-muted-foreground'>.iswoacademy.com</span>
+                  <span className='text-muted-foreground'>
+                    .iswoacademy.com
+                  </span>
                 </div>
               )}
               <FormMessage />
@@ -97,8 +99,8 @@ export function StepBranding({
 
         {/* Logo upload */}
         <div className='flex flex-col gap-2'>
-          <label className='flex items-center gap-1.5 text-sm font-medium text-foreground'>
-            <ImageIcon className='size-4 text-primary' />
+          <label className='text-foreground flex items-center gap-1.5 text-sm font-medium'>
+            <ImageIcon className='text-primary size-4' />
             {t('createAcademy.fields.logoUrl')}
           </label>
           <input
@@ -113,12 +115,12 @@ export function StepBranding({
               <img
                 src={URL.createObjectURL(logoFile)}
                 alt='Logo preview'
-                className='h-32 w-full rounded-lg object-cover border border-border'
+                className='border-border h-32 w-full rounded-lg border object-cover'
               />
               <button
                 type='button'
                 onClick={() => onLogoChange(null)}
-                className='absolute top-2 right-2 flex items-center justify-center size-5 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors'
+                className='bg-destructive text-destructive-foreground hover:bg-destructive/90 absolute top-2 right-2 flex size-5 items-center justify-center rounded-full transition-colors'
               >
                 <X className='size-3' />
               </button>
@@ -127,21 +129,21 @@ export function StepBranding({
             <button
               type='button'
               onClick={() => logoInputRef.current?.click()}
-              className='flex h-32 w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-secondary/30 hover:border-primary/50 hover:bg-secondary/50 transition-colors'
+              className='border-border bg-secondary/30 hover:border-primary/50 hover:bg-secondary/50 flex h-32 w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed transition-colors'
             >
-              <Upload className='size-5 text-muted-foreground' />
-              <span className='text-sm text-muted-foreground'>Subir logo</span>
+              <Upload className='text-muted-foreground size-5' />
+              <span className='text-muted-foreground text-sm'>Subir logo</span>
             </button>
           )}
-          <p className='text-xs text-muted-foreground'>
+          <p className='text-muted-foreground text-xs'>
             {t('createAcademy.fields.logoUrlHelp')}
           </p>
         </div>
 
         {/* Banner upload */}
         <div className='flex flex-col gap-2'>
-          <label className='flex items-center gap-1.5 text-sm font-medium text-foreground'>
-            <RectangleHorizontal className='size-4 text-primary' />
+          <label className='text-foreground flex items-center gap-1.5 text-sm font-medium'>
+            <RectangleHorizontal className='text-primary size-4' />
             {t('createAcademy.fields.bannerUrl')}
           </label>
           <input
@@ -156,12 +158,12 @@ export function StepBranding({
               <img
                 src={URL.createObjectURL(bannerFile)}
                 alt='Banner preview'
-                className='h-32 w-full rounded-lg object-cover border border-border'
+                className='border-border h-32 w-full rounded-lg border object-cover'
               />
               <button
                 type='button'
                 onClick={() => onBannerChange(null)}
-                className='absolute top-2 right-2 flex items-center justify-center size-5 rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors'
+                className='bg-destructive text-destructive-foreground hover:bg-destructive/90 absolute top-2 right-2 flex size-5 items-center justify-center rounded-full transition-colors'
               >
                 <X className='size-3' />
               </button>
@@ -170,13 +172,15 @@ export function StepBranding({
             <button
               type='button'
               onClick={() => bannerInputRef.current?.click()}
-              className='flex h-32 w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-secondary/30 hover:border-primary/50 hover:bg-secondary/50 transition-colors'
+              className='border-border bg-secondary/30 hover:border-primary/50 hover:bg-secondary/50 flex h-32 w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed transition-colors'
             >
-              <Upload className='size-5 text-muted-foreground' />
-              <span className='text-sm text-muted-foreground'>Subir banner</span>
+              <Upload className='text-muted-foreground size-5' />
+              <span className='text-muted-foreground text-sm'>
+                Subir banner
+              </span>
             </button>
           )}
-          <p className='text-xs text-muted-foreground'>
+          <p className='text-muted-foreground text-xs'>
             Imagen de portada de la academia (JPG, PNG, GIF, WebP)
           </p>
         </div>
@@ -184,4 +188,3 @@ export function StepBranding({
     </div>
   )
 }
-

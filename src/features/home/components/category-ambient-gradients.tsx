@@ -22,7 +22,9 @@ export function CategoryAmbientGradients({
             'pointer-events-none absolute inset-0 bg-gradient-to-br transition-opacity duration-700',
             cat.accentFrom,
             cat.accentTo,
-            i === activeIndex && !isTransitioning ? 'opacity-[0.055]' : 'opacity-0'
+            i === activeIndex && !isTransitioning
+              ? 'opacity-[0.055]'
+              : 'opacity-0'
           )}
         />
       ))}

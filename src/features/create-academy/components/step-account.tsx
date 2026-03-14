@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { toast } from 'sonner'
 import {
   ArrowRight,
   Check,
@@ -14,9 +13,14 @@ import {
   User,
   X,
 } from 'lucide-react'
+import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { isApiError } from '@/lib/api-client'
-import { getErrorMessage, getValidationDetails, isValidationError } from '@/lib/error-handler'
+import {
+  getErrorMessage,
+  getValidationDetails,
+  isValidationError,
+} from '@/lib/error-handler'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -28,12 +32,19 @@ const registerSchema = z
   .object({
     first_name: z.string().min(1, 'El nombre es obligatorio').max(50),
     last_name: z.string().min(1, 'El apellido es obligatorio').max(50),
-    email: z.string().min(1, 'El correo es obligatorio').email('Correo no válido').max(255),
+    email: z
+      .string()
+      .min(1, 'El correo es obligatorio')
+      .email('Correo no válido')
+      .max(255),
     password: z
       .string()
       .min(8, 'Mínimo 8 caracteres')
       .max(128)
-      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Necesita mayúscula, minúscula y número'),
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        'Necesita mayúscula, minúscula y número'
+      ),
     password_confirmation: z.string().min(1, 'Confirma tu contraseña'),
   })
   .refine((d) => d.password === d.password_confirmation, {
@@ -42,7 +53,10 @@ const registerSchema = z
   })
 
 const loginSchema = z.object({
-  email: z.string().min(1, 'El correo es obligatorio').email('Correo no válido'),
+  email: z
+    .string()
+    .min(1, 'El correo es obligatorio')
+    .email('Correo no válido'),
   password: z.string().min(1, 'La contraseña es obligatoria'),
 })
 
@@ -59,12 +73,12 @@ function PasswordStrength({ password }: { password: string }) {
       { label: 'Un número', met: /[0-9]/.test(password) },
       { label: 'Un especial', met: /[^A-Za-z0-9]/.test(password) },
     ],
-    [password],
+    [password]
   )
   const strength = checks.filter((c) => c.met).length
   if (!password) return null
   return (
-    <div className='flex flex-col gap-2 mt-1'>
+    <div className='mt-1 flex flex-col gap-2'>
       <div className='flex gap-1'>
         {Array.from({ length: 4 }).map((_, i) => (
           <div
@@ -79,7 +93,7 @@ function PasswordStrength({ password }: { password: string }) {
                     : strength <= 3
                       ? 'bg-yellow-400'
                       : 'bg-emerald-500'
-                : 'bg-muted',
+                : 'bg-muted'
             )}
           />
         ))}
@@ -90,10 +104,14 @@ function PasswordStrength({ password }: { password: string }) {
             key={c.label}
             className={cn(
               'flex items-center gap-1 text-[11px] transition-colors',
-              c.met ? 'text-emerald-400' : 'text-muted-foreground/60',
+              c.met ? 'text-emerald-400' : 'text-muted-foreground/60'
             )}
           >
-            {c.met ? <Check className='size-3 shrink-0' /> : <X className='size-3 shrink-0' />}
+            {c.met ? (
+              <Check className='size-3 shrink-0' />
+            ) : (
+              <X className='size-3 shrink-0' />
+            )}
             {c.label}
           </div>
         ))}
@@ -111,7 +129,10 @@ interface StepAccountProps {
 
 type Phase = 'register' | 'verify' | 'login'
 
-export function StepAccount({ onSuccess, initialPhase = 'register' }: StepAccountProps) {
+export function StepAccount({
+  onSuccess,
+  initialPhase = 'register',
+}: StepAccountProps) {
   const [phase, setPhase] = useState<Phase>(initialPhase)
   const [showPassword, setShowPassword] = useState(false)
   const [pendingEmail, setPendingEmail] = useState('')
@@ -138,11 +159,15 @@ export function StepAccount({ onSuccess, initialPhase = 'register' }: StepAccoun
         description: 'Revisa tu correo para confirmar tu cuenta.',
       })
     } catch (error: unknown) {
-      toast.error('Error al registrarse', { description: getErrorMessage(error) })
+      toast.error('Error al registrarse', {
+        description: getErrorMessage(error),
+      })
       if (isApiError(error) && isValidationError(error)) {
         const details = getValidationDetails(error)
         Object.entries(details).forEach(([field, message]) => {
-          if (['email', 'password', 'first_name', 'last_name'].includes(field)) {
+          if (
+            ['email', 'password', 'first_name', 'last_name'].includes(field)
+          ) {
             setError(field as keyof RegisterValues, { message })
           }
         })
@@ -178,67 +203,79 @@ export function StepAccount({ onSuccess, initialPhase = 'register' }: StepAccoun
 
   if (phase === 'login') {
     return (
-      <div className='flex flex-col gap-6 animate-in fade-in-0 slide-in-from-right-4 duration-500'>
+      <div className='animate-in fade-in-0 slide-in-from-right-4 flex flex-col gap-6 duration-500'>
         <div className='flex flex-col gap-1.5'>
           <h2 className='text-2xl font-bold tracking-tight'>Inicia sesión</h2>
-          <p className='text-sm text-muted-foreground leading-relaxed'>
-            Introduce tus credenciales para continuar con la configuración de tu academia.
+          <p className='text-muted-foreground text-sm leading-relaxed'>
+            Introduce tus credenciales para continuar con la configuración de tu
+            academia.
           </p>
         </div>
 
-        <form onSubmit={handleLoginSubmit(onLogin)} className='flex flex-col gap-4'>
+        <form
+          onSubmit={handleLoginSubmit(onLogin)}
+          className='flex flex-col gap-4'
+        >
           <div className='flex flex-col gap-2'>
             <Label htmlFor='login-email'>Correo electrónico</Label>
             <div className='relative'>
-              <Mail className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/50' />
+              <Mail className='text-muted-foreground/50 absolute top-1/2 left-3 size-4 -translate-y-1/2' />
               <Input
                 id='login-email'
                 type='email'
                 placeholder='tu@correo.com'
-                className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60'
+                className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pl-10'
                 {...regLogin('email')}
               />
             </div>
             {loginErrors.email && (
-              <p className='text-xs text-destructive'>{loginErrors.email.message}</p>
+              <p className='text-destructive text-xs'>
+                {loginErrors.email.message}
+              </p>
             )}
           </div>
 
           <div className='flex flex-col gap-2'>
             <Label htmlFor='login-password'>Contraseña</Label>
             <div className='relative'>
-              <Lock className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/50' />
+              <Lock className='text-muted-foreground/50 absolute top-1/2 left-3 size-4 -translate-y-1/2' />
               <Input
                 id='login-password'
                 type={showPassword ? 'text' : 'password'}
                 placeholder='Tu contraseña'
-                className='pl-10 pr-10 h-11 bg-card/50 border-border/50 focus:border-primary/60'
+                className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pr-10 pl-10'
                 {...regLogin('password')}
               />
               <button
                 type='button'
                 onClick={() => setShowPassword((v) => !v)}
-                className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-foreground transition-colors'
+                className='text-muted-foreground/50 hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors'
               >
-                {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
+                {showPassword ? (
+                  <EyeOff className='size-4' />
+                ) : (
+                  <Eye className='size-4' />
+                )}
               </button>
             </div>
             {loginErrors.password && (
-              <p className='text-xs text-destructive'>{loginErrors.password.message}</p>
+              <p className='text-destructive text-xs'>
+                {loginErrors.password.message}
+              </p>
             )}
           </div>
 
           <Button
             type='submit'
             disabled={isLoginSubmitting}
-            className='h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90'
+            className='bg-primary text-primary-foreground hover:bg-primary/90 h-11 text-sm font-semibold'
           >
             {isLoginSubmitting ? (
               <Loader2 className='size-4 animate-spin' />
             ) : (
               <>
                 Iniciar sesión y continuar
-                <ArrowRight className='size-4 ml-2' />
+                <ArrowRight className='ml-2 size-4' />
               </>
             )}
           </Button>
@@ -247,10 +284,12 @@ export function StepAccount({ onSuccess, initialPhase = 'register' }: StepAccoun
         <button
           type='button'
           onClick={() => setPhase('register')}
-          className='text-xs text-muted-foreground hover:text-foreground transition-colors text-center'
+          className='text-muted-foreground hover:text-foreground text-center text-xs transition-colors'
         >
           ¿No tienes cuenta?{' '}
-          <span className='text-primary underline underline-offset-2'>Regístrate aquí</span>
+          <span className='text-primary underline underline-offset-2'>
+            Regístrate aquí
+          </span>
         </button>
       </div>
     )
@@ -258,67 +297,80 @@ export function StepAccount({ onSuccess, initialPhase = 'register' }: StepAccoun
 
   if (phase === 'verify') {
     return (
-      <div className='flex flex-col gap-6 animate-in fade-in-0 slide-in-from-right-4 duration-500'>
+      <div className='animate-in fade-in-0 slide-in-from-right-4 flex flex-col gap-6 duration-500'>
         <div className='flex flex-col gap-1.5'>
-          <h2 className='text-2xl font-bold tracking-tight'>Confirma tu correo</h2>
-          <p className='text-sm text-muted-foreground leading-relaxed'>
+          <h2 className='text-2xl font-bold tracking-tight'>
+            Confirma tu correo
+          </h2>
+          <p className='text-muted-foreground text-sm leading-relaxed'>
             Te enviamos un enlace de confirmación a{' '}
             <span className='text-foreground font-medium'>{pendingEmail}</span>.
             Una vez confirmado, inicia sesión aquí para continuar.
           </p>
         </div>
 
-        <form onSubmit={handleLoginSubmit(onLogin)} className='flex flex-col gap-4'>
+        <form
+          onSubmit={handleLoginSubmit(onLogin)}
+          className='flex flex-col gap-4'
+        >
           <div className='flex flex-col gap-2'>
             <Label htmlFor='login-email'>Correo electrónico</Label>
             <div className='relative'>
-              <Mail className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/50' />
+              <Mail className='text-muted-foreground/50 absolute top-1/2 left-3 size-4 -translate-y-1/2' />
               <Input
                 id='login-email'
                 type='email'
-                className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60'
+                className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pl-10'
                 {...regLogin('email')}
               />
             </div>
             {loginErrors.email && (
-              <p className='text-xs text-destructive'>{loginErrors.email.message}</p>
+              <p className='text-destructive text-xs'>
+                {loginErrors.email.message}
+              </p>
             )}
           </div>
 
           <div className='flex flex-col gap-2'>
             <Label htmlFor='login-password'>Contraseña</Label>
             <div className='relative'>
-              <Lock className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/50' />
+              <Lock className='text-muted-foreground/50 absolute top-1/2 left-3 size-4 -translate-y-1/2' />
               <Input
                 id='login-password'
                 type={showPassword ? 'text' : 'password'}
-                className='pl-10 pr-10 h-11 bg-card/50 border-border/50 focus:border-primary/60'
+                className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pr-10 pl-10'
                 {...regLogin('password')}
               />
               <button
                 type='button'
                 onClick={() => setShowPassword((v) => !v)}
-                className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-foreground transition-colors'
+                className='text-muted-foreground/50 hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors'
               >
-                {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
+                {showPassword ? (
+                  <EyeOff className='size-4' />
+                ) : (
+                  <Eye className='size-4' />
+                )}
               </button>
             </div>
             {loginErrors.password && (
-              <p className='text-xs text-destructive'>{loginErrors.password.message}</p>
+              <p className='text-destructive text-xs'>
+                {loginErrors.password.message}
+              </p>
             )}
           </div>
 
           <Button
             type='submit'
             disabled={isLoginSubmitting}
-            className='h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90'
+            className='bg-primary text-primary-foreground hover:bg-primary/90 h-11 text-sm font-semibold'
           >
             {isLoginSubmitting ? (
               <Loader2 className='size-4 animate-spin' />
             ) : (
               <>
                 Iniciar sesión y continuar
-                <ArrowRight className='size-4 ml-2' />
+                <ArrowRight className='ml-2 size-4' />
               </>
             )}
           </Button>
@@ -327,20 +379,22 @@ export function StepAccount({ onSuccess, initialPhase = 'register' }: StepAccoun
         <button
           type='button'
           onClick={() => setPhase('register')}
-          className='text-xs text-muted-foreground hover:text-foreground transition-colors text-center'
+          className='text-muted-foreground hover:text-foreground text-center text-xs transition-colors'
         >
           ¿Usaste otro correo?{' '}
-          <span className='text-primary underline underline-offset-2'>Volver atrás</span>
+          <span className='text-primary underline underline-offset-2'>
+            Volver atrás
+          </span>
         </button>
       </div>
     )
   }
 
   return (
-    <div className='flex flex-col gap-6 animate-in fade-in-0 slide-in-from-right-4 duration-500'>
+    <div className='animate-in fade-in-0 slide-in-from-right-4 flex flex-col gap-6 duration-500'>
       <div className='flex flex-col gap-1.5'>
         <h2 className='text-2xl font-bold tracking-tight'>Crea tu cuenta</h2>
-        <p className='text-sm text-muted-foreground leading-relaxed'>
+        <p className='text-muted-foreground text-sm leading-relaxed'>
           Ingresa tus datos para comenzar a configurar tu academia.
         </p>
       </div>
@@ -357,16 +411,18 @@ export function StepAccount({ onSuccess, initialPhase = 'register' }: StepAccoun
             <div key={id} className='flex flex-col gap-2'>
               <Label htmlFor={id}>{label}</Label>
               <div className='relative'>
-                <User className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/50' />
+                <User className='text-muted-foreground/50 absolute top-1/2 left-3 size-4 -translate-y-1/2' />
                 <Input
                   id={id}
                   placeholder={placeholder}
-                  className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60'
+                  className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pl-10'
                   {...register(id)}
                 />
               </div>
               {errors[id] && (
-                <p className='text-xs text-destructive'>{errors[id]?.message}</p>
+                <p className='text-destructive text-xs'>
+                  {errors[id]?.message}
+                </p>
               )}
             </div>
           ))}
@@ -376,17 +432,17 @@ export function StepAccount({ onSuccess, initialPhase = 'register' }: StepAccoun
         <div className='flex flex-col gap-2'>
           <Label htmlFor='email'>Correo electrónico</Label>
           <div className='relative'>
-            <Mail className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/50' />
+            <Mail className='text-muted-foreground/50 absolute top-1/2 left-3 size-4 -translate-y-1/2' />
             <Input
               id='email'
               type='email'
               placeholder='tu@correo.com'
-              className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60'
+              className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pl-10'
               {...register('email')}
             />
           </div>
           {errors.email && (
-            <p className='text-xs text-destructive'>{errors.email.message}</p>
+            <p className='text-destructive text-xs'>{errors.email.message}</p>
           )}
         </div>
 
@@ -394,25 +450,31 @@ export function StepAccount({ onSuccess, initialPhase = 'register' }: StepAccoun
         <div className='flex flex-col gap-2'>
           <Label htmlFor='password'>Contraseña</Label>
           <div className='relative'>
-            <Lock className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/50' />
+            <Lock className='text-muted-foreground/50 absolute top-1/2 left-3 size-4 -translate-y-1/2' />
             <Input
               id='password'
               type={showPassword ? 'text' : 'password'}
               placeholder='Mínimo 8 caracteres'
-              className='pl-10 pr-10 h-11 bg-card/50 border-border/50 focus:border-primary/60'
+              className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pr-10 pl-10'
               {...register('password')}
             />
             <button
               type='button'
               onClick={() => setShowPassword((v) => !v)}
-              className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-foreground transition-colors'
+              className='text-muted-foreground/50 hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors'
             >
-              {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
+              {showPassword ? (
+                <EyeOff className='size-4' />
+              ) : (
+                <Eye className='size-4' />
+              )}
             </button>
           </div>
           <PasswordStrength password={password} />
           {errors.password && (
-            <p className='text-xs text-destructive'>{errors.password.message}</p>
+            <p className='text-destructive text-xs'>
+              {errors.password.message}
+            </p>
           )}
         </div>
 
@@ -420,31 +482,33 @@ export function StepAccount({ onSuccess, initialPhase = 'register' }: StepAccoun
         <div className='flex flex-col gap-2'>
           <Label htmlFor='password_confirmation'>Confirmar contraseña</Label>
           <div className='relative'>
-            <Lock className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/50' />
+            <Lock className='text-muted-foreground/50 absolute top-1/2 left-3 size-4 -translate-y-1/2' />
             <Input
               id='password_confirmation'
               type='password'
               placeholder='Repite tu contraseña'
-              className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60'
+              className='bg-card/50 border-border/50 focus:border-primary/60 h-11 pl-10'
               {...register('password_confirmation')}
             />
           </div>
           {errors.password_confirmation && (
-            <p className='text-xs text-destructive'>{errors.password_confirmation.message}</p>
+            <p className='text-destructive text-xs'>
+              {errors.password_confirmation.message}
+            </p>
           )}
         </div>
 
         <Button
           type='submit'
           disabled={isSubmitting}
-          className='h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:shadow-[0_0_28px_rgba(99,102,241,0.35)] transition-all duration-300'
+          className='bg-primary text-primary-foreground hover:bg-primary/90 h-11 text-sm font-semibold shadow-[0_0_20px_rgba(99,102,241,0.2)] transition-all duration-300 hover:shadow-[0_0_28px_rgba(99,102,241,0.35)]'
         >
           {isSubmitting ? (
             <Loader2 className='size-4 animate-spin' />
           ) : (
             <>
               Crear cuenta y continuar
-              <ArrowRight className='size-4 ml-2' />
+              <ArrowRight className='ml-2 size-4' />
             </>
           )}
         </Button>

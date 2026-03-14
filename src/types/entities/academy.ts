@@ -88,7 +88,13 @@ export interface AcademyConfiguration {
   id: number
   academy_id: number
   // Theme
-  theme: 'default' | 'corporate' | 'modern' | 'academic' | 'minimal' | 'creative'
+  theme:
+    | 'default'
+    | 'corporate'
+    | 'modern'
+    | 'academic'
+    | 'minimal'
+    | 'creative'
   primary_color: string | null
   secondary_color: string | null
   accent_color: string | null

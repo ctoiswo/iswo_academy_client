@@ -1,9 +1,9 @@
 import type { SystemHealth } from '@/lib/super-admin-api'
+import { ActivityStatsCard } from '../components/activity-stats-card'
+import { AppInfoCard } from '../components/app-info-card'
+import { PlatformSummaryCard } from '../components/platform-summary-card'
 import { ServiceStatusCard } from '../components/service-status-card'
 import { SystemMetricsCard } from '../components/system-metrics-card'
-import { ActivityStatsCard } from '../components/activity-stats-card'
-import { PlatformSummaryCard } from '../components/platform-summary-card'
-import { AppInfoCard } from '../components/app-info-card'
 
 interface HealthDashboardPanelProps {
   health: SystemHealth
@@ -14,7 +14,7 @@ export function HealthDashboardPanel({ health }: HealthDashboardPanelProps) {
     <div className='space-y-6'>
       {/* Service Status */}
       <div>
-        <h2 className='text-muted-foreground mb-3 text-xs font-semibold uppercase tracking-wider'>
+        <h2 className='text-muted-foreground mb-3 text-xs font-semibold tracking-wider uppercase'>
           Estado de servicios
         </h2>
         <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
@@ -27,10 +27,7 @@ export function HealthDashboardPanel({ health }: HealthDashboardPanelProps) {
                 : undefined
             }
           />
-          <ServiceStatusCard
-            label='Caché'
-            health={health.cache_status}
-          />
+          <ServiceStatusCard label='Caché' health={health.cache_status} />
           <ServiceStatusCard
             label='Almacenamiento'
             health={health.storage_status}

@@ -1,8 +1,13 @@
-import { Outlet, useNavigate, useLocation, useParams } from '@tanstack/react-router'
-import { DashboardLayout } from '@/components/layout/dashboard-layout'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Outlet,
+  useNavigate,
+  useLocation,
+  useParams,
+} from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { useTranslation } from '@/hooks/use-translation'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
 export function AcademySettings() {
   const { user, currentAcademy } = useAuthStore()
@@ -33,8 +38,12 @@ export function AcademySettings() {
       <div className='space-y-6'>
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
-            <TabsTrigger value='general'>{t('academySettings.tabs.general')}</TabsTrigger>
-            <TabsTrigger value='features'>{t('academySettings.tabs.features')}</TabsTrigger>
+            <TabsTrigger value='general'>
+              {t('academySettings.tabs.general')}
+            </TabsTrigger>
+            <TabsTrigger value='features'>
+              {t('academySettings.tabs.features')}
+            </TabsTrigger>
           </TabsList>
         </Tabs>
         <Outlet />

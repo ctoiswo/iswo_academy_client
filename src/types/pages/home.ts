@@ -1,6 +1,6 @@
-import type { FeaturedAcademy } from '@/types/entities/category'
-import { type Course } from '@/types'
 import { type RefObject } from 'react'
+import { type Course } from '@/types'
+import type { FeaturedAcademy } from '@/types/entities/category'
 
 /**
  * Types for landing/home page components

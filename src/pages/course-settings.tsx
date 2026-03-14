@@ -58,11 +58,7 @@ export default function CourseSettingsPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false)
 
-  const {
-    data: course,
-    isLoading,
-    error,
-  } = useCourse(courseSlug)
+  const { data: course, isLoading, error } = useCourse(courseSlug)
   const updateCourse = useUpdateCourse(academySlug)
   const deleteCourse = useDeleteCourse(academySlug)
 
@@ -309,7 +305,7 @@ export default function CourseSettingsPage() {
           <div className='flex items-center justify-between rounded-lg border border-red-200 p-3'>
             <div>
               <p className='font-medium'>Archivar Curso</p>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 El curso no será visible pero se conservarán los datos
               </p>
             </div>
@@ -325,7 +321,7 @@ export default function CourseSettingsPage() {
           <div className='flex items-center justify-between rounded-lg border border-red-200 p-3'>
             <div>
               <p className='font-medium'>Eliminar Curso</p>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 Eliminar permanentemente el curso y todo su contenido
               </p>
             </div>

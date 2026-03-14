@@ -1,6 +1,6 @@
+import type { AcademyData, AcademyMembership } from '@/types'
 import { motion } from 'framer-motion'
 import { Building } from 'lucide-react'
-import type { AcademyData, AcademyMembership } from '@/types'
 import { AcademyCard } from './academy-card'
 
 interface AcademyGridProps {

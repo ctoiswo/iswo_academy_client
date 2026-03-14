@@ -11,11 +11,7 @@ export default function CourseEditPage() {
     academySlug: string
     courseSlug: string
   }
-  const {
-    data: course,
-    isLoading,
-    error,
-  } = useCourse(courseSlug)
+  const { data: course, isLoading, error } = useCourse(courseSlug)
 
   const handleSuccess = () => {
     navigate({

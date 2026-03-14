@@ -61,7 +61,9 @@ export function EditQuestionDialog({
   const onSubmit = (data: UpdateQuestionRequest) => {
     // Filtrar respuestas vacías
     const validAnswers =
-      data.answers?.filter((a: { answer_text: string }) => a.answer_text.trim() !== '') || []
+      data.answers?.filter(
+        (a: { answer_text: string }) => a.answer_text.trim() !== ''
+      ) || []
 
     updateQuestion.mutate(
       { ...data, answers: validAnswers },
@@ -173,7 +175,7 @@ export function EditQuestionDialog({
                 ))}
               </div>
 
-              <p className='text-xs text-muted-foreground'>
+              <p className='text-muted-foreground text-xs'>
                 {questionType === 'multiple_choice' &&
                   'Marca la casilla de la respuesta correcta'}
                 {questionType === 'multiple_select' &&

@@ -59,7 +59,9 @@ export function groupAcademiesByCategory(academies: any[]) {
  * @returns true si la academia es gratuita
  */
 export function isAcademyFree(academy: Academy): boolean {
-  return !academy.monthly_price || parseFloat(academy.monthly_price.toString()) === 0
+  return (
+    !academy.monthly_price || parseFloat(academy.monthly_price.toString()) === 0
+  )
 }
 
 /**

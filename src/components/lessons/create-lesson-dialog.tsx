@@ -1,5 +1,5 @@
-import type { CreateLessonRequest } from '@/types'
 import { useState, useEffect } from 'react'
+import type { CreateLessonRequest } from '@/types'
 import { Upload, Link as LinkIcon, Video } from 'lucide-react'
 import { useCreateLesson } from '@/hooks/use-lessons'
 import { Button } from '@/components/ui/button'

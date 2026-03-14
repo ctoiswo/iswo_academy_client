@@ -50,8 +50,7 @@ export function AcademySwitcher({ fallback }: AcademySwitcherProps) {
                   onError={(e) => {
                     const target = e.target as HTMLImageElement
                     target.style.display = 'none'
-                    const fallbackEl =
-                      target.nextElementSibling as HTMLElement
+                    const fallbackEl = target.nextElementSibling as HTMLElement
                     if (fallbackEl) fallbackEl.style.display = 'flex'
                   }}
                 />

@@ -3,8 +3,8 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
 import academyConfigurationService from '@/services/academy-configuration-service'
+import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { useTranslation } from '@/hooks/use-translation'
 import { Button } from '@/components/ui/button'
@@ -16,8 +16,8 @@ import {
   FormItem,
   FormLabel,
 } from '@/components/ui/form'
-import { Switch } from '@/components/ui/switch'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Switch } from '@/components/ui/switch'
 
 const featuresSchema = z.object({
   enable_certificates: z.boolean(),
@@ -93,7 +93,9 @@ export function FeaturesConfigForm() {
       academyConfigurationService.updateFeatures(academyId!, data),
     onSuccess: () => {
       toast.success(t('academySettings.features.saveSuccess'))
-      queryClient.invalidateQueries({ queryKey: ['academy-configuration', academyId] })
+      queryClient.invalidateQueries({
+        queryKey: ['academy-configuration', academyId],
+      })
     },
     onError: () => {
       toast.error(t('academySettings.features.saveError'))
@@ -141,7 +143,9 @@ export function FeaturesConfigForm() {
         ))}
 
         <Button type='submit' disabled={mutation.isPending}>
-          {mutation.isPending ? t('academySettings.features.saving') : t('academySettings.features.save')}
+          {mutation.isPending
+            ? t('academySettings.features.saving')
+            : t('academySettings.features.save')}
         </Button>
       </form>
     </Form>

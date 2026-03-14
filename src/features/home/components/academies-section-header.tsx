@@ -4,16 +4,16 @@ export function AcademiesSectionHeader() {
   const { t } = useTranslation()
   return (
     <div className='flex flex-col items-center gap-4 text-center'>
-      <span className='text-xs font-semibold uppercase tracking-widest text-primary'>
+      <span className='text-primary text-xs font-semibold tracking-widest uppercase'>
         {t('pages.home.academies.eyebrow')}
       </span>
       <h2
-        className='text-3xl sm:text-4xl font-bold text-foreground tracking-tight text-balance'
+        className='text-foreground text-3xl font-bold tracking-tight text-balance sm:text-4xl'
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         {t('pages.home.academies.title')}
       </h2>
-      <p className='text-sm text-muted-foreground max-w-lg leading-relaxed'>
+      <p className='text-muted-foreground max-w-lg text-sm leading-relaxed'>
         {t('pages.home.academies.subtitle')}
       </p>
     </div>

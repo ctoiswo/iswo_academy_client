@@ -119,9 +119,9 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
 
         <CardContent>
           {allAccessCodes.length === 0 ? (
-            <div className='py-12 text-center text-muted-foreground'>
+            <div className='text-muted-foreground py-12 text-center'>
               <Key className='mx-auto mb-4 h-12 w-12' />
-              <h3 className='mb-2 text-lg font-medium text-foreground'>
+              <h3 className='text-foreground mb-2 text-lg font-medium'>
                 Aún no hay códigos de acceso
               </h3>
               <p className='mb-4'>
@@ -134,9 +134,9 @@ export function AccessCodeList({ courseSlug }: AccessCodeListProps) {
               </Button>
             </div>
           ) : accessCodes.length === 0 ? (
-            <div className='py-12 text-center text-muted-foreground'>
+            <div className='text-muted-foreground py-12 text-center'>
               <Filter className='mx-auto mb-4 h-12 w-12' />
-              <h3 className='mb-2 text-lg font-medium text-foreground'>
+              <h3 className='text-foreground mb-2 text-lg font-medium'>
                 No hay códigos de acceso con este filtro
               </h3>
               <p className='mb-4'>

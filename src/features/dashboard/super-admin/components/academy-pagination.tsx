@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/components/ui/button'
 import { getPageNumbers } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 
 interface AcademyPaginationProps {
   currentPage: number
@@ -23,7 +23,10 @@ export function AcademyPagination({
   return (
     <div className='mt-4 flex items-center justify-between'>
       <p className='text-muted-foreground text-sm'>
-        {t('super_admin.pagination.pageOf', { current: currentPage, total: pages })}
+        {t('super_admin.pagination.pageOf', {
+          current: currentPage,
+          total: pages,
+        })}
         {' — '}
         {t('super_admin.pagination.totalCount', { count: totalCount })}
       </p>
@@ -39,7 +42,10 @@ export function AcademyPagination({
 
         {pageNumbers.map((page, i) =>
           page === '...' ? (
-            <span key={`ellipsis-${i}`} className='text-muted-foreground px-2 text-sm'>
+            <span
+              key={`ellipsis-${i}`}
+              className='text-muted-foreground px-2 text-sm'
+            >
               …
             </span>
           ) : (

@@ -19,7 +19,7 @@ export function CoursesScrollRow({
     <div className='relative'>
       <div
         ref={scrollRef}
-        className='flex gap-5 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar'
+        className='no-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4'
       >
         {courses.map((course) => (
           <LandingCourseCard key={course.id} course={course} />
@@ -27,10 +27,10 @@ export function CoursesScrollRow({
       </div>
 
       {canScrollLeft && (
-        <div className='pointer-events-none absolute top-0 left-0 bottom-4 w-12 bg-gradient-to-r from-background to-transparent' />
+        <div className='from-background pointer-events-none absolute top-0 bottom-4 left-0 w-12 bg-gradient-to-r to-transparent' />
       )}
       {canScrollRight && (
-        <div className='pointer-events-none absolute top-0 right-0 bottom-4 w-12 bg-gradient-to-l from-background to-transparent' />
+        <div className='from-background pointer-events-none absolute top-0 right-0 bottom-4 w-12 bg-gradient-to-l to-transparent' />
       )}
     </div>
   )

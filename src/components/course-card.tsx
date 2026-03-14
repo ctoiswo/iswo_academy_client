@@ -149,7 +149,9 @@ export function CourseCard({
                 {course.duration_minutes && (
                   <div className='flex items-center gap-1'>
                     <Clock className='h-4 w-4' />
-                    <span>{Math.ceil(course.duration_minutes / 60 / 24 / 7)} semanas</span>
+                    <span>
+                      {Math.ceil(course.duration_minutes / 60 / 24 / 7)} semanas
+                    </span>
                   </div>
                 )}
                 <div className='flex items-center gap-1'>
@@ -168,7 +170,10 @@ export function CourseCard({
 
               {/* Action Buttons */}
               <div className='flex items-center gap-3'>
-                <Button className='flex-1' disabled={course.status !== 'published'}>
+                <Button
+                  className='flex-1'
+                  disabled={course.status !== 'published'}
+                >
                   {course.status === 'published' ? (
                     <>
                       <Play className='mr-2 h-4 w-4' />

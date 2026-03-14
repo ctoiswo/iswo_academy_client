@@ -116,20 +116,20 @@ function SortableCourseItem({
             {...attributes}
             {...listeners}
           >
-            <GripVertical className='h-5 w-5 text-muted-foreground' />
+            <GripVertical className='text-muted-foreground h-5 w-5' />
           </button>
           <div className='flex-1'>
             <div className='mb-2 flex items-center gap-2'>
-              <span className='text-sm font-medium text-muted-foreground'>
+              <span className='text-muted-foreground text-sm font-medium'>
                 #{index + 1}
               </span>
               <h4 className='font-medium'>{course.title}</h4>
               {getDifficultyBadge(course.difficulty_level)}
             </div>
-            <p className='mb-3 line-clamp-2 text-sm text-muted-foreground'>
+            <p className='text-muted-foreground mb-3 line-clamp-2 text-sm'>
               {course.description}
             </p>
-            <div className='flex gap-4 text-sm text-muted-foreground'>
+            <div className='text-muted-foreground flex gap-4 text-sm'>
               <div className='flex items-center gap-1'>
                 <Clock className='h-4 w-4' />
                 <span>{Math.round(course.duration_minutes / 60)}h</span>
@@ -206,7 +206,9 @@ export function LearningPathCourses({
 
     if (over && active.id !== over.id) {
       setCourses((items: Course[]) => {
-        const oldIndex = items.findIndex((item: Course) => item.id === active.id)
+        const oldIndex = items.findIndex(
+          (item: Course) => item.id === active.id
+        )
         const newIndex = items.findIndex((item: Course) => item.id === over.id)
         const newOrder = arrayMove(items, oldIndex, newIndex)
 
@@ -226,7 +228,9 @@ export function LearningPathCourses({
 
   const handleRemoveCourse = async (courseId: number) => {
     await removeCourseMutation.mutateAsync(courseId)
-    setCourses((prev: Course[]) => prev.filter((c: Course) => c.id !== courseId))
+    setCourses((prev: Course[]) =>
+      prev.filter((c: Course) => c.id !== courseId)
+    )
   }
 
   const getDifficultyBadge = (difficulty: string) => {
@@ -271,7 +275,7 @@ export function LearningPathCourses({
           <h2 className='text-lg font-semibold'>
             Cursos en la Ruta de Aprendizaje
           </h2>
-          <p className='text-sm text-muted-foreground'>
+          <p className='text-muted-foreground text-sm'>
             {courses.length} curso{courses.length !== 1 ? 's' : ''} en esta ruta
           </p>
         </div>
@@ -297,7 +301,7 @@ export function LearningPathCourses({
               />
               <div className='max-h-96 space-y-2 overflow-y-auto'>
                 {availableCourses.length === 0 ? (
-                  <p className='py-4 text-center text-sm text-muted-foreground'>
+                  <p className='text-muted-foreground py-4 text-center text-sm'>
                     {searchTerm
                       ? 'No se encontraron cursos'
                       : 'Todos los cursos ya están agregados'}
@@ -316,11 +320,11 @@ export function LearningPathCourses({
                               <h4 className='font-medium'>{course.title}</h4>
                               {getDifficultyBadge(course.difficulty_level)}
                             </div>
-                            <p className='line-clamp-1 text-sm text-muted-foreground'>
+                            <p className='text-muted-foreground line-clamp-1 text-sm'>
                               {course.description}
                             </p>
                           </div>
-                          <Plus className='h-5 w-5 text-muted-foreground' />
+                          <Plus className='text-muted-foreground h-5 w-5' />
                         </div>
                       </CardContent>
                     </Card>
@@ -335,11 +339,11 @@ export function LearningPathCourses({
       {/* Assigned Courses with Drag & Drop */}
       {courses.length === 0 ? (
         <div className='rounded-lg border-2 border-dashed border-gray-200 py-8 text-center'>
-          <Book className='mx-auto mb-3 h-8 w-8 text-muted-foreground' />
-          <h3 className='mb-1 text-sm font-medium text-foreground'>
+          <Book className='text-muted-foreground mx-auto mb-3 h-8 w-8' />
+          <h3 className='text-foreground mb-1 text-sm font-medium'>
             No hay cursos asignados
           </h3>
-          <p className='mb-4 text-sm text-muted-foreground'>
+          <p className='text-muted-foreground mb-4 text-sm'>
             Esta ruta de aprendizaje aún no tiene cursos
           </p>
           <Button onClick={() => setIsAddDialogOpen(true)} variant='outline'>
@@ -349,7 +353,7 @@ export function LearningPathCourses({
         </div>
       ) : (
         <div className='space-y-4'>
-          <p className='text-sm text-muted-foreground'>
+          <p className='text-muted-foreground text-sm'>
             Arrastra y suelta para reordenar los cursos
           </p>
           <DndContext

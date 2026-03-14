@@ -119,7 +119,7 @@ export function ManageQuestionsDialog({
             {/* Lista de preguntas */}
             <ScrollArea className='h-[400px] rounded-lg border'>
               {isLoading ? (
-                <div className='p-8 text-center text-muted-foreground'>
+                <div className='text-muted-foreground p-8 text-center'>
                   Cargando preguntas...
                 </div>
               ) : questions && questions.length > 0 ? (
@@ -130,7 +130,7 @@ export function ManageQuestionsDialog({
                       className='flex items-start gap-3 p-4 hover:bg-gray-50'
                     >
                       <div className='flex items-center gap-2'>
-                        <GripVertical className='h-5 w-5 text-muted-foreground' />
+                        <GripVertical className='text-muted-foreground h-5 w-5' />
                         <div className='flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600'>
                           {index + 1}
                         </div>
@@ -151,7 +151,7 @@ export function ManageQuestionsDialog({
                                 {question.points === 1 ? 'punto' : 'puntos'}
                               </Badge>
                               {question.answers && (
-                                <span className='text-sm text-muted-foreground'>
+                                <span className='text-muted-foreground text-sm'>
                                   {question.answers.length} opciones
                                 </span>
                               )}
@@ -198,7 +198,7 @@ export function ManageQuestionsDialog({
                         )}
 
                         {question.explanation && (
-                          <p className='mt-2 text-sm text-muted-foreground italic'>
+                          <p className='text-muted-foreground mt-2 text-sm italic'>
                             Explicación: {question.explanation}
                           </p>
                         )}
@@ -207,7 +207,7 @@ export function ManageQuestionsDialog({
                   ))}
                 </div>
               ) : (
-                <div className='p-12 text-center text-muted-foreground'>
+                <div className='text-muted-foreground p-12 text-center'>
                   <p className='mb-4 text-lg font-medium'>
                     Aún no hay preguntas
                   </p>

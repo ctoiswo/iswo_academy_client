@@ -1,20 +1,10 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useAuthStore } from '@/stores/auth-store'
 import authService from '@/services/auth-service'
+import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
 import { useTranslation } from '@/hooks/use-translation'
-import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Separator } from '@/components/ui/separator'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +16,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
 
 const profileFormSchema = z.object({
   first_name: z.string().min(2, 'First name must be at least 2 characters.'),
@@ -110,7 +110,11 @@ export function ProfileForm() {
               <FormItem>
                 <FormLabel>{t('settings.profile.email')}</FormLabel>
                 <FormControl>
-                  <Input type='email' placeholder='john@example.com' {...field} />
+                  <Input
+                    type='email'
+                    placeholder='john@example.com'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

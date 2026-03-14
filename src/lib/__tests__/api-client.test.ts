@@ -633,7 +633,7 @@ describe('API Client', () => {
     beforeEach(async () => {
       // Import tokenManager after mocks are set up
       const { tokenManager } = await import('../api-client')
-        ; (global as any).tokenManager = tokenManager
+      ;(global as any).tokenManager = tokenManager
     })
 
     it('should provide token management utilities', async () => {

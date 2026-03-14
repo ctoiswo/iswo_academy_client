@@ -1,21 +1,8 @@
-import {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-} from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import { Badge } from '@/components/ui/badge'
-import { Slider } from '@/components/ui/slider'
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion'
+import { lessonService } from '@/services/lesson-service'
+import type { Lesson, Section } from '@/types'
 import {
   Play,
   Pause,
@@ -37,10 +24,18 @@ import {
   X,
   FileText,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { useSections } from '@/hooks/use-sections'
-import { lessonService } from '@/services/lesson-service'
-import { useQuery } from '@tanstack/react-query'
-import type { Lesson, Section } from '@/types'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
+import { Slider } from '@/components/ui/slider'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -195,8 +190,7 @@ function VideoPlayer({
 
   const isYouTube =
     lesson.video_provider === 'youtube' && !!lesson.video_identifier
-  const isVimeo =
-    lesson.video_provider === 'vimeo' && !!lesson.video_identifier
+  const isVimeo = lesson.video_provider === 'vimeo' && !!lesson.video_identifier
   const videoSrc = getVideoSrc()
 
   // YouTube / Vimeo: embed iframe
@@ -206,10 +200,10 @@ function VideoPlayer({
       : `https://player.vimeo.com/video/${lesson.video_identifier}`
 
     return (
-      <div className='relative w-full aspect-video bg-black rounded-xl overflow-hidden'>
+      <div className='relative aspect-video w-full overflow-hidden rounded-xl bg-black'>
         <iframe
           src={src}
-          className='w-full h-full'
+          className='h-full w-full'
           allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
           allowFullScreen
           title={lesson.title}
@@ -221,17 +215,17 @@ function VideoPlayer({
   return (
     <div
       ref={containerRef}
-      className='relative w-full aspect-video bg-black rounded-xl overflow-hidden'
+      className='relative aspect-video w-full overflow-hidden rounded-xl bg-black'
       onMouseMove={handleMouseMove}
       onMouseLeave={() => isPlaying && setShowControls(false)}
     >
       {/* Gradient placeholder shown when no real video file */}
       {!videoSrc && (
-        <div className='absolute inset-0 bg-gradient-to-br from-indigo-950 via-background to-indigo-950/50 flex items-center justify-center'>
+        <div className='via-background absolute inset-0 flex items-center justify-center bg-gradient-to-br from-indigo-950 to-indigo-950/50'>
           <div className='text-center'>
-            <PlayCircle className='size-20 text-primary/40 mx-auto mb-4' />
+            <PlayCircle className='text-primary/40 mx-auto mb-4 size-20' />
             <p className='text-muted-foreground text-sm'>{lesson.title}</p>
-            <p className='text-muted-foreground/60 text-xs mt-1'>
+            <p className='text-muted-foreground/60 mt-1 text-xs'>
               Video no disponible
             </p>
           </div>
@@ -242,7 +236,7 @@ function VideoPlayer({
         ref={videoRef}
         src={videoSrc}
         className={cn(
-          'w-full h-full object-cover absolute inset-0',
+          'absolute inset-0 h-full w-full object-cover',
           !videoSrc && 'opacity-0'
         )}
         onTimeUpdate={handleTimeUpdate}
@@ -263,15 +257,15 @@ function VideoPlayer({
       >
         <div
           className={cn(
-            'size-20 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center',
-            'transition-all duration-300 hover:bg-primary/30 hover:scale-110',
+            'bg-primary/20 flex size-20 items-center justify-center rounded-full backdrop-blur-sm',
+            'hover:bg-primary/30 transition-all duration-300 hover:scale-110',
             'shadow-[0_0_40px_rgba(99,102,241,0.3)]'
           )}
         >
           {isPlaying ? (
-            <Pause className='size-8 text-primary-foreground' />
+            <Pause className='text-primary-foreground size-8' />
           ) : (
-            <Play className='size-8 text-primary-foreground ml-1' />
+            <Play className='text-primary-foreground ml-1 size-8' />
           )}
         </div>
       </button>
@@ -279,7 +273,7 @@ function VideoPlayer({
       {/* Controls */}
       <div
         className={cn(
-          'absolute bottom-0 left-0 right-0 px-4 pb-4 pt-16',
+          'absolute right-0 bottom-0 left-0 px-4 pt-16 pb-4',
           'bg-gradient-to-t from-black/90 via-black/50 to-transparent',
           'transition-opacity duration-300',
           showControls ? 'opacity-100' : 'opacity-0'
@@ -301,14 +295,14 @@ function VideoPlayer({
           <div className='flex items-center gap-2'>
             <button
               onClick={() => skip(-10)}
-              className='p-2 rounded-lg hover:bg-white/10 transition-colors'
+              className='rounded-lg p-2 transition-colors hover:bg-white/10'
               title='Retroceder 10s'
             >
               <SkipBack className='size-5 text-white' />
             </button>
             <button
               onClick={togglePlay}
-              className='p-2 rounded-lg hover:bg-white/10 transition-colors'
+              className='rounded-lg p-2 transition-colors hover:bg-white/10'
             >
               {isPlaying ? (
                 <Pause className='size-5 text-white' />
@@ -318,17 +312,17 @@ function VideoPlayer({
             </button>
             <button
               onClick={() => skip(10)}
-              className='p-2 rounded-lg hover:bg-white/10 transition-colors'
+              className='rounded-lg p-2 transition-colors hover:bg-white/10'
               title='Avanzar 10s'
             >
               <SkipForward className='size-5 text-white' />
             </button>
 
             {/* Volume */}
-            <div className='flex items-center gap-2 group/vol'>
+            <div className='group/vol flex items-center gap-2'>
               <button
                 onClick={toggleMute}
-                className='p-2 rounded-lg hover:bg-white/10 transition-colors'
+                className='rounded-lg p-2 transition-colors hover:bg-white/10'
               >
                 {isMuted || volume === 0 ? (
                   <VolumeX className='size-5 text-white' />
@@ -336,7 +330,7 @@ function VideoPlayer({
                   <Volume2 className='size-5 text-white' />
                 )}
               </button>
-              <div className='w-0 group-hover/vol:w-20 overflow-hidden transition-all duration-300'>
+              <div className='w-0 overflow-hidden transition-all duration-300 group-hover/vol:w-20'>
                 <Slider
                   value={[isMuted ? 0 : volume]}
                   max={1}
@@ -347,7 +341,7 @@ function VideoPlayer({
               </div>
             </div>
 
-            <span className='text-xs text-white/80 font-mono ml-2'>
+            <span className='ml-2 font-mono text-xs text-white/80'>
               {formatTime(currentTime)} / {formatTime(duration || 0)}
             </span>
           </div>
@@ -357,19 +351,19 @@ function VideoPlayer({
             <div className='relative'>
               <button
                 onClick={() => setShowSettings(!showSettings)}
-                className='p-2 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-1'
+                className='flex items-center gap-1 rounded-lg p-2 transition-colors hover:bg-white/10'
               >
                 <Settings className='size-5 text-white' />
                 <span className='text-xs text-white/80'>{playbackRate}x</span>
               </button>
               {showSettings && (
-                <div className='absolute bottom-full right-0 mb-2 py-2 bg-popover border border-border rounded-lg shadow-xl min-w-[100px]'>
+                <div className='bg-popover border-border absolute right-0 bottom-full mb-2 min-w-[100px] rounded-lg border py-2 shadow-xl'>
                   {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
                     <button
                       key={rate}
                       onClick={() => changePlaybackRate(rate)}
                       className={cn(
-                        'w-full px-4 py-1.5 text-sm text-left hover:bg-accent transition-colors',
+                        'hover:bg-accent w-full px-4 py-1.5 text-left text-sm transition-colors',
                         playbackRate === rate && 'text-primary font-medium'
                       )}
                     >
@@ -382,7 +376,7 @@ function VideoPlayer({
 
             <button
               onClick={toggleFullscreen}
-              className='p-2 rounded-lg hover:bg-white/10 transition-colors'
+              className='rounded-lg p-2 transition-colors hover:bg-white/10'
             >
               {isFullscreen ? (
                 <Minimize className='size-5 text-white' />
@@ -414,7 +408,8 @@ function ReadingContent({
     if (contentRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = contentRef.current
       const scrollable = scrollHeight - clientHeight
-      const scrollProgress = scrollable > 0 ? (scrollTop / scrollable) * 100 : 100
+      const scrollProgress =
+        scrollable > 0 ? (scrollTop / scrollable) * 100 : 100
       setProgress(scrollProgress)
       if (!completedOnce && scrollProgress > 90) {
         setCompletedOnce(true)
@@ -426,24 +421,24 @@ function ReadingContent({
   const rawContent = lesson.content || ''
 
   return (
-    <div className='flex flex-col h-full bg-card rounded-xl border border-border overflow-hidden'>
+    <div className='bg-card border-border flex h-full flex-col overflow-hidden rounded-xl border'>
       {/* Header */}
-      <div className='flex items-center justify-between px-6 py-4 border-b border-border bg-secondary/20'>
+      <div className='border-border bg-secondary/20 flex items-center justify-between border-b px-6 py-4'>
         <div className='flex items-center gap-3'>
-          <div className='flex items-center justify-center size-10 rounded-lg bg-primary/10'>
-            <BookOpen className='size-5 text-primary' />
+          <div className='bg-primary/10 flex size-10 items-center justify-center rounded-lg'>
+            <BookOpen className='text-primary size-5' />
           </div>
           <div>
-            <h2 className='font-semibold text-foreground'>{lesson.title}</h2>
+            <h2 className='text-foreground font-semibold'>{lesson.title}</h2>
             {lesson.duration_minutes && (
-              <p className='text-xs text-muted-foreground'>
+              <p className='text-muted-foreground text-xs'>
                 Lectura estimada: {lesson.duration_minutes} min
               </p>
             )}
           </div>
         </div>
         <div className='flex items-center gap-3'>
-          <span className='text-xs text-muted-foreground'>
+          <span className='text-muted-foreground text-xs'>
             {Math.round(progress)}% leído
           </span>
           <div className='w-24'>
@@ -456,15 +451,15 @@ function ReadingContent({
       <div
         ref={contentRef}
         onScroll={handleScroll}
-        className='flex-1 overflow-y-auto px-8 py-6 prose prose-invert prose-sm max-w-none'
+        className='prose prose-invert prose-sm max-w-none flex-1 overflow-y-auto px-8 py-6'
         dangerouslySetInnerHTML={{ __html: rawContent }}
       />
 
       {/* Footer */}
-      <div className='px-6 py-4 border-t border-border bg-secondary/20'>
+      <div className='border-border bg-secondary/20 border-t px-6 py-4'>
         <Button
           onClick={onComplete}
-          className='w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90'
+          className='bg-primary text-primary-foreground hover:bg-primary/90 w-full gap-2'
         >
           <CheckCircle2 className='size-4' />
           Marcar como completado
@@ -476,27 +471,33 @@ function ReadingContent({
 
 // ─── Document Content ─────────────────────────────────────────────────────────
 
-function DocumentContent({ lesson, onComplete }: { lesson: Lesson; onComplete: () => void }) {
+function DocumentContent({
+  lesson,
+  onComplete,
+}: {
+  lesson: Lesson
+  onComplete: () => void
+}) {
   return (
-    <div className='flex flex-col h-full bg-card rounded-xl border border-border overflow-hidden'>
-      <div className='flex items-center justify-between px-6 py-4 border-b border-border bg-secondary/20'>
+    <div className='bg-card border-border flex h-full flex-col overflow-hidden rounded-xl border'>
+      <div className='border-border bg-secondary/20 flex items-center justify-between border-b px-6 py-4'>
         <div className='flex items-center gap-3'>
-          <div className='flex items-center justify-center size-10 rounded-lg bg-primary/10'>
-            <FileText className='size-5 text-primary' />
+          <div className='bg-primary/10 flex size-10 items-center justify-center rounded-lg'>
+            <FileText className='text-primary size-5' />
           </div>
-          <h2 className='font-semibold text-foreground'>{lesson.title}</h2>
+          <h2 className='text-foreground font-semibold'>{lesson.title}</h2>
         </div>
       </div>
-      <div className='flex-1 flex items-center justify-center p-8 text-muted-foreground'>
+      <div className='text-muted-foreground flex flex-1 items-center justify-center p-8'>
         <div className='text-center'>
-          <FileText className='size-12 mx-auto mb-4 opacity-40' />
+          <FileText className='mx-auto mb-4 size-12 opacity-40' />
           <p className='text-sm'>Documento no disponible en este momento.</p>
         </div>
       </div>
-      <div className='px-6 py-4 border-t border-border bg-secondary/20'>
+      <div className='border-border bg-secondary/20 border-t px-6 py-4'>
         <Button
           onClick={onComplete}
-          className='w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90'
+          className='bg-primary text-primary-foreground hover:bg-primary/90 w-full gap-2'
         >
           <CheckCircle2 className='size-4' />
           Marcar como completado
@@ -543,39 +544,39 @@ function CourseSidebar({
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className='fixed inset-0 bg-black/60 z-40 lg:hidden'
+          className='fixed inset-0 z-40 bg-black/60 lg:hidden'
           onClick={onToggle}
         />
       )}
 
       <aside
         className={cn(
-          'fixed lg:relative inset-y-0 right-0 z-50 lg:z-auto',
-          'w-80 bg-card border-l border-border flex flex-col',
+          'fixed inset-y-0 right-0 z-50 lg:relative lg:z-auto',
+          'bg-card border-border flex w-80 flex-col border-l',
           'transform transition-transform duration-300 lg:transform-none',
           isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'
         )}
       >
         {/* Header */}
-        <div className='flex items-center justify-between px-4 py-4 border-b border-border'>
+        <div className='border-border flex items-center justify-between border-b px-4 py-4'>
           <div>
-            <h3 className='font-semibold text-foreground text-sm'>
+            <h3 className='text-foreground text-sm font-semibold'>
               Contenido del curso
             </h3>
-            <p className='text-xs text-muted-foreground mt-0.5'>
+            <p className='text-muted-foreground mt-0.5 text-xs'>
               {courseProgress}% completado
             </p>
           </div>
           <button
             onClick={onToggle}
-            className='lg:hidden p-2 rounded-lg hover:bg-secondary transition-colors'
+            className='hover:bg-secondary rounded-lg p-2 transition-colors lg:hidden'
           >
-            <X className='size-5 text-muted-foreground' />
+            <X className='text-muted-foreground size-5' />
           </button>
         </div>
 
         {/* Progress */}
-        <div className='px-4 py-3 border-b border-border'>
+        <div className='border-border border-b px-4 py-3'>
           <Progress value={courseProgress} className='h-1.5' />
         </div>
 
@@ -601,15 +602,15 @@ function CourseSidebar({
                 <AccordionItem
                   key={section.id}
                   value={section.id.toString()}
-                  className='border-b border-border'
+                  className='border-border border-b'
                 >
-                  <AccordionTrigger className='px-4 py-3 hover:no-underline hover:bg-secondary/30'>
+                  <AccordionTrigger className='hover:bg-secondary/30 px-4 py-3 hover:no-underline'>
                     <div className='flex flex-col items-start gap-1 text-left'>
-                      <span className='text-sm font-medium text-foreground'>
+                      <span className='text-foreground text-sm font-medium'>
                         {section.title}
                       </span>
                       <div className='flex items-center gap-2'>
-                        <span className='text-xs text-muted-foreground'>
+                        <span className='text-muted-foreground text-xs'>
                           {completedCount}/{lessons.length} lecciones
                         </span>
                         {sectionProgress === 100 && (
@@ -633,12 +634,12 @@ function CourseSidebar({
                               'flex items-center gap-3 px-4 py-3 text-left transition-all',
                               'hover:bg-secondary/30',
                               isCurrent &&
-                                'bg-primary/10 border-l-2 border-primary'
+                                'bg-primary/10 border-primary border-l-2'
                             )}
                           >
                             <div
                               className={cn(
-                                'flex items-center justify-center size-7 rounded-lg shrink-0',
+                                'flex size-7 shrink-0 items-center justify-center rounded-lg',
                                 isDone
                                   ? 'bg-emerald-500/20'
                                   : isCurrent
@@ -657,10 +658,10 @@ function CourseSidebar({
                                 )}
                               />
                             </div>
-                            <div className='flex-1 min-w-0'>
+                            <div className='min-w-0 flex-1'>
                               <p
                                 className={cn(
-                                  'text-sm truncate',
+                                  'truncate text-sm',
                                   isCurrent
                                     ? 'text-primary font-medium'
                                     : 'text-foreground'
@@ -669,9 +670,9 @@ function CourseSidebar({
                                 {lesson.title}
                               </p>
                               {lesson.duration_minutes && (
-                                <div className='flex items-center gap-1 mt-0.5'>
-                                  <Clock className='size-3 text-muted-foreground' />
-                                  <span className='text-xs text-muted-foreground'>
+                                <div className='mt-0.5 flex items-center gap-1'>
+                                  <Clock className='text-muted-foreground size-3' />
+                                  <span className='text-muted-foreground text-xs'>
                                     {lesson.duration_minutes} min
                                   </span>
                                 </div>
@@ -828,10 +829,11 @@ export function CoursePlayer({
       default:
         // quiz, assignment, interactive — placeholder
         return (
-          <div className='flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-border p-8 text-muted-foreground'>
-            <FileQuestion className='size-12 mx-auto mb-4 opacity-40' />
+          <div className='bg-card border-border text-muted-foreground flex min-h-[400px] flex-col items-center justify-center rounded-xl border p-8'>
+            <FileQuestion className='mx-auto mb-4 size-12 opacity-40' />
             <p className='text-sm'>
-              Este tipo de lección ({currentLesson.lesson_type}) estará disponible próximamente.
+              Este tipo de lección ({currentLesson.lesson_type}) estará
+              disponible próximamente.
             </p>
             <Button onClick={handleComplete} className='mt-6'>
               Marcar como completado
@@ -843,28 +845,27 @@ export function CoursePlayer({
 
   if (isLoading) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-background'>
-        <div className='animate-pulse text-muted-foreground text-sm'>
+      <div className='bg-background flex min-h-screen items-center justify-center'>
+        <div className='text-muted-foreground animate-pulse text-sm'>
           Cargando lección...
         </div>
       </div>
     )
   }
 
-  const courseTitle =
-    currentLesson?.title
-      ? sections[0]?.title ?? courseSlug
-      : courseSlug
+  const courseTitle = currentLesson?.title
+    ? (sections[0]?.title ?? courseSlug)
+    : courseSlug
 
   return (
-    <div className='min-h-screen flex flex-col bg-background'>
+    <div className='bg-background flex min-h-screen flex-col'>
       {/* Top bar */}
-      <header className='flex items-center justify-between px-4 lg:px-6 py-3 border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-30'>
+      <header className='border-border bg-card/80 sticky top-0 z-30 flex items-center justify-between border-b px-4 py-3 backdrop-blur-sm lg:px-6'>
         <div className='flex items-center gap-4'>
           <Button
             variant='ghost'
             size='sm'
-            className='gap-2 text-muted-foreground hover:text-foreground'
+            className='text-muted-foreground hover:text-foreground gap-2'
             onClick={() =>
               navigate({
                 to: '/academy/$academySlug/courses/$courseSlug/content',
@@ -875,17 +876,14 @@ export function CoursePlayer({
             <ChevronLeft className='size-4' />
             <span className='hidden sm:inline'>Volver al curso</span>
           </Button>
-          <div className='h-6 w-px bg-border hidden sm:block' />
-          <h1 className='text-sm font-medium text-foreground truncate max-w-[200px] sm:max-w-none'>
+          <div className='bg-border hidden h-6 w-px sm:block' />
+          <h1 className='text-foreground max-w-[200px] truncate text-sm font-medium sm:max-w-none'>
             {courseTitle}
           </h1>
         </div>
 
         <div className='flex items-center gap-2'>
-          <Badge
-            variant='outline'
-            className='hidden sm:flex gap-1.5 text-xs'
-          >
+          <Badge variant='outline' className='hidden gap-1.5 text-xs sm:flex'>
             <Clock className='size-3' />
             {courseProgress}% completado
           </Badge>
@@ -901,35 +899,35 @@ export function CoursePlayer({
       </header>
 
       {/* Main content + sidebar */}
-      <div className='flex-1 flex'>
-        <main className='flex-1 flex flex-col p-4 lg:p-6 max-w-5xl mx-auto w-full'>
+      <div className='flex flex-1'>
+        <main className='mx-auto flex w-full max-w-5xl flex-1 flex-col p-4 lg:p-6'>
           {/* Lesson content */}
           <div className='flex-1'>{renderContent()}</div>
 
           {/* Lesson info & navigation */}
           {currentLesson && (
-            <div className='mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-card rounded-xl border border-border'>
+            <div className='bg-card border-border mt-6 flex flex-col items-start justify-between gap-4 rounded-xl border p-4 sm:flex-row sm:items-center'>
               <div>
-                <div className='flex items-center gap-2 mb-1'>
+                <div className='mb-1 flex items-center gap-2'>
                   <LessonTypeBadge type={currentLesson.lesson_type} />
                   {currentLesson.duration_minutes && (
-                    <span className='text-xs text-muted-foreground'>
+                    <span className='text-muted-foreground text-xs'>
                       {currentLesson.duration_minutes} min
                     </span>
                   )}
                 </div>
-                <h2 className='text-lg font-semibold text-foreground'>
+                <h2 className='text-foreground text-lg font-semibold'>
                   {currentLesson.title}
                 </h2>
               </div>
 
-              <div className='flex items-center gap-2 w-full sm:w-auto'>
+              <div className='flex w-full items-center gap-2 sm:w-auto'>
                 <Button
                   variant='outline'
                   size='sm'
                   onClick={() => navigateLesson('prev')}
                   disabled={!hasPrev}
-                  className='flex-1 sm:flex-initial gap-1'
+                  className='flex-1 gap-1 sm:flex-initial'
                 >
                   <ChevronLeft className='size-4' />
                   Anterior
@@ -938,7 +936,7 @@ export function CoursePlayer({
                   size='sm'
                   onClick={() => navigateLesson('next')}
                   disabled={!hasNext}
-                  className='flex-1 sm:flex-initial gap-1 bg-primary text-primary-foreground hover:bg-primary/90'
+                  className='bg-primary text-primary-foreground hover:bg-primary/90 flex-1 gap-1 sm:flex-initial'
                 >
                   Siguiente
                   <ChevronRight className='size-4' />

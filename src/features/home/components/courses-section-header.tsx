@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 interface CoursesSectionHeaderProps {
   canScrollLeft: boolean
@@ -18,24 +18,24 @@ export function CoursesSectionHeader({
   return (
     <div className='flex items-end justify-between gap-4'>
       <div className='flex flex-col gap-3'>
-        <span className='text-xs font-semibold uppercase tracking-widest text-primary'>
+        <span className='text-primary text-xs font-semibold tracking-widest uppercase'>
           {t('pages.home.courses.eyebrow')}
         </span>
         <h2
-          className='text-3xl sm:text-4xl font-bold text-foreground tracking-tight text-balance'
+          className='text-foreground text-3xl font-bold tracking-tight text-balance sm:text-4xl'
           style={{ fontFamily: 'var(--font-heading)' }}
         >
           {t('pages.home.courses.title')}
         </h2>
-        <p className='text-sm text-muted-foreground max-w-md leading-relaxed'>
+        <p className='text-muted-foreground max-w-md text-sm leading-relaxed'>
           {t('pages.home.courses.subtitle')}
         </p>
       </div>
-      <div className='hidden sm:flex items-center gap-2'>
+      <div className='hidden items-center gap-2 sm:flex'>
         <button
           onClick={onScrollLeft}
           disabled={!canScrollLeft}
-          className='flex items-center justify-center size-9 rounded-lg border border-border/50 bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors disabled:opacity-30 disabled:cursor-not-allowed'
+          className='border-border/50 bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 flex size-9 items-center justify-center rounded-lg border transition-colors disabled:cursor-not-allowed disabled:opacity-30'
           aria-label={t('pages.home.courses.prevLabel')}
         >
           <ChevronLeft className='size-4' />
@@ -43,7 +43,7 @@ export function CoursesSectionHeader({
         <button
           onClick={onScrollRight}
           disabled={!canScrollRight}
-          className='flex items-center justify-center size-9 rounded-lg border border-border/50 bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors disabled:opacity-30 disabled:cursor-not-allowed'
+          className='border-border/50 bg-card text-muted-foreground hover:text-foreground hover:border-primary/40 flex size-9 items-center justify-center rounded-lg border transition-colors disabled:cursor-not-allowed disabled:opacity-30'
           aria-label={t('pages.home.courses.nextLabel')}
         >
           <ChevronRight className='size-4' />

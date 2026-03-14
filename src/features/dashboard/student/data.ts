@@ -88,5 +88,9 @@ export const mockAchievements: MockAchievement[] = [
 export const taskTypeConfig = {
   quiz: { icon: Target, color: 'text-amber-400', bg: 'bg-amber-500/10' },
   project: { icon: Rocket, color: 'text-primary', bg: 'bg-primary/10' },
-  reading: { icon: BookOpen, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+  reading: {
+    icon: BookOpen,
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-500/10',
+  },
 } as const

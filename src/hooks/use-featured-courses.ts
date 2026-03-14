@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { courseService } from '@/services/course-service'
-import type { LandingCourse } from '@/types/pages/home'
 import type { CategoryWithCourses } from '@/types'
+import type { LandingCourse } from '@/types/pages/home'
 
 /**
  * Convert duration_minutes to a human-readable "Xh Ym" string.
@@ -20,7 +20,11 @@ function formatDuration(minutes: number | undefined | null): string {
  * Format a price number to a display string.
  * Free courses show "Gratis", paid courses show "$X".
  */
-function formatPrice(price: number | undefined | null, isFree: boolean, currency = 'USD'): string {
+function formatPrice(
+  price: number | undefined | null,
+  isFree: boolean,
+  currency = 'USD'
+): string {
   if (isFree || !price || price === 0) return 'Gratis'
   // Use currency symbol map for common currencies
   const symbols: Record<string, string> = { USD: '$', EUR: '€', MXN: '$' }
@@ -31,7 +35,9 @@ function formatPrice(price: number | undefined | null, isFree: boolean, currency
 /**
  * Map a backend Course (summary view) to the LandingCourse shape used by the UI.
  */
-function mapToLandingCourse(course: CategoryWithCourses['courses'][number]): LandingCourse {
+function mapToLandingCourse(
+  course: CategoryWithCourses['courses'][number]
+): LandingCourse {
   // Sum lessons_count across all sections when total_lessons is not directly available
   const totalLessons =
     course.total_lessons ??
@@ -49,7 +55,8 @@ function mapToLandingCourse(course: CategoryWithCourses['courses'][number]): Lan
     rating: course.average_rating ?? 0,
     students: course.enrollment_count ?? 0,
     price: formatPrice(course.price, course.is_free, course.currency),
-    thumbnailUrl: course.promotional_image_url ?? course.thumbnail_url ?? undefined,
+    thumbnailUrl:
+      course.promotional_image_url ?? course.thumbnail_url ?? undefined,
     slug: course.slug,
   }
 }

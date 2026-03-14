@@ -1,15 +1,19 @@
-import { 
-  Bell, 
-  CheckCheck, 
-  BookOpen, 
-  Award, 
-  MessageSquare, 
+import {
+  Bell,
+  CheckCheck,
+  BookOpen,
+  Award,
+  MessageSquare,
   Megaphone,
   Settings as SettingsIcon,
-  type LucideIcon
+  type LucideIcon,
 } from 'lucide-react'
 
-export type NotificationCategory = 'academic' | 'social' | 'administrative' | 'system'
+export type NotificationCategory =
+  | 'academic'
+  | 'social'
+  | 'administrative'
+  | 'system'
 export type NotificationPriority = 1 | 2 | 3 | 4
 
 export function getCategoryIcon(category: string, type?: string): LucideIcon {
@@ -81,10 +85,15 @@ export function getCategoryEmoji(category: string, type?: string): string {
 
 export function getPriorityDuration(priority: number): number {
   switch (priority) {
-    case 4: return 8000  // Crítica - 8s
-    case 3: return 5000  // Alta - 5s  
-    case 2: return 4000  // Normal - 4s
-    case 1: return 3000  // Baja - 3s
-    default: return 4000
+    case 4:
+      return 8000 // Crítica - 8s
+    case 3:
+      return 5000 // Alta - 5s
+    case 2:
+      return 4000 // Normal - 4s
+    case 1:
+      return 3000 // Baja - 3s
+    default:
+      return 4000
   }
 }

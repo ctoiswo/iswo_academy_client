@@ -1,3 +1,5 @@
+import type { SuperAdminPayment } from '@/lib/super-admin-api'
+import { useTranslation } from '@/hooks/use-translation'
 import { Card } from '@/components/ui/card'
 import {
   Table,
@@ -6,8 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useTranslation } from '@/hooks/use-translation'
-import type { SuperAdminPayment } from '@/lib/super-admin-api'
 import type { RefundTarget } from '../types'
 import { PaymentRow } from './payment-row'
 
@@ -17,14 +17,20 @@ interface PaymentTableProps {
   onRefund: (target: RefundTarget) => void
 }
 
-export function PaymentTable({ payments, loading, onRefund }: PaymentTableProps) {
+export function PaymentTable({
+  payments,
+  loading,
+  onRefund,
+}: PaymentTableProps) {
   const { t } = useTranslation()
 
   if (loading) {
     return (
       <Card>
         <div className='py-16 text-center'>
-          <p className='text-muted-foreground'>{t('superAdmin.payments.table.loading')}</p>
+          <p className='text-muted-foreground'>
+            {t('superAdmin.payments.table.loading')}
+          </p>
         </div>
       </Card>
     )
@@ -34,7 +40,9 @@ export function PaymentTable({ payments, loading, onRefund }: PaymentTableProps)
     return (
       <Card>
         <div className='py-16 text-center'>
-          <p className='text-muted-foreground'>{t('superAdmin.payments.table.empty')}</p>
+          <p className='text-muted-foreground'>
+            {t('superAdmin.payments.table.empty')}
+          </p>
         </div>
       </Card>
     )
@@ -56,7 +64,11 @@ export function PaymentTable({ payments, loading, onRefund }: PaymentTableProps)
         </TableHeader>
         <TableBody>
           {payments.map((payment) => (
-            <PaymentRow key={payment.id} payment={payment} onRefund={onRefund} />
+            <PaymentRow
+              key={payment.id}
+              payment={payment}
+              onRefund={onRefund}
+            />
           ))}
         </TableBody>
       </Table>

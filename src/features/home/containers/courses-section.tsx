@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { useFeaturedCourses } from '@/hooks/use-featured-courses'
-import { CoursesSectionHeader } from '../components/courses-section-header'
 import { CoursesScrollRow } from '../components/courses-scroll-row'
+import { CoursesSectionHeader } from '../components/courses-section-header'
 import { CoursesViewAll } from '../components/courses-view-all'
 
 export function CoursesSection() {
@@ -27,12 +27,15 @@ export function CoursesSection() {
 
   const scroll = (dir: 'left' | 'right') => {
     if (!scrollRef.current) return
-    scrollRef.current.scrollBy({ left: dir === 'left' ? -320 : 320, behavior: 'smooth' })
+    scrollRef.current.scrollBy({
+      left: dir === 'left' ? -320 : 320,
+      behavior: 'smooth',
+    })
   }
 
   return (
     <section id='cursos' className='relative py-24'>
-      <div className='max-w-7xl mx-auto px-4 lg:px-8 flex flex-col gap-10'>
+      <div className='mx-auto flex max-w-7xl flex-col gap-10 px-4 lg:px-8'>
         <CoursesSectionHeader
           canScrollLeft={canScrollLeft}
           canScrollRight={canScrollRight}
@@ -40,7 +43,7 @@ export function CoursesSection() {
           onScrollRight={() => scroll('right')}
         />
         {isLoading ? (
-          <div className='flex items-center justify-center h-48 text-muted-foreground text-sm'>
+          <div className='text-muted-foreground flex h-48 items-center justify-center text-sm'>
             Cargando cursos…
           </div>
         ) : (

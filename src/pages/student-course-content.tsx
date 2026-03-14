@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
-import { cn } from '@/lib/utils'
+import type { LessonType } from '@/types/entities/lesson'
 import {
   ArrowLeft,
   Award,
@@ -17,28 +16,31 @@ import {
   StarHalf,
   Users,
 } from 'lucide-react'
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar'
+import { useTranslation } from 'react-i18next'
+import { cn } from '@/lib/utils'
+import { useCourse } from '@/hooks/use-courses'
+import { useSections } from '@/hooks/use-sections'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useCourse } from '@/hooks/use-courses'
-import { useSections } from '@/hooks/use-sections'
-import type { LessonType } from '@/types/entities/lesson'
 
 // ─── Star Rating ─────────────────────────────────────────────────────────────
 
-function StarRating({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'md' | 'lg' }) {
+function StarRating({
+  rating,
+  size = 'sm',
+}: {
+  rating: number
+  size?: 'sm' | 'md' | 'lg'
+}) {
   const cls = size === 'lg' ? 'size-5' : size === 'md' ? 'size-4' : 'size-3.5'
   const full = Math.floor(rating)
   const half = rating % 1 >= 0.5
@@ -47,7 +49,9 @@ function StarRating({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'md
       {Array.from({ length: full }).map((_, i) => (
         <Star key={i} className={cn(cls, 'fill-amber-400 text-amber-400')} />
       ))}
-      {half && <StarHalf className={cn(cls, 'fill-amber-400 text-amber-400')} />}
+      {half && (
+        <StarHalf className={cn(cls, 'fill-amber-400 text-amber-400')} />
+      )}
       {Array.from({ length: 5 - Math.ceil(rating) }).map((_, i) => (
         <Star key={`e${i}`} className={cn(cls, 'text-muted-foreground/30')} />
       ))}
@@ -60,7 +64,7 @@ function StarRating({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'md
 function LessonTypeIcon({ type }: { type: LessonType }) {
   switch (type) {
     case 'video':
-      return <PlayCircle className='size-4 text-primary' />
+      return <PlayCircle className='text-primary size-4' />
     case 'text':
       return <BookOpen className='size-4 text-blue-400' />
     case 'document':
@@ -69,7 +73,7 @@ function LessonTypeIcon({ type }: { type: LessonType }) {
     case 'assignment':
       return <FileQuestion className='size-4 text-amber-400' />
     default:
-      return <PlayCircle className='size-4 text-primary' />
+      return <PlayCircle className='text-primary size-4' />
   }
 }
 
@@ -84,8 +88,15 @@ export default function StudentCourseContentPage() {
   const navigate = useNavigate()
   const { t, i18n } = useTranslation()
 
-  const { data: course, isLoading: courseLoading, error: courseError } = useCourse(courseSlug)
-  const { data: sectionsData, isLoading: sectionsLoading } = useSections(academySlug, courseSlug)
+  const {
+    data: course,
+    isLoading: courseLoading,
+    error: courseError,
+  } = useCourse(courseSlug)
+  const { data: sectionsData, isLoading: sectionsLoading } = useSections(
+    academySlug,
+    courseSlug
+  )
 
   const sections = Array.isArray(sectionsData) ? sectionsData : []
   const isLoading = courseLoading || sectionsLoading
@@ -93,8 +104,8 @@ export default function StudentCourseContentPage() {
   // ── Loading ──────────────────────────────────────────────────────────────────
   if (isLoading) {
     return (
-      <div className='min-h-screen bg-background'>
-        <div className='space-y-4 p-6 max-w-7xl mx-auto pt-24'>
+      <div className='bg-background min-h-screen'>
+        <div className='mx-auto max-w-7xl space-y-4 p-6 pt-24'>
           <Skeleton className='h-10 w-48' />
           <Skeleton className='h-12 w-3/4' />
           <Skeleton className='h-6 w-1/2' />
@@ -106,10 +117,14 @@ export default function StudentCourseContentPage() {
 
   if (courseError || !course) {
     return (
-      <div className='min-h-screen bg-background flex items-center justify-center'>
-        <div className='text-center space-y-2'>
-          <h3 className='text-lg font-bold text-destructive'>{t('courseContent.errorTitle')}</h3>
-          <p className='text-muted-foreground'>{t('courseContent.errorDescription')}</p>
+      <div className='bg-background flex min-h-screen items-center justify-center'>
+        <div className='space-y-2 text-center'>
+          <h3 className='text-destructive text-lg font-bold'>
+            {t('courseContent.errorTitle')}
+          </h3>
+          <p className='text-muted-foreground'>
+            {t('courseContent.errorDescription')}
+          </p>
         </div>
       </div>
     )
@@ -124,14 +139,16 @@ export default function StudentCourseContentPage() {
   const progressPct = course.progress?.completion_percentage ?? 0
 
   const totalVideos = sections.reduce(
-    (acc, s) => acc + (s.lessons?.filter((l) => l.lesson_type === 'video').length ?? 0),
+    (acc, s) =>
+      acc + (s.lessons?.filter((l) => l.lesson_type === 'video').length ?? 0),
     0
   )
   const totalQuizzes = sections.reduce(
     (acc, s) =>
       acc +
-      (s.lessons?.filter((l) => l.lesson_type === 'quiz' || l.lesson_type === 'assignment')
-        .length ?? 0),
+      (s.lessons?.filter(
+        (l) => l.lesson_type === 'quiz' || l.lesson_type === 'assignment'
+      ).length ?? 0),
     0
   )
 
@@ -139,7 +156,8 @@ export default function StudentCourseContentPage() {
     ? `${Math.round(course.duration_minutes / 60)}h`
     : null
 
-  const rating = course.average_rating != null ? Number(course.average_rating) : null
+  const rating =
+    course.average_rating != null ? Number(course.average_rating) : null
 
   const updatedAt = course.updated_at
     ? new Date(course.updated_at).toLocaleDateString(i18n.language, {
@@ -172,11 +190,11 @@ export default function StudentCourseContentPage() {
     })
 
   return (
-    <div className='min-h-screen bg-background'>
+    <div className='bg-background min-h-screen'>
       {/* ── Hero Banner ──────────────────────────────────────────────────────── */}
       <div className='relative overflow-hidden'>
         {/* backgrounds */}
-        <div className='absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-background' />
+        <div className='from-primary/20 via-background to-background absolute inset-0 bg-gradient-to-br' />
         <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.15),transparent_60%)]' />
         <div
           className='pointer-events-none absolute inset-0 opacity-[0.03]'
@@ -187,7 +205,7 @@ export default function StudentCourseContentPage() {
           }}
         />
 
-        <div className='relative max-w-7xl mx-auto px-4 lg:px-8 pt-8 pb-12 lg:pb-16'>
+        <div className='relative mx-auto max-w-7xl px-4 pt-8 pb-12 lg:px-8 lg:pb-16'>
           {/* Back */}
           <button
             onClick={() =>
@@ -196,19 +214,22 @@ export default function StudentCourseContentPage() {
                 params: { academySlug },
               })
             }
-            className='inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6'
+            className='text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-2 text-sm transition-colors'
           >
             <ArrowLeft className='size-4' />
             {t('courseContent.backToCourses')}
           </button>
 
-          <div className='grid lg:grid-cols-3 gap-8 lg:gap-12'>
+          <div className='grid gap-8 lg:grid-cols-3 lg:gap-12'>
             {/* ── Left: course info ─────────────────────────────────────────── */}
-            <div className='lg:col-span-2 flex flex-col gap-5'>
+            <div className='flex flex-col gap-5 lg:col-span-2'>
               {/* Category & Tags */}
               <div className='flex flex-wrap items-center gap-2'>
                 {course.category && (
-                  <Badge variant='outline' className='border-primary/40 text-primary bg-primary/10'>
+                  <Badge
+                    variant='outline'
+                    className='border-primary/40 text-primary bg-primary/10'
+                  >
                     {course.category}
                   </Badge>
                 )}
@@ -224,13 +245,13 @@ export default function StudentCourseContentPage() {
               </div>
 
               {/* Title */}
-              <h1 className='text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground text-balance'>
+              <h1 className='text-foreground text-3xl font-bold tracking-tight text-balance md:text-4xl lg:text-5xl'>
                 {course.title}
               </h1>
 
               {/* Description as subtitle */}
               {course.description && (
-                <p className='text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl line-clamp-3'>
+                <p className='text-muted-foreground line-clamp-3 max-w-2xl text-base leading-relaxed md:text-lg'>
                   {course.description}
                 </p>
               )}
@@ -240,19 +261,28 @@ export default function StudentCourseContentPage() {
                 <div className='flex flex-wrap items-center gap-4 text-sm'>
                   {rating != null && (
                     <div className='flex items-center gap-2'>
-                      <span className='font-semibold text-amber-400'>{rating.toFixed(1)}</span>
+                      <span className='font-semibold text-amber-400'>
+                        {rating.toFixed(1)}
+                      </span>
                       <StarRating rating={rating} size='sm' />
                       {course.enrollment_count != null && (
                         <span className='text-muted-foreground'>
-                          ({new Intl.NumberFormat(i18n.language).format(course.enrollment_count)} {t('courseContent.reviews')})
+                          (
+                          {new Intl.NumberFormat(i18n.language).format(
+                            course.enrollment_count
+                          )}{' '}
+                          {t('courseContent.reviews')})
                         </span>
                       )}
                     </div>
                   )}
                   {course.enrollment_count != null && (
-                    <span className='flex items-center gap-1.5 text-muted-foreground'>
+                    <span className='text-muted-foreground flex items-center gap-1.5'>
                       <Users className='size-4' />
-                      {new Intl.NumberFormat(i18n.language).format(course.enrollment_count)} {t('courseContent.students')}
+                      {new Intl.NumberFormat(i18n.language).format(
+                        course.enrollment_count
+                      )}{' '}
+                      {t('courseContent.students')}
                     </span>
                   )}
                 </div>
@@ -261,25 +291,27 @@ export default function StudentCourseContentPage() {
               {/* Instructor */}
               {course.creator?.name && (
                 <div className='flex items-center gap-3'>
-                  <Avatar className='size-10 border-2 border-primary/20'>
+                  <Avatar className='border-primary/20 size-10 border-2'>
                     <AvatarImage src='' />
                     <AvatarFallback className='bg-primary/10 text-primary text-sm font-medium'>
                       {instructorInitials}
                     </AvatarFallback>
                   </Avatar>
                   <div className='flex flex-col'>
-                    <span className='text-sm font-medium text-foreground'>
+                    <span className='text-foreground text-sm font-medium'>
                       {t('courseContent.createdBy')} {course.creator.name}
                     </span>
                     {course.academy?.name && (
-                      <span className='text-xs text-muted-foreground'>{course.academy.name}</span>
+                      <span className='text-muted-foreground text-xs'>
+                        {course.academy.name}
+                      </span>
                     )}
                   </div>
                 </div>
               )}
 
               {/* Meta */}
-              <div className='flex flex-wrap items-center gap-4 text-xs text-muted-foreground'>
+              <div className='text-muted-foreground flex flex-wrap items-center gap-4 text-xs'>
                 {updatedAt && (
                   <span className='flex items-center gap-1.5'>
                     <Clock className='size-3.5' />
@@ -297,48 +329,57 @@ export default function StudentCourseContentPage() {
 
             {/* ── Right: Sticky CTA card ────────────────────────────────────── */}
             <div className='lg:row-span-1'>
-              <div className='sticky top-24 rounded-2xl border border-border/60 bg-card overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.2)]'>
+              <div className='border-border/60 bg-card sticky top-24 overflow-hidden rounded-2xl border shadow-[0_8px_32px_rgba(0,0,0,0.2)]'>
                 {/* Preview area */}
                 {course.promotional_image_url ? (
                   <div
                     className='relative aspect-video bg-cover bg-center'
-                    style={{ backgroundImage: `url(${course.promotional_image_url})` }}
+                    style={{
+                      backgroundImage: `url(${course.promotional_image_url})`,
+                    }}
                   >
-                    <div className='absolute inset-0 bg-black/40 flex items-center justify-center'>
+                    <div className='absolute inset-0 flex items-center justify-center bg-black/40'>
                       {firstLessonId && (
                         <button
                           onClick={() => navigateToLesson(firstLessonId!)}
-                          className='flex items-center justify-center size-16 rounded-full bg-primary/90 text-primary-foreground shadow-[0_0_32px_rgba(99,102,241,0.4)] transition-transform hover:scale-105'
+                          className='bg-primary/90 text-primary-foreground flex size-16 items-center justify-center rounded-full shadow-[0_0_32px_rgba(99,102,241,0.4)] transition-transform hover:scale-105'
                         >
-                          <Play className='size-7 ml-1' />
+                          <Play className='ml-1 size-7' />
                         </button>
                       )}
                     </div>
                   </div>
                 ) : (
-                  <div className='relative aspect-video bg-gradient-to-br from-primary/30 to-primary/5 flex items-center justify-center'>
+                  <div className='from-primary/30 to-primary/5 relative flex aspect-video items-center justify-center bg-gradient-to-br'>
                     {firstLessonId && (
                       <button
                         onClick={() => navigateToLesson(firstLessonId!)}
-                        className='flex items-center justify-center size-16 rounded-full bg-primary/90 text-primary-foreground shadow-[0_0_32px_rgba(99,102,241,0.4)] transition-transform hover:scale-105'
+                        className='bg-primary/90 text-primary-foreground flex size-16 items-center justify-center rounded-full shadow-[0_0_32px_rgba(99,102,241,0.4)] transition-transform hover:scale-105'
                       >
-                        <Play className='size-7 ml-1' />
+                        <Play className='ml-1 size-7' />
                       </button>
                     )}
                   </div>
                 )}
 
-                <div className='p-5 flex flex-col gap-4'>
+                <div className='flex flex-col gap-4 p-5'>
                   {/* Progress */}
                   {course.enrolled && (
                     <div className='flex flex-col gap-2'>
                       <div className='flex items-center justify-between text-sm'>
-                        <span className='text-muted-foreground'>{t('courseContent.yourProgress')}</span>
-                        <span className='font-semibold text-primary'>{Math.round(progressPct)}%</span>
+                        <span className='text-muted-foreground'>
+                          {t('courseContent.yourProgress')}
+                        </span>
+                        <span className='text-primary font-semibold'>
+                          {Math.round(progressPct)}%
+                        </span>
                       </div>
                       <Progress value={progressPct} className='h-2' />
-                      <span className='text-xs text-muted-foreground'>
-                        {t('courseContent.lessonsCompleted', { completed: completedLessons, total: totalLessons })}
+                      <span className='text-muted-foreground text-xs'>
+                        {t('courseContent.lessonsCompleted', {
+                          completed: completedLessons,
+                          total: totalLessons,
+                        })}
                       </span>
                     </div>
                   )}
@@ -350,28 +391,38 @@ export default function StudentCourseContentPage() {
                       onClick={() => navigateToLesson(firstLessonId!)}
                     >
                       <Play className='size-4' />
-                      {progressPct > 0 ? t('courseContent.continueLearning') : t('courseContent.startCourse')}
+                      {progressPct > 0
+                        ? t('courseContent.continueLearning')
+                        : t('courseContent.startCourse')}
                     </Button>
                   )}
 
                   {/* Course includes */}
-                  <div className='pt-4 border-t border-border/40 flex flex-col gap-2.5'>
-                    <span className='text-sm font-medium text-foreground'>{t('courseContent.courseIncludes')}</span>
-                    <div className='flex flex-col gap-2 text-xs text-muted-foreground'>
+                  <div className='border-border/40 flex flex-col gap-2.5 border-t pt-4'>
+                    <span className='text-foreground text-sm font-medium'>
+                      {t('courseContent.courseIncludes')}
+                    </span>
+                    <div className='text-muted-foreground flex flex-col gap-2 text-xs'>
                       {durationHours && (
                         <span className='flex items-center gap-2'>
-                          <PlayCircle className='size-3.5 text-primary' />
-                          {t('courseContent.videoDemand', { hours: durationHours })}
+                          <PlayCircle className='text-primary size-3.5' />
+                          {t('courseContent.videoDemand', {
+                            hours: durationHours,
+                          })}
                         </span>
                       )}
                       <span className='flex items-center gap-2'>
                         <FileText className='size-3.5 text-blue-400' />
-                        {t('courseContent.totalLessons', { count: totalLessons })}
+                        {t('courseContent.totalLessons', {
+                          count: totalLessons,
+                        })}
                       </span>
                       {totalQuizzes > 0 && (
                         <span className='flex items-center gap-2'>
                           <FileQuestion className='size-3.5 text-amber-400' />
-                          {t('courseContent.interactiveQuizzes', { count: totalQuizzes })}
+                          {t('courseContent.interactiveQuizzes', {
+                            count: totalQuizzes,
+                          })}
                         </span>
                       )}
                       {course.certificate_enabled && (
@@ -390,48 +441,62 @@ export default function StudentCourseContentPage() {
       </div>
 
       {/* ── Main content ─────────────────────────────────────────────────────── */}
-      <div className='max-w-7xl mx-auto px-4 lg:px-8 py-12'>
-        <div className='grid lg:grid-cols-3 gap-8 lg:gap-12'>
-          <div className='lg:col-span-2 flex flex-col gap-12'>
+      <div className='mx-auto max-w-7xl px-4 py-12 lg:px-8'>
+        <div className='grid gap-8 lg:grid-cols-3 lg:gap-12'>
+          <div className='flex flex-col gap-12 lg:col-span-2'>
             {/* What you'll learn */}
-            {course.course_objectives && course.course_objectives.length > 0 && (
-              <section className='rounded-2xl border border-border/60 bg-card p-6'>
-                <h2 className='text-xl font-semibold text-foreground mb-4'>{t('courseContent.whatYouLearn')}</h2>
-                <div className='grid sm:grid-cols-2 gap-3'>
-                  {course.course_objectives.map((obj) => (
-                    <div key={obj.id} className='flex items-start gap-3'>
-                      <CheckCircle2 className='size-5 text-emerald-400 mt-0.5 shrink-0' />
-                      <span className='text-sm text-muted-foreground'>
-                        {obj.formatted_title || obj.title}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+            {course.course_objectives &&
+              course.course_objectives.length > 0 && (
+                <section className='border-border/60 bg-card rounded-2xl border p-6'>
+                  <h2 className='text-foreground mb-4 text-xl font-semibold'>
+                    {t('courseContent.whatYouLearn')}
+                  </h2>
+                  <div className='grid gap-3 sm:grid-cols-2'>
+                    {course.course_objectives.map((obj) => (
+                      <div key={obj.id} className='flex items-start gap-3'>
+                        <CheckCircle2 className='mt-0.5 size-5 shrink-0 text-emerald-400' />
+                        <span className='text-muted-foreground text-sm'>
+                          {obj.formatted_title || obj.title}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
 
             {/* Course content */}
             <section>
-              <div className='flex items-center justify-between mb-4'>
-                <h2 className='text-xl font-semibold text-foreground'>{t('courseContent.courseContentSection')}</h2>
-                <span className='text-sm text-muted-foreground'>
+              <div className='mb-4 flex items-center justify-between'>
+                <h2 className='text-foreground text-xl font-semibold'>
+                  {t('courseContent.courseContentSection')}
+                </h2>
+                <span className='text-muted-foreground text-sm'>
                   {durationHours
-                    ? t('courseContent.sectionsSummaryWithHours', { sections: sections.length, lessons: totalLessons, hours: durationHours })
-                    : t('courseContent.sectionsSummary', { sections: sections.length, lessons: totalLessons })}
+                    ? t('courseContent.sectionsSummaryWithHours', {
+                        sections: sections.length,
+                        lessons: totalLessons,
+                        hours: durationHours,
+                      })
+                    : t('courseContent.sectionsSummary', {
+                        sections: sections.length,
+                        lessons: totalLessons,
+                      })}
                 </span>
               </div>
 
               {sections.length === 0 ? (
-                <div className='rounded-2xl border border-border/60 bg-card p-12 text-center text-muted-foreground'>
+                <div className='border-border/60 bg-card text-muted-foreground rounded-2xl border p-12 text-center'>
                   <BookOpen className='mx-auto mb-4 size-10 opacity-40' />
                   <p className='font-medium'>{t('courseContent.noContent')}</p>
-                  <p className='mt-1 text-sm'>{t('courseContent.noContentDesc')}</p>
+                  <p className='mt-1 text-sm'>
+                    {t('courseContent.noContentDesc')}
+                  </p>
                 </div>
               ) : (
                 <Accordion
                   type='multiple'
                   defaultValue={sections.slice(0, 2).map((s) => String(s.id))}
-                  className='rounded-2xl border border-border/60 bg-card overflow-hidden'
+                  className='border-border/60 bg-card overflow-hidden rounded-2xl border'
                 >
                   {sections.map((section, idx) => {
                     const lessonCount = section.lessons?.length ?? 0
@@ -439,22 +504,28 @@ export default function StudentCourseContentPage() {
                       <AccordionItem
                         key={section.id}
                         value={String(section.id)}
-                        className='border-b border-border/40 last:border-b-0'
+                        className='border-border/40 border-b last:border-b-0'
                       >
-                        <AccordionTrigger className='px-5 py-4 hover:no-underline hover:bg-secondary/20 transition-colors'>
-                          <div className='flex items-center gap-4 flex-1 min-w-0'>
-                            <div className='flex items-center justify-center size-8 rounded-lg bg-primary/10 text-primary text-sm font-semibold shrink-0'>
+                        <AccordionTrigger className='hover:bg-secondary/20 px-5 py-4 transition-colors hover:no-underline'>
+                          <div className='flex min-w-0 flex-1 items-center gap-4'>
+                            <div className='bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-lg text-sm font-semibold'>
                               {idx + 1}
                             </div>
-                            <div className='flex flex-col items-start gap-0.5 min-w-0 flex-1'>
-                              <span className='font-medium text-foreground truncate w-full text-left'>
+                            <div className='flex min-w-0 flex-1 flex-col items-start gap-0.5'>
+                              <span className='text-foreground w-full truncate text-left font-medium'>
                                 {section.title}
                               </span>
-                              <div className='flex items-center gap-3 text-xs text-muted-foreground'>
-                                <span>{lessonCount} {t('courseContent.lessonsLabel')}</span>
+                              <div className='text-muted-foreground flex items-center gap-3 text-xs'>
+                                <span>
+                                  {lessonCount}{' '}
+                                  {t('courseContent.lessonsLabel')}
+                                </span>
                               </div>
                             </div>
-                            <Badge variant='outline' className='shrink-0 text-xs mr-2'>
+                            <Badge
+                              variant='outline'
+                              className='mr-2 shrink-0 text-xs'
+                            >
                               {lessonCount}
                             </Badge>
                           </div>
@@ -465,32 +536,35 @@ export default function StudentCourseContentPage() {
                               {section.lessons.map((lesson) => (
                                 <button
                                   key={lesson.id}
-                                  onClick={() => navigateToLesson(String(lesson.id))}
-                                  className='group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors hover:bg-secondary/40 w-full text-left'
+                                  onClick={() =>
+                                    navigateToLesson(String(lesson.id))
+                                  }
+                                  className='group hover:bg-secondary/40 flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors'
                                 >
                                   <LessonTypeIcon type={lesson.lesson_type} />
-                                  <span className='flex-1 text-sm text-foreground'>
+                                  <span className='text-foreground flex-1 text-sm'>
                                     {lesson.title}
                                   </span>
                                   {lesson.is_free && (
                                     <Badge
                                       variant='outline'
-                                      className='text-[10px] border-primary/40 text-primary shrink-0'
+                                      className='border-primary/40 text-primary shrink-0 text-[10px]'
                                     >
                                       {t('courseContent.previewBadge')}
                                     </Badge>
                                   )}
                                   {lesson.duration_minutes != null && (
-                                    <span className='text-xs text-muted-foreground shrink-0'>
-                                      {lesson.duration_minutes}{t('courseContent.minLabel')}
+                                    <span className='text-muted-foreground shrink-0 text-xs'>
+                                      {lesson.duration_minutes}
+                                      {t('courseContent.minLabel')}
                                     </span>
                                   )}
-                                  <ChevronRight className='size-4 text-muted-foreground/40 shrink-0' />
+                                  <ChevronRight className='text-muted-foreground/40 size-4 shrink-0' />
                                 </button>
                               ))}
                             </div>
                           ) : (
-                            <p className='py-3 text-center text-xs text-muted-foreground'>
+                            <p className='text-muted-foreground py-3 text-center text-xs'>
                               {t('courseContent.noLessonsInSection')}
                             </p>
                           )}
@@ -505,8 +579,10 @@ export default function StudentCourseContentPage() {
             {/* Description */}
             {course.description && (
               <section>
-                <h2 className='text-xl font-semibold text-foreground mb-4'>{t('courseContent.descriptionSection')}</h2>
-                <p className='text-sm text-muted-foreground leading-relaxed'>
+                <h2 className='text-foreground mb-4 text-xl font-semibold'>
+                  {t('courseContent.descriptionSection')}
+                </h2>
+                <p className='text-muted-foreground text-sm leading-relaxed'>
                   {course.description}
                 </p>
               </section>
@@ -515,25 +591,34 @@ export default function StudentCourseContentPage() {
             {/* Instructor */}
             {course.creator?.name && (
               <section>
-                <h2 className='text-xl font-semibold text-foreground mb-4'>{t('courseContent.instructorSection')}</h2>
-                <div className='rounded-2xl border border-border/60 bg-card p-5'>
+                <h2 className='text-foreground mb-4 text-xl font-semibold'>
+                  {t('courseContent.instructorSection')}
+                </h2>
+                <div className='border-border/60 bg-card rounded-2xl border p-5'>
                   <div className='flex items-start gap-4'>
-                    <Avatar className='size-16 border-2 border-primary/20'>
+                    <Avatar className='border-primary/20 size-16 border-2'>
                       <AvatarImage src='' />
                       <AvatarFallback className='bg-primary/10 text-primary text-lg font-semibold'>
                         {instructorInitials}
                       </AvatarFallback>
                     </Avatar>
                     <div className='flex flex-col gap-1'>
-                      <h3 className='font-semibold text-foreground'>{course.creator.name}</h3>
+                      <h3 className='text-foreground font-semibold'>
+                        {course.creator.name}
+                      </h3>
                       {course.academy?.name && (
-                        <p className='text-sm text-muted-foreground'>{course.academy.name}</p>
+                        <p className='text-muted-foreground text-sm'>
+                          {course.academy.name}
+                        </p>
                       )}
                       {course.enrollment_count != null && (
-                        <div className='flex items-center gap-4 mt-2 text-xs text-muted-foreground'>
+                        <div className='text-muted-foreground mt-2 flex items-center gap-4 text-xs'>
                           <span className='flex items-center gap-1.5'>
                             <Users className='size-3.5' />
-                            {new Intl.NumberFormat(i18n.language).format(course.enrollment_count)} {t('courseContent.students')}
+                            {new Intl.NumberFormat(i18n.language).format(
+                              course.enrollment_count
+                            )}{' '}
+                            {t('courseContent.students')}
                           </span>
                           <span className='flex items-center gap-1.5'>
                             <PlayCircle className='size-3.5' />

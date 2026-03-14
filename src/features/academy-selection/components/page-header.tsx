@@ -14,16 +14,16 @@ export function PageHeader({ userName }: PageHeaderProps) {
       transition={{ duration: 0.6 }}
     >
       <div className='mb-5 flex items-center justify-center gap-3'>
-        <div className='flex items-center justify-center size-14 rounded-xl bg-primary/10 border border-primary/20'>
-          <GraduationCap className='size-7 text-primary' />
+        <div className='bg-primary/10 border-primary/20 flex size-14 items-center justify-center rounded-xl border'>
+          <GraduationCap className='text-primary size-7' />
         </div>
       </div>
       <h1
-        className='text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-4'
+        className='text-foreground mb-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl'
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         Selecciona tu{' '}
-        <span className='bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent'>
+        <span className='from-primary to-primary/60 bg-gradient-to-r bg-clip-text text-transparent'>
           Academia
         </span>
       </h1>

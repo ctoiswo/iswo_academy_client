@@ -63,7 +63,7 @@ export function AnimatedAuthLayout({
 
   return (
     <motion.div
-      className='relative min-h-screen w-full overflow-hidden bg-background'
+      className='bg-background relative min-h-screen w-full overflow-hidden'
       variants={containerVariants}
       initial='hidden'
       animate='visible'
@@ -135,7 +135,7 @@ export function AnimatedAuthLayout({
           return (
             <motion.div
               key={i}
-              className='absolute h-2 w-2 rounded-full bg-primary/20'
+              className='bg-primary/20 absolute h-2 w-2 rounded-full'
               style={{
                 [reversed ? 'right' : 'left']: `${randomPos}%`,
                 top: `${Math.random() * 100}%`,

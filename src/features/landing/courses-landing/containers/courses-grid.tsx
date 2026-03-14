@@ -1,13 +1,19 @@
+import type { CoursesGridProps } from '@/types/pages/home'
 import { Loader2 } from 'lucide-react'
 import { CourseCard } from '../components/course-card'
 import { CourseCardSkeleton } from '../components/course-card-skeleton'
 import { EmptyCoursesState } from '../components/empty-courses-state'
-import type { CoursesGridProps } from '@/types/pages/home'
 
-export function CoursesGrid({ courses, isLoading, isFetchingNextPage, sentinelRef, onClearFilters }: CoursesGridProps) {
+export function CoursesGrid({
+  courses,
+  isLoading,
+  isFetchingNextPage,
+  sentinelRef,
+  onClearFilters,
+}: CoursesGridProps) {
   if (isLoading) {
     return (
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5'>
+      <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {Array.from({ length: 8 }).map((_, i) => (
           <CourseCardSkeleton key={i} />
         ))}
@@ -21,7 +27,7 @@ export function CoursesGrid({ courses, isLoading, isFetchingNextPage, sentinelRe
 
   return (
     <>
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5'>
+      <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
         {courses.map((course) => (
           <CourseCard key={course.id} course={course} />
         ))}
@@ -32,10 +38,9 @@ export function CoursesGrid({ courses, isLoading, isFetchingNextPage, sentinelRe
 
       {isFetchingNextPage && (
         <div className='flex justify-center py-8'>
-          <Loader2 className='size-6 animate-spin text-muted-foreground' />
+          <Loader2 className='text-muted-foreground size-6 animate-spin' />
         </div>
       )}
     </>
   )
 }
-

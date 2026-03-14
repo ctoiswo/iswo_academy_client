@@ -138,7 +138,7 @@ export default function AcademyCourseCatalogPage() {
       >
         <div className='container mx-auto px-4 py-8'>
           <div className='py-12 text-center'>
-            <BookOpen className='mx-auto mb-4 h-16 w-16 text-muted-foreground' />
+            <BookOpen className='text-muted-foreground mx-auto mb-4 h-16 w-16' />
             <h3 className='mb-2 text-lg font-bold text-red-600'>
               Error al Cargar Cursos
             </h3>
@@ -200,7 +200,7 @@ export default function AcademyCourseCatalogPage() {
         <div className='mb-8 flex flex-col gap-4 sm:flex-row'>
           <div className='flex-1'>
             <div className='relative'>
-              <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-muted-foreground' />
+              <Search className='text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform' />
               <Input
                 placeholder='Buscar cursos...'
                 value={searchQuery}
@@ -237,7 +237,7 @@ export default function AcademyCourseCatalogPage() {
 
         {/* Results Count */}
         <div className='mb-6'>
-          <p className='text-sm text-muted-foreground'>
+          <p className='text-muted-foreground text-sm'>
             {sortedCourses.length === 0
               ? 'No se encontraron cursos'
               : `Mostrando ${sortedCourses.length} ${sortedCourses.length === 1 ? 'curso' : 'cursos'}`}
@@ -248,11 +248,11 @@ export default function AcademyCourseCatalogPage() {
         {sortedCourses.length === 0 ? (
           <Card className='py-12 text-center'>
             <CardContent>
-              <BookOpen className='mx-auto mb-4 h-16 w-16 text-muted-foreground' />
-              <h3 className='mb-2 text-lg font-medium text-foreground'>
+              <BookOpen className='text-muted-foreground mx-auto mb-4 h-16 w-16' />
+              <h3 className='text-foreground mb-2 text-lg font-medium'>
                 No se encontraron cursos
               </h3>
-              <p className='mb-4 text-muted-foreground'>
+              <p className='text-muted-foreground mb-4'>
                 {searchQuery || difficultyFilter !== 'all'
                   ? 'Intenta ajustar tus filtros de búsqueda'
                   : 'No hay cursos disponibles en este momento'}
@@ -288,7 +288,7 @@ export default function AcademyCourseCatalogPage() {
                     />
                   ) : (
                     <div className='flex h-full items-center justify-center'>
-                      <BookOpen className='h-16 w-16 text-muted-foreground' />
+                      <BookOpen className='text-muted-foreground h-16 w-16' />
                     </div>
                   )}
 
@@ -330,7 +330,7 @@ export default function AcademyCourseCatalogPage() {
                   </CardDescription>
 
                   {/* Course Info */}
-                  <div className='space-y-2 text-sm text-muted-foreground'>
+                  <div className='text-muted-foreground space-y-2 text-sm'>
                     <div className='flex items-center gap-2'>
                       <Clock className='h-4 w-4' />
                       <span>

@@ -9,6 +9,7 @@ import {
   Ban,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { formatCurrency } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,14 +19,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { TableCell, TableRow } from '@/components/ui/table'
-import { formatCurrency } from '@/lib/utils'
 import type { AcademyOverview } from '../types'
 
 interface AcademyRowProps {
   academy: AcademyOverview
 }
 
-const STATUS_VARIANT: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+const STATUS_VARIANT: Record<
+  string,
+  'default' | 'secondary' | 'destructive' | 'outline'
+> = {
   active: 'default',
   inactive: 'secondary',
   suspended: 'destructive',
@@ -52,8 +55,10 @@ export function AcademyRow({ academy }: AcademyRowProps) {
             )}
           </div>
           <div className='min-w-0'>
-            <p className='font-medium truncate'>{academy.name}</p>
-            <p className='text-muted-foreground text-sm truncate'>{academy.description}</p>
+            <p className='truncate font-medium'>{academy.name}</p>
+            <p className='text-muted-foreground truncate text-sm'>
+              {academy.description}
+            </p>
           </div>
         </div>
       </TableCell>
@@ -61,12 +66,14 @@ export function AcademyRow({ academy }: AcademyRowProps) {
       {/* Status */}
       <TableCell>
         <Badge variant={STATUS_VARIANT[academy.status] ?? 'outline'}>
-          {t(`super_admin.academies.status${academy.status.charAt(0).toUpperCase() + academy.status.slice(1)}`)}
+          {t(
+            `super_admin.academies.status${academy.status.charAt(0).toUpperCase() + academy.status.slice(1)}`
+          )}
         </Badge>
       </TableCell>
 
       {/* Users */}
-      <TableCell className='hidden sm:table-cell text-right'>
+      <TableCell className='hidden text-right sm:table-cell'>
         <div className='flex items-center justify-end space-x-1'>
           <Users className='text-muted-foreground h-4 w-4' />
           <span>{academy.total_users.toLocaleString()}</span>
@@ -74,7 +81,7 @@ export function AcademyRow({ academy }: AcademyRowProps) {
       </TableCell>
 
       {/* Courses */}
-      <TableCell className='hidden md:table-cell text-right'>
+      <TableCell className='hidden text-right md:table-cell'>
         <div className='flex items-center justify-end space-x-1'>
           <BookOpen className='text-muted-foreground h-4 w-4' />
           <span>{academy.total_courses}</span>

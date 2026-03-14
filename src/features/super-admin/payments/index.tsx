@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
+import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
-import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import {
   superAdminApi,
   type SuperAdminPayment,
   type PaymentsMeta,
   type GetPaymentsParams,
 } from '@/lib/super-admin-api'
-import { toast } from 'sonner'
 import { useTranslation } from '@/hooks/use-translation'
-import type { PaymentFilterType, RefundTarget } from './types'
+import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { PaymentManagementPanel } from './containers/payment-management-panel'
+import type { PaymentFilterType, RefundTarget } from './types'
 
 const DEFAULT_META: PaymentsMeta = {
   current_page: 1,
@@ -43,7 +43,12 @@ export function SuperAdminPaymentsPage() {
     async (page: number, search: string, activeFilter: PaymentFilterType) => {
       try {
         setLoading(true)
-        const params: GetPaymentsParams = { page, per_page: 25, sort, dir: 'desc' }
+        const params: GetPaymentsParams = {
+          page,
+          per_page: 25,
+          sort,
+          dir: 'desc',
+        }
         if (search) params.search = search
         if (activeFilter !== 'all') params.status = activeFilter
 

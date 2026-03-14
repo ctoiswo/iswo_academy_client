@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router'
+import type { Enrollment, EnrollmentFilters } from '@/types'
 import { BookOpen, Filter, Grid, List, Search, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useAuthStore } from '@/stores/auth-store'
 import { useUserEnrollments } from '@/hooks/use-enrollments'
 import { useWishlist } from '@/hooks/use-wishlist'
-import { useAuthStore } from '@/stores/auth-store'
-import type { Enrollment, EnrollmentFilters } from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -148,7 +148,9 @@ export default function MyCoursesPage() {
             <h3 className='mb-2 text-lg font-bold text-red-600'>
               {t('myCourses.errorTitle')}
             </h3>
-            <p className='text-muted-foreground'>{t('myCourses.errorDescription')}</p>
+            <p className='text-muted-foreground'>
+              {t('myCourses.errorDescription')}
+            </p>
           </div>
         </div>
       </DashboardLayout>
@@ -201,7 +203,7 @@ export default function MyCoursesPage() {
         <div className='flex flex-col gap-4 sm:flex-row'>
           <div className='flex-1'>
             <div className='relative'>
-              <Search className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-muted-foreground' />
+              <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform' />
               <Input
                 placeholder={t('myCourses.searchPlaceholder')}
                 value={searchQuery}
@@ -259,11 +261,11 @@ export default function MyCoursesPage() {
           wishlistCourses.length === 0 ? (
             <Card className='py-12 text-center'>
               <CardContent>
-                <BookOpen className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
-                <h3 className='mb-2 text-lg font-medium text-foreground'>
+                <BookOpen className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
+                <h3 className='text-foreground mb-2 text-lg font-medium'>
                   {t('myCourses.wishlist.title')}
                 </h3>
-                <p className='mb-4 text-muted-foreground'>
+                <p className='text-muted-foreground mb-4'>
                   {t('myCourses.wishlist.description')}
                 </p>
                 <Button
@@ -308,7 +310,7 @@ export default function MyCoursesPage() {
                   </CardHeader>
 
                   <CardContent className='space-y-4'>
-                    <p className='text-sm text-muted-foreground'>
+                    <p className='text-muted-foreground text-sm'>
                       {t('myCourses.wishlist.addedOn')}{' '}
                       {new Date(item.addedAt).toLocaleDateString()}
                     </p>
@@ -336,11 +338,11 @@ export default function MyCoursesPage() {
         filteredEnrollments.length === 0 ? (
           <Card className='py-12 text-center'>
             <CardContent>
-              <BookOpen className='mx-auto mb-4 h-12 w-12 text-muted-foreground' />
-              <h3 className='mb-2 text-lg font-medium text-foreground'>
+              <BookOpen className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
+              <h3 className='text-foreground mb-2 text-lg font-medium'>
                 {t('myCourses.noCoursesTitle')}
               </h3>
-              <p className='mb-4 text-muted-foreground'>
+              <p className='text-muted-foreground mb-4'>
                 {searchQuery || filters.status
                   ? t('myCourses.noCoursesDescription')
                   : t('myCourses.notEnrolledYet')}
@@ -451,7 +453,7 @@ export default function MyCoursesPage() {
                   </div>
 
                   {/* Course Info */}
-                  <div className='flex justify-between text-sm text-muted-foreground'>
+                  <div className='text-muted-foreground flex justify-between text-sm'>
                     <span>
                       {t('myCourses.duration')}:{' '}
                       {formatDuration(enrollment.course.duration_minutes)}

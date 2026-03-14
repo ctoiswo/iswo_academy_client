@@ -1,10 +1,10 @@
 import { Link, useParams } from '@tanstack/react-router'
 import { LayoutDashboard } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'
+import { useDashboardPath } from '@/hooks/use-dashboard-path'
 import { Button } from '@/components/ui/button'
 import { LargeLogo } from '@/components/large-logo'
-import { useAuthStore } from '@/stores/auth-store'
-import { useDashboardPath } from '@/hooks/use-dashboard-path'
 
 export function PageHeader() {
   const { isAuthenticated, currentAcademy } = useAuthStore()
@@ -14,11 +14,11 @@ export function PageHeader() {
   const myAcademySlug = slug ?? currentAcademy?.slug
 
   const navLinks = [
-    { href: '/courses',   label: 'Cursos' },
+    { href: '/courses', label: 'Cursos' },
     { href: '/academies', label: 'Academias' },
     ...(isAuthenticated && myAcademySlug
       ? [{ href: `/academies/${myAcademySlug}`, label: 'Tu Academia' }]
-      : [{ href: '/create-academy-landing',     label: 'Crea tu Academia' }]),
+      : [{ href: '/create-academy-landing', label: 'Crea tu Academia' }]),
   ]
 
   return (
@@ -30,14 +30,16 @@ export function PageHeader() {
         </Link>
 
         {/* Centre — navigation links */}
-        <nav className='hidden md:flex items-center gap-1'>
+        <nav className='hidden items-center gap-1 md:flex'>
           {navLinks.map((link) => (
             <Link
               key={link.href}
               to={link.href}
               className={cn(
-                'px-3.5 py-2 text-sm font-medium rounded-lg transition-colors',
-                isAuthenticated && myAcademySlug && link.href === `/academies/${myAcademySlug}`
+                'rounded-lg px-3.5 py-2 text-sm font-medium transition-colors',
+                isAuthenticated &&
+                  myAcademySlug &&
+                  link.href === `/academies/${myAcademySlug}`
                   ? 'text-primary hover:text-primary/80 hover:bg-primary/5'
                   : 'text-muted-foreground hover:text-foreground hover:bg-secondary/40'
               )}
@@ -48,7 +50,7 @@ export function PageHeader() {
         </nav>
 
         {/* Right — auth CTA */}
-        <div className='flex items-center gap-2 shrink-0'>
+        <div className='flex shrink-0 items-center gap-2'>
           {isAuthenticated && dashboardPath ? (
             <Link to={dashboardPath}>
               <Button size='sm' className='text-sm'>
@@ -71,4 +73,3 @@ export function PageHeader() {
     </header>
   )
 }
-

@@ -6,6 +6,8 @@ import {
   Shield,
   ShieldOff,
 } from 'lucide-react'
+import type { SuperAdminUser } from '@/lib/super-admin-api'
+import { useTranslation } from '@/hooks/use-translation'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -17,9 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { TableCell, TableRow } from '@/components/ui/table'
-import type { SuperAdminUser } from '@/lib/super-admin-api'
 import type { ConfirmTarget } from '../types'
-import { useTranslation } from '@/hooks/use-translation'
 
 type TFunction = ReturnType<typeof useTranslation>['t']
 
@@ -39,7 +39,10 @@ function formatRelative(iso: string | null, t: TFunction) {
   if (days === 0) return t('superAdmin.users.relative.today')
   if (days === 1) return t('superAdmin.users.relative.yesterday')
   if (days < 30) return t('superAdmin.users.relative.days', { count: days })
-  if (days < 365) return t('superAdmin.users.relative.months', { count: Math.floor(days / 30) })
+  if (days < 365)
+    return t('superAdmin.users.relative.months', {
+      count: Math.floor(days / 30),
+    })
   return t('superAdmin.users.relative.years', { count: Math.floor(days / 365) })
 }
 
@@ -102,7 +105,14 @@ export function UserRow({ user: u, currentUserId, onConfirm }: UserRowProps) {
           {u.academies.length > 0 && (
             <span className='text-muted-foreground truncate text-xs'>
               {u.academies.map((a) => a.name).join(', ')}
-              {u.academies_count > 3 && <> {t('superAdmin.users.table.moreAcademies', { count: u.academies_count - 3 })}</>}
+              {u.academies_count > 3 && (
+                <>
+                  {' '}
+                  {t('superAdmin.users.table.moreAcademies', {
+                    count: u.academies_count - 3,
+                  })}
+                </>
+              )}
             </span>
           )}
         </div>

@@ -1,5 +1,5 @@
-import { type AcademySummaryLight, type AcademyCategoryMinimal } from '@/types'
 import { type RefObject } from 'react'
+import { type AcademySummaryLight, type AcademyCategoryMinimal } from '@/types'
 
 /**
  * Types for academies landing page components

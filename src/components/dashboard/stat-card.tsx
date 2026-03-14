@@ -51,21 +51,21 @@ export function StatCard({
     <>
       <div
         className={cn(
-          'flex shrink-0 items-center justify-center size-10 rounded-lg',
+          'flex size-10 shrink-0 items-center justify-center rounded-lg',
           iconBg
         )}
       >
         <Icon className={cn('size-5', iconColor)} />
       </div>
-      <div className='flex flex-col min-w-0'>
-        <span className='text-xl font-bold text-foreground leading-tight'>
+      <div className='flex min-w-0 flex-col'>
+        <span className='text-foreground text-xl leading-tight font-bold'>
           {value}
         </span>
-        <span className='text-[11px] text-muted-foreground leading-tight'>
+        <span className='text-muted-foreground text-[11px] leading-tight'>
           {label}
         </span>
         {description && (
-          <span className='text-[10px] text-muted-foreground/70 mt-0.5 leading-tight truncate'>
+          <span className='text-muted-foreground/70 mt-0.5 truncate text-[10px] leading-tight'>
             {description}
           </span>
         )}

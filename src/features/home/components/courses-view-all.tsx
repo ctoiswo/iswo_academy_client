@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
 import { ArrowRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export function CoursesViewAll() {
   const { t } = useTranslation()
@@ -8,10 +8,10 @@ export function CoursesViewAll() {
     <div className='flex justify-center'>
       <Link
         to='/courses'
-        className='flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors group/link'
+        className='text-primary hover:text-primary/80 group/link flex items-center gap-2 text-sm font-medium transition-colors'
       >
         {t('pages.home.courses.viewAll')}
-        <ArrowRight className='size-4 group-hover/link:translate-x-0.5 transition-transform' />
+        <ArrowRight className='size-4 transition-transform group-hover/link:translate-x-0.5' />
       </Link>
     </div>
   )

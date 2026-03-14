@@ -7,37 +7,43 @@ interface CoursesHeroProps {
   totalCourses: number
 }
 
-export function CoursesHero({ search, onSearchChange, totalCourses }: CoursesHeroProps) {
+export function CoursesHero({
+  search,
+  onSearchChange,
+  totalCourses,
+}: CoursesHeroProps) {
   const { t } = useTranslation()
 
   return (
-    <section className='relative pt-28 pb-16 overflow-hidden'>
-      <div className='relative z-10 max-w-7xl mx-auto px-4 lg:px-8 flex flex-col items-center gap-6 text-center'>
-        <div className='flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-medium'>
-          <span className='size-1.5 rounded-full bg-primary animate-pulse' />
+    <section className='relative overflow-hidden pt-28 pb-16'>
+      <div className='relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-6 px-4 text-center lg:px-8'>
+        <div className='border-primary/20 bg-primary/5 text-primary flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-medium'>
+          <span className='bg-primary size-1.5 animate-pulse rounded-full' />
           {t('coursesLanding.hero.badge', { count: totalCourses })}
         </div>
 
         <h1
-          className='text-4xl sm:text-5xl md:text-6xl font-bold text-foreground tracking-tight leading-[1.1] text-balance'
+          className='text-foreground text-4xl leading-[1.1] font-bold tracking-tight text-balance sm:text-5xl md:text-6xl'
           style={{ fontFamily: 'var(--font-heading)' }}
         >
           {t('coursesLanding.hero.title')}{' '}
-          <span className='text-primary'>{t('coursesLanding.hero.titleHighlight')}</span>
+          <span className='text-primary'>
+            {t('coursesLanding.hero.titleHighlight')}
+          </span>
         </h1>
 
-        <p className='text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl'>
+        <p className='text-muted-foreground max-w-2xl text-base leading-relaxed sm:text-lg'>
           {t('coursesLanding.hero.subtitle')}
         </p>
 
-        <div className='relative w-full max-w-xl mt-2'>
-          <Search className='absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground' />
+        <div className='relative mt-2 w-full max-w-xl'>
+          <Search className='text-muted-foreground absolute top-1/2 left-4 size-4 -translate-y-1/2' />
           <input
             type='text'
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={t('coursesLanding.hero.searchPlaceholder')}
-            className='w-full h-12 pl-11 pr-4 rounded-xl border border-border/60 bg-card/60 backdrop-blur-sm text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/10 transition-all'
+            className='border-border/60 bg-card/60 text-foreground placeholder:text-muted-foreground focus:border-primary/60 focus:ring-primary/10 h-12 w-full rounded-xl border pr-4 pl-11 text-sm backdrop-blur-sm transition-all focus:ring-2 focus:outline-none'
           />
         </div>
       </div>

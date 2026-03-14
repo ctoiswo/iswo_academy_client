@@ -9,18 +9,24 @@ interface FeatureCardProps {
   delay: number
 }
 
-export function FeatureCard({ icon: Icon, title, desc, mounted, delay }: FeatureCardProps) {
+export function FeatureCard({
+  icon: Icon,
+  title,
+  desc,
+  mounted,
+  delay,
+}: FeatureCardProps) {
   return (
     <div
       className={cn(
-        'flex flex-col items-center gap-2 p-4 rounded-xl border border-border/30 bg-card/40 transition-all duration-500',
-        mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        'border-border/30 bg-card/40 flex flex-col items-center gap-2 rounded-xl border p-4 transition-all duration-500',
+        mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
       )}
       style={{ transitionDelay: `${delay}ms` }}
     >
-      <Icon className='size-5 text-primary/70' />
-      <span className='text-sm font-semibold text-foreground'>{title}</span>
-      <span className='text-xs text-muted-foreground'>{desc}</span>
+      <Icon className='text-primary/70 size-5' />
+      <span className='text-foreground text-sm font-semibold'>{title}</span>
+      <span className='text-muted-foreground text-xs'>{desc}</span>
     </div>
   )
 }

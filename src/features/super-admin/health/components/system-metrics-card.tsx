@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
 import { Cpu, HardDrive, MemoryStick } from 'lucide-react'
 import type { SystemLoad } from '@/lib/super-admin-api'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
 
 interface SystemMetricsCardProps {
   load: SystemLoad
@@ -36,7 +36,9 @@ export function SystemMetricsCard({ load }: SystemMetricsCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className='text-sm font-medium'>Recursos del sistema</CardTitle>
+        <CardTitle className='text-sm font-medium'>
+          Recursos del sistema
+        </CardTitle>
       </CardHeader>
       <CardContent className='space-y-4'>
         <MetricRow

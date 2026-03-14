@@ -1,5 +1,10 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query'
-import type { Academy, AcademyFilters, AcademySummaryLight, PaginatedResponse } from '@/types'
+import type {
+  Academy,
+  AcademyFilters,
+  AcademySummaryLight,
+  PaginatedResponse,
+} from '@/types'
 import { apiClient } from '@/lib/api-client'
 
 // Re-export types for backward compatibility
@@ -56,10 +61,17 @@ export function usePublicAcademies(filters?: AcademyFilters) {
       if (response.data?.data && response.data?.meta) {
         return response.data as PaginatedResponse<AcademySummaryLight>
       }
-      const data = Array.isArray(response.data) ? response.data : response.data?.data || []
+      const data = Array.isArray(response.data)
+        ? response.data
+        : response.data?.data || []
       return {
         data,
-        meta: { current_page: 1, total_pages: 1, total_count: data.length, per_page: filters?.per_page || 15 },
+        meta: {
+          current_page: 1,
+          total_pages: 1,
+          total_count: data.length,
+          per_page: filters?.per_page || 15,
+        },
       }
     },
     staleTime: 60_000, // 1 minute
@@ -71,16 +83,27 @@ export function usePublicAcademies(filters?: AcademyFilters) {
  * Infinite-scroll hook for the public academies landing page.
  * Fetches academies page by page as the user scrolls.
  */
-export function usePublicAcademiesInfinite(filters?: Omit<AcademyFilters, 'page'>) {
+export function usePublicAcademiesInfinite(
+  filters?: Omit<AcademyFilters, 'page'>
+) {
   return useInfiniteQuery({
     queryKey: ['public-academies-infinite', filters],
     queryFn: ({ pageParam }) =>
       apiClient
         .get('/academies', { params: { ...filters, page: pageParam } })
         .then((res) => {
-          if (res.data?.data && res.data?.meta) return res.data as PaginatedResponse<AcademySummaryLight>
+          if (res.data?.data && res.data?.meta)
+            return res.data as PaginatedResponse<AcademySummaryLight>
           const data = Array.isArray(res.data) ? res.data : res.data?.data || []
-          return { data, meta: { current_page: 1, total_pages: 1, total_count: data.length, per_page: filters?.per_page || 12 } }
+          return {
+            data,
+            meta: {
+              current_page: 1,
+              total_pages: 1,
+              total_count: data.length,
+              per_page: filters?.per_page || 12,
+            },
+          }
         }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {

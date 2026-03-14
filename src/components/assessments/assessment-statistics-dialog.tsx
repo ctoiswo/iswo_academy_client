@@ -63,7 +63,7 @@ export function AssessmentStatisticsDialog({
                 <CardContent className='pt-6'>
                   <div className='flex items-start justify-between'>
                     <div>
-                      <p className='text-sm font-medium text-muted-foreground'>
+                      <p className='text-muted-foreground text-sm font-medium'>
                         Tasa de Completado
                       </p>
                       <p className='mt-2 text-3xl font-bold'>
@@ -71,7 +71,7 @@ export function AssessmentStatisticsDialog({
                           ? `${statistics.completion_rate.toFixed(1)}%`
                           : 'N/A'}
                       </p>
-                      <p className='mt-1 text-xs text-muted-foreground'>
+                      <p className='text-muted-foreground mt-1 text-xs'>
                         De todos los estudiantes
                       </p>
                     </div>
@@ -86,7 +86,7 @@ export function AssessmentStatisticsDialog({
                 <CardContent className='pt-6'>
                   <div className='flex items-start justify-between'>
                     <div>
-                      <p className='text-sm font-medium text-muted-foreground'>
+                      <p className='text-muted-foreground text-sm font-medium'>
                         Tasa de Aprobación
                       </p>
                       <p className='mt-2 text-3xl font-bold'>
@@ -94,7 +94,7 @@ export function AssessmentStatisticsDialog({
                           ? `${statistics.pass_rate.toFixed(1)}%`
                           : 'N/A'}
                       </p>
-                      <p className='mt-1 text-xs text-muted-foreground'>
+                      <p className='text-muted-foreground mt-1 text-xs'>
                         De los que completaron
                       </p>
                     </div>
@@ -109,7 +109,7 @@ export function AssessmentStatisticsDialog({
                 <CardContent className='pt-6'>
                   <div className='flex items-start justify-between'>
                     <div>
-                      <p className='text-sm font-medium text-muted-foreground'>
+                      <p className='text-muted-foreground text-sm font-medium'>
                         Promedio de Puntuación
                       </p>
                       <p className='mt-2 text-3xl font-bold'>
@@ -117,7 +117,7 @@ export function AssessmentStatisticsDialog({
                           ? `${statistics.average_score.toFixed(1)}%`
                           : 'N/A'}
                       </p>
-                      <p className='mt-1 text-xs text-muted-foreground'>
+                      <p className='text-muted-foreground mt-1 text-xs'>
                         De {assessment.total_points} puntos posibles
                       </p>
                     </div>
@@ -132,13 +132,13 @@ export function AssessmentStatisticsDialog({
                 <CardContent className='pt-6'>
                   <div className='flex items-start justify-between'>
                     <div>
-                      <p className='text-sm font-medium text-muted-foreground'>
+                      <p className='text-muted-foreground text-sm font-medium'>
                         Total de Intentos
                       </p>
                       <p className='mt-2 text-3xl font-bold'>
                         {statistics?.total_attempts || 0}
                       </p>
-                      <p className='mt-1 text-xs text-muted-foreground'>
+                      <p className='text-muted-foreground mt-1 text-xs'>
                         Máximo: {assessment.attempts_allowed}{' '}
                         {assessment.attempts_allowed === 1
                           ? 'intento'
@@ -182,7 +182,9 @@ export function AssessmentStatisticsDialog({
                     </p>
                   </div>
                   <div>
-                    <p className='text-muted-foreground'>Peso en Calificación</p>
+                    <p className='text-muted-foreground'>
+                      Peso en Calificación
+                    </p>
                     <p className='font-medium'>
                       {assessment.weight_percentage}%
                     </p>
@@ -200,7 +202,7 @@ export function AssessmentStatisticsDialog({
             </Card>
 
             {!statistics && (
-              <div className='py-8 text-center text-muted-foreground'>
+              <div className='text-muted-foreground py-8 text-center'>
                 <BarChart3 className='mx-auto mb-2 h-12 w-12 opacity-30' />
                 <p>No hay datos de estadísticas disponibles aún</p>
                 <p className='text-sm'>
