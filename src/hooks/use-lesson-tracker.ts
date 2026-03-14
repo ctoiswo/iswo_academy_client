@@ -64,11 +64,15 @@ export function useLessonTracker(academySlug: string, courseSlug: string) {
     },
   })
 
+  const { mutate: completeMutate } = completeMutation
+
+  const { mutate: trackMutate } = trackMutation
+
   const markComplete = useCallback(
     (lessonId: number, onSuccess?: () => void) => {
-      completeMutation.mutate(lessonId, { onSuccess })
+      completeMutate(lessonId, { onSuccess })
     },
-    [completeMutation]
+    [completeMutate]
   )
 
   const trackProgress = useCallback(
@@ -80,9 +84,9 @@ export function useLessonTracker(academySlug: string, courseSlug: string) {
         video_duration?: number
       }
     ) => {
-      trackMutation.mutate({ lessonId, payload })
+      trackMutate({ lessonId, payload })
     },
-    [trackMutation]
+    [trackMutate]
   )
 
   return {
