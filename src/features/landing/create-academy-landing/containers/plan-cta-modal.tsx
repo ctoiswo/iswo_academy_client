@@ -35,8 +35,8 @@ export function PlanCtaModal({
         <div className='flex flex-col gap-3 pt-2'>
           {/* Option 1: Already has account */}
           <Link
-            to='/sign-in'
-            search={{ redirect: '/create-academy' }}
+            to='/create-academy'
+            search={{ mode: 'login' }}
             onClick={() => onOpenChange(false)}
           >
             <Button

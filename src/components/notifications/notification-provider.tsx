@@ -41,11 +41,7 @@ export function NotificationProvider({
   useEffect(() => {
     if (!showToasts) return
 
-    if (notificationsConnected && badgeConnected) {
-      console.log('✅ Conectado a notificaciones')
-    } else if (notificationsError) {
-      console.error(`❌ Error de notificaciones: ${notificationsError}`)
-    }
+    // Connection state managed silently
   }, [notificationsConnected, badgeConnected, notificationsError, showToasts])
 
   return (

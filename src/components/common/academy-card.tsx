@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Users, BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { AcademyCardProps } from '@/types/pages/home'
+import type { AcademyCardProps } from '@/types/pages/home'
 
 export function AcademyCard({
   academy,

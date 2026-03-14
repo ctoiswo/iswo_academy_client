@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import type { Assignment } from '@/types'
-import { CheckSquare } from 'lucide-react'
+import { CheckSquare, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAssignments } from '@/hooks/use-assignments'
 import { useCourse } from '@/hooks/use-courses'
@@ -21,7 +21,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AssignmentCard } from '@/components/assignments/assignment-card'
 

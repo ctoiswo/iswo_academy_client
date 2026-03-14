@@ -1,4 +1,4 @@
-import { AcademiesHeroProps } from '@/types/pages/academies-landing'
+import type { AcademiesHeroProps } from '@/types/pages/academies-landing'
 import { Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 

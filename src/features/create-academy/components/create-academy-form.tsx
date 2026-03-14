@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { ArrowLeft, ArrowRight, Loader2, Rocket, RefreshCw } from 'lucide-react'
+import { useSearch } from '@tanstack/react-router'
 import { academyService } from '@/services/academy-service'
 import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
@@ -41,6 +42,8 @@ const STEP_LABELS_NO_ACCOUNT = ['Información', 'Branding', 'Configuración']
 export function CreateAcademyForm() {
   const { t } = useTranslation()
   const { isAuthenticated, isInitialized } = useAuthStore()
+  const search = useSearch({ from: '/create-academy/' })
+  const loginMode = search.mode === 'login'
   // Start conservatively at 'account'; useEffect will advance to 'basicInfo'
   // once the auth store finishes initializing (avoids the race on page reload).
   const [currentStep, setCurrentStep] = useState<Step>('account')
@@ -192,7 +195,7 @@ export function CreateAcademyForm() {
           style={{ opacity: isTransitioning ? 0 : 1 }}
         >
           {currentStep === 'account' ? (
-            <StepAccount onSuccess={() => goToStep('basicInfo')} />
+            <StepAccount onSuccess={() => goToStep('basicInfo')} initialPhase={loginMode ? 'login' : 'register'} />
           ) : (
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>

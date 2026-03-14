@@ -2,7 +2,7 @@ import { Loader2 } from 'lucide-react'
 import { CourseCard } from '../components/course-card'
 import { CourseCardSkeleton } from '../components/course-card-skeleton'
 import { EmptyCoursesState } from '../components/empty-courses-state'
-import { CoursesGridProps } from '@/types/pages/home'
+import type { CoursesGridProps } from '@/types/pages/home'
 
 export function CoursesGrid({ courses, isLoading, isFetchingNextPage, sentinelRef, onClearFilters }: CoursesGridProps) {
   if (isLoading) {

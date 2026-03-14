@@ -106,12 +106,13 @@ function PasswordStrength({ password }: { password: string }) {
 
 interface StepAccountProps {
   onSuccess: () => void
+  initialPhase?: 'register' | 'login'
 }
 
-type Phase = 'register' | 'verify'
+type Phase = 'register' | 'verify' | 'login'
 
-export function StepAccount({ onSuccess }: StepAccountProps) {
-  const [phase, setPhase] = useState<Phase>('register')
+export function StepAccount({ onSuccess, initialPhase = 'register' }: StepAccountProps) {
+  const [phase, setPhase] = useState<Phase>(initialPhase)
   const [showPassword, setShowPassword] = useState(false)
   const [pendingEmail, setPendingEmail] = useState('')
   const { register: registerUser, login } = useAuthStore()
@@ -174,6 +175,86 @@ export function StepAccount({ onSuccess }: StepAccountProps) {
   }
 
   // ── Render ─────────────────────────────────────────────────────────────────
+
+  if (phase === 'login') {
+    return (
+      <div className='flex flex-col gap-6 animate-in fade-in-0 slide-in-from-right-4 duration-500'>
+        <div className='flex flex-col gap-1.5'>
+          <h2 className='text-2xl font-bold tracking-tight'>Inicia sesión</h2>
+          <p className='text-sm text-muted-foreground leading-relaxed'>
+            Introduce tus credenciales para continuar con la configuración de tu academia.
+          </p>
+        </div>
+
+        <form onSubmit={handleLoginSubmit(onLogin)} className='flex flex-col gap-4'>
+          <div className='flex flex-col gap-2'>
+            <Label htmlFor='login-email'>Correo electrónico</Label>
+            <div className='relative'>
+              <Mail className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/50' />
+              <Input
+                id='login-email'
+                type='email'
+                placeholder='tu@correo.com'
+                className='pl-10 h-11 bg-card/50 border-border/50 focus:border-primary/60'
+                {...regLogin('email')}
+              />
+            </div>
+            {loginErrors.email && (
+              <p className='text-xs text-destructive'>{loginErrors.email.message}</p>
+            )}
+          </div>
+
+          <div className='flex flex-col gap-2'>
+            <Label htmlFor='login-password'>Contraseña</Label>
+            <div className='relative'>
+              <Lock className='absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/50' />
+              <Input
+                id='login-password'
+                type={showPassword ? 'text' : 'password'}
+                placeholder='Tu contraseña'
+                className='pl-10 pr-10 h-11 bg-card/50 border-border/50 focus:border-primary/60'
+                {...regLogin('password')}
+              />
+              <button
+                type='button'
+                onClick={() => setShowPassword((v) => !v)}
+                className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-foreground transition-colors'
+              >
+                {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
+              </button>
+            </div>
+            {loginErrors.password && (
+              <p className='text-xs text-destructive'>{loginErrors.password.message}</p>
+            )}
+          </div>
+
+          <Button
+            type='submit'
+            disabled={isLoginSubmitting}
+            className='h-11 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90'
+          >
+            {isLoginSubmitting ? (
+              <Loader2 className='size-4 animate-spin' />
+            ) : (
+              <>
+                Iniciar sesión y continuar
+                <ArrowRight className='size-4 ml-2' />
+              </>
+            )}
+          </Button>
+        </form>
+
+        <button
+          type='button'
+          onClick={() => setPhase('register')}
+          className='text-xs text-muted-foreground hover:text-foreground transition-colors text-center'
+        >
+          ¿No tienes cuenta?{' '}
+          <span className='text-primary underline underline-offset-2'>Regístrate aquí</span>
+        </button>
+      </div>
+    )
+  }
 
   if (phase === 'verify') {
     return (

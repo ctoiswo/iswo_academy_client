@@ -457,7 +457,6 @@ function ReadingContent({
         ref={contentRef}
         onScroll={handleScroll}
         className='flex-1 overflow-y-auto px-8 py-6 prose prose-invert prose-sm max-w-none'
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: rawContent }}
       />
 
@@ -757,7 +756,7 @@ export function CoursePlayer({
   )
 
   const { data: currentLesson, isLoading: lessonLoading } = useQuery({
-    queryKey: ['lesson', academySlug, courseSlug, lessonId],
+    queryKey: ['lesson', academySlug, courseSlug, currentSection?.id, lessonId],
     queryFn: () =>
       lessonService.getLesson(
         academySlug,

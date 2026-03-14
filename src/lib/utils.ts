@@ -1,8 +1,7 @@
-import { PlatformStats, StatItem } from '@/types'
+import type { PlatformStats, StatItem, Course } from '@/types'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { Users, BookOpen, Award } from 'lucide-react'
-import { Course } from '@/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

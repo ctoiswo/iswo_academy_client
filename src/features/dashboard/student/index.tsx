@@ -16,13 +16,13 @@ export function StudentDashboard({ user, academy }: DashboardProps) {
     setMounted(true)
   }, [])
 
-  if (!user) return null
-
   const academySlug = academy?.slug ?? 'default'
-  const firstName = user.first_name ?? 'estudiante'
+  const firstName = user?.first_name ?? 'estudiante'
 
   const { data: dashboardData, isLoading } = useStudentDashboard(academySlug)
   const dashboardContent = dashboardData?.data
+
+  if (!user) return null
 
   return (
     <DashboardLayout

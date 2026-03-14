@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react'
 import { SlidersHorizontal, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { CoursesFilterProps } from '@/types/pages/home'
+import type { CoursesFilterProps } from '@/types/pages/home'
 
 export function CoursesFilter({
   categories,

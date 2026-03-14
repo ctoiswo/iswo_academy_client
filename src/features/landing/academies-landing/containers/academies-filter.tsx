@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react'
 import { SlidersHorizontal, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
-import { AcademiesFilterProps } from '@/types/pages/academies-landing'
+import type { AcademiesFilterProps } from '@/types/pages/academies-landing'
 
 export function AcademiesFilter({
   categories,

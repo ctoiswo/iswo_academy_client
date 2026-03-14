@@ -2,7 +2,7 @@ import { Loader2 } from 'lucide-react'
 import { AcademyCard } from '../components/academy-card'
 import { AcademyCardSkeleton } from '../components/academy-card-skeleton'
 import { EmptyAcademiesState } from '../components/empty-academies-state'
-import { AcademiesGridProps } from '@/types/pages/academies-landing'
+import type { AcademiesGridProps } from '@/types/pages/academies-landing'
 
 export function AcademiesGrid({
   academies,
