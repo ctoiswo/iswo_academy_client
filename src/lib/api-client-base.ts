@@ -8,6 +8,7 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from 'axios'
+import { toast } from 'sonner'
 import type { AuthTokens } from '@/stores/auth-store'
 import { getLocale } from '@/stores/locale-store'
 import { tokenStorage } from '@/lib/token-storage'
@@ -309,7 +310,48 @@ class APIClient {
           })
         }
 
-        // SEGUNDO: Si no es 401 o no se pudo refrescar, formatear el error del backend
+        // SEGUNDO: 402 Payment Required — subscription expired
+        if (error.response?.status === 402) {
+          const backendError = error.response?.data?.error
+          const message =
+            backendError?.user_message ||
+            backendError?.message ||
+            'Tu academia no tiene una suscripción activa.'
+          const slugMatch =
+            typeof window !== 'undefined'
+              ? window.location.pathname.match(/\/academy\/([^/]+)/)
+              : null
+          const subscriptionUrl = slugMatch
+            ? `/academy/${slugMatch[1]}/settings/subscription`
+            : null
+          toast.error(message, {
+            description: 'Actualiza tu plan para continuar usando la plataforma.',
+            duration: 10000,
+            ...(subscriptionUrl && {
+              action: {
+                label: 'Ver suscripción',
+                onClick: () => {
+                  window.location.href = subscriptionUrl
+                },
+              },
+            }),
+          })
+          if (backendError) {
+            return Promise.reject({
+              message: backendError.message || 'Subscription required',
+              user_message: backendError.user_message,
+              code: backendError.code,
+              type: backendError.type,
+              status: 402,
+              details: backendError.details,
+              metadata: backendError.metadata,
+              timestamp: backendError.timestamp,
+            } as ApiError)
+          }
+          return Promise.reject(error)
+        }
+
+        // TERCERO: Si no es 401/402, formatear el error del backend
         if (error.response?.data?.error) {
           const backendError = error.response.data.error
           // Crear un nuevo error con los datos del backend
@@ -327,7 +369,7 @@ class APIClient {
           return Promise.reject(apiError)
         }
 
-        // TERCERO: Si no tiene formato especial, rechazar el error tal cual
+        // CUARTO: Si no tiene formato especial, rechazar el error tal cual
         return Promise.reject(error)
       }
     )

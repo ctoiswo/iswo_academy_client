@@ -17,11 +17,17 @@ export function AcademySettings() {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
-  const activeTab = pathname.includes('/features') ? 'features' : 'general'
+  const activeTab = pathname.includes('/subscription')
+    ? 'subscription'
+    : pathname.includes('/features')
+      ? 'features'
+      : 'general'
 
   const handleTabChange = (value: string) => {
     if (value === 'features') {
       navigate({ to: `/academy/${slug}/settings/features` as string })
+    } else if (value === 'subscription') {
+      navigate({ to: `/academy/${slug}/settings/subscription` as string })
     } else {
       navigate({ to: `/academy/${slug}/settings/` as string })
     }
@@ -43,6 +49,9 @@ export function AcademySettings() {
             </TabsTrigger>
             <TabsTrigger value='features'>
               {t('academySettings.tabs.features')}
+            </TabsTrigger>
+            <TabsTrigger value='subscription'>
+              Suscripción
             </TabsTrigger>
           </TabsList>
         </Tabs>

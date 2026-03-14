@@ -93,6 +93,9 @@ export interface AcademyMembership {
   created_at: string
   last_accessed: string | null
   last_accessed_at?: string | null
+  admin_subscription_active: boolean
+  subscription_expires_at: string | null
+  admin_subscription_days_remaining: number | null
 }
 
 // Academy data structure returned in auth responses

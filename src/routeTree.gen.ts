@@ -88,6 +88,7 @@ import { Route as AuthenticatedAcademyAcademySlugLearningPathsIndexRouteImport }
 import { Route as AuthenticatedAcademyAcademySlugDashboardIndexRouteImport } from './routes/_authenticated/academy/$academySlug/dashboard/index'
 import { Route as AuthenticatedAcademyAcademySlugCoursesIndexRouteImport } from './routes/_authenticated/academy/$academySlug/courses/index'
 import { Route as PublicAcademyAcademySlugCoursesCourseSlugRouteImport } from './routes/public/academy/$academySlug/courses/$courseSlug'
+import { Route as AuthenticatedAcademyAcademySlugSettingsSubscriptionRouteImport } from './routes/_authenticated/academy/$academySlug/settings/subscription'
 import { Route as AuthenticatedAcademyAcademySlugSettingsFeaturesRouteImport } from './routes/_authenticated/academy/$academySlug/settings/features'
 import { Route as AuthenticatedAcademyAcademySlugDashboardTeacherRouteImport } from './routes/_authenticated/academy/$academySlug/dashboard/teacher'
 import { Route as AuthenticatedAcademyAcademySlugDashboardStudentRouteImport } from './routes/_authenticated/academy/$academySlug/dashboard/student'
@@ -564,6 +565,12 @@ const PublicAcademyAcademySlugCoursesCourseSlugRoute =
     path: '/$courseSlug',
     getParentRoute: () => PublicAcademyAcademySlugCoursesRoute,
   } as any)
+const AuthenticatedAcademyAcademySlugSettingsSubscriptionRoute =
+  AuthenticatedAcademyAcademySlugSettingsSubscriptionRouteImport.update({
+    id: '/subscription',
+    path: '/subscription',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugSettingsRoute,
+  } as any)
 const AuthenticatedAcademyAcademySlugSettingsFeaturesRoute =
   AuthenticatedAcademyAcademySlugSettingsFeaturesRouteImport.update({
     id: '/features',
@@ -920,6 +927,7 @@ export interface FileRoutesByFullPath {
   '/academy/$academySlug/dashboard/student': typeof AuthenticatedAcademyAcademySlugDashboardStudentRoute
   '/academy/$academySlug/dashboard/teacher': typeof AuthenticatedAcademyAcademySlugDashboardTeacherRoute
   '/academy/$academySlug/settings/features': typeof AuthenticatedAcademyAcademySlugSettingsFeaturesRoute
+  '/academy/$academySlug/settings/subscription': typeof AuthenticatedAcademyAcademySlugSettingsSubscriptionRoute
   '/public/academy/$academySlug/courses/$courseSlug': typeof PublicAcademyAcademySlugCoursesCourseSlugRouteWithChildren
   '/academy/$academySlug/courses/': typeof AuthenticatedAcademyAcademySlugCoursesIndexRoute
   '/academy/$academySlug/dashboard/': typeof AuthenticatedAcademyAcademySlugDashboardIndexRoute
@@ -1030,6 +1038,7 @@ export interface FileRoutesByTo {
   '/academy/$academySlug/dashboard/student': typeof AuthenticatedAcademyAcademySlugDashboardStudentRoute
   '/academy/$academySlug/dashboard/teacher': typeof AuthenticatedAcademyAcademySlugDashboardTeacherRoute
   '/academy/$academySlug/settings/features': typeof AuthenticatedAcademyAcademySlugSettingsFeaturesRoute
+  '/academy/$academySlug/settings/subscription': typeof AuthenticatedAcademyAcademySlugSettingsSubscriptionRoute
   '/public/academy/$academySlug/courses/$courseSlug': typeof PublicAcademyAcademySlugCoursesCourseSlugRouteWithChildren
   '/academy/$academySlug/courses': typeof AuthenticatedAcademyAcademySlugCoursesIndexRoute
   '/academy/$academySlug/dashboard': typeof AuthenticatedAcademyAcademySlugDashboardIndexRoute
@@ -1146,6 +1155,7 @@ export interface FileRoutesById {
   '/_authenticated/academy/$academySlug/dashboard/student': typeof AuthenticatedAcademyAcademySlugDashboardStudentRoute
   '/_authenticated/academy/$academySlug/dashboard/teacher': typeof AuthenticatedAcademyAcademySlugDashboardTeacherRoute
   '/_authenticated/academy/$academySlug/settings/features': typeof AuthenticatedAcademyAcademySlugSettingsFeaturesRoute
+  '/_authenticated/academy/$academySlug/settings/subscription': typeof AuthenticatedAcademyAcademySlugSettingsSubscriptionRoute
   '/public/academy/$academySlug/courses/$courseSlug': typeof PublicAcademyAcademySlugCoursesCourseSlugRouteWithChildren
   '/_authenticated/academy/$academySlug/courses/': typeof AuthenticatedAcademyAcademySlugCoursesIndexRoute
   '/_authenticated/academy/$academySlug/dashboard/': typeof AuthenticatedAcademyAcademySlugDashboardIndexRoute
@@ -1264,6 +1274,7 @@ export interface FileRouteTypes {
     | '/academy/$academySlug/dashboard/student'
     | '/academy/$academySlug/dashboard/teacher'
     | '/academy/$academySlug/settings/features'
+    | '/academy/$academySlug/settings/subscription'
     | '/public/academy/$academySlug/courses/$courseSlug'
     | '/academy/$academySlug/courses/'
     | '/academy/$academySlug/dashboard/'
@@ -1374,6 +1385,7 @@ export interface FileRouteTypes {
     | '/academy/$academySlug/dashboard/student'
     | '/academy/$academySlug/dashboard/teacher'
     | '/academy/$academySlug/settings/features'
+    | '/academy/$academySlug/settings/subscription'
     | '/public/academy/$academySlug/courses/$courseSlug'
     | '/academy/$academySlug/courses'
     | '/academy/$academySlug/dashboard'
@@ -1489,6 +1501,7 @@ export interface FileRouteTypes {
     | '/_authenticated/academy/$academySlug/dashboard/student'
     | '/_authenticated/academy/$academySlug/dashboard/teacher'
     | '/_authenticated/academy/$academySlug/settings/features'
+    | '/_authenticated/academy/$academySlug/settings/subscription'
     | '/public/academy/$academySlug/courses/$courseSlug'
     | '/_authenticated/academy/$academySlug/courses/'
     | '/_authenticated/academy/$academySlug/dashboard/'
@@ -2115,6 +2128,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAcademyAcademySlugCoursesCourseSlugRouteImport
       parentRoute: typeof PublicAcademyAcademySlugCoursesRoute
     }
+    '/_authenticated/academy/$academySlug/settings/subscription': {
+      id: '/_authenticated/academy/$academySlug/settings/subscription'
+      path: '/subscription'
+      fullPath: '/academy/$academySlug/settings/subscription'
+      preLoaderRoute: typeof AuthenticatedAcademyAcademySlugSettingsSubscriptionRouteImport
+      parentRoute: typeof AuthenticatedAcademyAcademySlugSettingsRoute
+    }
     '/_authenticated/academy/$academySlug/settings/features': {
       id: '/_authenticated/academy/$academySlug/settings/features'
       path: '/features'
@@ -2650,6 +2670,7 @@ const AuthenticatedAcademyAcademySlugDashboardRouteWithChildren =
 
 interface AuthenticatedAcademyAcademySlugSettingsRouteChildren {
   AuthenticatedAcademyAcademySlugSettingsFeaturesRoute: typeof AuthenticatedAcademyAcademySlugSettingsFeaturesRoute
+  AuthenticatedAcademyAcademySlugSettingsSubscriptionRoute: typeof AuthenticatedAcademyAcademySlugSettingsSubscriptionRoute
   AuthenticatedAcademyAcademySlugSettingsIndexRoute: typeof AuthenticatedAcademyAcademySlugSettingsIndexRoute
 }
 
@@ -2657,6 +2678,8 @@ const AuthenticatedAcademyAcademySlugSettingsRouteChildren: AuthenticatedAcademy
   {
     AuthenticatedAcademyAcademySlugSettingsFeaturesRoute:
       AuthenticatedAcademyAcademySlugSettingsFeaturesRoute,
+    AuthenticatedAcademyAcademySlugSettingsSubscriptionRoute:
+      AuthenticatedAcademyAcademySlugSettingsSubscriptionRoute,
     AuthenticatedAcademyAcademySlugSettingsIndexRoute:
       AuthenticatedAcademyAcademySlugSettingsIndexRoute,
   }

@@ -79,6 +79,9 @@ export interface AcademyFull extends AcademyBase {
   academy_category: AcademyCategory | null
   courses_count: number
   enrolled_users_count: number
+  subscription_expires_at: string | null
+  admin_subscription_active: boolean
+  admin_subscription_days_remaining: number | null
   created_at: string
   updated_at: string
 }
@@ -89,12 +92,12 @@ export interface AcademyConfiguration {
   academy_id: number
   // Theme
   theme:
-    | 'default'
-    | 'corporate'
-    | 'modern'
-    | 'academic'
-    | 'minimal'
-    | 'creative'
+  | 'default'
+  | 'corporate'
+  | 'modern'
+  | 'academic'
+  | 'minimal'
+  | 'creative'
   primary_color: string | null
   secondary_color: string | null
   accent_color: string | null
