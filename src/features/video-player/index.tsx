@@ -205,7 +205,9 @@ function VideoPlayer({
         const u = new URL(lesson.video_url)
         if (u.hostname.includes('youtube.com')) return u.searchParams.get('v')
         if (u.hostname === 'youtu.be') return u.pathname.slice(1).split('?')[0]
-      } catch {}
+      } catch {
+        // ignore malformed URL
+      }
     }
     return null
   }
@@ -258,7 +260,7 @@ function VideoPlayer({
     }
 
     return () => {
-      try { player?.destroy() } catch {}
+      try { player?.destroy() } catch { /* ignore destroy errors on cleanup */ }
     }
   }, [isYouTube, youTubeId, lesson.id])
 
