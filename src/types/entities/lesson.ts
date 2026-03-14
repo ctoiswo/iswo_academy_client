@@ -39,6 +39,7 @@ export interface Lesson {
   updated_at: string
   mux_playback_id?: string
   mux_asset_id?: string
+  user_progress?: LessonUserProgress | null
 }
 
 export interface Section {
@@ -55,6 +56,14 @@ export interface Section {
 
 export interface SectionWithLessons extends Section {
   lessons: Lesson[]
+}
+
+export interface LessonUserProgress {
+  completed: boolean
+  completed_at: string | null
+  time_spent_seconds: number
+  completion_percentage: number
+  last_accessed_at: string | null
 }
 
 export interface LessonProgress {

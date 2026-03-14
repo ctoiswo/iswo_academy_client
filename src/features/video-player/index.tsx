@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { lessonService } from '@/services/lesson-service'
+import { useLessonTracker } from '@/hooks/use-lesson-tracker'
 import type { Lesson, Section } from '@/types'
 import {
   Play,
@@ -396,12 +397,16 @@ function VideoPlayer({
 function ReadingContent({
   lesson,
   onComplete,
+  isCompleting = false,
+  isCompleted = false,
 }: {
   lesson: Lesson
   onComplete: () => void
+  isCompleting?: boolean
+  isCompleted?: boolean
 }) {
   const [progress, setProgress] = useState(0)
-  const [completedOnce, setCompletedOnce] = useState(false)
+  const [scrolledPast90, setScrolledPast90] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
 
   const handleScroll = () => {
@@ -411,8 +416,8 @@ function ReadingContent({
       const scrollProgress =
         scrollable > 0 ? (scrollTop / scrollable) * 100 : 100
       setProgress(scrollProgress)
-      if (!completedOnce && scrollProgress > 90) {
-        setCompletedOnce(true)
+      if (!scrolledPast90 && !isCompleted && scrollProgress > 90) {
+        setScrolledPast90(true)
         onComplete()
       }
     }
@@ -457,13 +462,21 @@ function ReadingContent({
 
       {/* Footer */}
       <div className='border-border bg-secondary/20 border-t px-6 py-4'>
-        <Button
-          onClick={onComplete}
-          className='bg-primary text-primary-foreground hover:bg-primary/90 w-full gap-2'
-        >
-          <CheckCircle2 className='size-4' />
-          Marcar como completado
-        </Button>
+        {isCompleted ? (
+          <div className='flex w-full items-center justify-center gap-2 rounded-md bg-green-600/20 px-4 py-2 text-sm font-medium text-green-400'>
+            <CheckCircle2 className='size-4' />
+            Lección completada
+          </div>
+        ) : (
+          <Button
+            onClick={onComplete}
+            disabled={isCompleting}
+            className='bg-primary text-primary-foreground hover:bg-primary/90 w-full gap-2'
+          >
+            <CheckCircle2 className='size-4' />
+            {isCompleting ? 'Guardando...' : 'Marcar como completado'}
+          </Button>
+        )}
       </div>
     </div>
   )
@@ -474,9 +487,13 @@ function ReadingContent({
 function DocumentContent({
   lesson,
   onComplete,
+  isCompleting = false,
+  isCompleted = false,
 }: {
   lesson: Lesson
   onComplete: () => void
+  isCompleting?: boolean
+  isCompleted?: boolean
 }) {
   return (
     <div className='bg-card border-border flex h-full flex-col overflow-hidden rounded-xl border'>
@@ -497,10 +514,11 @@ function DocumentContent({
       <div className='border-border bg-secondary/20 border-t px-6 py-4'>
         <Button
           onClick={onComplete}
+          disabled={isCompleting || isCompleted}
           className='bg-primary text-primary-foreground hover:bg-primary/90 w-full gap-2'
         >
           <CheckCircle2 className='size-4' />
-          Marcar como completado
+          {isCompleted ? 'Completado' : isCompleting ? 'Guardando...' : 'Marcar como completado'}
         </Button>
       </div>
     </div>
@@ -768,20 +786,37 @@ export function CoursePlayer({
     enabled: !!currentSection,
   })
 
-  const [completedIds, setCompletedIds] = useState<Set<number>>(new Set())
+  const { markComplete, isCompleting } = useLessonTracker(academySlug, courseSlug)
+
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  // Tracks which lesson IDs the user has completed this session + any already
+  // completed ones loaded from the API via user_progress.
+  const [completedIds, setCompletedIds] = useState<Set<number>>(new Set())
+
+  // When the current lesson loads (or its user_progress changes), seed the set.
+  useEffect(() => {
+    if (currentLesson?.user_progress?.completed) {
+      setCompletedIds((prev) => {
+        if (prev.has(currentLesson.id)) return prev
+        return new Set([...prev, currentLesson.id])
+      })
+    }
+  }, [currentLesson?.id, currentLesson?.user_progress?.completed])
+
+  const allLessons = sections.flatMap((s) => s.lessons ?? [])
 
   // Course-level progress derived from completed set
-  const allLessons = sections.flatMap((s) => s.lessons ?? [])
   const courseProgress =
     allLessons.length > 0
       ? Math.round((completedIds.size / allLessons.length) * 100)
       : 0
 
   const handleComplete = () => {
-    if (currentLesson) {
+    if (!currentLesson || completedIds.has(currentLesson.id)) return
+    markComplete(currentLesson.id, () => {
+      // Optimistically mark complete in sidebar immediately
       setCompletedIds((prev) => new Set([...prev, currentLesson.id]))
-    }
+    })
   }
 
   const handleLessonSelect = (lesson: Lesson) => {
@@ -820,11 +855,21 @@ export function CoursePlayer({
         )
       case 'text':
         return (
-          <ReadingContent lesson={currentLesson} onComplete={handleComplete} />
+          <ReadingContent
+            lesson={currentLesson}
+            onComplete={handleComplete}
+            isCompleting={isCompleting}
+            isCompleted={currentLesson.user_progress?.completed ?? false}
+          />
         )
       case 'document':
         return (
-          <DocumentContent lesson={currentLesson} onComplete={handleComplete} />
+          <DocumentContent
+            lesson={currentLesson}
+            onComplete={handleComplete}
+            isCompleting={isCompleting}
+            isCompleted={currentLesson.user_progress?.completed ?? false}
+          />
         )
       default:
         // quiz, assignment, interactive — placeholder

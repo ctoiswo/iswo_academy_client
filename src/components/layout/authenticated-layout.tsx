@@ -1,4 +1,4 @@
-import { Outlet } from '@tanstack/react-router'
+import { Outlet, useLocation } from '@tanstack/react-router'
 import { getCookie } from '@/lib/cookies'
 import { cn } from '@/lib/utils'
 import { LayoutProvider } from '@/context/layout-provider'
@@ -14,6 +14,21 @@ type AuthenticatedLayoutProps = {
 
 export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
   const defaultOpen = getCookie('sidebar_state') !== 'false'
+  const { pathname } = useLocation()
+  const isWatchRoute = /\/watch\//.test(pathname)
+
+  if (isWatchRoute) {
+    return (
+      <SearchProvider>
+        <LayoutProvider>
+          <NotificationProvider enabled={true}>
+            {children ?? <Outlet />}
+          </NotificationProvider>
+        </LayoutProvider>
+      </SearchProvider>
+    )
+  }
+
   return (
     <SearchProvider>
       <LayoutProvider>

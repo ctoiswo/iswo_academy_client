@@ -1,5 +1,6 @@
 import type {
   Lesson,
+  LessonUserProgress,
   CreateLessonRequest,
   UpdateLessonRequest,
   VideoUrlResponse,
@@ -47,7 +48,7 @@ class LessonService {
     const response = await apiClient.get(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}`
     )
-    return response.data.lesson
+    return response.data as Lesson
   }
 
   /**
@@ -160,6 +161,44 @@ class LessonService {
   ): Promise<VideoUrlResponse> {
     const response = await apiClient.get(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}/video_url`
+    )
+    return response.data
+  }
+
+  /**
+   * Mark a lesson as completed for the current user.
+   * Uses the direct lesson route (no sectionId needed).
+   */
+  async completeLesson(
+    academySlug: string,
+    courseSlug: string,
+    lessonId: number
+  ): Promise<LessonUserProgress> {
+    const response = await apiClient.post(
+      `/academies/${academySlug}/courses/${courseSlug}/lessons/${lessonId}/complete`
+    )
+    return response.data
+  }
+
+  /**
+   * Track reading/video progress for a lesson.
+   * @param timeIncrement - seconds spent reading (for text/document lessons)
+   * @param videoPosition - current video position in seconds
+   * @param videoDuration - total video duration in seconds
+   */
+  async trackProgress(
+    academySlug: string,
+    courseSlug: string,
+    lessonId: number,
+    payload: {
+      time_increment?: number
+      video_position?: number
+      video_duration?: number
+    }
+  ): Promise<LessonUserProgress> {
+    const response = await apiClient.patch(
+      `/academies/${academySlug}/courses/${courseSlug}/lessons/${lessonId}/track_progress`,
+      payload
     )
     return response.data
   }
