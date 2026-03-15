@@ -99,10 +99,14 @@ export default function MyBadgesPage() {
                   ? t(`badges.${badge.slug}.description`, { defaultValue: badge.description })
                   : badge.description
                 return (
-                  <Card
+                  <div
                     key={userBadge.id}
-                    className='hover:border-primary/40 transition-colors'
+                    className={cn(
+                      'rounded-xl bg-gradient-to-br p-px',
+                      visual.gradient
+                    )}
                   >
+                  <Card className='h-full rounded-[11px] border-0'>
                     <CardContent className='flex flex-col items-center gap-3 p-5 text-center'>
                       {badge.icon_url ? (
                         <div
@@ -147,6 +151,7 @@ export default function MyBadgesPage() {
                       </p>
                     </CardContent>
                   </Card>
+                  </div>
                 )
               })}
             </div>
