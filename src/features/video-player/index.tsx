@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { lessonService } from '@/services/lesson-service'
 import { useLessonTracker } from '@/hooks/use-lesson-tracker'
-import type { Lesson, Section } from '@/types'
+import { useAssessments, assessmentKeys } from '@/hooks/use-assessments'
+import type { Lesson, Section, AssessmentSummary } from '@/types'
 import {
   Play,
   Pause,
@@ -24,10 +25,12 @@ import {
   Menu,
   X,
   FileText,
+  GraduationCap,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useSections } from '@/hooks/use-sections'
 import { LessonExtras } from './lesson-extras'
+import { AssessmentPlayer } from './assessment-player'
 import {
   Accordion,
   AccordionContent,
@@ -44,7 +47,8 @@ import { Slider } from '@/components/ui/slider'
 interface CoursePlayerProps {
   academySlug: string
   courseSlug: string
-  lessonId: number
+  lessonId?: number
+  assessmentId?: number
 }
 
 // ─── Video Player ─────────────────────────────────────────────────────────────
@@ -620,16 +624,24 @@ function DocumentContent({
 function CourseSidebar({
   sections,
   currentLessonId,
+  currentAssessmentId,
   completedIds,
+  assessments,
+  passedAssessmentIds,
   onLessonSelect,
+  onAssessmentSelect,
   courseProgress,
   isOpen,
   onToggle,
 }: {
   sections: Section[]
-  currentLessonId: number
+  currentLessonId?: number
+  currentAssessmentId?: number
   completedIds: Set<number>
+  assessments: AssessmentSummary[]
+  passedAssessmentIds: Set<number>
   onLessonSelect: (lesson: Lesson) => void
+  onAssessmentSelect: (assessment: AssessmentSummary) => void
   courseProgress: number
   isOpen: boolean
   onToggle: () => void
@@ -646,6 +658,8 @@ function CourseSidebar({
     if (lesson.lesson_type === 'document') return FileText
     return BookOpen
   }
+
+  const finalExam = assessments.find((a) => a.type === 'Exam' && a.published)
 
   return (
     <>
@@ -705,6 +719,14 @@ function CourseSidebar({
                 lessons.length > 0
                   ? Math.round((completedCount / lessons.length) * 100)
                   : 0
+              const sectionQuiz = assessments.find(
+                (a) =>
+                  a.type === 'Quiz' &&
+                  a.published &&
+                  a.section_id === section.id
+              )
+              const quizPassed = !sectionQuiz || passedAssessmentIds.has(sectionQuiz.id)
+              const sectionComplete = sectionProgress === 100 && quizPassed
 
               return (
                 <AccordionItem
@@ -721,7 +743,7 @@ function CourseSidebar({
                         <span className='text-muted-foreground text-xs'>
                           {completedCount}/{lessons.length} lecciones
                         </span>
-                        {sectionProgress === 100 && (
+                        {sectionComplete && (
                           <CheckCircle2 className='size-3 text-emerald-400' />
                         )}
                       </div>
@@ -789,12 +811,124 @@ function CourseSidebar({
                           </button>
                         )
                       })}
+
+                      {/* Section quiz */}
+                      {sectionQuiz && (
+                        <button
+                          onClick={() => onAssessmentSelect(sectionQuiz)}
+                          className={cn(
+                            'flex items-center gap-3 px-4 py-3 text-left transition-all',
+                            'hover:bg-secondary/30',
+                            currentAssessmentId === sectionQuiz.id &&
+                              'bg-amber-500/10 border-amber-500 border-l-2'
+                          )}
+                        >
+                          <div
+                            className={cn(
+                              'flex size-7 shrink-0 items-center justify-center rounded-lg',
+                              passedAssessmentIds.has(sectionQuiz.id)
+                                ? 'bg-emerald-500/20'
+                                : currentAssessmentId === sectionQuiz.id
+                                  ? 'bg-amber-500/20'
+                                  : 'bg-amber-500/10'
+                            )}
+                          >
+                            {passedAssessmentIds.has(sectionQuiz.id) ? (
+                              <CheckCircle2 className='size-4 text-emerald-400' />
+                            ) : (
+                              <FileQuestion className={cn(
+                                'size-4',
+                                currentAssessmentId === sectionQuiz.id
+                                  ? 'text-amber-500'
+                                  : 'text-amber-400'
+                              )} />
+                            )}
+                          </div>
+                          <div className='min-w-0 flex-1'>
+                            <p
+                              className={cn(
+                                'truncate text-sm',
+                                currentAssessmentId === sectionQuiz.id
+                                  ? 'font-medium text-amber-500'
+                                  : passedAssessmentIds.has(sectionQuiz.id)
+                                    ? 'text-emerald-400'
+                                    : 'text-foreground'
+                              )}
+                            >
+                              {sectionQuiz.title}
+                            </p>
+                            <p className='text-muted-foreground text-xs'>Quiz · {sectionQuiz.questions_count} preguntas</p>
+                          </div>
+                          {passedAssessmentIds.has(sectionQuiz.id) && (
+                            <Badge variant='outline' className='shrink-0 border-emerald-500/40 bg-emerald-500/10 text-[10px] text-emerald-500'>
+                              Aprobado
+                            </Badge>
+                          )}
+                        </button>
+                      )}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
               )
             })}
           </Accordion>
+
+          {/* Final exam */}
+          {finalExam && (
+            <button
+              onClick={() => onAssessmentSelect(finalExam)}
+              className={cn(
+                'border-border flex w-full items-center gap-3 border-t px-4 py-4 text-left transition-all',
+                'hover:bg-secondary/30',
+                currentAssessmentId === finalExam.id &&
+                  'bg-orange-500/10 border-l-2 border-l-orange-500'
+              )}
+            >
+              <div
+                className={cn(
+                  'flex size-8 shrink-0 items-center justify-center rounded-lg',
+                  passedAssessmentIds.has(finalExam.id)
+                    ? 'bg-emerald-500/20'
+                    : currentAssessmentId === finalExam.id
+                      ? 'bg-orange-500/20'
+                      : 'bg-orange-500/10'
+                )}
+              >
+                {passedAssessmentIds.has(finalExam.id) ? (
+                  <CheckCircle2 className='size-4 text-emerald-400' />
+                ) : (
+                  <GraduationCap className={cn(
+                    'size-4',
+                    currentAssessmentId === finalExam.id
+                      ? 'text-orange-500'
+                      : 'text-orange-400'
+                  )} />
+                )}
+              </div>
+              <div className='min-w-0 flex-1'>
+                <p
+                  className={cn(
+                    'truncate text-sm font-medium',
+                    currentAssessmentId === finalExam.id
+                      ? 'text-orange-500'
+                      : passedAssessmentIds.has(finalExam.id)
+                        ? 'text-emerald-400'
+                        : 'text-foreground'
+                  )}
+                >
+                  {finalExam.title}
+                </p>
+                <p className='text-muted-foreground text-xs'>
+                  Examen final · {finalExam.questions_count} preguntas
+                </p>
+              </div>
+              {passedAssessmentIds.has(finalExam.id) && (
+                <Badge variant='outline' className='shrink-0 border-emerald-500/40 bg-emerald-500/10 text-[10px] text-emerald-500'>
+                  Aprobado
+                </Badge>
+              )}
+            </button>
+          )}
         </div>
       </aside>
     </>
@@ -850,8 +984,10 @@ export function CoursePlayer({
   academySlug,
   courseSlug,
   lessonId,
+  assessmentId,
 }: CoursePlayerProps) {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const { data: sectionsData, isLoading: sectionsLoading } = useSections(
     academySlug,
@@ -859,10 +995,19 @@ export function CoursePlayer({
   )
   const sections: Section[] = Array.isArray(sectionsData) ? sectionsData : []
 
+  // Fetch all published assessments for this course (for sidebar)
+  const { data: assessmentsData } = useAssessments(academySlug, courseSlug, { status: 'published' })
+  const assessments: AssessmentSummary[] = Array.isArray(assessmentsData) ? assessmentsData : []
+
+  // Current assessment (when viewing a quiz/exam)
+  const currentAssessment = assessmentId
+    ? assessments.find((a) => a.id === assessmentId)
+    : undefined
+
   // Find the section that contains the current lesson
-  const currentSection = sections.find((s) =>
-    s.lessons?.some((l) => l.id === lessonId)
-  )
+  const currentSection = lessonId
+    ? sections.find((s) => s.lessons?.some((l) => l.id === lessonId))
+    : undefined
 
   const { data: currentLesson, isLoading: lessonLoading } = useQuery({
     queryKey: ['lesson', academySlug, courseSlug, currentSection?.id, lessonId],
@@ -871,19 +1016,19 @@ export function CoursePlayer({
         academySlug,
         courseSlug,
         currentSection!.id,
-        lessonId
+        lessonId!
       ),
-    enabled: !!currentSection,
+    enabled: !!currentSection && !!lessonId,
   })
 
   const { markComplete, isCompleting } = useLessonTracker(academySlug, courseSlug)
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  // Tracks which lesson IDs the user has completed this session + any already
-  // completed ones loaded from the API via is_completed on sections data.
   const [completedIds, setCompletedIds] = useState<Set<number>>(new Set())
+  // Track which assessment IDs the current user has passed
+  const [passedAssessmentIds, setPassedAssessmentIds] = useState<Set<number>>(new Set())
 
-  // Seed from sections data (is_completed per lesson) — covers all lessons at once.
+  // Seed completed lessons from sections data
   useEffect(() => {
     if (sections.length === 0) return
     const preCompleted = sections
@@ -900,6 +1045,20 @@ export function CoursePlayer({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sectionsLoading])
 
+  // Seed passed assessments from the assessments index response (user_passed field)
+  useEffect(() => {
+    if (assessments.length === 0) return
+    const passed = assessments.filter((a) => a.user_passed === true).map((a) => a.id)
+    if (passed.length > 0) {
+      setPassedAssessmentIds((prev) => {
+        const merged = new Set(prev)
+        passed.forEach((id) => merged.add(id))
+        return merged
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assessments.length])
+
   // Also pick up any completion from the currently-loaded lesson's user_progress.
   useEffect(() => {
     if (currentLesson?.user_progress?.completed) {
@@ -912,7 +1071,6 @@ export function CoursePlayer({
 
   const allLessons = sections.flatMap((s) => s.lessons ?? [])
 
-  // Course-level progress derived from completed set
   const courseProgress =
     allLessons.length > 0
       ? Math.round((completedIds.size / allLessons.length) * 100)
@@ -921,7 +1079,6 @@ export function CoursePlayer({
   const handleComplete = () => {
     if (!currentLesson || completedIds.has(currentLesson.id)) return
     markComplete(currentLesson.id, () => {
-      // Optimistically mark complete in sidebar immediately
       setCompletedIds((prev) => new Set([...prev, currentLesson.id]))
     })
   }
@@ -938,6 +1095,24 @@ export function CoursePlayer({
     })
   }
 
+  const handleAssessmentSelect = (assessment: AssessmentSummary) => {
+    setSidebarOpen(false)
+    navigate({
+      to: '/academy/$academySlug/courses/$courseSlug/watch/assessment/$assessmentId',
+      params: {
+        academySlug,
+        courseSlug,
+        assessmentId: String(assessment.id),
+      },
+    })
+  }
+
+  const handleAssessmentPassed = (passedAssessmentId: number) => {
+    setPassedAssessmentIds((prev) => new Set([...prev, passedAssessmentId]))
+    // Invalidate assessments query so user_passed refreshes
+    queryClient.invalidateQueries({ queryKey: assessmentKeys.list(academySlug, courseSlug) })
+  }
+
   const navigateLesson = (direction: 'prev' | 'next') => {
     const currentIndex = allLessons.findIndex((l) => l.id === lessonId)
     const newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1
@@ -946,13 +1121,35 @@ export function CoursePlayer({
     }
   }
 
-  const currentIndex = allLessons.findIndex((l) => l.id === lessonId)
+  const currentIndex = lessonId
+    ? allLessons.findIndex((l) => l.id === lessonId)
+    : -1
   const hasPrev = currentIndex > 0
-  const hasNext = currentIndex < allLessons.length - 1
+  const hasNext = currentIndex >= 0 && currentIndex < allLessons.length - 1
 
-  const isLoading = sectionsLoading || lessonLoading
+  const isLoading = sectionsLoading || (!!lessonId && lessonLoading && !assessmentId)
 
   const renderContent = () => {
+    // Assessment view
+    if (assessmentId && currentAssessment) {
+      return (
+        <AssessmentPlayer
+          academySlug={academySlug}
+          courseSlug={courseSlug}
+          assessment={currentAssessment}
+          onPassed={() => handleAssessmentPassed(assessmentId)}
+        />
+      )
+    }
+    if (assessmentId && !currentAssessment && !sectionsLoading) {
+      return (
+        <div className='bg-card border-border text-muted-foreground flex min-h-[400px] flex-col items-center justify-center rounded-xl border p-8'>
+          <FileQuestion className='mx-auto mb-4 size-12 opacity-40' />
+          <p className='text-sm'>Evaluación no encontrada.</p>
+        </div>
+      )
+    }
+
     if (!currentLesson) return null
 
     switch (currentLesson.lesson_type) {
@@ -984,7 +1181,6 @@ export function CoursePlayer({
           />
         )
       default:
-        // quiz, assignment, interactive — placeholder
         return (
           <div className='bg-card border-border text-muted-foreground flex min-h-[400px] flex-col items-center justify-center rounded-xl border p-8'>
             <FileQuestion className='mx-auto mb-4 size-12 opacity-40' />
@@ -1012,7 +1208,7 @@ export function CoursePlayer({
 
   const courseTitle = currentLesson?.title
     ? (sections[0]?.title ?? courseSlug)
-    : courseSlug
+    : currentAssessment?.title ?? courseSlug
 
   return (
     <div className='bg-background flex min-h-screen flex-col'>
@@ -1058,19 +1254,19 @@ export function CoursePlayer({
       {/* Main content + sidebar */}
       <div className='flex flex-1'>
         <main className='mx-auto flex w-full max-w-5xl flex-1 flex-col p-4 lg:p-6'>
-          {/* Lesson content */}
+          {/* Lesson/Assessment content */}
           <div className='flex-1'>{renderContent()}</div>
 
-          {/* Resources & Comments */}
-          {currentLesson && (
+          {/* Resources & Comments — only for lessons */}
+          {currentLesson && !assessmentId && (
             <LessonExtras
               lessonId={currentLesson.id}
               attachments={currentLesson.attachments}
             />
           )}
 
-          {/* Lesson info & navigation */}
-          {currentLesson && (
+          {/* Lesson info & navigation — only for lessons */}
+          {currentLesson && !assessmentId && (
             <div className='bg-card border-border mt-6 flex flex-col items-start justify-between gap-4 rounded-xl border p-4 sm:flex-row sm:items-center'>
               <div>
                 <div className='mb-1 flex items-center gap-2'>
@@ -1114,8 +1310,12 @@ export function CoursePlayer({
         <CourseSidebar
           sections={sections}
           currentLessonId={lessonId}
+          currentAssessmentId={assessmentId}
           completedIds={completedIds}
+          assessments={assessments}
+          passedAssessmentIds={passedAssessmentIds}
           onLessonSelect={handleLessonSelect}
+          onAssessmentSelect={handleAssessmentSelect}
           courseProgress={courseProgress}
           isOpen={sidebarOpen}
           onToggle={() => setSidebarOpen(!sidebarOpen)}

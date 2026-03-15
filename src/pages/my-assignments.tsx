@@ -123,7 +123,7 @@ export default function MyAssignmentsPage() {
     <DashboardLayout
       user={user}
       academy={currentAcademy}
-      variant='sidebar'
+      variant='full'
       dashboardType='student'
     >
       <div className='space-y-6'>

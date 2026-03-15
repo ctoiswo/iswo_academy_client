@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import type { LessonType } from '@/types/entities/lesson'
 import {
@@ -15,7 +16,9 @@ import {
   Star,
   StarHalf,
   Users,
+  X,
 } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { useCourse } from '@/hooks/use-courses'
@@ -100,6 +103,8 @@ export default function StudentCourseContentPage() {
 
   const sections = Array.isArray(sectionsData) ? sectionsData : []
   const isLoading = courseLoading || sectionsLoading
+
+  const [showVideoModal, setShowVideoModal] = useState(false)
 
   // ── Loading ──────────────────────────────────────────────────────────────────
   if (isLoading) {
@@ -188,6 +193,9 @@ export default function StudentCourseContentPage() {
       to: '/academy/$academySlug/courses/$courseSlug/watch/$lessonId',
       params: { academySlug, courseSlug, lessonId },
     })
+
+  const hasPromoVideo =
+    course.promotional_video_embedded_url || course.promotional_video_url
 
   return (
     <div className='bg-background min-h-screen'>
@@ -354,26 +362,40 @@ export default function StudentCourseContentPage() {
                     }}
                   >
                     <div className='absolute inset-0 flex items-center justify-center bg-black/40'>
-                      {firstLessonId && (
+                      {hasPromoVideo ? (
+                        <button
+                          onClick={() => setShowVideoModal(true)}
+                          className='bg-primary/90 text-primary-foreground flex size-16 items-center justify-center rounded-full shadow-[0_0_32px_rgba(99,102,241,0.4)] transition-transform hover:scale-105'
+                        >
+                          <Play className='ml-1 size-7' />
+                        </button>
+                      ) : firstLessonId ? (
                         <button
                           onClick={() => navigateToLesson(firstLessonId!)}
                           className='bg-primary/90 text-primary-foreground flex size-16 items-center justify-center rounded-full shadow-[0_0_32px_rgba(99,102,241,0.4)] transition-transform hover:scale-105'
                         >
                           <Play className='ml-1 size-7' />
                         </button>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 ) : (
                   <div className='from-primary/30 to-primary/5 relative flex aspect-video items-center justify-center bg-gradient-to-br'>
-                    {firstLessonId && (
+                    {hasPromoVideo ? (
+                      <button
+                        onClick={() => setShowVideoModal(true)}
+                        className='bg-primary/90 text-primary-foreground flex size-16 items-center justify-center rounded-full shadow-[0_0_32px_rgba(99,102,241,0.4)] transition-transform hover:scale-105'
+                      >
+                        <Play className='ml-1 size-7' />
+                      </button>
+                    ) : firstLessonId ? (
                       <button
                         onClick={() => navigateToLesson(firstLessonId!)}
                         className='bg-primary/90 text-primary-foreground flex size-16 items-center justify-center rounded-full shadow-[0_0_32px_rgba(99,102,241,0.4)] transition-transform hover:scale-105'
                       >
                         <Play className='ml-1 size-7' />
                       </button>
-                    )}
+                    ) : null}
                   </div>
                 )}
 
@@ -695,6 +717,63 @@ export default function StudentCourseContentPage() {
           <div className='hidden lg:block' />
         </div>
       </div>
+
+      {/* Promotional Video Modal */}
+      <AnimatePresence>
+        {showVideoModal && hasPromoVideo && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className='fixed inset-0 z-50 bg-black/90 backdrop-blur-sm'
+              onClick={() => setShowVideoModal(false)}
+            />
+            <div className='fixed inset-0 z-50 flex items-center justify-center p-4'>
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.8, opacity: 0, y: 20 }}
+                transition={{
+                  type: 'spring',
+                  damping: 25,
+                  stiffness: 300,
+                  duration: 0.4,
+                }}
+                className='relative w-full max-w-5xl'
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={() => setShowVideoModal(false)}
+                  className='absolute -top-12 right-0 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/20'
+                  aria-label='Close video'
+                >
+                  <X className='h-6 w-6' />
+                </button>
+                <div className='relative aspect-video overflow-hidden rounded-xl bg-black shadow-2xl'>
+                  {course.promotional_video_embedded_url ? (
+                    <iframe
+                      src={`${course.promotional_video_embedded_url}?autoplay=1`}
+                      className='h-full w-full'
+                      allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                      allowFullScreen
+                      title={`${course.title} - Preview`}
+                    />
+                  ) : (
+                    <video
+                      src={course.promotional_video_url}
+                      className='h-full w-full'
+                      controls
+                      autoPlay
+                    />
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

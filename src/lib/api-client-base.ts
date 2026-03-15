@@ -211,7 +211,9 @@ class APIClient {
               const newTokens = await tokenManager.refreshAccessToken()
               config.headers.Authorization = `Bearer ${newTokens.access_token}`
             } catch (_error) {
-              // console.error('Failed to refresh token proactively:', error)
+              // Proactive refresh failed — clear tokens so the response
+              // interceptor won't retry endlessly with a dead refresh token
+              tokenManager.clearTokens()
             } finally {
               this.isRefreshing = false
             }

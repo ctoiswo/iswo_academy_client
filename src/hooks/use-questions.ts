@@ -36,6 +36,7 @@ export function useQuestions(
     queryFn: () =>
       questionService.getQuestions(academySlug, courseSlug, assessmentId),
     enabled: !!academySlug && !!courseSlug && !!assessmentId,
+    staleTime: 0,
   })
 }
 

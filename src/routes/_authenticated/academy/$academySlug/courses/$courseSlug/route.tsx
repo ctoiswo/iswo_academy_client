@@ -6,9 +6,10 @@ function CourseLayoutRoute() {
   const { user, currentAcademy } = useAuthStore()
   const matches = useMatches()
 
-  // Lesson viewer is full-screen — bypass DashboardLayout
+  // Lesson viewer and assessment viewer are full-screen — bypass DashboardLayout
   const isLessonViewer = matches.some((m) =>
-    (m.routeId as string).includes('$lessonId')
+    (m.routeId as string).includes('$lessonId') ||
+    (m.routeId as string).includes('watch/assessment')
   )
 
   if (isLessonViewer) {

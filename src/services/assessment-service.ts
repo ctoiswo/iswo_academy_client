@@ -6,6 +6,10 @@ import type {
   AssessmentAttempt,
   CreateAssessmentRequest,
   UpdateAssessmentRequest,
+  QuizAttemptSession,
+  QuizAttemptResult,
+  MyAttemptsResponse,
+  SubmitAnswer,
 } from '@/types'
 import apiClient from '@/lib/api-client'
 
@@ -164,6 +168,51 @@ class AssessmentService {
       }`
     const response = await apiClient.get<{ attempts: AssessmentAttempt[] }>(url)
     return response.data?.attempts || []
+  }
+
+  /**
+   * Get the current user's own attempts for an assessment
+   */
+  async getMyAttempts(
+    academySlug: string,
+    courseSlug: string,
+    assessmentId: number
+  ): Promise<MyAttemptsResponse> {
+    const response = await apiClient.get<MyAttemptsResponse>(
+      `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/my_attempts`
+    )
+    return response.data
+  }
+
+  /**
+   * Start a new quiz attempt (student)
+   */
+  async startAttempt(
+    academySlug: string,
+    courseSlug: string,
+    assessmentId: number
+  ): Promise<QuizAttemptSession> {
+    const response = await apiClient.post<QuizAttemptSession>(
+      `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/start`
+    )
+    return response.data
+  }
+
+  /**
+   * Submit answers and complete an attempt (student)
+   */
+  async submitAttempt(
+    academySlug: string,
+    courseSlug: string,
+    assessmentId: number,
+    attemptId: number,
+    answers: SubmitAnswer[]
+  ): Promise<QuizAttemptResult> {
+    const response = await apiClient.post<QuizAttemptResult>(
+      `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/submit`,
+      { attempt_id: attemptId, answers }
+    )
+    return response.data
   }
 }
 

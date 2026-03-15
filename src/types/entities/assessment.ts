@@ -59,6 +59,7 @@ export interface AssessmentSummary {
   total_points: number
   questions_count: number
   attempts_count: number
+  user_passed: boolean | null
   created_at: string
   updated_at: string
 }
@@ -107,4 +108,61 @@ export interface QuestionOption {
   option_text: string
   is_correct: boolean
   order: number
+}
+
+// --- Student quiz-taking types ---
+
+// Answer option as shown to student (no is_correct)
+export interface StudentAnswer {
+  id: number
+  answer_text: string
+  position: number
+}
+
+// Question as shown to student (no is_correct on answers)
+export interface StudentQuestion {
+  id: number
+  question_text: string
+  question_type: QuestionType
+  points: number
+  position: number
+  answers: StudentAnswer[]
+}
+
+// Returned when starting an attempt
+export interface QuizAttemptSession {
+  attempt_id: number
+  assessment: {
+    id: number
+    title: string
+    description: string | null
+    time_limit_minutes: number | null
+    passing_score: number
+    questions_count: number
+  }
+  questions: StudentQuestion[]
+}
+
+// Answer to submit
+export interface SubmitAnswer {
+  question_id: number
+  answer_ids?: number[]
+  answer_id?: number
+  answer_text?: string
+}
+
+// Result after completing an attempt
+export interface QuizAttemptResult {
+  passed: boolean
+  score: number | null
+  max_score: number | null
+  percentage: number | null
+  attempt_number: number
+}
+
+// my_attempts response
+export interface MyAttemptsResponse {
+  attempts: Pick<AssessmentAttempt, 'id' | 'attempt_number' | 'score' | 'max_score' | 'percentage' | 'passed' | 'status' | 'started_at' | 'completed_at'>[]
+  passed: boolean
+  best_score: number | null
 }

@@ -22,10 +22,10 @@ class QuestionService {
     courseSlug: string,
     assessmentId: number
   ): Promise<Question[]> {
-    const response = await apiClient.get(
+    const response = await apiClient.get<{ data: Question[] }>(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/questions`
     )
-    return response.data
+    return response.data?.data || []
   }
 
   /**
@@ -42,10 +42,10 @@ class QuestionService {
     assessmentId: number,
     questionId: number
   ): Promise<Question> {
-    const response = await apiClient.get(
+    const response = await apiClient.get<{ data: Question }>(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/questions/${questionId}`
     )
-    return response.data
+    return response.data.data
   }
 
   /**
@@ -62,11 +62,11 @@ class QuestionService {
     assessmentId: number,
     data: CreateQuestionRequest
   ): Promise<Question> {
-    const response = await apiClient.post(
+    const response = await apiClient.post<{ data: Question }>(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/questions`,
       { question: data, answers: data.answers }
     )
-    return response.data
+    return response.data.data
   }
 
   /**
@@ -85,11 +85,11 @@ class QuestionService {
     questionId: number,
     data: UpdateQuestionRequest
   ): Promise<Question> {
-    const response = await apiClient.patch(
+    const response = await apiClient.patch<{ data: Question }>(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/questions/${questionId}`,
       { question: data, answers: data.answers }
     )
-    return response.data
+    return response.data.data
   }
 
   /**
@@ -127,11 +127,11 @@ class QuestionService {
     questionId: number,
     position: number
   ): Promise<Question> {
-    const response = await apiClient.post(
+    const response = await apiClient.post<{ data: Question }>(
       `/academies/${academySlug}/courses/${courseSlug}/assessments/${assessmentId}/questions/${questionId}/reorder`,
       { position }
     )
-    return response.data
+    return response.data.data
   }
 }
 

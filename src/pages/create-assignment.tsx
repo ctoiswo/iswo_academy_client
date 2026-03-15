@@ -10,7 +10,6 @@ import {
   Target,
   Upload,
   FileText,
-  Users,
   Plus,
   Trash2,
   GripVertical,
@@ -73,10 +72,6 @@ export default function CreateAssignmentPage() {
   const [maxFileSizeMb, setMaxFileSizeMb] = useState('10')
   const [allowResubmission, setAllowResubmission] = useState(false)
   const [autoAcceptOnTime, setAutoAcceptOnTime] = useState(false)
-
-  // Peer review
-  const [peerReviewEnabled, setPeerReviewEnabled] = useState(false)
-  const [peerReviewCount, setPeerReviewCount] = useState('2')
 
   // Rubric
   const [showRubric, setShowRubric] = useState(false)
@@ -155,8 +150,6 @@ export default function CreateAssignmentPage() {
       max_file_size_mb: Number(maxFileSizeMb),
       allow_resubmission: allowResubmission,
       auto_accept_on_time: autoAcceptOnTime,
-      peer_review_enabled: peerReviewEnabled,
-      peer_review_count: Number(peerReviewCount),
       rubric:
         showRubric && rubricCriteria.length > 0 ? rubricCriteria : undefined,
     }
@@ -711,45 +704,6 @@ export default function CreateAssignmentPage() {
                       onCheckedChange={setAutoAcceptOnTime}
                     />
                   </div>
-                </div>
-              </section>
-
-              {/* Peer Review */}
-              <section className='border-border/60 bg-card rounded-xl border p-5'>
-                <div className='mb-4 flex items-center gap-3'>
-                  <div className='flex size-8 items-center justify-center rounded-lg bg-cyan-500/10'>
-                    <Users className='size-4 text-cyan-400' />
-                  </div>
-                  <h3 className='text-foreground text-sm font-semibold'>
-                    Revisión por Pares
-                  </h3>
-                </div>
-
-                <div className='flex flex-col gap-4'>
-                  <div className='flex items-center justify-between'>
-                    <Label className='text-sm'>
-                      Habilitar revisión por pares
-                    </Label>
-                    <Switch
-                      checked={peerReviewEnabled}
-                      onCheckedChange={setPeerReviewEnabled}
-                    />
-                  </div>
-
-                  {peerReviewEnabled && (
-                    <div className='border-primary/20 flex flex-col gap-1.5 border-l-2 pl-4'>
-                      <Label className='text-muted-foreground text-xs'>
-                        Revisiones por estudiante
-                      </Label>
-                      <Input
-                        type='number'
-                        min='1'
-                        value={peerReviewCount}
-                        onChange={(e) => setPeerReviewCount(e.target.value)}
-                        className='bg-secondary/40 border-border/60 h-9'
-                      />
-                    </div>
-                  )}
                 </div>
               </section>
 

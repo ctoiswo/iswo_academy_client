@@ -4,6 +4,7 @@ import type {
   AssessmentType,
   CreateAssessmentRequest,
   UpdateAssessmentRequest,
+  SubmitAnswer,
 } from '@/types'
 import { toast } from 'sonner'
 
@@ -178,6 +179,58 @@ export function useDeleteAssessment(academySlug: string, courseSlug: string) {
     },
     onError: (error: Error) => {
       toast.error(`Error al eliminar la evaluación: ${error.message}`)
+    },
+  })
+}
+
+// ─── Student quiz-taking hooks ────────────────────────────────────────────────
+
+export const myAttemptsKey = (academySlug: string, courseSlug: string, assessmentId: number) =>
+  ['assessments', 'my_attempts', academySlug, courseSlug, assessmentId] as const
+
+export function useMyAttempts(
+  academySlug: string,
+  courseSlug: string,
+  assessmentId: number
+) {
+  return useQuery({
+    queryKey: myAttemptsKey(academySlug, courseSlug, assessmentId),
+    queryFn: () =>
+      assessmentService.getMyAttempts(academySlug, courseSlug, assessmentId),
+    enabled: !!academySlug && !!courseSlug && !!assessmentId,
+  })
+}
+
+export function useStartAttempt(academySlug: string, courseSlug: string) {
+  return useMutation({
+    mutationFn: (assessmentId: number) =>
+      assessmentService.startAttempt(academySlug, courseSlug, assessmentId),
+    onError: (error: Error) => {
+      toast.error(`Error al iniciar el quiz: ${error.message}`)
+    },
+  })
+}
+
+export function useSubmitAttempt(
+  academySlug: string,
+  courseSlug: string,
+  assessmentId: number
+) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ attemptId, answers }: { attemptId: number; answers: SubmitAnswer[] }) =>
+      assessmentService.submitAttempt(academySlug, courseSlug, assessmentId, attemptId, answers),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: myAttemptsKey(academySlug, courseSlug, assessmentId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: assessmentKeys.list(academySlug, courseSlug),
+      })
+    },
+    onError: (error: Error) => {
+      toast.error(`Error al enviar el quiz: ${error.message}`)
     },
   })
 }
