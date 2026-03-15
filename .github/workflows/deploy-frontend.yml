@@ -72,8 +72,14 @@ jobs:
     - name: Set up SSH key
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/google_compute_engine
+        # Generate a temporary ed25519 key — no SSH_PRIVATE_KEY secret needed
+        ssh-keygen -t ed25519 -f ~/.ssh/google_compute_engine -N ""
         chmod 600 ~/.ssh/google_compute_engine
+        # Add the public key to the VM's project metadata so this runner can authenticate
+        gcloud compute instances add-metadata iswo-academy-vm \
+          --metadata "ssh-keys=oscarortega:$(cat ~/.ssh/google_compute_engine.pub)" \
+          --project=gifted-monitor-490019-j7 \
+          --zone=us-east1-b
         printf 'Host 35.231.98.72\n  IdentityFile ~/.ssh/google_compute_engine\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null\n' > ~/.ssh/config
         chmod 600 ~/.ssh/config
 
@@ -85,7 +91,14 @@ jobs:
         kamal deploy
 
     - name: Clean up
-      run: rm -f ~/.ssh/google_compute_engine .kamal/secrets
+      if: always()
+      run: |
+        rm -f ~/.ssh/google_compute_engine .kamal/secrets
+        # Remove the temporary public key from VM metadata
+        gcloud compute instances remove-metadata iswo-academy-vm \
+          --keys=ssh-keys \
+          --project=gifted-monitor-490019-j7 \
+          --zone=us-east1-b || true
 
     - name: Invalidate CDN cache (optional)
       run: |

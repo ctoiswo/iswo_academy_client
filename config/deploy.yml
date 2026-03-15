@@ -31,8 +31,6 @@ registry:
 # SSH user on the GCP VM (GCP uses the account name, not root)
 ssh:
   user: oscarortega
-  keys:
-    - ~/.ssh/google_compute_engine
 
 # Build args — VITE env vars are baked into the bundle at build time
 builder:
