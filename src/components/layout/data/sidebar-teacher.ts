@@ -85,6 +85,16 @@ export function getTeacherSidebar(
       ],
     },
     {
+      title: t('sidebar.groups.gamification'),
+      items: [
+        {
+          title: t('sidebar.items.myBadges'),
+          url: `/academy/${academySlug}/my-badges`,
+          icon: Award,
+        },
+      ],
+    },
+    {
       title: t('sidebar.groups.configuration'),
       items: [
         {

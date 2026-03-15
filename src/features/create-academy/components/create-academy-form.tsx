@@ -48,7 +48,7 @@ const STEP_LABELS_NO_ACCOUNT = ['Información', 'Branding', 'Configuración']
 
 export function CreateAcademyForm() {
   const { t } = useTranslation()
-  const { isAuthenticated, isInitialized } = useAuthStore()
+  const { isAuthenticated, isInitialized, refreshAcademies } = useAuthStore()
   const search = useSearch({ from: '/create-academy/' })
   const loginMode = search.mode === 'login'
   // Start conservatively at 'account'; useEffect will advance to 'basicInfo'
@@ -187,6 +187,9 @@ export function CreateAcademyForm() {
 
       setCreatedAcademy(academy)
       toast.success(t('createAcademy.success.toastMessage'))
+      // Refresh the auth store so the new academy appears in academyData
+      // and the dashboard button navigates to the correct slug
+      await refreshAcademies()
     } catch (error: unknown) {
       const msg =
         (error as { response?: { data?: { error?: { message?: string } } } })

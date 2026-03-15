@@ -39,11 +39,15 @@ class GamificationService {
 
   /**
    * Get user's earned badges
+   * @param academySlug - Academy slug (required by backend as X-Academy-Slug header)
    * @param filters - Optional filters
    * @returns Promise with user badges array
    */
-  async getEarnedBadges(filters?: BadgeFilters): Promise<UserBadge[]> {
-    const response = await apiClient.get('/badges/earned', { params: filters })
+  async getEarnedBadges(academySlug: string, filters?: BadgeFilters): Promise<UserBadge[]> {
+    const response = await apiClient.get('/badges/earned', {
+      params: filters,
+      headers: { 'X-Academy-Slug': academySlug },
+    })
     return Array.isArray(response.data)
       ? response.data
       : response.data?.data || []
@@ -116,11 +120,12 @@ class GamificationService {
 
   /**
    * Check for new badges (unviewed earned badges)
+   * @param academySlug - Academy slug required by the backend
    * @returns Promise with unviewed badges
    */
-  async checkNewBadges(): Promise<UserBadge[]> {
+  async checkNewBadges(academySlug: string): Promise<UserBadge[]> {
     try {
-      const earnedBadges = await this.getEarnedBadges()
+      const earnedBadges = await this.getEarnedBadges(academySlug)
       const newBadges = earnedBadges.filter((ub) => !ub.viewed)
       return newBadges
     } catch (_error) {

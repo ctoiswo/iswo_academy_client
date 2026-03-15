@@ -53,7 +53,7 @@ export function getStudentSidebar(
       items: [
         {
           title: t('sidebar.items.myBadges'),
-          url: `/academy/${academySlug}/badges`,
+          url: `/academy/${academySlug}/my-badges`,
           icon: Award,
         },
         {

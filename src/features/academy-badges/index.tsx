@@ -13,15 +13,15 @@ import {
   Search,
   Pencil,
   Trash2,
-  Shield,
   Star,
   Award,
   Zap,
   Users,
-  Trophy,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
+import { cn } from '@/lib/utils'
+import { BadgeIcon, getVisualConfig } from '@/components/gamification/badge-visual-config'
 import { useTranslation } from '@/hooks/use-translation'
 import {
   AlertDialog,
@@ -82,25 +82,6 @@ const badgeSchema = z.object({
 type BadgeSchemaValues = z.infer<typeof badgeSchema>
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
-
-const tierVariant: Record<
-  string,
-  'default' | 'secondary' | 'outline' | 'destructive'
-> = {
-  bronze: 'outline',
-  silver: 'secondary',
-  gold: 'default',
-  platinum: 'default',
-  diamond: 'destructive',
-}
-
-const tierIcon: Record<string, React.ReactNode> = {
-  bronze: <Shield className='h-3 w-3' />,
-  silver: <Star className='h-3 w-3' />,
-  gold: <Trophy className='h-3 w-3' />,
-  platinum: <Award className='h-3 w-3' />,
-  diamond: <Zap className='h-3 w-3' />,
-}
 
 const CATEGORIES = [
   'milestone',
@@ -489,9 +470,16 @@ interface BadgeCardProps {
 
 function BadgeCard({ badge, onEdit, onDelete }: BadgeCardProps) {
   const { t } = useTranslation()
+  const visual = getVisualConfig(badge.slug, badge.tier)
 
   return (
-    <Card className='group relative overflow-hidden transition-shadow hover:shadow-md'>
+    <div
+      className={cn(
+        'group rounded-xl bg-gradient-to-br p-px transition-shadow hover:shadow-md',
+        visual.gradient
+      )}
+    >
+    <Card className='relative h-full overflow-hidden rounded-[11px] border-0'>
       {/* Active indicator */}
       {!badge.is_active && (
         <div className='bg-background/60 absolute inset-0 z-10 flex items-center justify-center'>
@@ -502,15 +490,33 @@ function BadgeCard({ badge, onEdit, onDelete }: BadgeCardProps) {
       <CardHeader className='px-4 pt-4 pb-2'>
         <div className='flex items-start justify-between gap-2'>
           {/* Icon / placeholder */}
-          <div className='bg-muted flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-2xl'>
+          <div className='flex h-12 w-12 shrink-0 items-center justify-center'>
             {badge.icon_url ? (
-              <img
-                src={badge.icon_url}
-                alt={badge.name}
-                className='h-10 w-10 object-contain'
-              />
+              <div
+                className={cn(
+                  'flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br p-0.5',
+                  getVisualConfig(badge.slug, badge.tier).gradient
+                )}
+              >
+                <div className='bg-card flex size-full items-center justify-center rounded-full'>
+                  <img
+                    src={badge.icon_url}
+                    alt={badge.name}
+                    className='h-7 w-7 object-contain'
+                  />
+                </div>
+              </div>
             ) : (
-              <Trophy className='text-muted-foreground h-6 w-6' />
+              <div
+                className={cn(
+                  'flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br p-0.5',
+                  getVisualConfig(badge.slug, badge.tier).gradient
+                )}
+              >
+                <div className='bg-card flex size-full items-center justify-center rounded-full'>
+                  <BadgeIcon slug={badge.slug} className='text-primary h-7 w-7' />
+                </div>
+              </div>
             )}
           </div>
 
@@ -538,18 +544,27 @@ function BadgeCard({ badge, onEdit, onDelete }: BadgeCardProps) {
 
       <CardContent className='space-y-2 px-4 pb-4'>
         <div>
-          <p className='text-sm leading-tight font-semibold'>{badge.name}</p>
+          <p className='text-sm leading-tight font-semibold'>
+            {badge.slug ? t(`badges.${badge.slug}.name`, { defaultValue: badge.name }) : badge.name}
+          </p>
           <p className='text-muted-foreground mt-0.5 line-clamp-2 text-xs'>
-            {badge.description}
+            {badge.slug ? t(`badges.${badge.slug}.description`, { defaultValue: badge.description }) : badge.description}
           </p>
         </div>
 
         <div className='flex flex-wrap gap-1'>
           <Badge
-            variant={tierVariant[badge.tier] ?? 'outline'}
-            className='gap-1 text-xs'
+            variant='outline'
+            className={cn('gap-1 text-xs capitalize', (() => {
+              const tier = badge.tier
+              if (tier === 'bronze') return 'border-amber-700 text-amber-700'
+              if (tier === 'silver') return 'border-slate-400 text-slate-500'
+              if (tier === 'gold') return 'border-yellow-500 text-yellow-600'
+              if (tier === 'platinum') return 'border-cyan-400 text-cyan-500'
+              if (tier === 'diamond') return 'border-purple-400 text-purple-500'
+              return ''
+            })())}
           >
-            {tierIcon[badge.tier]}
             {badge.tier}
           </Badge>
           <Badge variant='outline' className='text-xs capitalize'>
@@ -585,6 +600,7 @@ function BadgeCard({ badge, onEdit, onDelete }: BadgeCardProps) {
         )}
       </CardContent>
     </Card>
+    </div>
   )
 }
 

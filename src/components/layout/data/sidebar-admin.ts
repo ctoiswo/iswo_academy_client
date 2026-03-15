@@ -220,6 +220,11 @@ export function getAdminSidebar(
           url: `/academy/${academySlug}/badges`,
           icon: Award,
         },
+        {
+          title: t('sidebar.items.myBadges'),
+          url: `/academy/${academySlug}/my-badges`,
+          icon: Award,
+        },
       ],
     },
   ]
