@@ -13,6 +13,7 @@ import {
   ChevronRight,
   FileText,
   CalendarClock,
+  Award,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { Badge } from '@/components/ui/badge'
@@ -34,10 +35,9 @@ export default function MyAssignmentsPage() {
   const { academySlug } = useParams({
     from: '/_authenticated/academy/$academySlug/my-assignments',
   })
-  const { user } = useAuthStore()
+  const { user, currentAcademy } = useAuthStore()
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all')
 
-  // Fetch assignments
   const { data, isLoading } = useQuery({
     queryKey: ['student-assignments', academySlug, user?.id, filterStatus],
     queryFn: () =>
@@ -54,17 +54,16 @@ export default function MyAssignmentsPage() {
   const getStatusBadge = (assignment: StudentAssignment) => {
     if (assignment.is_past_due) {
       return (
-        <Badge variant='destructive' className='gap-1'>
+        <Badge variant='destructive' className='gap-1 text-xs'>
           <AlertCircle className='h-3 w-3' />
           Vencida
         </Badge>
       )
     }
-
     if (assignment.days_until_due !== null) {
       if (assignment.days_until_due === 0) {
         return (
-          <Badge variant='default' className='gap-1 bg-orange-500'>
+          <Badge className='gap-1 bg-orange-500 text-xs text-white hover:bg-orange-500'>
             <Clock className='h-3 w-3' />
             Vence hoy
           </Badge>
@@ -72,24 +71,23 @@ export default function MyAssignmentsPage() {
       }
       if (assignment.days_until_due <= 3) {
         return (
-          <Badge variant='default' className='gap-1 bg-yellow-500'>
+          <Badge className='gap-1 bg-amber-500 text-xs text-white hover:bg-amber-500'>
             <Clock className='h-3 w-3' />
-            Vence en {assignment.days_until_due} días
+            {assignment.days_until_due}d
           </Badge>
         )
       }
       if (assignment.days_until_due <= 7) {
         return (
-          <Badge variant='secondary' className='gap-1'>
+          <Badge variant='secondary' className='gap-1 text-xs'>
             <Calendar className='h-3 w-3' />
-            Vence en {assignment.days_until_due} días
+            {assignment.days_until_due}d
           </Badge>
         )
       }
     }
-
     return (
-      <Badge variant='outline' className='gap-1'>
+      <Badge variant='outline' className='gap-1 text-xs'>
         <FileText className='h-3 w-3' />
         Pendiente
       </Badge>
@@ -98,26 +96,18 @@ export default function MyAssignmentsPage() {
 
   const formatDueDate = (dueAt: string | null) => {
     if (!dueAt) return 'Sin fecha límite'
-
     const date = new Date(dueAt)
     const now = new Date()
     const diffDays = Math.ceil(
       (date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
     )
-
-    if (diffDays < 0) {
-      return `Venció hace ${Math.abs(diffDays)} días`
-    }
-
+    if (diffDays < 0) return `Venció hace ${Math.abs(diffDays)} días`
     return date.toLocaleDateString('es-ES', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
       day: 'numeric',
+      month: 'short',
+      year: 'numeric',
     })
   }
-
-  const { currentAcademy } = useAuthStore()
 
   return (
     <DashboardLayout
@@ -126,12 +116,15 @@ export default function MyAssignmentsPage() {
       variant='full'
       dashboardType='student'
     >
-      <div className='space-y-6'>
-        {/* Header with stats */}
+      <div className='flex-1 space-y-6 px-4'>
+        {/* Header */}
         <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
           <div>
-            <h1 className='text-foreground text-3xl font-bold'>Mis Tareas</h1>
-            <p className='text-muted-foreground mt-1'>
+            <h1 className='flex items-center gap-2 text-2xl font-bold tracking-tight'>
+              <ClipboardList className='text-primary size-6' />
+              Mis Tareas
+            </h1>
+            <p className='text-muted-foreground mt-1 text-sm'>
               Gestiona todas tus asignaciones pendientes
             </p>
           </div>
@@ -140,7 +133,7 @@ export default function MyAssignmentsPage() {
             value={filterStatus}
             onValueChange={(value) => setFilterStatus(value as FilterStatus)}
           >
-            <SelectTrigger className='w-[200px]'>
+            <SelectTrigger className='w-[190px]'>
               <SelectValue placeholder='Filtrar por estado' />
             </SelectTrigger>
             <SelectContent>
@@ -152,15 +145,15 @@ export default function MyAssignmentsPage() {
           </Select>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats */}
         {isLoading ? (
-          <div className='grid gap-4 md:grid-cols-4'>
+          <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
             {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className='h-24' />
+              <Skeleton key={i} className='h-24 rounded-xl' />
             ))}
           </div>
         ) : assignmentsData ? (
-          <div className='grid gap-4 md:grid-cols-4'>
+          <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
             <Card>
               <CardHeader className='flex flex-row items-center justify-between pb-2'>
                 <CardTitle className='text-muted-foreground text-sm font-medium'>
@@ -183,10 +176,10 @@ export default function MyAssignmentsPage() {
                 <CardTitle className='text-muted-foreground text-sm font-medium'>
                   Próximas
                 </CardTitle>
-                <CalendarClock className='h-4 w-4 text-blue-400' />
+                <CalendarClock className='text-primary h-4 w-4' />
               </CardHeader>
               <CardContent>
-                <div className='text-2xl font-bold text-blue-600'>
+                <div className='text-primary text-2xl font-bold'>
                   {assignmentsData.summary.upcoming}
                 </div>
                 <p className='text-muted-foreground mt-1 text-xs'>
@@ -200,10 +193,10 @@ export default function MyAssignmentsPage() {
                 <CardTitle className='text-muted-foreground text-sm font-medium'>
                   Vencidas
                 </CardTitle>
-                <AlertCircle className='h-4 w-4 text-red-400' />
+                <AlertCircle className='h-4 w-4 text-destructive' />
               </CardHeader>
               <CardContent>
-                <div className='text-2xl font-bold text-red-600'>
+                <div className='text-destructive text-2xl font-bold'>
                   {assignmentsData.summary.past_due}
                 </div>
                 <p className='text-muted-foreground mt-1 text-xs'>
@@ -217,10 +210,10 @@ export default function MyAssignmentsPage() {
                 <CardTitle className='text-muted-foreground text-sm font-medium'>
                   Cursos
                 </CardTitle>
-                <BookOpen className='h-4 w-4 text-purple-400' />
+                <BookOpen className='text-muted-foreground h-4 w-4' />
               </CardHeader>
               <CardContent>
-                <div className='text-2xl font-bold text-purple-600'>
+                <div className='text-2xl font-bold'>
                   {assignmentsData.summary.courses_with_assignments}
                 </div>
                 <p className='text-muted-foreground mt-1 text-xs'>
@@ -233,16 +226,16 @@ export default function MyAssignmentsPage() {
 
         {/* Assignments by Course */}
         {isLoading ? (
-          <div className='space-y-6'>
+          <div className='space-y-4'>
             {[...Array(2)].map((_, i) => (
-              <Skeleton key={i} className='h-64' />
+              <Skeleton key={i} className='h-64 rounded-xl' />
             ))}
           </div>
         ) : assignmentsData &&
           assignmentsData.assignments_by_course.length > 0 ? (
           <motion.div
-            className='space-y-6'
-            initial={{ opacity: 0, y: 20 }}
+            className='space-y-4'
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
@@ -257,30 +250,31 @@ export default function MyAssignmentsPage() {
             ))}
           </motion.div>
         ) : (
-          <Card>
-            <CardContent className='py-12'>
-              <div className='text-center'>
-                <ClipboardList className='text-muted-foreground mx-auto h-12 w-12' />
-                <h3 className='text-foreground mt-4 text-lg font-semibold'>
-                  No hay tareas
-                </h3>
-                <p className='text-muted-foreground mt-2'>
-                  {filterStatus === 'all'
-                    ? 'No tienes asignaciones en este momento.'
-                    : `No hay tareas ${
-                        filterStatus === 'pending'
-                          ? 'pendientes'
-                          : filterStatus === 'upcoming'
-                            ? 'próximas'
-                            : 'vencidas'
-                      }.`}
-                </p>
-                <Button asChild className='mt-6'>
-                  <Link to='/academies'>Explorar Cursos</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <div className='border-border flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center'>
+            <Award className='text-muted-foreground/40 size-14' />
+            <p className='text-muted-foreground mt-4 text-base font-medium'>
+              No hay tareas
+            </p>
+            <p className='text-muted-foreground mt-1 text-sm'>
+              {filterStatus === 'all'
+                ? 'No tienes asignaciones en este momento.'
+                : `No hay tareas ${
+                    filterStatus === 'pending'
+                      ? 'pendientes'
+                      : filterStatus === 'upcoming'
+                        ? 'próximas'
+                        : 'vencidas'
+                  }.`}
+            </p>
+            <Button asChild className='mt-6' variant='outline'>
+              <Link
+                to='/academy/$academySlug/courses'
+                params={{ academySlug }}
+              >
+                Explorar Cursos
+              </Link>
+            </Button>
+          </div>
         )}
       </div>
     </DashboardLayout>
@@ -302,21 +296,25 @@ function CourseAssignmentsCard({
 }: CourseAssignmentsCardProps) {
   return (
     <Card>
-      <CardHeader>
-        <div className='flex items-start justify-between'>
-          <div className='flex items-center gap-4'>
-            {courseData.course.image_url && (
+      <CardHeader className='pb-3'>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-3'>
+            {courseData.course.image_url ? (
               <img
                 src={courseData.course.image_url}
                 alt={courseData.course.title}
-                className='h-16 w-16 rounded-lg object-cover'
+                className='h-10 w-10 rounded-lg object-cover'
               />
+            ) : (
+              <div className='bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg'>
+                <BookOpen className='text-primary h-5 w-5' />
+              </div>
             )}
             <div>
-              <CardTitle className='text-xl'>
+              <CardTitle className='text-base'>
                 {courseData.course.title}
               </CardTitle>
-              <p className='text-muted-foreground mt-1 text-sm'>
+              <p className='text-muted-foreground text-xs'>
                 {courseData.assignments.length}{' '}
                 {courseData.assignments.length === 1
                   ? 'asignación'
@@ -324,67 +322,67 @@ function CourseAssignmentsCard({
               </p>
             </div>
           </div>
-          <Button asChild variant='outline' size='sm'>
+          <Button asChild variant='ghost' size='sm' className='text-xs'>
             <Link
               to='/academy/$academySlug/courses/$courseSlug/content'
-              params={{
-                academySlug,
-                courseSlug: courseData.course.slug,
-              }}
+              params={{ academySlug, courseSlug: courseData.course.slug }}
             >
-              Ver Curso
-              <ChevronRight className='ml-1 h-4 w-4' />
+              Ver curso
+              <ChevronRight className='ml-1 h-3.5 w-3.5' />
             </Link>
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className='space-y-4'>
-          {courseData.assignments.map((assignment) => (
+      <CardContent className='pt-0'>
+        <div className='space-y-2'>
+          {courseData.assignments.map((assignment, idx) => (
             <motion.div
               key={assignment.id}
-              className='flex items-start justify-between rounded-lg border p-4 transition-colors hover:bg-gray-50'
-              whileHover={{ scale: 1.01 }}
-              transition={{ duration: 0.2 }}
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: idx * 0.04 }}
             >
-              <div className='flex-1'>
-                <div className='flex items-start justify-between gap-4'>
-                  <div className='flex-1'>
-                    <h4 className='text-foreground font-semibold'>
+              <Link
+                to='/academy/$academySlug/courses/$courseSlug/content'
+                params={{ academySlug, courseSlug: courseData.course.slug }}
+                search={
+                  assignment.lesson
+                    ? { lessonId: assignment.lesson.id }
+                    : undefined
+                }
+                className='hover:bg-muted/60 border-border group flex items-start justify-between rounded-lg border p-3 transition-colors'
+              >
+                <div className='flex min-w-0 flex-1 items-start gap-3'>
+                  <div className='bg-primary/10 mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md'>
+                    <FileText className='text-primary h-3.5 w-3.5' />
+                  </div>
+                  <div className='min-w-0 flex-1'>
+                    <p className='text-foreground group-hover:text-primary truncate text-sm font-medium transition-colors'>
                       {assignment.title}
-                    </h4>
-                    {assignment.description && (
-                      <p className='text-muted-foreground mt-1 line-clamp-2 text-sm'>
-                        {assignment.description}
-                      </p>
-                    )}
-                    <div className='text-muted-foreground mt-3 flex flex-wrap items-center gap-3 text-sm'>
+                    </p>
+                    <div className='text-muted-foreground mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs'>
                       {assignment.section && (
                         <span className='flex items-center gap-1'>
-                          <BookOpen className='h-4 w-4' />
+                          <BookOpen className='h-3 w-3' />
                           {assignment.section.title}
                         </span>
                       )}
-                      {assignment.lesson && (
-                        <span className='flex items-center gap-1'>
-                          <FileText className='h-4 w-4' />
-                          {assignment.lesson.title}
-                        </span>
-                      )}
                       <span className='flex items-center gap-1'>
-                        <Clock className='h-4 w-4' />
+                        <Clock className='h-3 w-3' />
                         {formatDueDate(assignment.due_at)}
+                      </span>
+                      <span className='flex items-center gap-1'>
+                        <Award className='h-3 w-3' />
+                        {assignment.max_points} pts
                       </span>
                     </div>
                   </div>
-                  <div className='flex flex-col items-end gap-2'>
-                    {getStatusBadge(assignment)}
-                    <span className='text-muted-foreground text-sm font-medium'>
-                      {assignment.max_points} pts
-                    </span>
-                  </div>
                 </div>
-              </div>
+                <div className='ml-3 flex shrink-0 items-center gap-2'>
+                  {getStatusBadge(assignment)}
+                  <ChevronRight className='text-muted-foreground h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100' />
+                </div>
+              </Link>
             </motion.div>
           ))}
         </div>
