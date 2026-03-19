@@ -22,7 +22,6 @@ import { useCourse } from '@/hooks/use-courses'
 import { useSections, useReorderSection } from '@/hooks/use-sections'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { EditLessonDialog } from '@/components/lessons/edit-lesson-dialog'
 import { CreateSectionDialog } from '@/components/sections/create-section-dialog'
 import { EditSectionDialog } from '@/components/sections/edit-section-dialog'
 import { SectionCard } from '@/components/sections/section-card'
@@ -40,12 +39,7 @@ export default function CourseLessonsPage() {
 
   const [createSectionDialogOpen, setCreateSectionDialogOpen] = useState(false)
   const [editSectionDialogOpen, setEditSectionDialogOpen] = useState(false)
-  const [editLessonDialogOpen, setEditLessonDialogOpen] = useState(false)
   const [editingSection, setEditingSection] = useState<Section | null>(null)
-  const [editingLesson, setEditingLesson] = useState<{
-    lesson: Lesson
-    sectionId: number
-  } | null>(null)
   const [localSections, setLocalSections] = useState<Section[]>([])
 
   const { data: course, isLoading, error } = useCourse(courseSlug)
@@ -94,8 +88,11 @@ export default function CourseLessonsPage() {
   }
 
   const handleEditLesson = (lesson: Lesson, sectionId: number) => {
-    setEditingLesson({ lesson, sectionId })
-    setEditLessonDialogOpen(true)
+    navigate({
+      to: '/academy/$academySlug/courses/$courseSlug/lessons/$lessonId/edit',
+      params: { academySlug, courseSlug, lessonId: String(lesson.id) },
+      search: { sectionId },
+    })
   }
 
   if (isLoading || sectionsLoading) {
@@ -261,16 +258,6 @@ export default function CourseLessonsPage() {
         courseSlug={courseSlug}
         section={editingSection}
       />
-      {editingLesson && (
-        <EditLessonDialog
-          open={editLessonDialogOpen}
-          onOpenChange={setEditLessonDialogOpen}
-          academySlug={academySlug}
-          courseSlug={courseSlug}
-          sectionId={editingLesson.sectionId}
-          lesson={editingLesson.lesson}
-        />
-      )}
     </div>
   )
 }

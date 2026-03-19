@@ -184,6 +184,11 @@ class APIClient {
   private setupRequestInterceptor() {
     this.client.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
+        // For FormData requests let the browser set multipart boundary.
+        if (config.data instanceof FormData) {
+          delete config.headers['Content-Type']
+        }
+
         // Añadir locale header — delegado al locale store (fuente única de verdad)
         config.headers['X-Locale'] = getLocale()
 

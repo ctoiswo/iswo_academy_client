@@ -71,7 +71,7 @@ export default function CreateAssignmentPage() {
   const [maxFileUploads, setMaxFileUploads] = useState('5')
   const [maxFileSizeMb, setMaxFileSizeMb] = useState('10')
   const [allowResubmission, setAllowResubmission] = useState(false)
-  const [autoAcceptOnTime, setAutoAcceptOnTime] = useState(false)
+  const [autoAcceptOnTime, setAutoAcceptOnTime] = useState(true)
 
   // Rubric
   const [showRubric, setShowRubric] = useState(false)
@@ -643,14 +643,6 @@ export default function CreateAssignmentPage() {
 
                 <div className='flex flex-col gap-4'>
                   <div className='flex items-center justify-between'>
-                    <Label className='text-sm'>Respuesta de texto</Label>
-                    <Switch
-                      checked={requireTextSubmission}
-                      onCheckedChange={setRequireTextSubmission}
-                    />
-                  </div>
-
-                  <div className='flex items-center justify-between'>
                     <Label className='text-sm'>Subida de archivos</Label>
                     <Switch
                       checked={requireFileUpload}
@@ -686,24 +678,6 @@ export default function CreateAssignmentPage() {
                       </div>
                     </div>
                   )}
-
-                  <div className='bg-border/60 h-px' />
-
-                  <div className='flex items-center justify-between'>
-                    <Label className='text-sm'>Permitir re-envío</Label>
-                    <Switch
-                      checked={allowResubmission}
-                      onCheckedChange={setAllowResubmission}
-                    />
-                  </div>
-
-                  <div className='flex items-center justify-between'>
-                    <Label className='text-sm'>Auto-aceptar a tiempo</Label>
-                    <Switch
-                      checked={autoAcceptOnTime}
-                      onCheckedChange={setAutoAcceptOnTime}
-                    />
-                  </div>
                 </div>
               </section>
 

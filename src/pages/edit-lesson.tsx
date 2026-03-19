@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router'
-import type { LessonType } from '@/types'
+import type { LessonAttachment, LessonType } from '@/types'
 import {
   ArrowLeft,
   Video,
@@ -15,7 +15,7 @@ import {
   Paperclip,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useCreateLesson } from '@/hooks/use-lessons'
+import { useLesson, useUpdateLesson } from '@/hooks/use-lessons'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -27,10 +27,11 @@ import { RichTextEditor } from '@/components/editor/rich-text-editor'
 
 type VideoSourceType = 'url' | 'file'
 
-export default function CreateLessonPage() {
-  const { academySlug, courseSlug } = useParams({ strict: false }) as {
+export default function EditLessonPage() {
+  const { academySlug, courseSlug, lessonId } = useParams({ strict: false }) as {
     academySlug: string
     courseSlug: string
+    lessonId: string
   }
   const { sectionId } = useSearch({ strict: false }) as { sectionId: number }
   const navigate = useNavigate()
@@ -52,10 +53,30 @@ export default function CreateLessonPage() {
   // Text state
   const [textContent, setTextContent] = useState('')
 
-  // Resource files state (max 5)
+  // Resource files state (new files to upload, max 5)
   const [resourceFiles, setResourceFiles] = useState<File[]>([])
+  const [existingAttachments, setExistingAttachments] = useState<
+    LessonAttachment[]
+  >([])
+  const [removedAttachmentIds, setRemovedAttachmentIds] = useState<number[]>([])
 
-  const createLesson = useCreateLesson(academySlug, courseSlug, sectionId)
+  const {
+    data: lesson,
+    isLoading: lessonLoading,
+    isError: lessonError,
+  } = useLesson(academySlug, courseSlug, Number(sectionId), Number(lessonId))
+
+  const updateLesson = useUpdateLesson(academySlug, courseSlug, Number(sectionId))
+
+  const normalizeLesson = (raw: any) => {
+    if (!raw) return null
+    if (raw.lesson) return raw.lesson
+    if (raw.data?.lesson) return raw.data.lesson
+    if (raw.data && raw.data.id) return raw.data
+    return raw
+  }
+
+  const currentLesson: any = normalizeLesson(lesson as any)
 
   useEffect(() => {
     if (videoSource === 'url' && videoUrl) {
@@ -64,6 +85,43 @@ export default function CreateLessonPage() {
       setVideoPreview(null)
     }
   }, [videoUrl, videoSource])
+
+  useEffect(() => {
+    if (!currentLesson) return
+
+    const rawType = currentLesson.lesson_type
+    const detectedType: LessonType =
+      rawType === 'video' || rawType === 'text'
+        ? rawType
+        : currentLesson.has_video ||
+            currentLesson.video_url ||
+            currentLesson.video_identifier
+          ? 'video'
+          : 'text'
+
+    setTitle(currentLesson.title || '')
+    setLessonType(detectedType)
+    setDuration(
+      currentLesson.duration_minutes
+        ? String(currentLesson.duration_minutes)
+        : ''
+    )
+    setIsFree(Boolean(currentLesson.is_free))
+
+    setVideoUrl(currentLesson.video_url || '')
+    setVideoSource(currentLesson.video_url ? 'url' : 'file')
+
+    setTextContent(
+      typeof currentLesson.content === 'string' ? currentLesson.content : ''
+    )
+    setExistingAttachments(
+      Array.isArray(currentLesson.attachments)
+        ? currentLesson.attachments
+        : []
+    )
+    setRemovedAttachmentIds([])
+    setResourceFiles([])
+  }, [currentLesson])
 
   const convertToEmbedUrl = (url: string): string | null => {
     try {
@@ -104,8 +162,7 @@ export default function CreateLessonPage() {
   }
 
   const detectProvider = (url: string): string => {
-    if (url.includes('youtube.com') || url.includes('youtu.be'))
-      return 'youtube'
+    if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube'
     if (url.includes('vimeo.com')) return 'vimeo'
     return 'youtube'
   }
@@ -143,59 +200,94 @@ export default function CreateLessonPage() {
         formDataToSend.append('lesson[video_identifier]', videoId)
         formDataToSend.append('lesson[video_url]', videoUrl.trim())
       }
+
+      // If lesson changed from text to video, clear stale text content.
+      formDataToSend.append('lesson[content_json]', '')
     }
 
-    if (lessonType === 'text' && textContent) {
-      formDataToSend.append('lesson[content_json]', textContent)
+    if (lessonType === 'text') {
+      formDataToSend.append('lesson[content_json]', textContent || '')
+
+      // If lesson changed from video to text, clear stale video fields.
+      formDataToSend.append('lesson[video_provider]', 'none')
+      formDataToSend.append('lesson[video_identifier]', '')
+      formDataToSend.append('lesson[video_url]', '')
     }
 
-    resourceFiles.forEach((file, index) => {
-      const title = file.name.replace(/\.[^/.]+$/, '')
+    let attrIndex = 0
+
+    removedAttachmentIds.forEach((attachmentId) => {
       formDataToSend.append(
-        `lesson[attachments_attributes][${index}][type]`,
+        `lesson[attachments_attributes][${attrIndex}][id]`,
+        String(attachmentId)
+      )
+      formDataToSend.append(
+        `lesson[attachments_attributes][${attrIndex}][_destroy]`,
+        'true'
+      )
+      attrIndex += 1
+    })
+
+    resourceFiles.forEach((file) => {
+      const titleValue = file.name.replace(/\.[^/.]+$/, '')
+      formDataToSend.append(
+        `lesson[attachments_attributes][${attrIndex}][type]`,
         'FileAttachment'
       )
       formDataToSend.append(
-        `lesson[attachments_attributes][${index}][title]`,
-        title || file.name
+        `lesson[attachments_attributes][${attrIndex}][title]`,
+        titleValue || file.name
       )
       formDataToSend.append(
-        `lesson[attachments_attributes][${index}][attachment_type]`,
+        `lesson[attachments_attributes][${attrIndex}][attachment_type]`,
         'general'
       )
       formDataToSend.append(
-        `lesson[attachments_attributes][${index}][required]`,
+        `lesson[attachments_attributes][${attrIndex}][required]`,
         'false'
       )
       formDataToSend.append(
-        `lesson[attachments_attributes][${index}][file]`,
+        `lesson[attachments_attributes][${attrIndex}][file]`,
         file
       )
+      attrIndex += 1
     })
 
     try {
-      await createLesson.mutateAsync(formDataToSend as any)
+      await updateLesson.mutateAsync({
+        lessonId: Number(lessonId),
+        data: formDataToSend as any,
+      })
 
       handleBack()
     } catch (error: any) {
-      console.error('Error creating lesson with resources', error)
-      toast.error(error?.message || 'Error subiendo recursos de la lección')
+      console.error('Error updating lesson with resources', error)
+      toast.error(error?.message || 'Error actualizando la lección')
     } finally {
       setIsLoading(false)
     }
   }
 
+  const maxAllowed = Math.max(0, 5 - existingAttachments.length)
+
   const handleResourceFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files || [])
     setResourceFiles((prev) => {
       const combined = [...prev, ...selected]
-      return combined.slice(0, 5)
+      return combined.slice(0, maxAllowed)
     })
     e.target.value = ''
   }
 
   const removeResourceFile = (index: number) => {
     setResourceFiles((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const removeExistingAttachment = (attachmentId: number) => {
+    setRemovedAttachmentIds((prev) => [...prev, attachmentId])
+    setExistingAttachments((prev) =>
+      prev.filter((attachment) => attachment.id !== attachmentId)
+    )
   }
 
   const lessonTypeConfig = [
@@ -219,9 +311,20 @@ export default function CreateLessonPage() {
     },
   ]
 
+  if (lessonLoading) {
+    return (
+      <div className='p-6 text-sm text-muted-foreground'>Cargando lección...</div>
+    )
+  }
+
+  if (lessonError || !currentLesson) {
+    return (
+      <div className='p-6 text-sm text-destructive'>No se pudo cargar la lección.</div>
+    )
+  }
+
   return (
     <div className='bg-background relative min-h-screen'>
-      {/* Background decoration */}
       <div
         className='pointer-events-none fixed inset-0 opacity-[0.02]'
         style={{
@@ -236,7 +339,6 @@ export default function CreateLessonPage() {
         aria-hidden='true'
       />
 
-      {/* Header */}
       <header className='border-border/40 bg-background/80 sticky top-0 z-50 border-b backdrop-blur-xl'>
         <div className='mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-4 lg:px-8'>
           <div className='flex items-center gap-4'>
@@ -250,29 +352,21 @@ export default function CreateLessonPage() {
             </button>
             <div className='bg-border/60 h-6 w-px' />
             <div className='flex flex-col'>
-              <span className='text-muted-foreground text-xs'>
-                Nueva Leccion
-              </span>
+              <span className='text-muted-foreground text-xs'>Editar Lección</span>
             </div>
           </div>
 
           <div className='flex items-center gap-3'>
-            <Button
-              type='button'
-              variant='ghost'
-              size='sm'
-              className='text-muted-foreground gap-2'
-              disabled={!title}
-            >
+            <Button type='button' variant='ghost' size='sm' className='text-muted-foreground gap-2' disabled={!title}>
               <Eye className='size-4' />
               <span className='hidden sm:inline'>Vista previa</span>
             </Button>
             <Button
               onClick={handleSubmit}
-              disabled={isLoading || createLesson.isPending || !title.trim()}
+              disabled={isLoading || updateLesson.isPending || !title.trim()}
               className='bg-primary text-primary-foreground hover:bg-primary/90 gap-2 shadow-[0_0_16px_rgba(99,102,241,0.2)]'
             >
-              {isLoading || createLesson.isPending ? (
+              {isLoading || updateLesson.isPending ? (
                 <>
                   <div className='border-primary-foreground/30 border-t-primary-foreground size-4 animate-spin rounded-full border-2' />
                   Guardando...
@@ -288,22 +382,16 @@ export default function CreateLessonPage() {
         </div>
       </header>
 
-      {/* Main content */}
       <main className='relative z-10 mx-auto max-w-5xl px-4 py-8 lg:px-8'>
         <form onSubmit={handleSubmit} className='flex flex-col gap-8'>
-          {/* Title & basics */}
           <section className='border-border/60 bg-card animate-in fade-in-0 slide-in-from-bottom-4 flex flex-col gap-6 rounded-xl border p-6'>
             <div className='flex items-center gap-3'>
               <div className='bg-primary/10 flex size-10 items-center justify-center rounded-lg'>
                 <Sparkles className='text-primary size-5' />
               </div>
               <div>
-                <h1 className='text-foreground text-lg font-semibold'>
-                  Nueva Leccion
-                </h1>
-                <p className='text-muted-foreground text-sm'>
-                  Agrega contenido educativo a tu curso
-                </p>
+                <h1 className='text-foreground text-lg font-semibold'>Editar Leccion</h1>
+                <p className='text-muted-foreground text-sm'>Actualiza el contenido educativo de tu curso</p>
               </div>
             </div>
 
@@ -323,9 +411,7 @@ export default function CreateLessonPage() {
 
             <div className='grid gap-4 sm:grid-cols-2'>
               <div className='space-y-2'>
-                <Label htmlFor='duration' className='text-sm font-medium'>
-                  Duracion estimada
-                </Label>
+                <Label htmlFor='duration' className='text-sm font-medium'>Duracion estimada</Label>
                 <div className='relative'>
                   <Clock className='text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2' />
                   <Input
@@ -337,34 +423,20 @@ export default function CreateLessonPage() {
                     placeholder='30'
                     className='bg-secondary/40 border-border/60 h-11 pl-10'
                   />
-                  <span className='text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 text-sm'>
-                    min
-                  </span>
+                  <span className='text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 text-sm'>min</span>
                 </div>
               </div>
 
               <div className='border-border/60 bg-secondary/20 flex items-center justify-between rounded-lg border p-4'>
                 <div className='space-y-0.5'>
-                  <Label
-                    htmlFor='is_free'
-                    className='cursor-pointer text-sm font-medium'
-                  >
-                    Leccion gratuita
-                  </Label>
-                  <p className='text-muted-foreground text-xs'>
-                    Disponible sin inscripcion
-                  </p>
+                  <Label htmlFor='is_free' className='cursor-pointer text-sm font-medium'>Leccion gratuita</Label>
+                  <p className='text-muted-foreground text-xs'>Disponible sin inscripcion</p>
                 </div>
-                <Switch
-                  id='is_free'
-                  checked={isFree}
-                  onCheckedChange={setIsFree}
-                />
+                <Switch id='is_free' checked={isFree} onCheckedChange={setIsFree} />
               </div>
             </div>
           </section>
 
-          {/* Lesson type selector */}
           <section className='border-border/60 bg-card animate-in fade-in-0 slide-in-from-bottom-4 flex flex-col gap-4 rounded-xl border p-6 delay-100'>
             <Label className='text-sm font-medium'>
               Tipo de contenido <span className='text-destructive'>*</span>
@@ -400,34 +472,19 @@ export default function CreateLessonPage() {
                       />
                     </div>
                     <div className='text-center'>
-                      <p
-                        className={cn(
-                          'font-medium transition-colors',
-                          isSelected
-                            ? 'text-foreground'
-                            : 'text-muted-foreground'
-                        )}
-                      >
+                      <p className={cn('font-medium transition-colors', isSelected ? 'text-foreground' : 'text-muted-foreground')}>
                         {config.label}
                       </p>
-                      <p className='text-muted-foreground mt-0.5 text-xs'>
-                        {config.description}
-                      </p>
+                      <p className='text-muted-foreground mt-0.5 text-xs'>{config.description}</p>
                     </div>
-                    {isSelected && (
-                      <Badge className='bg-primary/20 text-primary border-0'>
-                        Seleccionado
-                      </Badge>
-                    )}
+                    {isSelected && <Badge className='bg-primary/20 text-primary border-0'>Seleccionado</Badge>}
                   </button>
                 )
               })}
             </div>
           </section>
 
-          {/* Content section */}
           <section className='border-border/60 bg-card animate-in fade-in-0 slide-in-from-bottom-4 flex flex-col gap-6 rounded-xl border p-6 delay-200'>
-            {/* Video */}
             {lessonType === 'video' && (
               <>
                 <div className='flex items-center gap-3'>
@@ -435,12 +492,8 @@ export default function CreateLessonPage() {
                     <Video className='size-5 text-blue-400' />
                   </div>
                   <div>
-                    <h2 className='text-foreground text-base font-semibold'>
-                      Contenido de Video
-                    </h2>
-                    <p className='text-muted-foreground text-sm'>
-                      Sube un video o usa una URL de YouTube/Vimeo
-                    </p>
+                    <h2 className='text-foreground text-base font-semibold'>Contenido de Video</h2>
+                    <p className='text-muted-foreground text-sm'>Sube un video o usa una URL de YouTube/Vimeo</p>
                   </div>
                 </div>
 
@@ -461,9 +514,7 @@ export default function CreateLessonPage() {
                     <LinkIcon className='text-muted-foreground size-4' />
                     <div>
                       <p className='text-sm font-medium'>URL del video</p>
-                      <p className='text-muted-foreground text-xs'>
-                        YouTube, Vimeo
-                      </p>
+                      <p className='text-muted-foreground text-xs'>YouTube, Vimeo</p>
                     </div>
                   </label>
                   <label
@@ -516,9 +567,7 @@ export default function CreateLessonPage() {
                       className={cn(
                         'flex flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed p-8 transition-all',
                         'hover:border-primary/50 hover:bg-primary/5',
-                        videoFile
-                          ? 'border-primary/50 bg-primary/5'
-                          : 'border-border/60'
+                        videoFile ? 'border-primary/50 bg-primary/5' : 'border-border/60'
                       )}
                     >
                       {videoFile ? (
@@ -527,9 +576,7 @@ export default function CreateLessonPage() {
                             <Video className='text-primary size-7' />
                           </div>
                           <div className='text-center'>
-                            <p className='text-foreground font-medium'>
-                              {videoFile.name}
-                            </p>
+                            <p className='text-foreground font-medium'>{videoFile.name}</p>
                             <p className='text-muted-foreground text-sm'>
                               {(videoFile.size / 1024 / 1024).toFixed(2)} MB
                             </p>
@@ -551,19 +598,13 @@ export default function CreateLessonPage() {
                             <Upload className='text-muted-foreground size-7' />
                           </div>
                           <div className='text-center'>
-                            <p className='text-foreground font-medium'>
-                              Arrastra un video aqui
-                            </p>
-                            <p className='text-muted-foreground text-sm'>
-                              o haz clic para seleccionar
-                            </p>
+                            <p className='text-foreground font-medium'>Arrastra un video aqui</p>
+                            <p className='text-muted-foreground text-sm'>o haz clic para seleccionar</p>
                           </div>
                           <Input
                             type='file'
                             accept='video/*'
-                            onChange={(e) =>
-                              setVideoFile(e.target.files?.[0] || null)
-                            }
+                            onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
                             className='max-w-xs'
                           />
                         </>
@@ -574,7 +615,6 @@ export default function CreateLessonPage() {
               </>
             )}
 
-            {/* Text/Reading */}
             {lessonType === 'text' && (
               <>
                 <div className='flex items-center gap-3'>
@@ -582,12 +622,8 @@ export default function CreateLessonPage() {
                     <FileText className='size-5 text-emerald-400' />
                   </div>
                   <div>
-                    <h2 className='text-foreground text-base font-semibold'>
-                      Contenido de Lectura
-                    </h2>
-                    <p className='text-muted-foreground text-sm'>
-                      Usa el editor para crear articulos con formato enriquecido
-                    </p>
+                    <h2 className='text-foreground text-base font-semibold'>Contenido de Lectura</h2>
+                    <p className='text-muted-foreground text-sm'>Usa el editor para crear articulos con formato enriquecido</p>
                   </div>
                 </div>
                 <RichTextEditor
@@ -597,77 +633,98 @@ export default function CreateLessonPage() {
                 />
               </>
             )}
-
-            {/* Quiz */}
           </section>
 
-          {/* Resource files */}
           <section className='border-border/60 bg-card animate-in fade-in-0 slide-in-from-bottom-4 flex flex-col gap-4 rounded-xl border p-6 delay-300'>
             <div className='flex items-center gap-3'>
               <div className='flex size-10 items-center justify-center rounded-lg bg-violet-500/10'>
                 <Paperclip className='size-5 text-violet-400' />
               </div>
               <div>
-                <h2 className='text-foreground text-base font-semibold'>
-                  Recursos descargables
-                </h2>
-                <p className='text-muted-foreground text-sm'>
-                  Archivos que el estudiante puede descargar (máx. 5)
-                </p>
+                <h2 className='text-foreground text-base font-semibold'>Recursos descargables</h2>
+                <p className='text-muted-foreground text-sm'>Archivos que el estudiante puede descargar (máx. 5)</p>
               </div>
             </div>
 
-            {resourceFiles.length > 0 && (
-              <ul className='flex flex-col gap-2'>
-                {resourceFiles.map((file, index) => (
-                  <li
-                    key={index}
-                    className='border-border/60 bg-secondary/20 flex items-center justify-between rounded-lg border px-4 py-2.5'
-                  >
-                    <div className='flex items-center gap-3 overflow-hidden'>
-                      <FileText className='text-muted-foreground size-4 shrink-0' />
-                      <span className='text-foreground truncate text-sm'>
-                        {file.name}
-                      </span>
-                      <span className='text-muted-foreground shrink-0 text-xs'>
-                        {(file.size / 1024 / 1024).toFixed(2)} MB
-                      </span>
-                    </div>
-                    <button
-                      type='button'
-                      onClick={() => removeResourceFile(index)}
-                      className='text-muted-foreground hover:text-destructive ml-2 shrink-0 transition-colors'
+            {existingAttachments.length > 0 && (
+              <div className='space-y-2'>
+                <Label className='text-xs text-muted-foreground'>Recursos actuales</Label>
+                <ul className='flex flex-col gap-2'>
+                  {existingAttachments.map((attachment) => (
+                    <li
+                      key={attachment.id}
+                      className='border-border/60 bg-secondary/10 flex items-center justify-between rounded-lg border px-4 py-2.5'
                     >
-                      <X className='size-4' />
-                    </button>
-                  </li>
-                ))}
-              </ul>
+                      <div className='flex items-center gap-3 overflow-hidden'>
+                        <FileText className='text-muted-foreground size-4 shrink-0' />
+                        <span className='text-foreground truncate text-sm'>{attachment.title}</span>
+                        {attachment.file_size_mb ? (
+                          <span className='text-muted-foreground shrink-0 text-xs'>{attachment.file_size_mb} MB</span>
+                        ) : null}
+                      </div>
+                      <button
+                        type='button'
+                        onClick={() => removeExistingAttachment(attachment.id)}
+                        className='text-muted-foreground hover:text-destructive ml-2 shrink-0 transition-colors'
+                      >
+                        <X className='size-4' />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
 
-            {resourceFiles.length < 5 && (
+            {existingAttachments.length === 0 && (
+              <p className='text-muted-foreground text-sm'>
+                Esta lección no tiene recursos adjuntos actualmente.
+              </p>
+            )}
+
+            {resourceFiles.length > 0 && (
+              <div className='space-y-2'>
+                <Label className='text-xs text-muted-foreground'>Nuevos recursos a agregar</Label>
+                <ul className='flex flex-col gap-2'>
+                  {resourceFiles.map((file, index) => (
+                    <li
+                      key={index}
+                      className='border-border/60 bg-secondary/20 flex items-center justify-between rounded-lg border px-4 py-2.5'
+                    >
+                      <div className='flex items-center gap-3 overflow-hidden'>
+                        <FileText className='text-muted-foreground size-4 shrink-0' />
+                        <span className='text-foreground truncate text-sm'>{file.name}</span>
+                        <span className='text-muted-foreground shrink-0 text-xs'>
+                          {(file.size / 1024 / 1024).toFixed(2)} MB
+                        </span>
+                      </div>
+                      <button
+                        type='button'
+                        onClick={() => removeResourceFile(index)}
+                        className='text-muted-foreground hover:text-destructive ml-2 shrink-0 transition-colors'
+                      >
+                        <X className='size-4' />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {maxAllowed > 0 && resourceFiles.length < maxAllowed && (
               <label className='border-border/60 hover:border-primary/50 hover:bg-primary/5 flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 transition-all'>
                 <Upload className='text-muted-foreground size-4' />
                 <span className='text-muted-foreground text-sm'>
                   {resourceFiles.length === 0
-                    ? 'Seleccionar archivos'
-                    : `Agregar más (${resourceFiles.length}/5)`}
+                    ? `Seleccionar archivos (${existingAttachments.length}/5 existentes)`
+                    : `Agregar más (${existingAttachments.length + resourceFiles.length}/5)`}
                 </span>
-                <input
-                  type='file'
-                  multiple
-                  className='hidden'
-                  onChange={handleResourceFilesChange}
-                />
+                <input type='file' multiple className='hidden' onChange={handleResourceFilesChange} />
               </label>
             )}
           </section>
 
-          {/* Actions footer */}
           <div className='border-border/40 flex items-center justify-between border-t pt-4'>
-            <Button type='button' variant='ghost' onClick={handleBack}>
-              Cancelar
-            </Button>
+            <Button type='button' variant='ghost' onClick={handleBack}>Cancelar</Button>
             <div className='flex items-center gap-3'>
               <Button type='button' variant='outline' disabled={!title}>
                 <Eye className='mr-2 size-4' />
@@ -675,10 +732,10 @@ export default function CreateLessonPage() {
               </Button>
               <Button
                 type='submit'
-                disabled={isLoading || createLesson.isPending || !title.trim()}
+                disabled={isLoading || updateLesson.isPending || !title.trim()}
                 className='bg-primary text-primary-foreground hover:bg-primary/90 gap-2 shadow-[0_0_16px_rgba(99,102,241,0.2)]'
               >
-                {isLoading || createLesson.isPending ? (
+                {isLoading || updateLesson.isPending ? (
                   <>
                     <div className='border-primary-foreground/30 border-t-primary-foreground size-4 animate-spin rounded-full border-2' />
                     Guardando...
