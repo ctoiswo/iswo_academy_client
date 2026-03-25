@@ -8,7 +8,6 @@ import {
   Upload,
   Link as LinkIcon,
   Clock,
-  Eye,
   Save,
   Sparkles,
   X,
@@ -357,10 +356,6 @@ export default function EditLessonPage() {
           </div>
 
           <div className='flex items-center gap-3'>
-            <Button type='button' variant='ghost' size='sm' className='text-muted-foreground gap-2' disabled={!title}>
-              <Eye className='size-4' />
-              <span className='hidden sm:inline'>Vista previa</span>
-            </Button>
             <Button
               onClick={handleSubmit}
               disabled={isLoading || updateLesson.isPending || !title.trim()}
@@ -726,10 +721,6 @@ export default function EditLessonPage() {
           <div className='border-border/40 flex items-center justify-between border-t pt-4'>
             <Button type='button' variant='ghost' onClick={handleBack}>Cancelar</Button>
             <div className='flex items-center gap-3'>
-              <Button type='button' variant='outline' disabled={!title}>
-                <Eye className='mr-2 size-4' />
-                Vista previa
-              </Button>
               <Button
                 type='submit'
                 disabled={isLoading || updateLesson.isPending || !title.trim()}

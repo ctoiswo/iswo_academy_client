@@ -186,6 +186,11 @@ export function getAdminSidebar(
           icon: Route,
         },
         {
+          title: t('sidebar.items.certificateTemplates'),
+          url: `/academy/${academySlug}/certificates`,
+          icon: Award,
+        },
+        {
           title: t('sidebar.items.academySettings'),
           url: `/academy/${academySlug}/settings`,
           icon: Settings2,

@@ -16,9 +16,10 @@ import {
 interface CoursesSectionProps {
   courses: any[]
   academyName?: string
+  academySlug?: string
 }
 
-export function CoursesSection({ courses }: CoursesSectionProps) {
+export function CoursesSection({ courses, academySlug }: CoursesSectionProps) {
   return (
     <section className='py-16'>
       <div className='container'>
@@ -73,8 +74,11 @@ export function CoursesSection({ courses }: CoursesSectionProps) {
                   whileHover={{ y: -10 }}
                 >
                   <Link
-                    to='/courses/$courseSlug'
-                    params={{ courseSlug: course.slug }}
+                    to={
+                      academySlug
+                        ? `/courses/${course.slug}?fromAcademySlug=${academySlug}`
+                        : `/courses/${course.slug}`
+                    }
                   >
                     <Card className='group h-full cursor-pointer overflow-hidden'>
                       <div className='relative'>

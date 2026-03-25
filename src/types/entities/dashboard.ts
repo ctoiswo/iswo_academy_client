@@ -54,7 +54,21 @@ export interface DashboardStreak {
   weekly_activity: Record<string, boolean>
 }
 
+export interface DashboardActiveEnrollment {
+  id: number
+  status: 'active' | 'completed' | 'paused' | string
+  progress_percentage: number
+  enrolled_at: string | null
+  course: {
+    id: number
+    title: string
+    slug: string
+    thumbnail_url: string | null
+  }
+}
+
 export interface StudentDashboardData {
+  active_enrollments: DashboardActiveEnrollment[]
   pending_assignments: DashboardAssignment[]
   learning_path_enrollments: DashboardLPEnrollment[]
   user_achievements: DashboardAchievement[]

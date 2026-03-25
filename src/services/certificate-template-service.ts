@@ -212,6 +212,22 @@ class CertificateTemplateService {
     )
     return response.data
   }
+
+  /**
+   * Trigger async preview PDF generation for a template
+   * @param academySlug - Academy slug
+   * @param templateId - Template ID
+   * @returns Promise with server message
+   */
+  async generatePreviewPdf(
+    academySlug: string,
+    templateId: number
+  ): Promise<{ message: string }> {
+    const response = await apiClient.post(
+      `/academies/${academySlug}/certificate_templates/${templateId}/generate_preview_pdf`
+    )
+    return response.data
+  }
 }
 
 // Export singleton instance

@@ -78,7 +78,20 @@ export default function MyCoursesPage() {
     })
   }
 
-  const handleViewCertificate = (enrollmentId: number) => {
+  const handleViewCertificate = (
+    enrollmentId: number,
+    targetAcademySlug?: string
+  ) => {
+    const resolvedAcademySlug = targetAcademySlug || academySlug
+
+    if (resolvedAcademySlug) {
+      navigate({
+        to: `/academy/${resolvedAcademySlug}/certificates/${enrollmentId}`,
+      })
+      return
+    }
+
+    // Fallback for unexpected missing academy context.
     navigate({ to: `/certificates/${enrollmentId}` })
   }
 
@@ -474,7 +487,14 @@ export default function MyCoursesPage() {
                     {enrollment.status === 'completed' ? (
                       <Button
                         size='sm'
-                        onClick={() => handleViewCertificate(enrollment.id)}
+                        onClick={() =>
+                          handleViewCertificate(
+                            enrollment.id,
+                            enrollment.course.academy?.slug ||
+                              (enrollment.course as any).academy_slug ||
+                              academySlug
+                          )
+                        }
                         className='w-full'
                       >
                         {t('myCourses.certificateButton')}

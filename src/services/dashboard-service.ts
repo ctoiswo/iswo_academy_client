@@ -6,7 +6,7 @@ class DashboardService {
     academySlug: string
   ): Promise<StudentDashboardResponse> {
     const response = await apiClient.get<StudentDashboardResponse>(
-      `/academies/${academySlug}/dashboard/student`
+      `/dashboard/academies/${academySlug}/student`
     )
     return response.data
   }

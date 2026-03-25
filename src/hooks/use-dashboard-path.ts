@@ -13,12 +13,27 @@ export function useDashboardPath(): string | null {
   if (user.is_super_admin) return '/dashboard/super-admin'
 
   const count = academyData?.count ?? 0
+  const academies = academyData?.academies ?? []
 
   if (count === 0) return '/dashboard/student'
 
   if (count === 1) {
     const slug = academyData?.academies[0]?.slug ?? currentAcademy?.slug
     if (slug) return `/academy/${slug}/dashboard`
+  }
+
+  if (count > 1) {
+    if (currentAcademy?.slug) return `/academy/${currentAcademy.slug}/dashboard`
+
+    const storedAcademyId = localStorage.getItem('currentAcademyId')
+    if (storedAcademyId) {
+      const restoredAcademy = academies.find(
+        (academy) => academy.id === Number(storedAcademyId)
+      )
+      if (restoredAcademy?.slug) {
+        return `/academy/${restoredAcademy.slug}/dashboard`
+      }
+    }
   }
 
   return '/academy-selection'

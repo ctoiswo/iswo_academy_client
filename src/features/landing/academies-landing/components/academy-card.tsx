@@ -86,7 +86,7 @@ export function AcademyCard({ academy, index }: AcademyCardProps) {
           </span>
         </div>
 
-        <Link to='/sign-in'>
+        <Link to='/academies/$slug' params={{ slug: academy.slug }}>
           <button className='border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 mt-1 flex h-8 w-full items-center justify-center rounded-lg border text-xs font-medium transition-colors'>
             {t('academiesLanding.card.viewAcademy')}
           </button>

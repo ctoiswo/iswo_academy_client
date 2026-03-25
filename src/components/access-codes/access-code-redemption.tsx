@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import type {
   AccessCodeValidationResponse,
   AccessCodeRedemptionResponse,
@@ -24,9 +24,16 @@ import { Label } from '@/components/ui/label'
 
 interface AccessCodeRedemptionProps {
   onSuccess?: (response: AccessCodeRedemptionResponse) => void
+  renderSuccessActions?: (options: {
+    response: AccessCodeRedemptionResponse
+    reset: () => void
+  }) => ReactNode
 }
 
-export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
+export function AccessCodeRedemption({
+  onSuccess,
+  renderSuccessActions,
+}: AccessCodeRedemptionProps) {
   const { t } = useTranslation()
   const [code, setCode] = useState('')
   const [validation, setValidation] =
@@ -79,6 +86,12 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
     if (redemptionResult) {
       setRedemptionResult(null)
     }
+  }
+
+  const resetRedemptionFlow = () => {
+    setCode('')
+    setValidation(null)
+    setRedemptionResult(null)
   }
 
   // Show success result
@@ -134,17 +147,20 @@ export function AccessCodeRedemption({ onSuccess }: AccessCodeRedemptionProps) {
             </p>
           </div>
 
-          <Button
-            onClick={() => {
-              setCode('')
-              setValidation(null)
-              setRedemptionResult(null)
-            }}
-            variant='outline'
-            className='w-full'
-          >
-            {t('accessCode.redeem.redeemAnotherButton')}
-          </Button>
+          {renderSuccessActions ? (
+            renderSuccessActions({
+              response: redemptionResult,
+              reset: resetRedemptionFlow,
+            })
+          ) : (
+            <Button
+              onClick={resetRedemptionFlow}
+              variant='outline'
+              className='w-full'
+            >
+              {t('accessCode.redeem.redeemAnotherButton')}
+            </Button>
+          )}
         </CardContent>
       </Card>
     )

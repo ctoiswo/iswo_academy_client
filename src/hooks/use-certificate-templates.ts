@@ -128,3 +128,27 @@ export const useCertificateTemplatePreview = (
     enabled: !!academySlug && !!templateId,
   })
 }
+
+export const useGenerateTemplatePreviewPdf = (academySlug: string) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (templateId: number) =>
+      certificateTemplateService.generatePreviewPdf(academySlug, templateId),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({
+        queryKey: ['certificate-templates', academySlug],
+      })
+      toast.success(
+        response.message ||
+          'Se encoló la generación del PDF de prueba de la plantilla'
+      )
+    },
+    onError: (error: any) => {
+      const message =
+        error.response?.data?.error?.message ||
+        'No se pudo encolar la generación del PDF de prueba'
+      toast.error(message)
+    },
+  })
+}

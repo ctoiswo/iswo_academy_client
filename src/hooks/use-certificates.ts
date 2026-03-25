@@ -28,11 +28,14 @@ export function useUpdateLearningPathCertificateConfiguration(
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (certificateEnabled: boolean) =>
+    mutationFn: (config: {
+      certificateEnabled: boolean
+      certificateTemplateId?: number | null
+    }) =>
       certificateService.updateLearningPathCertificateConfiguration(
         academySlug,
         learningPathSlug,
-        certificateEnabled
+        config
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({

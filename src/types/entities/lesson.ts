@@ -51,6 +51,7 @@ export interface Section {
   order: number
   course_id: number
   lessons?: Lesson[]
+  lesson_count?: number
   lessons_count?: number
   created_at?: string
   updated_at?: string

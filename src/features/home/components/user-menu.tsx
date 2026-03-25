@@ -2,6 +2,7 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { LayoutDashboard, LogOut, Settings } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
+import { useDashboardPath } from '@/hooks/use-dashboard-path'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,8 +16,8 @@ import {
 
 export function UserMenu() {
   const { t } = useTranslation()
-  const { isAuthenticated, user, logout, academyData, currentAcademy } =
-    useAuthStore()
+  const { isAuthenticated, user, logout } = useAuthStore()
+  const dashboardPath = useDashboardPath()
   const navigate = useNavigate()
 
   const handleLogout = async () => {
@@ -25,25 +26,7 @@ export function UserMenu() {
   }
 
   const handleDashboardClick = () => {
-    // Si hay una academia actual, ir a su dashboard
-    if (currentAcademy?.slug) {
-      navigate({
-        to: '/academy/$academySlug/dashboard',
-        params: { academySlug: currentAcademy.slug },
-      })
-    }
-    // Si no hay academia actual pero tiene academias, ir a la primera
-    else if (academyData?.academies && academyData.academies.length > 0) {
-      const firstAcademy = academyData.academies[0]
-      navigate({
-        to: '/academy/$academySlug/dashboard',
-        params: { academySlug: firstAcademy.slug },
-      })
-    }
-    // Si no tiene academias, ir a la selección de academias
-    else {
-      navigate({ to: '/academy-selection' })
-    }
+    navigate({ to: (dashboardPath || '/academy-selection') as string })
   }
 
   // Show user avatar and menu when authenticated

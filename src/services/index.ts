@@ -89,3 +89,7 @@ export {
   default as statsService,
   statsService as statsApi,
 } from './stats-service'
+export {
+  default as paymentService,
+  paymentService as paymentApi,
+} from './payment-service'

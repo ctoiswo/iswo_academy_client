@@ -39,6 +39,13 @@ export interface Course {
   // Features
   allow_comments: boolean
   certificate_enabled: boolean
+  certificate_template?: {
+    id: number
+    name: string
+    description: string | null
+    is_default: boolean
+    is_active: boolean
+  } | null
   progress_tracking: boolean
   featured: boolean
   trial_period_days: number

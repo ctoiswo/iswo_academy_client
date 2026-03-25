@@ -122,7 +122,21 @@ export default function CourseLessonsPage() {
     )
   }
 
-  const lessonsCount = course.lessons_count ?? 0
+  const lessonsCount = sections.reduce((total, section) => {
+    if (typeof section.lesson_count === 'number') {
+      return total + section.lesson_count
+    }
+
+    if (typeof section.lessons_count === 'number') {
+      return total + section.lessons_count
+    }
+
+    if (Array.isArray(section.lessons)) {
+      return total + section.lessons.length
+    }
+
+    return total
+  }, 0)
 
   return (
     <div className='flex flex-col gap-6 p-6'>

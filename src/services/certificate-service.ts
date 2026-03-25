@@ -135,13 +135,17 @@ class CertificateService {
   async updateLearningPathCertificateConfiguration(
     academySlug: string,
     learningPathSlug: string,
-    certificateEnabled: boolean
+    config: {
+      certificateEnabled: boolean
+      certificateTemplateId?: number | null
+    }
   ): Promise<{ certificate_enabled: boolean; message: string }> {
     const response = await apiClient.patch(
       `/academies/${academySlug}/learning_paths/${learningPathSlug}/certificates/configuration`,
       {
         learning_path: {
-          certificate_enabled: certificateEnabled,
+          certificate_enabled: config.certificateEnabled,
+          certificate_template_id: config.certificateTemplateId ?? null,
         },
       }
     )

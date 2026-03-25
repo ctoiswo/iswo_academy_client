@@ -86,6 +86,7 @@ export interface CreateCourseRequest {
   prerequisites?: string
   allow_comments?: boolean
   certificate_enabled?: boolean
+  certificate_template_id?: number | null
   progress_tracking?: boolean
   featured?: boolean
   trial_period_days?: number

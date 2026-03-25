@@ -1,13 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { format } from 'date-fns'
-import { useParams } from '@tanstack/react-router'
-import { Award, FileText, ExternalLink } from 'lucide-react'
+import { Link, useParams } from '@tanstack/react-router'
+import {
+  ArrowLeft,
+  Award,
+  ExternalLink,
+  FileText,
+  Save,
+  Star,
+} from 'lucide-react'
+import { useCertificateTemplates } from '@/hooks/use-certificate-templates'
 import {
   useLearningPathCertificateConfiguration,
   useUpdateLearningPathCertificateConfiguration,
   useLearningPathCertificates,
 } from '@/hooks/use-certificates'
-import { useLearningPath } from '@/hooks/use-learning-paths'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,6 +25,13 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import {
@@ -34,21 +48,49 @@ export function LearningPathCertificates() {
     from: '/_authenticated/academy/$academySlug/learning-paths/$learningPathSlug/certificates',
   })
   const [currentPage, setCurrentPage] = useState(1)
+  const [certificateEnabled, setCertificateEnabled] = useState(false)
+  const [selectedTemplateValue, setSelectedTemplateValue] = useState('default')
 
-  const { data: learningPath, isLoading: isLoadingPath } = useLearningPath(
-    academySlug,
-    learningPathSlug
-  )
   const { data: certificateConfig, isLoading: isLoadingConfig } =
     useLearningPathCertificateConfiguration(academySlug, learningPathSlug)
   const { data: certificatesData, isLoading: isLoadingCertificates } =
     useLearningPathCertificates(academySlug, learningPathSlug, currentPage)
+  const { data: templates, isLoading: isLoadingTemplates } =
+    useCertificateTemplates(academySlug)
   const updateConfiguration = useUpdateLearningPathCertificateConfiguration(
     academySlug,
     learningPathSlug
   )
 
-  const isLoading = isLoadingPath || isLoadingConfig
+  useEffect(() => {
+    if (!certificateConfig) return
+
+    setCertificateEnabled(certificateConfig.certificate_enabled)
+    setSelectedTemplateValue(
+      certificateConfig.certificate_template?.id
+        ? String(certificateConfig.certificate_template.id)
+        : 'default'
+    )
+  }, [certificateConfig])
+
+  const isLoading = isLoadingConfig || isLoadingTemplates
+  const defaultTemplate = templates?.find((template) => template.is_default) || null
+  const activeTemplates = templates?.filter((template) => template.is_active) || []
+  const selectedTemplate = useMemo(() => {
+    if (selectedTemplateValue === 'default') return defaultTemplate
+
+    return (
+      templates?.find((template) => String(template.id) === selectedTemplateValue) ||
+      null
+    )
+  }, [defaultTemplate, selectedTemplateValue, templates])
+  const initialTemplateValue = certificateConfig?.certificate_template?.id
+    ? String(certificateConfig.certificate_template.id)
+    : 'default'
+  const isDirty = certificateConfig
+    ? certificateEnabled !== certificateConfig.certificate_enabled ||
+      selectedTemplateValue !== initialTemplateValue
+    : false
 
   if (isLoading) {
     return (
@@ -59,169 +101,232 @@ export function LearningPathCertificates() {
     )
   }
 
-  if (!learningPath || !certificateConfig) {
+  if (!certificateConfig) {
     return <div>Ruta de aprendizaje no encontrada</div>
   }
 
-  const handleToggleCertificates = (enabled: boolean) => {
-    updateConfiguration.mutate(enabled)
+  const handleSave = async () => {
+    await updateConfiguration.mutateAsync({
+      certificateEnabled,
+      certificateTemplateId:
+        selectedTemplateValue === 'default'
+          ? null
+          : Number(selectedTemplateValue),
+    })
   }
 
   return (
-    <div className='space-y-6'>
-      <div>
-        <h1 className='text-3xl font-bold'>Certificados</h1>
-        <p className='text-muted-foreground'>
-          Configura los certificados para estudiantes que completen esta ruta
-        </p>
+    <div className='flex flex-col gap-6 p-6'>
+      <div className='border-border/60 from-card via-card to-primary/5 relative overflow-hidden rounded-2xl border bg-gradient-to-br p-6'>
+        <div className='bg-primary/10 absolute top-0 right-0 h-48 w-48 translate-x-1/3 -translate-y-1/3 rounded-full blur-[80px]' />
+        <div className='relative z-10 flex items-start justify-between gap-4'>
+          <div className='flex flex-col gap-2'>
+            <Link
+              to='/academy/$academySlug/learning-paths/$learningPathSlug/info'
+              params={{ academySlug, learningPathSlug }}
+              className='text-muted-foreground hover:text-foreground flex w-fit items-center gap-1.5 text-sm transition-colors'
+            >
+              <ArrowLeft className='size-3.5' />
+              Volver a la ruta
+            </Link>
+            <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
+              {certificateConfig.learning_path.title}
+            </h1>
+            <p className='text-muted-foreground text-sm'>
+              Selecciona la plantilla que usará esta ruta para emitir certificados
+            </p>
+          </div>
+          <div className='flex shrink-0 gap-2'>
+            <Link to='/academy/$academySlug/certificates' params={{ academySlug }}>
+              <Button variant='outline'>
+                <ExternalLink className='mr-2 h-4 w-4' />
+                Gestionar Plantillas
+              </Button>
+            </Link>
+            <Button
+              onClick={handleSave}
+              disabled={!isDirty || updateConfiguration.isPending}
+            >
+              <Save className='mr-2 h-4 w-4' />
+              Guardar
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <div className='grid gap-4 md:grid-cols-3'>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              Total Emitidos
-            </CardTitle>
-            <Award className='text-muted-foreground h-4 w-4' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>
-              {certificateConfig.statistics.total_issued}
-            </div>
-            <p className='text-muted-foreground text-xs'>
-              certificados en total
+      <div className='grid gap-3 md:grid-cols-3'>
+        <div className='border-border/60 bg-card flex items-center gap-3 rounded-xl border p-4'>
+          <div className='bg-primary/10 rounded-lg p-2'>
+            <Award className='text-primary size-4' />
+          </div>
+          <div className='min-w-0'>
+            <p className='text-muted-foreground text-xs'>Emisión</p>
+            <p className='text-foreground text-xl font-bold leading-none'>
+              {certificateEnabled ? 'Activa' : 'Desactivada'}
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+        <div className='border-border/60 bg-card flex items-center gap-3 rounded-xl border p-4'>
+          <div className='rounded-lg bg-amber-500/10 p-2'>
+            <Star className='size-4 text-amber-400' />
+          </div>
+          <div className='min-w-0'>
+            <p className='text-muted-foreground text-xs'>Plantilla</p>
+            <p className='text-foreground text-xl font-bold leading-none'>
+              {selectedTemplate?.name || 'Sin definir'}
+            </p>
+          </div>
+        </div>
+        <div className='border-border/60 bg-card flex items-center gap-3 rounded-xl border p-4'>
+          <div className='rounded-lg bg-emerald-500/10 p-2'>
+            <FileText className='size-4 text-emerald-400' />
+          </div>
+          <div className='min-w-0'>
+            <p className='text-muted-foreground text-xs'>Plantillas activas</p>
+            <p className='text-foreground text-xl font-bold leading-none'>
+              {activeTemplates.length}
+            </p>
+          </div>
+        </div>
+      </div>
 
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              Certificados Activos
-            </CardTitle>
-            <Award className='h-4 w-4 text-green-600' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>
-              {certificateConfig.statistics.active_certificates}
-            </div>
-            <p className='text-muted-foreground text-xs'>vigentes</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              Certificados Revocados
-            </CardTitle>
-            <Award className='h-4 w-4 text-red-600' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>
-              {certificateConfig.statistics.revoked_certificates}
-            </div>
-            <p className='text-muted-foreground text-xs'>anulados</p>
-          </CardContent>
-        </Card>
+      <div className='border-primary/20 bg-primary/5 flex items-start gap-3 rounded-xl border p-4'>
+        <Award className='text-primary mt-0.5 size-4 shrink-0' />
+        <div>
+          <p className='text-primary text-sm font-semibold'>Asignación por ruta</p>
+          <p className='text-muted-foreground mt-0.5 text-xs'>
+            Las plantillas se gestionan a nivel academia. Aquí solo eliges cuál
+            aplica a esta ruta de aprendizaje. Si no eliges una específica, se
+            usará la predeterminada.
+          </p>
+        </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Emisión de Certificados</CardTitle>
+          <CardTitle>Configuración del certificado</CardTitle>
           <CardDescription>
-            Activa esta opción para emitir certificados automáticamente
+            Define si esta ruta emite certificados y qué plantilla debe usar.
           </CardDescription>
         </CardHeader>
         <CardContent className='space-y-6'>
-          <div className='flex items-center justify-between'>
-            <div className='space-y-0.5'>
-              <Label
-                htmlFor='enable_certificates'
-                className='flex items-center gap-2'
-              >
-                <Award className='h-4 w-4' />
-                Emitir Certificados
+          <div className='flex items-center justify-between gap-6'>
+            <div className='space-y-1'>
+              <Label htmlFor='learning-path-certificate-enabled'>
+                Emitir certificados
               </Label>
               <p className='text-muted-foreground text-sm'>
-                Los estudiantes recibirán un certificado al completar todos los
-                cursos
+                Los estudiantes obtendrán un certificado al completar esta ruta.
               </p>
             </div>
             <Switch
-              id='enable_certificates'
-              checked={certificateConfig.certificate_enabled}
-              onCheckedChange={handleToggleCertificates}
-              disabled={updateConfiguration.isPending}
+              id='learning-path-certificate-enabled'
+              checked={certificateEnabled}
+              onCheckedChange={setCertificateEnabled}
             />
+          </div>
+
+          <div className='space-y-3'>
+            <Label>Plantilla asignada</Label>
+            <Select
+              value={selectedTemplateValue}
+              onValueChange={setSelectedTemplateValue}
+              disabled={activeTemplates.length === 0}
+            >
+              <SelectTrigger className='w-full'>
+                <SelectValue placeholder='Selecciona una plantilla' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='default'>
+                  Usar plantilla predeterminada de la academia
+                </SelectItem>
+                {activeTemplates.map((template) => (
+                  <SelectItem key={template.id} value={String(template.id)}>
+                    {template.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {activeTemplates.length === 0 && (
+              <p className='text-muted-foreground text-sm'>
+                No hay plantillas activas en esta academia todavía.
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Plantilla del Certificado</CardTitle>
+          <CardTitle>Resumen de la plantilla elegida</CardTitle>
           <CardDescription>
-            {certificateConfig.certificate_template
-              ? `Usando plantilla: ${certificateConfig.certificate_template.name}`
-              : 'No hay plantilla configurada'}
+            Vista rápida de la configuración que se aplicará al emitir
+            certificados de esta ruta.
           </CardDescription>
         </CardHeader>
         <CardContent className='space-y-4'>
-          {certificateConfig.certificate_template ? (
+          {selectedTemplate ? (
             <>
-              <div className='flex items-center justify-between rounded-lg border p-4'>
-                <div className='space-y-1'>
-                  <div className='flex items-center gap-2'>
-                    <FileText className='text-muted-foreground h-4 w-4' />
-                    <span className='font-medium'>
-                      {certificateConfig.certificate_template.name}
+              <div className='flex flex-wrap items-start justify-between gap-3 rounded-xl border p-4'>
+                <div className='space-y-2'>
+                  <div className='flex flex-wrap items-center gap-2'>
+                    <span className='text-base font-semibold'>
+                      {selectedTemplate.name}
                     </span>
-                    {certificateConfig.certificate_template.is_default && (
-                      <Badge variant='secondary'>Por defecto</Badge>
+                    {selectedTemplate.is_default && (
+                      <Badge variant='secondary'>Predeterminada</Badge>
                     )}
-                    {certificateConfig.certificate_template.is_active && (
+                    {selectedTemplate.is_active && (
                       <Badge variant='default'>Activa</Badge>
                     )}
                   </div>
-                  <p className='text-muted-foreground text-sm'>
-                    Esta plantilla se usará para generar los certificados
+                  <p className='text-muted-foreground max-w-2xl text-sm'>
+                    {selectedTemplate.description ||
+                      'Esta plantilla se utilizará para generar los certificados de la ruta.'}
                   </p>
                 </div>
-                <Button variant='outline' size='sm'>
-                  <ExternalLink className='mr-2 h-4 w-4' />
-                  Ver Plantilla
-                </Button>
+                <Link to='/academy/$academySlug/certificates' params={{ academySlug }}>
+                  <Button variant='outline' size='sm'>
+                    <ExternalLink className='mr-2 h-4 w-4' />
+                    Ver plantillas
+                  </Button>
+                </Link>
               </div>
 
-              <div className='space-y-2'>
-                <Label>Información del Certificado</Label>
-                <div className='text-muted-foreground space-y-1 text-sm'>
-                  <p>
-                    • Título: Certificado de Completado -{' '}
+              <div className='grid gap-3 md:grid-cols-2'>
+                <div className='rounded-xl border p-4'>
+                  <p className='text-muted-foreground text-xs uppercase tracking-[0.2em]'>
+                    Ruta
+                  </p>
+                  <p className='mt-2 text-sm font-medium'>
                     {certificateConfig.learning_path.title}
                   </p>
-                  <p>• Academia: {certificateConfig.academy.name}</p>
-                  <p>
-                    • Duración Total:{' '}
-                    {certificateConfig.learning_path.estimated_duration_hours}{' '}
-                    horas
+                  <p className='text-muted-foreground mt-1 text-sm'>
+                    {certificateConfig.learning_path.courses_count} cursos incluidos
                   </p>
-                  <p>
-                    • Cursos Incluidos:{' '}
-                    {certificateConfig.learning_path.courses_count}
+                </div>
+                <div className='rounded-xl border p-4'>
+                  <p className='text-muted-foreground text-xs uppercase tracking-[0.2em]'>
+                    Academia
+                  </p>
+                  <p className='mt-2 text-sm font-medium'>
+                    {certificateConfig.academy.name}
+                  </p>
+                  <p className='text-muted-foreground mt-1 text-sm'>
+                    {certificateConfig.learning_path.estimated_duration_hours} horas estimadas
                   </p>
                 </div>
               </div>
             </>
           ) : (
-            <div className='rounded-lg border-2 border-dashed p-8 text-center'>
+            <div className='rounded-xl border-2 border-dashed p-8 text-center'>
               <FileText className='text-muted-foreground mx-auto mb-4 h-12 w-12' />
-              <p className='text-muted-foreground mb-4 text-sm'>
-                No hay plantilla de certificado configurada
+              <p className='text-foreground text-sm font-medium'>
+                No hay una plantilla disponible todavía
               </p>
-              <p className='text-muted-foreground mb-4 text-xs'>
-                Contacta al administrador de la academia para configurar una
-                plantilla
+              <p className='text-muted-foreground mt-2 text-sm'>
+                Crea o activa una plantilla a nivel academia para poder asignarla
+                a esta ruta.
               </p>
             </div>
           )}

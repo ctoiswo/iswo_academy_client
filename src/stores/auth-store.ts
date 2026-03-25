@@ -379,6 +379,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   },
 
   switchAcademy: () => {
+    localStorage.removeItem(CURRENT_ACADEMY_KEY)
     set({ currentAcademy: null })
   },
 
@@ -432,6 +433,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   setCurrentAcademy: (
     academy: AcademyMembership | AcademySummaryLight | null
   ) => {
+    if (academy?.id) {
+      localStorage.setItem(CURRENT_ACADEMY_KEY, academy.id.toString())
+    } else {
+      localStorage.removeItem(CURRENT_ACADEMY_KEY)
+    }
     set({ currentAcademy: academy as AcademyMembership | null })
   },
 

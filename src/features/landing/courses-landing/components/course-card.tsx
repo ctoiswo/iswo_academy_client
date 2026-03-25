@@ -165,7 +165,11 @@ export function CourseCard({ course }: CourseCardProps) {
             </button>
           </Link>
         ) : (
-          <Link to='/sign-in' className='mt-auto'>
+          <Link
+            to='/courses/$courseSlug'
+            params={{ courseSlug: course.slug }}
+            className='mt-auto'
+          >
             <button className='bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 flex h-9 w-full items-center justify-center rounded-lg border text-xs font-medium transition-colors'>
               {t('coursesLanding.card.viewCourse')}
             </button>

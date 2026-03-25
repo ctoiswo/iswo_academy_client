@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { AlertTriangle } from 'lucide-react'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
 import { ForbiddenError } from '@/features/errors/forbidden'
 import { GeneralError } from '@/features/errors/general-error'
 import { MaintenanceError } from '@/features/errors/maintenance-error'
@@ -28,7 +28,10 @@ function RouteComponent() {
   return (
     <>
       <Header fixed className='border-b'>
-        <Search />
+        <div className='text-muted-foreground flex items-center gap-2 text-sm'>
+          <AlertTriangle className='h-4 w-4' />
+          Error de navegación
+        </div>
         <div className='ms-auto flex items-center space-x-4'>
           <ConfigDrawer />
           <ProfileDropdown />

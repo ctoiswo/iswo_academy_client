@@ -1,38 +1,33 @@
-import { useState } from 'react'
-import { useParams, Link } from '@tanstack/react-router'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useParams } from '@tanstack/react-router'
 import {
   ArrowLeft,
-  Plus,
   Award,
-  Eye,
-  Trash2,
   Star,
-  Settings,
-  Layout,
-  RotateCcw,
   FileText,
+  Save,
 } from 'lucide-react'
-import {
-  useCertificateTemplates,
-  useDeleteCertificateTemplate,
-  useSetDefaultTemplate,
-} from '@/hooks/use-certificate-templates'
-import { useCourse } from '@/hooks/use-courses'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+import { useCertificateTemplates } from '@/hooks/use-certificate-templates'
+import { useCourse, useUpdateCourse } from '@/hooks/use-courses'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { CertificatePreviewDialog } from '@/components/certificates/certificate-preview-dialog'
-import { CreateCertificateTemplateDialog } from '@/components/certificates/create-certificate-template-dialog'
-import { EditCertificateTemplateDialog } from '@/components/certificates/edit-certificate-template-dialog'
+import { Switch } from '@/components/ui/switch'
 
 export default function CourseCertificatesPage() {
   const params = useParams({ strict: false }) as {
@@ -41,53 +36,41 @@ export default function CourseCertificatesPage() {
   }
   const { academySlug, courseSlug } = params
 
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
-  const [editDialogOpen, setEditDialogOpen] = useState(false)
-  const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [selectedTemplateId, setSelectedTemplateId] = useState<number | null>(
-    null
-  )
+  const [certificateEnabled, setCertificateEnabled] = useState(false)
+  const [selectedTemplateValue, setSelectedTemplateValue] = useState('default')
 
   const {
     data: course,
     isLoading: courseLoading,
     error: courseError,
-  } = useCourse(courseSlug)
+  } = useCourse(courseSlug, academySlug)
   const { data: templates, isLoading: templatesLoading } =
     useCertificateTemplates(academySlug)
-  const deleteTemplate = useDeleteCertificateTemplate(academySlug)
-  const setDefaultTemplate = useSetDefaultTemplate(academySlug)
+  const updateCourse = useUpdateCourse(academySlug)
 
   const isLoading = courseLoading || templatesLoading
   const error = courseError
 
-  const handleDelete = (templateId: number) => {
-    setSelectedTemplateId(templateId)
-    setDeleteDialogOpen(true)
-  }
+  const defaultTemplate = templates?.find((template) => template.is_default) || null
+  const activeTemplates = templates?.filter((template) => template.is_active) || []
+  const selectedTemplate = useMemo(() => {
+    if (selectedTemplateValue === 'default') return defaultTemplate
+    return (
+      templates?.find((template) => String(template.id) === selectedTemplateValue) ||
+      null
+    )
+  }, [defaultTemplate, selectedTemplateValue, templates])
 
-  const confirmDelete = async () => {
-    if (selectedTemplateId) {
-      await deleteTemplate.mutateAsync(selectedTemplateId)
-      setDeleteDialogOpen(false)
-      setSelectedTemplateId(null)
-    }
-  }
+  useEffect(() => {
+    if (!course) return
 
-  const handleSetDefault = async (templateId: number) => {
-    await setDefaultTemplate.mutateAsync(templateId)
-  }
-
-  const handlePreview = (templateId: number) => {
-    setSelectedTemplateId(templateId)
-    setPreviewDialogOpen(true)
-  }
-
-  const handleEdit = (templateId: number) => {
-    setSelectedTemplateId(templateId)
-    setEditDialogOpen(true)
-  }
+    setCertificateEnabled(course.certificate_enabled)
+    setSelectedTemplateValue(
+      course.certificate_template?.id
+        ? String(course.certificate_template.id)
+        : 'default'
+    )
+  }, [course])
 
   if (isLoading) {
     return (
@@ -118,14 +101,28 @@ export default function CourseCertificatesPage() {
     )
   }
 
-  const defaultTemplate = templates?.find((t) => t.is_default)
-  const otherTemplates = templates?.filter((t) => !t.is_default) || []
-  const totalTemplates = templates?.length ?? 0
-  const activeCount = templates?.filter((t) => t.is_active).length ?? 0
+  const isDirty =
+    certificateEnabled !== course.certificate_enabled ||
+    selectedTemplateValue !==
+      (course.certificate_template?.id
+        ? String(course.certificate_template.id)
+        : 'default')
+
+  const handleSave = async () => {
+    await updateCourse.mutateAsync({
+      courseSlug,
+      data: {
+        certificate_enabled: certificateEnabled,
+        certificate_template_id:
+          selectedTemplateValue === 'default'
+            ? null
+            : Number(selectedTemplateValue),
+      },
+    })
+  }
 
   return (
     <div className='flex flex-col gap-6 p-6'>
-      {/* Header */}
       <div className='border-border/60 from-card via-card to-primary/5 relative overflow-hidden rounded-2xl border bg-gradient-to-br p-6'>
         <div className='bg-primary/10 absolute top-0 right-0 h-48 w-48 translate-x-1/3 -translate-y-1/3 rounded-full blur-[80px]' />
         <div className='relative z-10 flex items-start justify-between gap-4'>
@@ -142,317 +139,173 @@ export default function CourseCertificatesPage() {
               {course.title}
             </h1>
             <p className='text-muted-foreground text-sm'>
-              Configura las plantillas de certificados de finalización
+              Selecciona la plantilla que usará este curso para emitir certificados
             </p>
           </div>
-          <Button
-            onClick={() => setCreateDialogOpen(true)}
-            className='bg-primary text-primary-foreground hover:bg-primary/90 shrink-0 font-semibold shadow-[0_0_20px_rgba(99,102,241,0.2)] transition-all hover:shadow-[0_0_28px_rgba(99,102,241,0.35)]'
-          >
-            <Plus className='mr-2 h-4 w-4' />
-            Nueva Plantilla
-          </Button>
+          <div className='flex shrink-0 gap-2'>
+            <Button onClick={handleSave} disabled={!isDirty || updateCourse.isPending}>
+              <Save className='mr-2 h-4 w-4' />
+              Guardar
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Stat cards */}
       <div className='grid grid-cols-3 gap-3'>
-        {/* Total */}
-        <div className='border-border/60 bg-card group relative flex items-center gap-3 rounded-xl border p-4'>
+        <div className='border-border/60 bg-card flex items-center gap-3 rounded-xl border p-4'>
           <div className='bg-primary/10 rounded-lg p-2'>
             <Award className='text-primary size-4' />
           </div>
           <div className='min-w-0'>
-            <p className='text-muted-foreground text-xs'>Total</p>
-            <p className='text-foreground text-xl font-bold leading-none'>{totalTemplates}</p>
+            <p className='text-muted-foreground text-xs'>Emisión</p>
+            <p className='text-foreground text-xl font-bold leading-none'>
+              {certificateEnabled ? 'Activa' : 'Desactivada'}
+            </p>
           </div>
         </div>
-        {/* Default */}
-        <div className='border-border/60 bg-card group relative flex items-center gap-3 rounded-xl border p-4'>
+        <div className='border-border/60 bg-card flex items-center gap-3 rounded-xl border p-4'>
           <div className='rounded-lg bg-amber-500/10 p-2'>
             <Star className='size-4 text-amber-400' />
           </div>
           <div className='min-w-0'>
-            <p className='text-muted-foreground text-xs'>Predeterminada</p>
+            <p className='text-muted-foreground text-xs'>Plantilla</p>
             <p className='text-foreground text-xl font-bold leading-none'>
-              {defaultTemplate ? '1' : '0'}
+              {selectedTemplate?.name || 'Sin definir'}
             </p>
           </div>
         </div>
-        {/* Active */}
-        <div className='border-border/60 bg-card group relative flex items-center gap-3 rounded-xl border p-4'>
+        <div className='border-border/60 bg-card flex items-center gap-3 rounded-xl border p-4'>
           <div className='rounded-lg bg-emerald-500/10 p-2'>
             <FileText className='size-4 text-emerald-400' />
           </div>
           <div className='min-w-0'>
-            <p className='text-muted-foreground text-xs'>Activas</p>
-            <p className='text-foreground text-xl font-bold leading-none'>{activeCount}</p>
+            <p className='text-muted-foreground text-xs'>Plantillas activas</p>
+            <p className='text-foreground text-xl font-bold leading-none'>
+              {activeTemplates.length}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Info banner */}
       <div className='border-primary/20 bg-primary/5 flex items-start gap-3 rounded-xl border p-4'>
         <Award className='text-primary mt-0.5 size-4 shrink-0' />
         <div>
-          <p className='text-primary text-sm font-semibold'>Acerca de los certificados</p>
+          <p className='text-primary text-sm font-semibold'>Asignación por curso</p>
           <p className='text-muted-foreground mt-0.5 text-xs'>
-            Se generan automáticamente al completar el curso. Usa{' '}
-            <span className='font-mono'>{'{{student_name}}'}</span> y{' '}
-            <span className='font-mono'>{'{{course_title}}'}</span> como datos dinámicos.
-            Tamaño recomendado: A4 o Letter en orientación landscape.
+            Las plantillas se diseñan fuera del curso, a nivel academia. Aquí solo eliges
+            cuál aplica a este curso. Si no eliges una específica, se usará la predeterminada.
           </p>
         </div>
       </div>
 
-      {/* Default Template */}
-      {defaultTemplate && (
-        <div className='flex flex-col gap-3'>
-          <p className='text-muted-foreground flex items-center gap-2 text-sm font-medium'>
-            <Star className='size-4 fill-amber-400 text-amber-400' />
-            Plantilla predeterminada
-          </p>
-          <div className='border-amber-500/30 bg-card rounded-xl border p-5'>
-            <div className='mb-4 flex items-start justify-between gap-4'>
-              <div className='flex flex-col gap-1'>
-                <div className='flex items-center gap-2'>
-                  <span className='text-base font-semibold'>{defaultTemplate.name}</span>
-                  <span className='rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-400'>
-                    Predeterminada
-                  </span>
-                  {defaultTemplate.is_active && (
-                    <span className='rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-400'>
-                      Activa
-                    </span>
+      <Card>
+        <CardHeader>
+          <CardTitle>Configuración del certificado</CardTitle>
+          <CardDescription>
+            Define si este curso emite certificados y qué plantilla debe usar.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className='space-y-6'>
+          <div className='flex items-center justify-between gap-6'>
+            <div className='space-y-1'>
+              <Label htmlFor='course-certificate-enabled'>Emitir certificados</Label>
+              <p className='text-muted-foreground text-sm'>
+                Los estudiantes obtendrán un certificado al completar este curso.
+              </p>
+            </div>
+            <Switch
+              id='course-certificate-enabled'
+              checked={certificateEnabled}
+              onCheckedChange={setCertificateEnabled}
+            />
+          </div>
+
+          <div className='space-y-3'>
+            <Label>Plantilla asignada</Label>
+            <Select
+              value={selectedTemplateValue}
+              onValueChange={setSelectedTemplateValue}
+              disabled={activeTemplates.length === 0}
+            >
+              <SelectTrigger className='w-full'>
+                <SelectValue placeholder='Selecciona una plantilla' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='default'>Usar plantilla predeterminada de la academia</SelectItem>
+                {activeTemplates.map((template) => (
+                  <SelectItem key={template.id} value={String(template.id)}>
+                    {template.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {activeTemplates.length === 0 && (
+              <p className='text-muted-foreground text-sm'>
+                No hay plantillas activas en esta academia todavía.
+              </p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Resumen de la plantilla elegida</CardTitle>
+          <CardDescription>
+            Vista rápida de la plantilla que se aplicará cuando se genere el certificado.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {selectedTemplate ? (
+            <div className='space-y-4 rounded-xl border p-4'>
+              <div className='flex items-start justify-between gap-4'>
+                <div>
+                  <div className='flex items-center gap-2'>
+                    <span className='text-base font-semibold'>{selectedTemplate.name}</span>
+                    {selectedTemplate.is_default && (
+                      <Badge variant='secondary'>Predeterminada</Badge>
+                    )}
+                    {selectedTemplate.is_active && <Badge>Activa</Badge>}
+                  </div>
+                  {selectedTemplate.description && (
+                    <p className='text-muted-foreground mt-1 text-sm'>
+                      {selectedTemplate.description}
+                    </p>
                   )}
                 </div>
-                {defaultTemplate.description && (
-                  <p className='text-muted-foreground text-sm'>{defaultTemplate.description}</p>
-                )}
+
               </div>
-              <div className='flex shrink-0 gap-2'>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={() => handlePreview(defaultTemplate.id)}
-                >
-                  <Eye className='mr-1.5 h-3.5 w-3.5' />
-                  Vista Previa
-                </Button>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={() => handleEdit(defaultTemplate.id)}
-                >
-                  <Settings className='mr-1.5 h-3.5 w-3.5' />
-                  Configurar
-                </Button>
+
+              <div className='grid gap-3 md:grid-cols-3'>
+                <div className='bg-muted/40 rounded-lg p-3'>
+                  <p className='text-muted-foreground text-xs'>Orientación</p>
+                  <p className='text-sm font-semibold capitalize'>
+                    {selectedTemplate.design.layout}
+                  </p>
+                </div>
+                <div className='bg-muted/40 rounded-lg p-3'>
+                  <p className='text-muted-foreground text-xs'>Borde</p>
+                  <p className='text-sm font-semibold capitalize'>
+                    {selectedTemplate.design.border_style}
+                  </p>
+                </div>
+                <div className='bg-muted/40 rounded-lg p-3'>
+                  <p className='text-muted-foreground text-xs'>Usos</p>
+                  <p className='text-sm font-semibold'>{selectedTemplate.usage_count}</p>
+                </div>
               </div>
             </div>
-            <div className='grid grid-cols-2 gap-3 md:grid-cols-4'>
-              <div className='bg-muted/40 rounded-lg p-3'>
-                <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
-                  <Layout className='size-3' />
-                  Orientación
-                </div>
-                <p className='text-sm font-semibold capitalize'>{defaultTemplate.design.layout}</p>
-              </div>
-              <div className='bg-muted/40 rounded-lg p-3'>
-                <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
-                  <FileText className='size-3' />
-                  Borde
-                </div>
-                <p className='text-sm font-semibold capitalize'>{defaultTemplate.design.border_style}</p>
-              </div>
-              <div className='bg-muted/40 rounded-lg p-3'>
-                <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
-                  <Settings className='size-3' />
-                  Firmas
-                </div>
-                <p className='text-sm font-semibold'>{defaultTemplate.design.signature_count}</p>
-              </div>
-              <div className='bg-muted/40 rounded-lg p-3'>
-                <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
-                  <RotateCcw className='size-3' />
-                  Usos
-                </div>
-                <p className='text-sm font-semibold'>{defaultTemplate.usage_count}</p>
-              </div>
+          ) : (
+            <div className='rounded-xl border border-dashed p-8 text-center'>
+              <Award className='text-muted-foreground mx-auto mb-3 size-10' />
+              <p className='font-medium'>No hay plantilla disponible</p>
+              <p className='text-muted-foreground mt-1 text-sm'>
+                Crea una plantilla en la biblioteca de la academia y luego vuelve aquí para asignarla.
+              </p>
             </div>
-            {defaultTemplate.requirements &&
-              (defaultTemplate.requirements.lessons_completion ||
-                defaultTemplate.requirements.minimum_score) && (
-                <div className='border-border/40 mt-3 rounded-lg border p-3'>
-                  <p className='text-muted-foreground mb-1.5 text-xs font-medium'>Requisitos</p>
-                  <div className='flex flex-wrap gap-3 text-sm'>
-                    {defaultTemplate.requirements.lessons_completion && (
-                      <span className='text-muted-foreground'>
-                        Completar{' '}
-                        <span className='text-foreground font-semibold'>
-                          {defaultTemplate.requirements.lessons_completion}%
-                        </span>{' '}
-                        de las lecciones
-                      </span>
-                    )}
-                    {defaultTemplate.requirements.minimum_score && (
-                      <span className='text-muted-foreground'>
-                        Puntaje mínimo{' '}
-                        <span className='text-foreground font-semibold'>
-                          {defaultTemplate.requirements.minimum_score}%
-                        </span>
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-          </div>
-        </div>
-      )}
-
-      {/* Other Templates */}
-      {otherTemplates.length > 0 && (
-        <div className='flex flex-col gap-3'>
-          <p className='text-muted-foreground flex items-center gap-2 text-sm font-medium'>
-            <FileText className='size-4' />
-            Otras plantillas
-          </p>
-          <div className='grid gap-4 md:grid-cols-2'>
-            {otherTemplates.map((template) => (
-              <div
-                key={template.id}
-                className='border-border/60 bg-card rounded-xl border p-4'
-              >
-                <div className='mb-3 flex items-start justify-between gap-3'>
-                  <div className='flex flex-col gap-0.5'>
-                    <div className='flex items-center gap-2'>
-                      <span className='font-semibold'>{template.name}</span>
-                      {template.is_active && (
-                        <span className='rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-400'>
-                          Activa
-                        </span>
-                      )}
-                    </div>
-                    {template.description && (
-                      <p className='text-muted-foreground text-xs'>{template.description}</p>
-                    )}
-                  </div>
-                </div>
-                <div className='mb-3 grid grid-cols-2 gap-2'>
-                  <div className='bg-muted/40 rounded-lg p-2.5'>
-                    <p className='text-muted-foreground text-xs'>Orientación</p>
-                    <p className='text-sm font-semibold capitalize'>{template.design.layout}</p>
-                  </div>
-                  <div className='bg-muted/40 rounded-lg p-2.5'>
-                    <p className='text-muted-foreground text-xs'>Usos</p>
-                    <p className='text-sm font-semibold'>{template.usage_count}</p>
-                  </div>
-                </div>
-                <div className='flex gap-2'>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handlePreview(template.id)}
-                    className='flex-1'
-                  >
-                    <Eye className='mr-1 h-3.5 w-3.5' />
-                    Vista Previa
-                  </Button>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleSetDefault(template.id)}
-                    className='flex-1'
-                  >
-                    <Star className='mr-1 h-3.5 w-3.5' />
-                    Predeterminar
-                  </Button>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleEdit(template.id)}
-                  >
-                    <Settings className='h-3.5 w-3.5' />
-                  </Button>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => handleDelete(template.id)}
-                    className='text-destructive hover:text-destructive'
-                  >
-                    <Trash2 className='h-3.5 w-3.5' />
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Empty State */}
-      {totalTemplates === 0 && (
-        <div className='border-border/40 bg-card/50 flex flex-col items-center gap-3 rounded-2xl border border-dashed py-16 text-center'>
-          <div className='bg-primary/10 rounded-xl p-4'>
-            <Award className='text-primary size-8' />
-          </div>
-          <div>
-            <h3 className='font-semibold'>Aún no hay plantillas</h3>
-            <p className='text-muted-foreground mx-auto mt-1 max-w-sm text-sm'>
-              Crea tu primera plantilla de certificado para que los estudiantes puedan obtenerlos
-              al completar el curso
-            </p>
-          </div>
-          <Button onClick={() => setCreateDialogOpen(true)} className='mt-2'>
-            <Plus className='mr-2 h-4 w-4' />
-            Crear Primera Plantilla
-          </Button>
-        </div>
-      )}
-
-      {/* Dialogs */}
-      <CreateCertificateTemplateDialog
-        open={createDialogOpen}
-        onOpenChange={setCreateDialogOpen}
-        academySlug={academySlug}
-      />
-
-      {selectedTemplateId && (
-        <>
-          <EditCertificateTemplateDialog
-            open={editDialogOpen}
-            onOpenChange={setEditDialogOpen}
-            academySlug={academySlug}
-            templateId={selectedTemplateId}
-          />
-
-          <CertificatePreviewDialog
-            open={previewDialogOpen}
-            onOpenChange={setPreviewDialogOpen}
-            academySlug={academySlug}
-            templateId={selectedTemplateId}
-          />
-        </>
-      )}
-
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>¿Eliminar plantilla?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta acción no se puede deshacer. Los certificados ya emitidos con
-              esta plantilla no se verán afectados.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              className='bg-destructive hover:bg-destructive/90'
-            >
-              Eliminar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

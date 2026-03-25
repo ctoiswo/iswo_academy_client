@@ -9,14 +9,22 @@ import { PendingTasks } from './containers/pending-tasks'
 import { StatsSection } from './containers/stats-section'
 import { WelcomeHero } from './containers/welcome-hero'
 
-export function StudentDashboard({ user, academy }: DashboardProps) {
+interface StudentDashboardProps extends DashboardProps {
+  academySlug?: string
+}
+
+export function StudentDashboard({
+  user,
+  academy,
+  academySlug: academySlugFromRoute,
+}: StudentDashboardProps) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  const academySlug = academy?.slug ?? 'default'
+  const academySlug = academySlugFromRoute ?? academy?.slug ?? ''
   const firstName = user?.first_name ?? 'estudiante'
 
   const { data: dashboardData, isLoading } = useStudentDashboard(academySlug)

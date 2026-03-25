@@ -1,5 +1,8 @@
 import { useParams, useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 import { Loader2, AlertCircle, ShoppingCart, Ticket } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import type { AccessCodeRedemptionResponse } from '@/types'
 import { useAuthStore } from '@/stores/auth-store'
 import { formatPrice } from '@/lib/formatters'
 import { useCourseBySlug } from '@/hooks/use-featured-content'
@@ -12,12 +15,28 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { AccessCodeRedemption } from '@/components/access-codes/access-code-redemption'
 import { Header } from '@/features/home/components/header'
 
 export default function CourseEnrollPage() {
   const { courseSlug } = useParams({ strict: false })
   const navigate = useNavigate()
-  const { isAuthenticated } = useAuthStore()
+  const { t } = useTranslation()
+  const {
+    isAuthenticated,
+    refreshAcademies,
+    academyData,
+    currentAcademy,
+    selectAcademy,
+  } = useAuthStore()
+  const [isRedeemModalOpen, setIsRedeemModalOpen] = useState(false)
 
   const {
     data: courseData,
@@ -76,16 +95,41 @@ export default function CourseEnrollPage() {
   }
 
   const handleRedeemCode = () => {
-    // Navigate to redeem code page within the academy context
-    if (courseData?.academy?.slug) {
-      navigate({
-        to: '/academy/$academySlug/redeem-code',
-        params: { academySlug: courseData.academy.slug },
-      })
-    } else {
-      // Fallback to generic redeem code page
-      navigate({ to: '/redeem-code' })
+    setIsRedeemModalOpen(true)
+  }
+
+  const handleRedeemSuccess = async () => {
+    // Keep academy memberships in sync in case the code grants access in a new academy.
+    await refreshAcademies()
+  }
+
+  const handleGoToRedeemedAcademyDashboard = async (
+    response: AccessCodeRedemptionResponse
+  ) => {
+    await refreshAcademies()
+
+    const updatedAcademies = useAuthStore.getState().academyData?.academies || []
+    const targetAcademy = updatedAcademies.find(
+      (academy) => academy.slug === response.course.academy.slug
+    )
+
+    if (targetAcademy) {
+      selectAcademy(targetAcademy.id)
     }
+
+    setIsRedeemModalOpen(false)
+    navigate({ to: `/academy/${response.course.academy.slug}/dashboard` })
+  }
+
+  const handleSeeLater = () => {
+    setIsRedeemModalOpen(false)
+
+    if (currentAcademy?.slug) {
+      navigate({ to: `/academy/${currentAcademy.slug}/dashboard` })
+      return
+    }
+
+    navigate({ to: '/courses' })
   }
 
   return (
@@ -232,6 +276,87 @@ export default function CourseEnrollPage() {
           </div>
         </div>
       </div>
+
+      <Dialog open={isRedeemModalOpen} onOpenChange={setIsRedeemModalOpen}>
+        <DialogContent className='max-h-[85vh] overflow-y-auto sm:max-w-2xl'>
+          <DialogHeader>
+            <DialogTitle>{t('accessCode.redeem.title')}</DialogTitle>
+            <DialogDescription>
+              {t('accessCode.redeem.description')}
+            </DialogDescription>
+          </DialogHeader>
+
+          <AccessCodeRedemption
+            onSuccess={handleRedeemSuccess}
+            renderSuccessActions={({ response, reset }) => {
+              const redeemedAcademySlug = response.course.academy.slug
+              const isDifferentAcademy =
+                !!currentAcademy?.slug && currentAcademy.slug !== redeemedAcademySlug
+              const hasAcademyInList =
+                academyData?.academies?.some(
+                  (academy) => academy.slug === redeemedAcademySlug
+                ) ?? false
+
+              return (
+                <div className='space-y-3'>
+                  {isDifferentAcademy && (
+                    <Alert>
+                      <AlertCircle className='h-4 w-4' />
+                      <AlertDescription>
+                        Este curso pertenece a la academia{' '}
+                        <strong>{response.course.academy.name}</strong> y tu
+                        academia actual es{' '}
+                        <strong>{currentAcademy?.name}</strong>.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  <div className='grid gap-2 sm:grid-cols-2'>
+                    {(isDifferentAcademy || hasAcademyInList) && (
+                      <Button
+                        onClick={() =>
+                          handleGoToRedeemedAcademyDashboard(response)
+                        }
+                        className='w-full'
+                      >
+                        Ir al dashboard de {response.course.academy.name}
+                      </Button>
+                    )}
+
+                    <Button
+                      onClick={handleSeeLater}
+                      variant='outline'
+                      className='w-full'
+                    >
+                      Ver mas tarde
+                    </Button>
+                  </div>
+
+                  <Button onClick={reset} variant='ghost' className='w-full'>
+                    {t('accessCode.redeem.redeemAnotherButton')}
+                  </Button>
+                </div>
+              )
+            }}
+          />
+
+          <div className='text-muted-foreground text-center text-sm'>
+            <p>
+              {t('accessCode.redeem.helpText')}
+              <br />
+              {t('common.no')}{' '}
+              <Button
+                variant='link'
+                className='h-auto p-0 text-sm'
+                onClick={() => setIsRedeemModalOpen(false)}
+              >
+                {t('accessCode.redeem.browseCourses')}
+              </Button>
+              .
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

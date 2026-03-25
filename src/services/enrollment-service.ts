@@ -25,7 +25,17 @@ class EnrollmentService {
       params.append('per_page', filters.per_page.toString())
 
     const response = await apiClient.get(`/enrollments?${params}`)
-    return response.data
+    const payload = response.data
+
+    // Normalize API payload for legacy consumers that expect `enrollments`.
+    if (payload && Array.isArray(payload.data)) {
+      return {
+        ...payload,
+        enrollments: payload.data,
+      }
+    }
+
+    return payload
   }
 
   /**

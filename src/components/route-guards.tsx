@@ -69,7 +69,7 @@ export function AuthGuard({ children, fallback }: RouteGuardProps) {
         const singleAcademy = academyData.academies[0]
         if (currentPath === '/') {
           router.navigate({
-            to: `/academy/${singleAcademy.id}/dashboard`,
+            to: `/academy/${singleAcademy.slug}/dashboard`,
             replace: true,
           })
         }
@@ -130,11 +130,11 @@ export function GuestGuard({ children, fallback }: RouteGuardProps) {
       } else if (academyData.count === 1) {
         // Single academy - redirect to academy dashboard
         const singleAcademy = academyData.academies[0]
-        router.navigate({ to: `/academy/${singleAcademy.id}/dashboard` })
+        router.navigate({ to: `/academy/${singleAcademy.slug}/dashboard` })
       } else if (academyData.count > 1) {
         // Multiple academies - redirect based on current academy selection
         if (currentAcademy) {
-          router.navigate({ to: `/academy/${currentAcademy.id}/dashboard` })
+          router.navigate({ to: `/academy/${currentAcademy.slug}/dashboard` })
         } else {
           router.navigate({ to: '/academy-selection' })
         }

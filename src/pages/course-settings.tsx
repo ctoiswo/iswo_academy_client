@@ -40,8 +40,6 @@ import { Switch } from '@/components/ui/switch'
 
 const settingsSchema = z.object({
   is_published: z.boolean(),
-  is_free: z.boolean(),
-  certificate_enabled: z.boolean(),
   allow_comments: z.boolean(),
 })
 
@@ -66,8 +64,6 @@ export default function CourseSettingsPage() {
     resolver: zodResolver(settingsSchema),
     defaultValues: {
       is_published: false,
-      is_free: false,
-      certificate_enabled: false,
       allow_comments: true,
     },
   })
@@ -77,8 +73,6 @@ export default function CourseSettingsPage() {
     if (course) {
       form.reset({
         is_published: course.status === 'published',
-        is_free: course.is_free || false,
-        certificate_enabled: course.certificate_enabled || false,
         allow_comments: course.allow_comments !== false,
       })
     }
@@ -91,8 +85,6 @@ export default function CourseSettingsPage() {
       status: (values.is_published ? 'published' : 'draft') as
         | 'published'
         | 'draft',
-      is_free: values.is_free,
-      certificate_enabled: values.certificate_enabled,
       allow_comments: values.allow_comments,
     }
 
@@ -205,57 +197,12 @@ export default function CourseSettingsPage() {
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name='is_free'
-                    render={({ field }) => (
-                      <FormItem className='flex items-center justify-between rounded-lg border p-4'>
-                        <div className='space-y-0.5'>
-                          <FormLabel className='text-base'>
-                            Curso Gratuito
-                          </FormLabel>
-                          <FormDescription>
-                            Los estudiantes pueden acceder sin pagar
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
                 </div>
               </div>
 
               <div>
                 <h4 className='mb-4 text-sm font-medium'>Opciones del Curso</h4>
                 <div className='space-y-4'>
-                  <FormField
-                    control={form.control}
-                    name='certificate_enabled'
-                    render={({ field }) => (
-                      <FormItem className='flex items-center justify-between rounded-lg border p-4'>
-                        <div className='space-y-0.5'>
-                          <FormLabel className='text-base'>
-                            Certificado de Finalización
-                          </FormLabel>
-                          <FormDescription>
-                            Otorgar certificado al completar el curso
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
                   <FormField
                     control={form.control}
                     name='allow_comments'

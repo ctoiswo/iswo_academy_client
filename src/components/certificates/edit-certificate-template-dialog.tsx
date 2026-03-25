@@ -82,7 +82,7 @@ export function EditCertificateTemplateDialog({
     { title: string; name_placeholder: string }[]
   >([{ title: 'Instructor', name_placeholder: '{{course_instructor}}' }])
   const [backgroundImage, setBackgroundImage] = useState<File | null>(null)
-  const [logo, setLogo] = useState<File | null>(null)
+  const [backgroundPreviewUrl, setBackgroundPreviewUrl] = useState<string | null>(null)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema) as any,
@@ -104,6 +104,8 @@ export function EditCertificateTemplateDialog({
       minimum_score: 70,
     },
   })
+
+  const selectedLayout = form.watch('layout')
 
   // Populate form when template loads
   useEffect(() => {
@@ -136,6 +138,18 @@ export function EditCertificateTemplateDialog({
     }
   }, [template, form])
 
+  useEffect(() => {
+    if (!backgroundImage) {
+      setBackgroundPreviewUrl(null)
+      return
+    }
+
+    const objectUrl = URL.createObjectURL(backgroundImage)
+    setBackgroundPreviewUrl(objectUrl)
+
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [backgroundImage])
+
   const onSubmit = async (values: FormValues) => {
     const data: any = {
       name: values.name,
@@ -161,7 +175,6 @@ export function EditCertificateTemplateDialog({
         minimum_score: values.minimum_score,
       },
       background_image: backgroundImage || undefined,
-      logo: logo || undefined,
     }
 
     await updateTemplate.mutateAsync(data)
@@ -402,7 +415,7 @@ export function EditCertificateTemplateDialog({
                     name='logo_position'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Posición del Logo</FormLabel>
+                        <FormLabel>Posición del Logo de la Academia</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
@@ -429,6 +442,11 @@ export function EditCertificateTemplateDialog({
                     )}
                   />
 
+                  <FormDescription>
+                    El logo del certificado se toma automaticamente del logo de
+                    la academia.
+                  </FormDescription>
+
                   <div className='space-y-4'>
                     <div>
                       <Label>Imagen de Fondo (Opcional)</Label>
@@ -445,20 +463,22 @@ export function EditCertificateTemplateDialog({
                             {backgroundImage.name}
                           </p>
                         )}
-                      </div>
-                    </div>
-                    <div>
-                      <Label>Logo de la Academia (Opcional)</Label>
-                      <div className='mt-2'>
-                        <Input
-                          type='file'
-                          accept='image/*'
-                          onChange={(e) => setLogo(e.target.files?.[0] || null)}
-                        />
-                        {logo && (
-                          <p className='text-muted-foreground mt-1 text-sm'>
-                            {logo.name}
-                          </p>
+
+                        <p className='text-muted-foreground mt-2 text-xs'>
+                          Recomendacion para mejor resultado:
+                          {selectedLayout === 'portrait'
+                            ? ' vertical 2480 x 3508 px (A4 a 300 DPI). Minimo sugerido: 1240 x 1754 px.'
+                            : ' horizontal 3508 x 2480 px (A4 a 300 DPI). Minimo sugerido: 1754 x 1240 px.'}
+                        </p>
+
+                        {backgroundPreviewUrl && (
+                          <div className='mt-3 overflow-hidden rounded-md border border-slate-700 bg-slate-900'>
+                            <img
+                              src={backgroundPreviewUrl}
+                              alt='Vista previa de imagen de fondo'
+                              className='h-44 w-full object-contain'
+                            />
+                          </div>
                         )}
                       </div>
                     </div>
@@ -505,7 +525,7 @@ export function EditCertificateTemplateDialog({
                         <FormLabel>Cuerpo del Certificado</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder='Usa placeholders como {{student_name}}, {{course_title}}, {{completion_date}}'
+                            placeholder='Usa placeholders como {{student_name}}, {{course_title}}, {{completion_date}}, {{academy_admin_name}}'
                             rows={4}
                             {...field}
                           />
@@ -513,7 +533,10 @@ export function EditCertificateTemplateDialog({
                         <FormDescription>
                           Placeholders disponibles: {'{{student_name}}'},{' '}
                           {'{{course_title}}'}, {'{{completion_date}}'},{' '}
-                          {'{{academy_name}}'}, {'{{final_score}}'}
+                          {'{{academy_name}}'}, {'{{final_score}}'},{' '}
+                          {'{{platform_ceo_email}}'},{' '}
+                          {'{{academy_admin_name}}'}, {'{{academy_admin_email}}'},{' '}
+                          {'{{academy_owner_name}}'}, {'{{academy_owner_email}}'}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -528,7 +551,7 @@ export function EditCertificateTemplateDialog({
                         <FormLabel>Pie de Página</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder='Emitido por {{academy_name}}'
+                            placeholder='Emitido por {{academy_name}} · CEO: {{platform_ceo_email}}'
                             {...field}
                           />
                         </FormControl>

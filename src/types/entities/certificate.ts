@@ -18,6 +18,7 @@ export interface Certificate {
     id: number
     title: string
     academy_name: string
+    academy_slug?: string
   }
   verification_url: string | null
   created_at: string
@@ -57,6 +58,7 @@ export interface CertificateTemplate {
   }
   background_image_url?: string
   logo_url?: string
+  preview_pdf_url?: string | null
   created_at: string
   updated_at: string
 }

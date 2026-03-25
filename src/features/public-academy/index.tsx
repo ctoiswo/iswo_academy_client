@@ -1,9 +1,12 @@
 import { useParams, useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 import { Loader2, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { useAcademy } from '@/hooks/use-academy'
 import { useWishlist } from '@/hooks/use-wishlist'
+import { paymentService } from '@/services/payment-service'
+import { Particles } from '@/components/ui/particles'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,6 +22,7 @@ export function PublicAcademyPage() {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuthStore()
   const { isInWishlist, toggleWishlist } = useWishlist()
+  const [isBuyingSubscription, setIsBuyingSubscription] = useState(false)
 
   // Fetch academy data
   const {
@@ -77,6 +81,41 @@ export function PublicAcademyPage() {
     }
   }
 
+  const handleBuySubscription = async () => {
+    if (!backendAcademy) return
+
+    if (!isAuthenticated) {
+      toast.info('Inicia sesión para comprar la suscripción')
+      navigate({
+        to: '/sign-in',
+        search: { redirect: window.location.pathname },
+      })
+      return
+    }
+
+    try {
+      setIsBuyingSubscription(true)
+      const result = await paymentService.createAcademySubscription(
+        backendAcademy.id
+      )
+      const checkoutUrl = result?.data?.checkout_url
+
+      if (!checkoutUrl) {
+        throw new Error('No se recibió URL de checkout para la suscripción')
+      }
+
+      window.location.href = checkoutUrl
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'No se pudo iniciar la compra de suscripción'
+      toast.error(message)
+    } finally {
+      setIsBuyingSubscription(false)
+    }
+  }
+
   // Loading state
   if (loading) {
     return (
@@ -118,7 +157,17 @@ export function PublicAcademyPage() {
   const courses = backendAcademy.courses || []
 
   return (
-    <div className='bg-background min-h-screen'>
+    <div className='bg-background relative min-h-screen overflow-hidden'>
+      <Particles
+        className='pointer-events-none fixed inset-0 z-0'
+        quantity={90}
+        ease={70}
+        size={0.45}
+        staticity={48}
+      />
+      <div className='pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.08),transparent_60%)]' />
+
+      <div className='relative z-10'>
       <PageHeader />
 
       <AcademyHero
@@ -126,13 +175,20 @@ export function PublicAcademyPage() {
         isSaved={isSaved}
         onSave={handleWishlistToggle}
         onShare={handleShare}
+        onBuySubscription={handleBuySubscription}
+        isBuyingSubscription={isBuyingSubscription}
       />
 
       <AcademyInfo academy={backendAcademy} />
 
-      <CoursesSection courses={courses} academyName={backendAcademy.name} />
+      <CoursesSection
+        courses={courses}
+        academyName={backendAcademy.name}
+        academySlug={backendAcademy.slug}
+      />
 
       <PageFooter />
+      </div>
     </div>
   )
 }
