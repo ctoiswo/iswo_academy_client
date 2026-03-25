@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { Bell, BellOff, CheckCheck } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import {
   getCategoryIcon,
@@ -21,6 +22,7 @@ import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
 export default function NotificationsPage() {
   const { user, currentAcademy } = useAuthStore()
+  const navigate = useNavigate()
   const [filter, setFilter] = useState<'all' | 'unread'>('all')
 
   // Query para todas las notificaciones (sin filtro)
@@ -50,7 +52,11 @@ export default function NotificationsPage() {
 
     // Si tiene action_url, navegar
     if (notification.action_url) {
-      window.location.href = notification.action_url
+      if (notification.action_url.startsWith('/')) {
+        navigate({ to: notification.action_url })
+      } else {
+        window.location.href = notification.action_url
+      }
     }
   }
 

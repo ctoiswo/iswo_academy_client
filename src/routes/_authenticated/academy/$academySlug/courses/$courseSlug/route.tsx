@@ -1,16 +1,13 @@
-import { createFileRoute, Outlet, useMatches } from '@tanstack/react-router'
+import { createFileRoute, Outlet, useLocation } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
 function CourseLayoutRoute() {
   const { user, currentAcademy } = useAuthStore()
-  const matches = useMatches()
+  const { pathname } = useLocation()
 
   // Lesson viewer and assessment viewer are full-screen — bypass DashboardLayout
-  const isLessonViewer = matches.some((m) =>
-    (m.routeId as string).includes('$lessonId') ||
-    (m.routeId as string).includes('watch/assessment')
-  )
+  const isLessonViewer = /\/watch\//.test(pathname)
 
   if (isLessonViewer) {
     return <Outlet />

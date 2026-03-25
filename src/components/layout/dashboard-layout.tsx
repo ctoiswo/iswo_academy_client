@@ -314,7 +314,7 @@ function SidebarLayout({
                 staticity={50}
               />
               {/* Header */}
-              <Header>
+              <Header showSidebarTrigger>
                 <div className='flex w-full items-center justify-between'>
                   <div className='flex items-center space-x-4'>
                     {title && (

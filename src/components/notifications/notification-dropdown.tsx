@@ -3,6 +3,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Bell, ExternalLink } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { getCategoryEmoji, getPriorityColor } from '@/lib/notification-utils'
 import { useNotifications } from '@/hooks/use-notifications'
@@ -16,6 +17,7 @@ interface NotificationDropdownProps {
 
 export function NotificationDropdown({ className }: NotificationDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
   const { currentAcademy } = useAuthStore()
   const {
     notifications,
@@ -32,7 +34,11 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
     }
 
     if (notification.action_url) {
-      window.location.href = notification.action_url
+      if (notification.action_url.startsWith('/')) {
+        navigate({ to: notification.action_url })
+      } else {
+        window.location.href = notification.action_url
+      }
     }
 
     setIsOpen(false)
@@ -77,7 +83,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
               transition={{ duration: 0.15 }}
-              className='absolute top-full right-0 z-50 mt-2 w-96 rounded-lg border border-gray-200 bg-white shadow-lg'
+              className='bg-popover border-border absolute top-full right-0 z-50 mt-2 w-96 rounded-lg border shadow-lg'
             >
               {/* Header */}
               <div className='flex items-center justify-between border-b p-4'>
@@ -113,7 +119,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                         key={notification.id}
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className={`mb-2 cursor-pointer rounded-lg p-3 transition-all hover:bg-gray-50 ${!notification.read ? 'border-l-4 border-blue-500 bg-blue-50' : 'bg-white'} `}
+                        className={`mb-2 cursor-pointer rounded-lg p-3 transition-all hover:bg-accent/60 ${!notification.read ? 'border-primary/60 bg-primary/10 border-l-4' : 'bg-card'} `}
                         onClick={() => handleNotificationClick(notification)}
                       >
                         <div className='flex items-start gap-3'>
@@ -190,7 +196,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
 
               {/* Footer */}
               {notifications.length > 0 && (
-                <div className='border-t bg-gray-50 p-3 text-center'>
+                <div className='border-border bg-muted/40 border-t p-3 text-center'>
                   <Button
                     variant='ghost'
                     size='sm'
@@ -198,7 +204,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                       const notificationsUrl = currentAcademy
                         ? `/academy/${currentAcademy.slug}/notifications`
                         : '/notifications'
-                      window.location.href = notificationsUrl
+                      navigate({ to: notificationsUrl })
                       setIsOpen(false)
                     }}
                     className='text-xs'

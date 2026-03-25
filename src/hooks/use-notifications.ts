@@ -155,18 +155,22 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
 
   // Cargar notificaciones no leídas desde el API
   const loadUnreadNotifications = useCallback(async () => {
-    if (!isAuthenticated || !tokens?.access_token || !currentAcademy) return
+    if (!isAuthenticated || !tokens?.access_token) return
+
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${tokens.access_token}`,
+      'Content-Type': 'application/json',
+    }
+    if (currentAcademy?.slug) {
+      headers['X-Academy-Slug'] = currentAcademy.slug
+    }
 
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/notifications/unread`,
         {
           method: 'GET',
-          headers: {
-            Authorization: `Bearer ${tokens.access_token}`,
-            'Content-Type': 'application/json',
-            'X-Academy-Slug': currentAcademy.slug,
-          },
+          headers,
         }
       )
 
@@ -179,23 +183,27 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
       // console.error('Failed to load notifications:', error)
       setConnectionError('Failed to load notifications')
     }
-  }, [isAuthenticated, tokens, currentAcademy])
+  }, [isAuthenticated, tokens, currentAcademy?.slug])
 
   // Marcar notificación como leída
   const markAsRead = useCallback(
     async (notificationId: number) => {
-      if (!tokens?.access_token || !currentAcademy) return
+      if (!tokens?.access_token) return
+
+      const headers: Record<string, string> = {
+        Authorization: `Bearer ${tokens.access_token}`,
+        'Content-Type': 'application/json',
+      }
+      if (currentAcademy?.slug) {
+        headers['X-Academy-Slug'] = currentAcademy.slug
+      }
 
       try {
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/notifications/${notificationId}/mark_as_read`,
           {
             method: 'PATCH',
-            headers: {
-              Authorization: `Bearer ${tokens.access_token}`,
-              'Content-Type': 'application/json',
-              'X-Academy-Slug': currentAcademy.slug,
-            },
+            headers,
           }
         )
 
@@ -206,7 +214,7 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
         // console.error('Failed to mark notification as read:', error)
       }
     },
-    [tokens, currentAcademy]
+    [tokens, currentAcademy?.slug]
   )
 
   // Marcar todas como leídas

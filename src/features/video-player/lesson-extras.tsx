@@ -51,6 +51,8 @@ function ResourceItem({ attachment }: { attachment: LessonAttachment }) {
     file: '📎',
   }
   const icon = iconMap[attachment.file_icon] ?? '📎'
+  const fileSizeMb = Number(attachment.file_size_mb)
+  const hasFileSize = Number.isFinite(fileSizeMb) && fileSizeMb > 0
 
   return (
     <div className='bg-secondary/30 hover:bg-secondary/50 flex items-center gap-3 rounded-lg p-3 transition-colors'>
@@ -64,9 +66,7 @@ function ResourceItem({ attachment }: { attachment: LessonAttachment }) {
         <p className='text-muted-foreground text-xs capitalize'>
           {attachment.attachment_type}
           {attachment.file_extension && ` · .${attachment.file_extension}`}
-          {attachment.file_size_mb
-            ? ` · ${attachment.file_size_mb.toFixed(1)} MB`
-            : ''}
+          {hasFileSize ? ` · ${fileSizeMb.toFixed(1)} MB` : ''}
           {attachment.required && (
             <span className='text-amber-400 ml-1'>· Requerido</span>
           )}
@@ -128,7 +128,7 @@ function CommentItem({
     .toUpperCase()
 
   return (
-    <div className='flex gap-3'>
+    <div id={`comment-${comment.id}`} className='flex gap-3'>
       <Avatar className='mt-0.5 size-8 shrink-0'>
         <AvatarFallback className='text-xs'>{initials}</AvatarFallback>
       </Avatar>
@@ -231,7 +231,7 @@ export function LessonExtras({
   const resourceCount = attachments?.length ?? 0
 
   return (
-    <div className='bg-card border-border mt-6 overflow-hidden rounded-xl border'>
+    <div className='bg-card border-border mt-0 overflow-hidden rounded-xl border'>
       <Tabs defaultValue='comments'>
         <TabsList
           className={cn(

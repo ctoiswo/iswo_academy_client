@@ -9,6 +9,7 @@ export interface Certificate {
   certificate_number: string
   issued_at: string
   revoked_at: string | null
+  pdf_url?: string | null
   user: {
     id: number
     full_name: string
@@ -112,4 +113,37 @@ export interface CertificateDownloadData {
     academy_name: string
     instructor_name: string
   }
+}
+
+export interface MissingCertificateRequirement {
+  key: string
+  label: string
+  message: string
+  required?: number
+  current?: number | string | null
+  unit?: string
+}
+
+export interface CourseCertificateStatus {
+  course: {
+    id: number
+    slug: string
+    title: string
+  }
+  eligible: boolean
+  has_certificate: boolean
+  certificate: {
+    id: number
+    certificate_number: string
+    issued_at: string
+    pdf_url?: string | null
+    verification_url: string | null
+    download_path: string
+  } | null
+  metrics: {
+    completed: boolean
+    progress_percentage: number
+    current_score: number | null
+  }
+  missing_requirements: MissingCertificateRequirement[]
 }

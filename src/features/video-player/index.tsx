@@ -1113,6 +1113,33 @@ export function CoursePlayer({
     queryClient.invalidateQueries({ queryKey: assessmentKeys.list(academySlug, courseSlug) })
   }
 
+  const goToNextSectionFromAssessment = (assessment: AssessmentSummary) => {
+    if (!assessment.section_id) return
+
+    const sortedSections = [...sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    const currentSectionIndex = sortedSections.findIndex((s) => s.id === assessment.section_id)
+    if (currentSectionIndex < 0) return
+
+    const nextSection = sortedSections[currentSectionIndex + 1]
+    if (!nextSection) return
+
+    const nextSectionLessons = [...(nextSection.lessons ?? [])].sort(
+      (a, b) => (a.position ?? 0) - (b.position ?? 0)
+    )
+    const firstLesson = nextSectionLessons[0]
+    if (firstLesson) {
+      handleLessonSelect(firstLesson)
+      return
+    }
+
+    const nextSectionQuiz = assessments.find(
+      (a) => a.type === 'Quiz' && a.published && a.section_id === nextSection.id
+    )
+    if (nextSectionQuiz) {
+      handleAssessmentSelect(nextSectionQuiz)
+    }
+  }
+
   const navigateLesson = (direction: 'prev' | 'next') => {
     const currentIndex = allLessons.findIndex((l) => l.id === lessonId)
     const newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1
@@ -1138,6 +1165,14 @@ export function CoursePlayer({
           courseSlug={courseSlug}
           assessment={currentAssessment}
           onPassed={() => handleAssessmentPassed(assessmentId)}
+          onGoToCertificate={() => {
+            navigate({
+              to: `/academy/${academySlug}/certificates?courseSlug=${courseSlug}&from=final-exam`,
+            })
+          }}
+          onContinueToNextSection={() =>
+            goToNextSectionFromAssessment(currentAssessment)
+          }
         />
       )
     }
@@ -1163,6 +1198,15 @@ export function CoursePlayer({
           />
         )
       case 'text':
+        return (
+          <ReadingContent
+            lesson={currentLesson}
+            onComplete={handleComplete}
+            isCompleting={isCompleting}
+            isCompleted={currentLesson.user_progress?.completed ?? false}
+          />
+        )
+      case 'assignment':
         return (
           <ReadingContent
             lesson={currentLesson}
@@ -1253,9 +1297,9 @@ export function CoursePlayer({
 
       {/* Main content + sidebar */}
       <div className='flex flex-1'>
-        <main className='mx-auto flex w-full max-w-5xl flex-1 flex-col p-4 lg:p-6'>
+        <main className='mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 p-4 lg:p-6'>
           {/* Lesson/Assessment content */}
-          <div className='flex-1'>{renderContent()}</div>
+          {renderContent()}
 
           {/* Resources & Comments — only for lessons */}
           {currentLesson && !assessmentId && (
@@ -1267,7 +1311,7 @@ export function CoursePlayer({
 
           {/* Lesson info & navigation — only for lessons */}
           {currentLesson && !assessmentId && (
-            <div className='bg-card border-border mt-6 flex flex-col items-start justify-between gap-4 rounded-xl border p-4 sm:flex-row sm:items-center'>
+            <div className='bg-card border-border mt-0 flex flex-col items-start justify-between gap-4 rounded-xl border p-4 sm:flex-row sm:items-center'>
               <div>
                 <div className='mb-1 flex items-center gap-2'>
                   <LessonTypeBadge type={currentLesson.lesson_type} />

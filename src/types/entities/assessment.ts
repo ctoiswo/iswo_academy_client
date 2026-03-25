@@ -3,6 +3,8 @@
  * Matching backend assessment_json structure
  */
 
+import type { CourseCertificateStatus } from './certificate'
+
 export type AssessmentType = 'Quiz' | 'Exam'
 
 export type QuestionType =
@@ -158,6 +160,16 @@ export interface QuizAttemptResult {
   max_score: number | null
   percentage: number | null
   attempt_number: number
+  certificate_status?: CourseCertificateStatus | null
+  incorrect_answers?: {
+    question_id: number
+    question_text: string
+    explanation: string | null
+    selected_answer_ids: number[]
+    selected_answers: string[]
+    correct_answer_ids: number[]
+    correct_answers: string[]
+  }[]
 }
 
 // my_attempts response

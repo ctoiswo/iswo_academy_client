@@ -2,6 +2,7 @@ import type {
   Certificate,
   CertificateVerification,
   CertificateDownloadData,
+  CourseCertificateStatus,
   LearningPathCertificateConfiguration,
   PaginationMeta,
   MessageResponse,
@@ -171,6 +172,19 @@ class CertificateService {
       {
         params: { page, per_page: perPage },
       }
+    )
+    return response.data
+  }
+
+  /**
+   * Get current user's certificate status for a specific academy course
+   */
+  async getCourseCertificateStatus(
+    academySlug: string,
+    courseSlug: string
+  ): Promise<CourseCertificateStatus> {
+    const response = await apiClient.get<CourseCertificateStatus>(
+      `/academies/${academySlug}/courses/${courseSlug}/certificate_status`
     )
     return response.data
   }

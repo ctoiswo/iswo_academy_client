@@ -27,6 +27,8 @@ interface AssessmentPlayerProps {
   courseSlug: string
   assessment: AssessmentSummary
   onPassed?: () => void
+  onContinueToNextSection?: () => void
+  onGoToCertificate?: () => void
 }
 
 // ─── Timer ────────────────────────────────────────────────────────────────────
@@ -79,10 +81,14 @@ function ResultScreen({
   result,
   assessment,
   onRetry,
+  onContinueToNextSection,
+  onGoToCertificate,
 }: {
   result: QuizAttemptResult
   assessment: AssessmentSummary
   onRetry: () => void
+  onContinueToNextSection?: () => void
+  onGoToCertificate?: () => void
 }) {
   const canRetry =
     assessment.attempts_allowed == null ||
@@ -134,6 +140,50 @@ function ResultScreen({
           Intentar de nuevo
         </Button>
       )}
+
+      {!result.passed && (result.incorrect_answers?.length ?? 0) > 0 && (
+        <div className='bg-card border-border mt-2 w-full max-w-3xl rounded-xl border p-4 text-left'>
+          <h3 className='text-foreground mb-3 text-sm font-semibold'>
+            Revisa tus respuestas incorrectas
+          </h3>
+          <div className='space-y-4'>
+            {result.incorrect_answers?.map((item) => (
+              <div key={item.question_id} className='border-border rounded-lg border p-3'>
+                <p className='text-foreground text-sm font-medium'>
+                  {item.question_text}
+                </p>
+                <p className='text-muted-foreground mt-2 text-xs'>
+                  Tu respuesta: {item.selected_answers.length > 0 ? item.selected_answers.join(', ') : 'Sin respuesta'}
+                </p>
+                {assessment.show_correct_answers && (
+                  <p className='mt-1 text-xs text-emerald-500'>
+                    Correcta: {item.correct_answers.join(', ')}
+                  </p>
+                )}
+                {item.explanation && (
+                  <p className='text-muted-foreground mt-2 text-xs'>
+                    {assessment.show_correct_answers ? 'Explicación' : 'Sugerencia'}: {item.explanation}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {result.passed && assessment.type === 'Exam' && onGoToCertificate && (
+        <Button onClick={onGoToCertificate} className='gap-2'>
+          Ir por tu certificado
+          <ChevronRight className='size-4' />
+        </Button>
+      )}
+
+      {result.passed && assessment.type !== 'Exam' && onContinueToNextSection && (
+        <Button onClick={onContinueToNextSection} className='gap-2'>
+          Ir a la siguiente sección
+          <ChevronRight className='size-4' />
+        </Button>
+      )}
     </div>
   )
 }
@@ -145,6 +195,8 @@ export function AssessmentPlayer({
   courseSlug,
   assessment,
   onPassed,
+  onContinueToNextSection,
+  onGoToCertificate,
 }: AssessmentPlayerProps) {
   const [phase, setPhase] = useState<'intro' | 'taking' | 'result'>('intro')
   const [attemptId, setAttemptId] = useState<number | null>(null)
@@ -316,13 +368,33 @@ export function AssessmentPlayer({
           result={result}
           assessment={assessment}
           onRetry={handleRetry}
+          onContinueToNextSection={onContinueToNextSection}
+          onGoToCertificate={onGoToCertificate}
         />
       </div>
     )
   }
 
   // ── Taking screen ─────────────────────────────────────────────────────────
-  if (!currentQuestion) return null
+  if (!currentQuestion) {
+    return (
+      <div className='bg-card border-border flex flex-col rounded-xl border p-8 text-center'>
+        <div className='mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-amber-500/15'>
+          <FileQuestion className='size-8 text-amber-500' />
+        </div>
+        <h3 className='text-foreground text-lg font-semibold'>Quiz sin preguntas</h3>
+        <p className='text-muted-foreground mt-2 text-sm'>
+          Este quiz todavia no tiene preguntas publicadas. Intentalo mas tarde o
+          contacta al instructor.
+        </p>
+        <div className='mt-6'>
+          <Button variant='outline' onClick={() => setPhase('intro')}>
+            Volver
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   const selectedForCurrent = selections[currentQuestion.id] ?? []
   const isMultiSelect = currentQuestion.question_type === 'multiple_select'

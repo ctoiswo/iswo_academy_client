@@ -76,7 +76,7 @@ export interface LessonAttachment {
   attachment_type: string
   file_icon: string
   file_extension: string
-  file_size_mb: number | null
+  file_size_mb: number | string | null
   required: boolean
   download_url: string | null
 }
