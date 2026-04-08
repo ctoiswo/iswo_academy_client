@@ -19,4 +19,17 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-router': ['@tanstack/react-router'],
+          'vendor-query': ['@tanstack/react-query'],
+          'vendor-ui': ['framer-motion', 'recharts'],
+          'vendor-editor': ['@tiptap/react', '@tiptap/starter-kit'],
+        },
+      },
+    },
+  },
 })
