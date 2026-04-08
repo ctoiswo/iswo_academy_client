@@ -232,7 +232,7 @@ export function AssessmentPlayer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attemptId, selections])
 
-  const handleSubmit = (fromTimer = false) => {
+  const handleSubmit = (_fromTimer = false) => {
     if (attemptId == null) return
 
     const answers: SubmitAnswer[] = questions.map((q) => {

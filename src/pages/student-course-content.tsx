@@ -762,7 +762,7 @@ export default function StudentCourseContentPage() {
                     />
                   ) : (
                     <video
-                      src={course.promotional_video_url}
+                      src={course.promotional_video_url ?? undefined}
                       className='h-full w-full'
                       controls
                       autoPlay

@@ -66,12 +66,12 @@ export default function CreateAssignmentPage() {
   const [latePenaltyPercent, setLatePenaltyPercent] = useState('10')
 
   // Submission settings
-  const [requireTextSubmission, setRequireTextSubmission] = useState(true)
+  const [requireTextSubmission] = useState(true)
   const [requireFileUpload, setRequireFileUpload] = useState(false)
   const [maxFileUploads, setMaxFileUploads] = useState('5')
   const [maxFileSizeMb, setMaxFileSizeMb] = useState('10')
-  const [allowResubmission, setAllowResubmission] = useState(false)
-  const [autoAcceptOnTime, setAutoAcceptOnTime] = useState(true)
+  const [allowResubmission] = useState(false)
+  const [autoAcceptOnTime] = useState(true)
 
   // Rubric
   const [showRubric, setShowRubric] = useState(false)

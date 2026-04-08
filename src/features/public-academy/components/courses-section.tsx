@@ -75,9 +75,9 @@ export function CoursesSection({ courses, academySlug }: CoursesSectionProps) {
                 >
                   <Link
                     to={
-                      academySlug
+                      (academySlug
                         ? `/courses/${course.slug}?fromAcademySlug=${academySlug}`
-                        : `/courses/${course.slug}`
+                        : `/courses/${course.slug}`) as any
                     }
                   >
                     <Card className='group h-full cursor-pointer overflow-hidden'>

@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils'
 
 export function SubscriptionInfo() {
   const { currentAcademy } = useAuthStore()
-  const { academySlug } = useParams({ strict: false }) as {
+  const { academySlug: _academySlug } = useParams({ strict: false }) as {
     academySlug?: string
   }
   const [selectedPlanCode, setSelectedPlanCode] =
@@ -206,7 +206,7 @@ export function SubscriptionInfo() {
                   Total a pagar
                 </p>
                 <p className='text-3xl font-bold'>
-                  {formatFullPrice(selectedPlan.price)}
+                  {formatFullPrice(selectedPlan!.price)}
                 </p>
               </div>
             </div>
