@@ -153,6 +153,7 @@ export function PublicCoursePage() {
           url: url,
         })
       } catch (_err) {
+        // sharing cancelled or not supported
       }
     } else {
       try {

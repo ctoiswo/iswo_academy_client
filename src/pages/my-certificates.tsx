@@ -182,13 +182,20 @@ export default function MyCertificatesPage() {
     return raw?.enrollments ?? []
   }, [enrollmentsData])
 
-  const pendingStatusQueries = useQueries({
+  const { pendingStatuses, isAnyPendingLoading, hasFreshCertificate } = useQueries({
     queries: academyEnrollments.map((enrollment) => ({
       queryKey: ['course-certificate-status', academySlug, enrollment.course.slug, 'pending-list'],
       queryFn: () =>
         certificateService.getCourseCertificateStatus(academySlug!, enrollment.course.slug),
       enabled: !!academySlug && !!enrollment.course.slug,
     })),
+    combine: (results) => ({
+      pendingStatuses: results
+        .map((r) => r.data)
+        .filter((s): s is CourseCertificateStatus => Boolean(s)),
+      isAnyPendingLoading: results.some((r) => r.isLoading),
+      hasFreshCertificate: results.some((r) => Boolean(r.data?.has_certificate)),
+    }),
   })
 
   const certificates: Certificate[] = useMemo(() => {
@@ -224,26 +231,19 @@ export default function MyCertificatesPage() {
     })
 
   const automaticPendingStatuses = useMemo(() => {
-    return pendingStatusQueries
-      .map((query) => query.data)
-      .filter((status): status is CourseCertificateStatus => Boolean(status))
+    return pendingStatuses
       .filter((status) => !status.has_certificate)
       .filter((status) => status.metrics.current_score != null)
       .filter((status) => status.course.slug !== search.courseSlug)
-  }, [pendingStatusQueries, search.courseSlug])
+  }, [pendingStatuses, search.courseSlug])
 
-  const isLoadingPendingStatuses =
-    isLoadingEnrollments || pendingStatusQueries.some((query) => query.isLoading)
+  const isLoadingPendingStatuses = isLoadingEnrollments || isAnyPendingLoading
 
   useEffect(() => {
-    const hasFreshCertificate = pendingStatusQueries.some(
-      (query) => query.data?.has_certificate
-    )
-
     if (!hasFreshCertificate || !academySlug) return
 
     queryClient.invalidateQueries({ queryKey: ['my-certificates', academySlug] })
-  }, [academySlug, pendingStatusQueries, queryClient])
+  }, [academySlug, hasFreshCertificate, queryClient])
 
   return (
     <DashboardLayout

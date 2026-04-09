@@ -26,28 +26,10 @@ export function SubscriptionInfo() {
   const [selectedPlanCode, setSelectedPlanCode] =
     useState<AdminSubscriptionPlanCode>(ADMIN_SUBSCRIPTION_PLANS[0].code)
 
-  if (!currentAcademy) return null
-
-  const {
-    admin_subscription_active,
-    subscription_expires_at,
-    admin_subscription_days_remaining,
-  } = currentAcademy
-
-  const isGracePeriod = admin_subscription_active && subscription_expires_at === null
-  const isExpired = !admin_subscription_active
-
-  const formattedExpiry = subscription_expires_at
-    ? new Intl.DateTimeFormat('es', { dateStyle: 'long' }).format(
-        new Date(subscription_expires_at)
-      )
-    : null
-  const selectedPlan = getAdminSubscriptionPlan(selectedPlanCode)
-
   const adminSubscriptionMutation = useMutation({
     mutationFn: () => {
       return paymentService.createAdminSubscription(
-        currentAcademy.id,
+        currentAcademy!.id,
         selectedPlanCode
       )
     },
@@ -66,6 +48,24 @@ export function SubscriptionInfo() {
       )
     },
   })
+
+  if (!currentAcademy) return null
+
+  const {
+    admin_subscription_active,
+    subscription_expires_at,
+    admin_subscription_days_remaining,
+  } = currentAcademy
+
+  const isGracePeriod = admin_subscription_active && subscription_expires_at === null
+  const isExpired = !admin_subscription_active
+
+  const formattedExpiry = subscription_expires_at
+    ? new Intl.DateTimeFormat('es', { dateStyle: 'long' }).format(
+        new Date(subscription_expires_at)
+      )
+    : null
+  const selectedPlan = getAdminSubscriptionPlan(selectedPlanCode)
 
   const handleStartCheckout = () => {
     adminSubscriptionMutation.mutate()

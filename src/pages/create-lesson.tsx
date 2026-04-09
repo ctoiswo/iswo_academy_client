@@ -177,7 +177,6 @@ export default function CreateLessonPage() {
 
       handleBack()
     } catch (error: any) {
-      console.error('Error creating lesson with resources', error)
       toast.error(error?.message || 'Error subiendo recursos de la lección')
     } finally {
       setIsLoading(false)

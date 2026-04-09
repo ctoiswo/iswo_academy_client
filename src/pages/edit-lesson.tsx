@@ -260,7 +260,6 @@ export default function EditLessonPage() {
 
       handleBack()
     } catch (error: any) {
-      console.error('Error updating lesson with resources', error)
       toast.error(error?.message || 'Error actualizando la lección')
     } finally {
       setIsLoading(false)
