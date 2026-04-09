@@ -70,7 +70,8 @@ export function UserAuthForm({ redirectTo }: UserAuthFormProps) {
     const baseUrl =
       import.meta.env.VITE_API_URL?.replace('/api/v1', '') ||
       'http://localhost:3000'
-    window.location.href = `${baseUrl}/auth/${provider}`
+    const callbackUrl = `${window.location.origin}/auth/callback`
+    window.location.href = `${baseUrl}/auth/${provider}?redirect_uri=${encodeURIComponent(callbackUrl)}`
   }
 
   async function onSubmit(data: z.infer<typeof formSchema>) {

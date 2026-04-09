@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import academyService from '@/services/academy-service'
 import type { AcademySummaryLight, PaginationMeta } from '@/types'
 import {
@@ -49,6 +50,7 @@ type ViewMode = 'grid' | 'list'
 
 export default function SuperAdminAcademies() {
   const { user } = useAuthStore()
+  const navigate = useNavigate()
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
   const [academies, setAcademies] = useState<AcademySummaryLight[]>([])
   const [loading, setLoading] = useState(true)
@@ -142,7 +144,7 @@ export default function SuperAdminAcademies() {
               <List className='h-4 w-4' />
             </Button>
           </div>
-          <Button className='self-start'>
+          <Button className='self-start' onClick={() => navigate({ to: '/create-academy' })}>
             <Plus className='mr-2 h-4 w-4' />
             Nueva Academia
           </Button>
