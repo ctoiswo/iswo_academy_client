@@ -1,8 +1,7 @@
-name: Deploy Frontend to GCP
+name: CI
 
 permissions:
   contents: read
-  id-token: write
 
 on:
   push:
@@ -13,7 +12,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
@@ -38,70 +37,69 @@ jobs:
     - name: Run TypeScript type check
       run: pnpm type-check
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v5
-
-    - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v2
-      with:
-        workload_identity_provider: projects/1087321066171/locations/global/workloadIdentityPools/github-pool/providers/github-provider
-        service_account: iswo-academy-sa@gifted-monitor-490019-j7.iam.gserviceaccount.com
-
-    - name: Set up Google Cloud CLI
-      uses: google-github-actions/setup-gcloud@v2
-      with:
-        project_id: gifted-monitor-490019-j7
-
-    - name: Configure Docker for GCR
-      run: gcloud auth configure-docker gcr.io
-
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '3.3'
-
-    - name: Install Kamal
-      run: gem install kamal
-
-    - name: Set up SSH key
-      run: |
-        mkdir -p ~/.ssh
-        # Generate a temporary ed25519 key — no SSH_PRIVATE_KEY secret needed
-        ssh-keygen -t ed25519 -f ~/.ssh/google_compute_engine -N ""
-        chmod 600 ~/.ssh/google_compute_engine
-        # Add the public key to the VM's project metadata so this runner can authenticate
-        gcloud compute instances add-metadata iswo-academy-vm \
-          --metadata "ssh-keys=oscarortega:$(cat ~/.ssh/google_compute_engine.pub)" \
-          --project=gifted-monitor-490019-j7 \
-          --zone=us-east1-b
-        printf 'Host 35.231.98.72\n  IdentityFile ~/.ssh/google_compute_engine\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null\n' > ~/.ssh/config
-        chmod 600 ~/.ssh/config
-
-    - name: Deploy with Kamal
-      run: |
-        GCP_TOKEN=$(gcloud auth print-access-token)
-        mkdir -p .kamal
-        echo "KAMAL_REGISTRY_PASSWORD=${GCP_TOKEN}" > .kamal/secrets
-        kamal deploy
-
-    - name: Clean up
-      if: always()
-      run: |
-        rm -f ~/.ssh/google_compute_engine .kamal/secrets
-        # Remove the temporary public key from VM metadata
-        gcloud compute instances remove-metadata iswo-academy-vm \
-          --keys=ssh-keys \
-          --project=gifted-monitor-490019-j7 \
-          --zone=us-east1-b || true
-
-    - name: Invalidate CDN cache (optional)
-      run: |
-        # Si tienes CDN configurado, invalida el cache
-        # gcloud compute url-maps invalidate-cdn-cache LOAD_BALANCER_NAME --path="/*"
-        echo "Frontend deployed successfully!"
+# Deploy a GCP deshabilitado — el deploy se realiza via Vercel.
+# Descomentar este job para volver a desplegar en GCP con Kamal.
+#
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: test
+#    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+#
+#    steps:
+#    - name: Checkout code
+#      uses: actions/checkout@v5
+#
+#    - name: Authenticate to Google Cloud
+#      uses: google-github-actions/auth@v2
+#      with:
+#        workload_identity_provider: projects/1087321066171/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+#        service_account: iswo-academy-sa@gifted-monitor-490019-j7.iam.gserviceaccount.com
+#
+#    - name: Set up Google Cloud CLI
+#      uses: google-github-actions/setup-gcloud@v2
+#      with:
+#        project_id: gifted-monitor-490019-j7
+#
+#    - name: Configure Docker for GCR
+#      run: gcloud auth configure-docker gcr.io
+#
+#    - name: Set up Ruby
+#      uses: ruby/setup-ruby@v1
+#      with:
+#        ruby-version: '3.3'
+#
+#    - name: Install Kamal
+#      run: gem install kamal
+#
+#    - name: Set up SSH key
+#      run: |
+#        mkdir -p ~/.ssh
+#        ssh-keygen -t ed25519 -f ~/.ssh/google_compute_engine -N ""
+#        chmod 600 ~/.ssh/google_compute_engine
+#        gcloud compute instances add-metadata iswo-academy-vm \
+#          --metadata "ssh-keys=oscarortega:$(cat ~/.ssh/google_compute_engine.pub)" \
+#          --project=gifted-monitor-490019-j7 \
+#          --zone=us-east1-b
+#        printf 'Host 35.231.98.72\n  IdentityFile ~/.ssh/google_compute_engine\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null\n' > ~/.ssh/config
+#        chmod 600 ~/.ssh/config
+#
+#    - name: Deploy with Kamal
+#      run: |
+#        GCP_TOKEN=$(gcloud auth print-access-token)
+#        mkdir -p .kamal
+#        echo "KAMAL_REGISTRY_PASSWORD=${GCP_TOKEN}" > .kamal/secrets
+#        kamal deploy
+#
+#    - name: Clean up
+#      if: always()
+#      run: |
+#        rm -f ~/.ssh/google_compute_engine .kamal/secrets
+#        gcloud compute instances remove-metadata iswo-academy-vm \
+#          --keys=ssh-keys \
+#          --project=gifted-monitor-490019-j7 \
+#          --zone=us-east1-b || true
+#
+#    - name: Invalidate CDN cache (optional)
+#      run: |
+#        # gcloud compute url-maps invalidate-cdn-cache LOAD_BALANCER_NAME --path="/*"
+#        echo "Frontend deployed successfully!"
