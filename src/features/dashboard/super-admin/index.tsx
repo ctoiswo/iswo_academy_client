@@ -110,6 +110,7 @@ export function SuperAdminDashboard({ user, academy }: DashboardProps) {
           onPageChange={setCurrentPage}
           onSearch={handleSearch}
           onStatusFilter={handleStatusFilter}
+          onRefresh={fetchAcademies}
         />
       </div>
     </DashboardLayout>

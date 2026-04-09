@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { DashboardCard } from '@/components/dashboard'
 import { AcademyFilters } from '../components/academy-filters'
@@ -22,6 +23,7 @@ interface AcademyManagementPanelProps {
   onPageChange: (page: number) => void
   onSearch: (value: string) => void
   onStatusFilter: (value: AcademyStatusFilter) => void
+  onRefresh: () => void
 }
 
 export function AcademyManagementPanel({
@@ -35,8 +37,11 @@ export function AcademyManagementPanel({
   onPageChange,
   onSearch,
   onStatusFilter,
+  onRefresh,
 }: AcademyManagementPanelProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+
   if (error) {
     return (
       <DashboardCard title={t('super_admin.academies.title')}>
@@ -54,7 +59,7 @@ export function AcademyManagementPanel({
       title={t('super_admin.academies.title')}
       description={t('super_admin.academies.description')}
       action={
-        <Button size='sm'>
+        <Button size='sm' onClick={() => navigate({ to: '/create-academy' })}>
           <Plus className='mr-2 h-4 w-4' />
           {t('super_admin.academies.addAcademy')}
         </Button>
@@ -73,6 +78,7 @@ export function AcademyManagementPanel({
         loading={loading}
         searchTerm={searchTerm}
         statusFilter={statusFilter}
+        onRefresh={onRefresh}
       />
 
       <AcademyPagination

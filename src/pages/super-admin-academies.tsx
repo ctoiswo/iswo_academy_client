@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import academyService from '@/services/academy-service'
-import type { AcademySummaryLight, PaginationMeta } from '@/types'
+import { toast } from 'sonner'
+import { superAdminApi, type AcademyOverview } from '@/lib/super-admin-api'
+import type { PaginationMeta } from '@/types'
 import {
   LayoutGrid,
   List,
@@ -52,7 +53,7 @@ export default function SuperAdminAcademies() {
   const { user } = useAuthStore()
   const navigate = useNavigate()
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
-  const [academies, setAcademies] = useState<AcademySummaryLight[]>([])
+  const [academies, setAcademies] = useState<AcademyOverview[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchInput, setSearchInput] = useState('')
@@ -68,7 +69,7 @@ export default function SuperAdminAcademies() {
     async (page: number = 1, search: string = '') => {
       try {
         setLoading(true)
-        const result = await academyService.getAcademies({
+        const result = await superAdminApi.getAcademies({
           page,
           per_page: 15,
           search: search || undefined,
@@ -103,6 +104,16 @@ export default function SuperAdminAcademies() {
 
   const handlePageChange = (page: number) => {
     loadAcademies(page, searchQuery)
+  }
+
+  const handleSuspend = async (academy: AcademyOverview) => {
+    try {
+      await superAdminApi.updateAcademyStatus(academy.id, 'inactive')
+      toast.success(`Academia "${academy.name}" suspendida`)
+      loadAcademies(currentPage, searchQuery)
+    } catch {
+      toast.error('No se pudo suspender la academia')
+    }
   }
 
   return (
@@ -201,15 +212,15 @@ export default function SuperAdminAcademies() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align='end'>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/dashboard', params: { academySlug: academy.slug } })}>
                           <Eye className='mr-2 h-4 w-4' />
                           Ver detalles
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}>
                           <Edit className='mr-2 h-4 w-4' />
                           Editar
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}>
                           <Settings className='mr-2 h-4 w-4' />
                           Configuración
                         </DropdownMenuItem>
@@ -224,21 +235,17 @@ export default function SuperAdminAcademies() {
                   <div className='flex items-center gap-4 text-sm'>
                     <div className='flex items-center gap-1.5'>
                       <Users className='text-muted-foreground h-4 w-4' />
-                      <span>
-                        {academy.enrolled_users_count || 0} estudiantes
-                      </span>
+                      <span>{academy.total_users || 0} estudiantes</span>
                     </div>
                     <div className='flex items-center gap-1.5'>
                       <BookOpen className='text-muted-foreground h-4 w-4' />
-                      <span>{academy.courses_count || 0} cursos</span>
+                      <span>{academy.total_courses || 0} cursos</span>
                     </div>
                   </div>
                   <div className='flex items-center gap-2'>
-                    {academy.subscription_required && (
-                      <Badge variant='outline'>
-                        ${academy.monthly_price}/mes
-                      </Badge>
-                    )}
+                    <Badge variant={academy.status === 'active' ? 'default' : 'secondary'}>
+                      {academy.status === 'active' ? 'Activa' : 'Inactiva'}
+                    </Badge>
                   </div>
                 </CardContent>
                 <CardFooter className='text-muted-foreground text-xs'>
@@ -260,7 +267,7 @@ export default function SuperAdminAcademies() {
                   <TableHead>Estudiantes</TableHead>
                   <TableHead>Cursos</TableHead>
                   <TableHead>Estado</TableHead>
-                  <TableHead>Precio</TableHead>
+                  <TableHead>Ingresos</TableHead>
                   <TableHead>Creador</TableHead>
                   <TableHead className='text-right'>Acciones</TableHead>
                 </TableRow>
@@ -287,32 +294,24 @@ export default function SuperAdminAcademies() {
                     <TableCell>
                       <div className='flex items-center gap-1.5'>
                         <Users className='text-muted-foreground h-4 w-4' />
-                        {academy.enrolled_users_count || 0}
+                        {academy.total_users || 0}
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className='flex items-center gap-1.5'>
                         <BookOpen className='text-muted-foreground h-4 w-4' />
-                        {academy.courses_count || 0}
+                        {academy.total_courses || 0}
                       </div>
                     </TableCell>
                     <TableCell>
-                      {academy.subscription_required ? (
-                        <Badge variant='default'>Premium</Badge>
-                      ) : (
-                        <Badge variant='secondary'>Gratuita</Badge>
-                      )}
+                      <Badge variant={academy.status === 'active' ? 'default' : 'secondary'}>
+                        {academy.status === 'active' ? 'Activa' : 'Inactiva'}
+                      </Badge>
                     </TableCell>
                     <TableCell>
-                      {academy.subscription_required ? (
-                        <span className='text-sm'>
-                          ${academy.monthly_price}/mes
-                        </span>
-                      ) : (
-                        <span className='text-muted-foreground text-sm'>
-                          Gratis
-                        </span>
-                      )}
+                      <span className='text-sm'>
+                        ${academy.total_revenue?.toFixed(2) || '0.00'}
+                      </span>
                     </TableCell>
                     <TableCell className='text-muted-foreground text-sm'>
                       {academy.creator?.name || 'Sin creador'}
@@ -329,15 +328,15 @@ export default function SuperAdminAcademies() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='end'>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/dashboard', params: { academySlug: academy.slug } })}>
                             <Eye className='mr-2 h-4 w-4' />
                             Ver detalles
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}>
                             <Edit className='mr-2 h-4 w-4' />
                             Editar
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}>
                             <Settings className='mr-2 h-4 w-4' />
                             Configuración
                           </DropdownMenuItem>

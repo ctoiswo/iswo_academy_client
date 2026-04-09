@@ -38,9 +38,15 @@ function OAuthCallbackPage() {
           await refreshUser()
 
           toast.success('Sesión iniciada correctamente')
-          navigate({ to: '/academies', replace: true })
+
+          // Navigate based on user role
+          const { user } = useAuthStore.getState()
+          if (user?.is_super_admin) {
+            navigate({ to: '/dashboard/super-admin', replace: true })
+          } else {
+            navigate({ to: '/academies', replace: true })
+          }
         } catch (_err) {
-          // console.error('Error loading user data:', err)
           toast.error('Error al cargar datos del usuario')
           navigate({ to: '/sign-in', replace: true })
         }

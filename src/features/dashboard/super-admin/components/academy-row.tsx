@@ -9,6 +9,9 @@ import {
   Ban,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
+import { toast } from 'sonner'
+import { superAdminApi } from '@/lib/api-client'
 import { formatCurrency } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -23,6 +26,7 @@ import type { AcademyOverview } from '../types'
 
 interface AcademyRowProps {
   academy: AcademyOverview
+  onRefresh: () => void
 }
 
 const STATUS_VARIANT: Record<
@@ -34,8 +38,20 @@ const STATUS_VARIANT: Record<
   suspended: 'destructive',
 }
 
-export function AcademyRow({ academy }: AcademyRowProps) {
+export function AcademyRow({ academy, onRefresh }: AcademyRowProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+
+  const handleSuspend = async () => {
+    try {
+      await superAdminApi.updateAcademyStatus(academy.id, 'inactive')
+      toast.success(`Academia "${academy.name}" suspendida`)
+      onRefresh()
+    } catch {
+      toast.error('No se pudo suspender la academia')
+    }
+  }
+
   return (
     <TableRow>
       {/* Name + description */}
@@ -105,15 +121,19 @@ export function AcademyRow({ academy }: AcademyRowProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate({ to: '/academy/$academySlug/dashboard', params: { academySlug: academy.slug } })}
+            >
               <Eye className='mr-2 h-4 w-4' />
               {t('super_admin.academies.actionView')}
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}
+            >
               <Settings className='mr-2 h-4 w-4' />
               {t('super_admin.academies.actionSettings')}
             </DropdownMenuItem>
-            <DropdownMenuItem className='text-destructive'>
+            <DropdownMenuItem className='text-destructive' onClick={handleSuspend}>
               <Ban className='mr-2 h-4 w-4' />
               {t('super_admin.academies.actionSuspend')}
             </DropdownMenuItem>

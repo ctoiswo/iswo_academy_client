@@ -109,6 +109,7 @@ export function GuestGuard({ children, fallback }: RouteGuardProps) {
     isLoading,
     isInitialized,
     initialize,
+    user,
     academyData,
     currentAcademy,
   } = useAuthStore()
@@ -122,8 +123,16 @@ export function GuestGuard({ children, fallback }: RouteGuardProps) {
   }, [isInitialized, isLoading, initialize])
 
   useEffect(() => {
+    if (isLoading || !isAuthenticated) return
+
+    // Super admin bypasses academy logic entirely
+    if (user?.is_super_admin) {
+      router.navigate({ to: '/dashboard/super-admin', replace: true })
+      return
+    }
+
     // Redirect authenticated users based on their academy status
-    if (!isLoading && isAuthenticated && academyData) {
+    if (academyData) {
       if (academyData.count === 0) {
         // No academies - redirect to dashboard (guest student)
         router.navigate({ to: '/dashboard' })
@@ -139,11 +148,11 @@ export function GuestGuard({ children, fallback }: RouteGuardProps) {
           router.navigate({ to: '/academy-selection' })
         }
       }
-    } else if (!isLoading && isAuthenticated && !academyData) {
+    } else {
       // Fallback to dashboard if academy data is not available yet
       router.navigate({ to: '/dashboard' })
     }
-  }, [isAuthenticated, isLoading, router, academyData, currentAcademy])
+  }, [isAuthenticated, isLoading, router, user, academyData, currentAcademy])
 
   // For guest routes, show loading only if we're actively checking existing authentication
   // This prevents showing loading on fresh visits to sign-up/sign-in pages

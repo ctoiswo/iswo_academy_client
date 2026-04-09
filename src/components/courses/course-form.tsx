@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { toast } from 'sonner'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -273,44 +274,38 @@ export function CourseForm({
   const onSubmit = (data: CourseFormData) => {
     // Validar imagen promocional
     if (data.promotional_image_type === 'file') {
-      // Solo validar si no hay archivo subido Y no existe imagen en el curso
       if (!data.promotional_image_file && !course?.promotional_image_url) {
         form.setError('promotional_image_file', {
           message: 'Debes subir una imagen',
         })
+        toast.error('Imagen requerida: debes subir una imagen promocional o proporcionar una URL.')
         return
       }
     } else if (data.promotional_image_type === 'url') {
-      // Solo validar si la URL está vacía o es inválida
-      if (
-        !data.promotional_image_url ||
-        data.promotional_image_url.trim() === ''
-      ) {
+      if (!data.promotional_image_url || data.promotional_image_url.trim() === '') {
         form.setError('promotional_image_url', {
           message: 'Debes proporcionar una URL de imagen',
         })
+        toast.error('Imagen requerida: debes proporcionar una URL de imagen promocional.')
         return
       }
     }
 
     // Validar video promocional
     if (data.promotional_video_type === 'file') {
-      // Solo validar si no hay archivo subido Y no existe video en el curso
       if (!data.promotional_video_file && !course?.promotional_video_url) {
         form.setError('promotional_video_file', {
           message: 'Debes subir un video',
         })
+        toast.error('Video requerido: debes subir un video promocional o proporcionar una URL.')
         return
       }
     } else if (data.promotional_video_type === 'url') {
-      // Solo validar si la URL está vacía o es inválida
-      if (
-        !data.promotional_video_url ||
-        data.promotional_video_url.trim() === ''
-      ) {
+      if (!data.promotional_video_url || data.promotional_video_url.trim() === '') {
         form.setError('promotional_video_url', {
           message: 'Debes proporcionar una URL de video',
         })
+        toast.error('Video requerido: debes proporcionar una URL de video promocional.')
         return
       }
     }

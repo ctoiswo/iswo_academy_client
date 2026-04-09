@@ -49,6 +49,7 @@ export interface AcademyCreator {
 
 export interface AcademyOverview {
   id: number
+  slug: string
   name: string
   description: string | null
   logo_url: string | null

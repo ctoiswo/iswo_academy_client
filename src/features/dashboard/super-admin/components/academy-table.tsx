@@ -15,6 +15,7 @@ interface AcademyTableProps {
   loading: boolean
   searchTerm: string
   statusFilter: AcademyStatusFilter
+  onRefresh: () => void
 }
 
 export function AcademyTable({
@@ -22,6 +23,7 @@ export function AcademyTable({
   loading,
   searchTerm,
   statusFilter,
+  onRefresh,
 }: AcademyTableProps) {
   const { t } = useTranslation()
   if (loading) {
@@ -70,7 +72,7 @@ export function AcademyTable({
         </TableHeader>
         <TableBody>
           {academies.map((academy) => (
-            <AcademyRow key={academy.id} academy={academy} />
+            <AcademyRow key={academy.id} academy={academy} onRefresh={onRefresh} />
           ))}
         </TableBody>
       </Table>
