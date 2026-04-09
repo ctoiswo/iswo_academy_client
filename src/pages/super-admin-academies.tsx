@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { toast } from 'sonner'
 import { superAdminApi, type AcademyOverview } from '@/lib/super-admin-api'
 import type { PaginationMeta } from '@/types'
 import {
@@ -106,15 +105,6 @@ export default function SuperAdminAcademies() {
     loadAcademies(page, searchQuery)
   }
 
-  const handleSuspend = async (academy: AcademyOverview) => {
-    try {
-      await superAdminApi.updateAcademyStatus(academy.id, 'inactive')
-      toast.success(`Academia "${academy.name}" suspendida`)
-      loadAcademies(currentPage, searchQuery)
-    } catch {
-      toast.error('No se pudo suspender la academia')
-    }
-  }
 
   return (
     <DashboardLayout
