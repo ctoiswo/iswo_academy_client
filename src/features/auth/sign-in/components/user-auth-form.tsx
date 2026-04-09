@@ -66,7 +66,7 @@ export function UserAuthForm({ redirectTo }: UserAuthFormProps) {
   const emailField = register('email')
   const passwordField = register('password')
 
-  function handleOAuthLogin(provider: 'github' | 'google_oauth2') {
+  function handleOAuthLogin(provider: 'github' | 'google_oauth2' | 'sigiswo') {
     const baseUrl =
       import.meta.env.VITE_API_URL?.replace('/api/v1', '') ||
       'http://localhost:3000'
