@@ -61,6 +61,7 @@ import { Route as AuthenticatedDashboardTeacherRouteImport } from './routes/_aut
 import { Route as AuthenticatedDashboardStudentRouteImport } from './routes/_authenticated/dashboard/student'
 import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authenticated/dashboard/admin'
 import { Route as AuthenticatedAdminLearningPathsRouteImport } from './routes/_authenticated/admin/learning-paths'
+import { Route as AuthenticatedAcademyAcademySlugRouteImport } from './routes/_authenticated/academy/$academySlug'
 import { Route as authAuthCallbackRouteImport } from './routes/(auth)/auth/callback'
 import { Route as PaymentsPaymentIdSuccessIndexRouteImport } from './routes/payments/$paymentId/success/index'
 import { Route as PaymentsPaymentIdPendingIndexRouteImport } from './routes/payments/$paymentId/pending/index'
@@ -412,6 +413,12 @@ const AuthenticatedAdminLearningPathsRoute =
     path: '/learning-paths',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAcademyAcademySlugRoute =
+  AuthenticatedAcademyAcademySlugRouteImport.update({
+    id: '/academy/$academySlug',
+    path: '/academy/$academySlug',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const authAuthCallbackRoute = authAuthCallbackRouteImport.update({
   id: '/(auth)/auth/callback',
   path: '/auth/callback',
@@ -497,81 +504,81 @@ const PublicAcademyAcademySlugCoursesRoute =
   } as any)
 const AuthenticatedAcademyAcademySlugUsersRoute =
   AuthenticatedAcademyAcademySlugUsersRouteImport.update({
-    id: '/academy/$academySlug/users',
-    path: '/academy/$academySlug/users',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/users',
+    path: '/users',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugTeachersRoute =
   AuthenticatedAcademyAcademySlugTeachersRouteImport.update({
-    id: '/academy/$academySlug/teachers',
-    path: '/academy/$academySlug/teachers',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/teachers',
+    path: '/teachers',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugStudentsRoute =
   AuthenticatedAcademyAcademySlugStudentsRouteImport.update({
-    id: '/academy/$academySlug/students',
-    path: '/academy/$academySlug/students',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/students',
+    path: '/students',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugSettingsRoute =
   AuthenticatedAcademyAcademySlugSettingsRouteImport.update({
-    id: '/academy/$academySlug/settings',
-    path: '/academy/$academySlug/settings',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugRedeemCodeRoute =
   AuthenticatedAcademyAcademySlugRedeemCodeRouteImport.update({
-    id: '/academy/$academySlug/redeem-code',
-    path: '/academy/$academySlug/redeem-code',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/redeem-code',
+    path: '/redeem-code',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugMyCoursesRoute =
   AuthenticatedAcademyAcademySlugMyCoursesRouteImport.update({
-    id: '/academy/$academySlug/my-courses',
-    path: '/academy/$academySlug/my-courses',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/my-courses',
+    path: '/my-courses',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugMyBadgesRoute =
   AuthenticatedAcademyAcademySlugMyBadgesRouteImport.update({
-    id: '/academy/$academySlug/my-badges',
-    path: '/academy/$academySlug/my-badges',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/my-badges',
+    path: '/my-badges',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugMyAssignmentsRoute =
   AuthenticatedAcademyAcademySlugMyAssignmentsRouteImport.update({
-    id: '/academy/$academySlug/my-assignments',
-    path: '/academy/$academySlug/my-assignments',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/my-assignments',
+    path: '/my-assignments',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugDashboardRoute =
   AuthenticatedAcademyAcademySlugDashboardRouteImport.update({
-    id: '/academy/$academySlug/dashboard',
-    path: '/academy/$academySlug/dashboard',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugCoursesRoute =
   AuthenticatedAcademyAcademySlugCoursesRouteImport.update({
-    id: '/academy/$academySlug/courses',
-    path: '/academy/$academySlug/courses',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/courses',
+    path: '/courses',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugCertificatesRoute =
   AuthenticatedAcademyAcademySlugCertificatesRouteImport.update({
-    id: '/academy/$academySlug/certificates',
-    path: '/academy/$academySlug/certificates',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/certificates',
+    path: '/certificates',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugBadgesRoute =
   AuthenticatedAcademyAcademySlugBadgesRouteImport.update({
-    id: '/academy/$academySlug/badges',
-    path: '/academy/$academySlug/badges',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/badges',
+    path: '/badges',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugLearningPathsRouteRoute =
   AuthenticatedAcademyAcademySlugLearningPathsRouteRouteImport.update({
-    id: '/academy/$academySlug/learning-paths',
-    path: '/academy/$academySlug/learning-paths',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/learning-paths',
+    path: '/learning-paths',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugSettingsIndexRoute =
   AuthenticatedAcademyAcademySlugSettingsIndexRouteImport.update({
@@ -581,9 +588,9 @@ const AuthenticatedAcademyAcademySlugSettingsIndexRoute =
   } as any)
 const AuthenticatedAcademyAcademySlugNotificationsIndexRoute =
   AuthenticatedAcademyAcademySlugNotificationsIndexRouteImport.update({
-    id: '/academy/$academySlug/notifications/',
-    path: '/academy/$academySlug/notifications/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/notifications/',
+    path: '/notifications/',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugLearningPathsIndexRoute =
   AuthenticatedAcademyAcademySlugLearningPathsIndexRouteImport.update({
@@ -642,9 +649,9 @@ const AuthenticatedAcademyAcademySlugDashboardAdminRoute =
   } as any)
 const AuthenticatedAcademyAcademySlugAdminCourseNewRoute =
   AuthenticatedAcademyAcademySlugAdminCourseNewRouteImport.update({
-    id: '/academy/$academySlug/admin/course-new',
-    path: '/academy/$academySlug/admin/course-new',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/admin/course-new',
+    path: '/admin/course-new',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const AuthenticatedAcademyAcademySlugCoursesCourseSlugRouteRoute =
   AuthenticatedAcademyAcademySlugCoursesCourseSlugRouteRouteImport.update({
@@ -676,9 +683,9 @@ const AuthenticatedAcademyAcademySlugCoursesCourseSlugIndexRoute =
   } as any)
 const AuthenticatedAcademyAcademySlugAdminCoursesIndexRoute =
   AuthenticatedAcademyAcademySlugAdminCoursesIndexRouteImport.update({
-    id: '/academy/$academySlug/admin/courses/',
-    path: '/academy/$academySlug/admin/courses/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+    id: '/admin/courses/',
+    path: '/admin/courses/',
+    getParentRoute: () => AuthenticatedAcademyAcademySlugRoute,
   } as any)
 const PublicAcademyAcademySlugCoursesCourseSlugContentRoute =
   PublicAcademyAcademySlugCoursesCourseSlugContentRouteImport.update({
@@ -945,6 +952,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyIndexRoute
   '/terms': typeof TermsIndexRoute
   '/auth/callback': typeof authAuthCallbackRoute
+  '/academy/$academySlug': typeof AuthenticatedAcademyAcademySlugRouteWithChildren
   '/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/dashboard/student': typeof AuthenticatedDashboardStudentRoute
@@ -1070,6 +1078,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyIndexRoute
   '/terms': typeof TermsIndexRoute
   '/auth/callback': typeof authAuthCallbackRoute
+  '/academy/$academySlug': typeof AuthenticatedAcademyAcademySlugRouteWithChildren
   '/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/dashboard/student': typeof AuthenticatedDashboardStudentRoute
@@ -1190,6 +1199,7 @@ export interface FileRoutesById {
   '/privacy/': typeof PrivacyIndexRoute
   '/terms/': typeof TermsIndexRoute
   '/(auth)/auth/callback': typeof authAuthCallbackRoute
+  '/_authenticated/academy/$academySlug': typeof AuthenticatedAcademyAcademySlugRouteWithChildren
   '/_authenticated/admin/learning-paths': typeof AuthenticatedAdminLearningPathsRoute
   '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRoute
   '/_authenticated/dashboard/student': typeof AuthenticatedDashboardStudentRoute
@@ -1318,6 +1328,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/auth/callback'
+    | '/academy/$academySlug'
     | '/admin/learning-paths'
     | '/dashboard/admin'
     | '/dashboard/student'
@@ -1443,6 +1454,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/auth/callback'
+    | '/academy/$academySlug'
     | '/admin/learning-paths'
     | '/dashboard/admin'
     | '/dashboard/student'
@@ -1562,6 +1574,7 @@ export interface FileRouteTypes {
     | '/privacy/'
     | '/terms/'
     | '/(auth)/auth/callback'
+    | '/_authenticated/academy/$academySlug'
     | '/_authenticated/admin/learning-paths'
     | '/_authenticated/dashboard/admin'
     | '/_authenticated/dashboard/student'
@@ -2067,6 +2080,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminLearningPathsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/academy/$academySlug': {
+      id: '/_authenticated/academy/$academySlug'
+      path: '/academy/$academySlug'
+      fullPath: '/academy/$academySlug'
+      preLoaderRoute: typeof AuthenticatedAcademyAcademySlugRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/(auth)/auth/callback': {
       id: '/(auth)/auth/callback'
       path: '/auth/callback'
@@ -2167,94 +2187,94 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/academy/$academySlug/users': {
       id: '/_authenticated/academy/$academySlug/users'
-      path: '/academy/$academySlug/users'
+      path: '/users'
       fullPath: '/academy/$academySlug/users'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugUsersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/teachers': {
       id: '/_authenticated/academy/$academySlug/teachers'
-      path: '/academy/$academySlug/teachers'
+      path: '/teachers'
       fullPath: '/academy/$academySlug/teachers'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugTeachersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/students': {
       id: '/_authenticated/academy/$academySlug/students'
-      path: '/academy/$academySlug/students'
+      path: '/students'
       fullPath: '/academy/$academySlug/students'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugStudentsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/settings': {
       id: '/_authenticated/academy/$academySlug/settings'
-      path: '/academy/$academySlug/settings'
+      path: '/settings'
       fullPath: '/academy/$academySlug/settings'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugSettingsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/redeem-code': {
       id: '/_authenticated/academy/$academySlug/redeem-code'
-      path: '/academy/$academySlug/redeem-code'
+      path: '/redeem-code'
       fullPath: '/academy/$academySlug/redeem-code'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugRedeemCodeRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/my-courses': {
       id: '/_authenticated/academy/$academySlug/my-courses'
-      path: '/academy/$academySlug/my-courses'
+      path: '/my-courses'
       fullPath: '/academy/$academySlug/my-courses'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugMyCoursesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/my-badges': {
       id: '/_authenticated/academy/$academySlug/my-badges'
-      path: '/academy/$academySlug/my-badges'
+      path: '/my-badges'
       fullPath: '/academy/$academySlug/my-badges'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugMyBadgesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/my-assignments': {
       id: '/_authenticated/academy/$academySlug/my-assignments'
-      path: '/academy/$academySlug/my-assignments'
+      path: '/my-assignments'
       fullPath: '/academy/$academySlug/my-assignments'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugMyAssignmentsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/dashboard': {
       id: '/_authenticated/academy/$academySlug/dashboard'
-      path: '/academy/$academySlug/dashboard'
+      path: '/dashboard'
       fullPath: '/academy/$academySlug/dashboard'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/courses': {
       id: '/_authenticated/academy/$academySlug/courses'
-      path: '/academy/$academySlug/courses'
+      path: '/courses'
       fullPath: '/academy/$academySlug/courses'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugCoursesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/certificates': {
       id: '/_authenticated/academy/$academySlug/certificates'
-      path: '/academy/$academySlug/certificates'
+      path: '/certificates'
       fullPath: '/academy/$academySlug/certificates'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugCertificatesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/badges': {
       id: '/_authenticated/academy/$academySlug/badges'
-      path: '/academy/$academySlug/badges'
+      path: '/badges'
       fullPath: '/academy/$academySlug/badges'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugBadgesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/learning-paths': {
       id: '/_authenticated/academy/$academySlug/learning-paths'
-      path: '/academy/$academySlug/learning-paths'
+      path: '/learning-paths'
       fullPath: '/academy/$academySlug/learning-paths'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugLearningPathsRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/settings/': {
       id: '/_authenticated/academy/$academySlug/settings/'
@@ -2265,10 +2285,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/academy/$academySlug/notifications/': {
       id: '/_authenticated/academy/$academySlug/notifications/'
-      path: '/academy/$academySlug/notifications'
+      path: '/notifications'
       fullPath: '/academy/$academySlug/notifications'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugNotificationsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/learning-paths/': {
       id: '/_authenticated/academy/$academySlug/learning-paths/'
@@ -2335,10 +2355,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/academy/$academySlug/admin/course-new': {
       id: '/_authenticated/academy/$academySlug/admin/course-new'
-      path: '/academy/$academySlug/admin/course-new'
+      path: '/admin/course-new'
       fullPath: '/academy/$academySlug/admin/course-new'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugAdminCourseNewRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/_authenticated/academy/$academySlug/courses/$courseSlug': {
       id: '/_authenticated/academy/$academySlug/courses/$courseSlug'
@@ -2370,10 +2390,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/academy/$academySlug/admin/courses/': {
       id: '/_authenticated/academy/$academySlug/admin/courses/'
-      path: '/academy/$academySlug/admin/courses'
+      path: '/admin/courses'
       fullPath: '/academy/$academySlug/admin/courses'
       preLoaderRoute: typeof AuthenticatedAcademyAcademySlugAdminCoursesIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      parentRoute: typeof AuthenticatedAcademyAcademySlugRoute
     }
     '/public/academy/$academySlug/courses/$courseSlug/content': {
       id: '/public/academy/$academySlug/courses/$courseSlug/content'
@@ -2901,21 +2921,7 @@ const AuthenticatedAcademyAcademySlugSettingsRouteWithChildren =
     AuthenticatedAcademyAcademySlugSettingsRouteChildren,
   )
 
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
-  AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
-  AuthenticatedSuperAdminRouteRoute: typeof AuthenticatedSuperAdminRouteRouteWithChildren
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
-  AuthenticatedLearningPathsRoute: typeof AuthenticatedLearningPathsRoute
-  AuthenticatedMyCoursesRoute: typeof AuthenticatedMyCoursesRouteWithChildren
-  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
-  AuthenticatedRedeemCodeRoute: typeof AuthenticatedRedeemCodeRoute
-  AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
-  AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
-  AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
-  AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
-  AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
-  AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+interface AuthenticatedAcademyAcademySlugRouteChildren {
   AuthenticatedAcademyAcademySlugLearningPathsRouteRoute: typeof AuthenticatedAcademyAcademySlugLearningPathsRouteRouteWithChildren
   AuthenticatedAcademyAcademySlugBadgesRoute: typeof AuthenticatedAcademyAcademySlugBadgesRoute
   AuthenticatedAcademyAcademySlugCertificatesRoute: typeof AuthenticatedAcademyAcademySlugCertificatesRoute
@@ -2934,6 +2940,65 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAcademyAcademySlugAdminCoursesIndexRoute: typeof AuthenticatedAcademyAcademySlugAdminCoursesIndexRoute
 }
 
+const AuthenticatedAcademyAcademySlugRouteChildren: AuthenticatedAcademyAcademySlugRouteChildren =
+  {
+    AuthenticatedAcademyAcademySlugLearningPathsRouteRoute:
+      AuthenticatedAcademyAcademySlugLearningPathsRouteRouteWithChildren,
+    AuthenticatedAcademyAcademySlugBadgesRoute:
+      AuthenticatedAcademyAcademySlugBadgesRoute,
+    AuthenticatedAcademyAcademySlugCertificatesRoute:
+      AuthenticatedAcademyAcademySlugCertificatesRoute,
+    AuthenticatedAcademyAcademySlugCoursesRoute:
+      AuthenticatedAcademyAcademySlugCoursesRouteWithChildren,
+    AuthenticatedAcademyAcademySlugDashboardRoute:
+      AuthenticatedAcademyAcademySlugDashboardRouteWithChildren,
+    AuthenticatedAcademyAcademySlugMyAssignmentsRoute:
+      AuthenticatedAcademyAcademySlugMyAssignmentsRoute,
+    AuthenticatedAcademyAcademySlugMyBadgesRoute:
+      AuthenticatedAcademyAcademySlugMyBadgesRoute,
+    AuthenticatedAcademyAcademySlugMyCoursesRoute:
+      AuthenticatedAcademyAcademySlugMyCoursesRoute,
+    AuthenticatedAcademyAcademySlugRedeemCodeRoute:
+      AuthenticatedAcademyAcademySlugRedeemCodeRoute,
+    AuthenticatedAcademyAcademySlugSettingsRoute:
+      AuthenticatedAcademyAcademySlugSettingsRouteWithChildren,
+    AuthenticatedAcademyAcademySlugStudentsRoute:
+      AuthenticatedAcademyAcademySlugStudentsRoute,
+    AuthenticatedAcademyAcademySlugTeachersRoute:
+      AuthenticatedAcademyAcademySlugTeachersRoute,
+    AuthenticatedAcademyAcademySlugUsersRoute:
+      AuthenticatedAcademyAcademySlugUsersRoute,
+    AuthenticatedAcademyAcademySlugAdminCourseNewRoute:
+      AuthenticatedAcademyAcademySlugAdminCourseNewRoute,
+    AuthenticatedAcademyAcademySlugNotificationsIndexRoute:
+      AuthenticatedAcademyAcademySlugNotificationsIndexRoute,
+    AuthenticatedAcademyAcademySlugAdminCoursesIndexRoute:
+      AuthenticatedAcademyAcademySlugAdminCoursesIndexRoute,
+  }
+
+const AuthenticatedAcademyAcademySlugRouteWithChildren =
+  AuthenticatedAcademyAcademySlugRoute._addFileChildren(
+    AuthenticatedAcademyAcademySlugRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+  AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
+  AuthenticatedSuperAdminRouteRoute: typeof AuthenticatedSuperAdminRouteRouteWithChildren
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
+  AuthenticatedLearningPathsRoute: typeof AuthenticatedLearningPathsRoute
+  AuthenticatedMyCoursesRoute: typeof AuthenticatedMyCoursesRouteWithChildren
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedRedeemCodeRoute: typeof AuthenticatedRedeemCodeRoute
+  AuthenticatedAcademyAcademySlugRoute: typeof AuthenticatedAcademyAcademySlugRouteWithChildren
+  AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
+  AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
+  AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
+  AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+}
+
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
@@ -2944,44 +3009,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMyCoursesRoute: AuthenticatedMyCoursesRouteWithChildren,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedRedeemCodeRoute: AuthenticatedRedeemCodeRoute,
+  AuthenticatedAcademyAcademySlugRoute:
+    AuthenticatedAcademyAcademySlugRouteWithChildren,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
-  AuthenticatedAcademyAcademySlugLearningPathsRouteRoute:
-    AuthenticatedAcademyAcademySlugLearningPathsRouteRouteWithChildren,
-  AuthenticatedAcademyAcademySlugBadgesRoute:
-    AuthenticatedAcademyAcademySlugBadgesRoute,
-  AuthenticatedAcademyAcademySlugCertificatesRoute:
-    AuthenticatedAcademyAcademySlugCertificatesRoute,
-  AuthenticatedAcademyAcademySlugCoursesRoute:
-    AuthenticatedAcademyAcademySlugCoursesRouteWithChildren,
-  AuthenticatedAcademyAcademySlugDashboardRoute:
-    AuthenticatedAcademyAcademySlugDashboardRouteWithChildren,
-  AuthenticatedAcademyAcademySlugMyAssignmentsRoute:
-    AuthenticatedAcademyAcademySlugMyAssignmentsRoute,
-  AuthenticatedAcademyAcademySlugMyBadgesRoute:
-    AuthenticatedAcademyAcademySlugMyBadgesRoute,
-  AuthenticatedAcademyAcademySlugMyCoursesRoute:
-    AuthenticatedAcademyAcademySlugMyCoursesRoute,
-  AuthenticatedAcademyAcademySlugRedeemCodeRoute:
-    AuthenticatedAcademyAcademySlugRedeemCodeRoute,
-  AuthenticatedAcademyAcademySlugSettingsRoute:
-    AuthenticatedAcademyAcademySlugSettingsRouteWithChildren,
-  AuthenticatedAcademyAcademySlugStudentsRoute:
-    AuthenticatedAcademyAcademySlugStudentsRoute,
-  AuthenticatedAcademyAcademySlugTeachersRoute:
-    AuthenticatedAcademyAcademySlugTeachersRoute,
-  AuthenticatedAcademyAcademySlugUsersRoute:
-    AuthenticatedAcademyAcademySlugUsersRoute,
-  AuthenticatedAcademyAcademySlugAdminCourseNewRoute:
-    AuthenticatedAcademyAcademySlugAdminCourseNewRoute,
-  AuthenticatedAcademyAcademySlugNotificationsIndexRoute:
-    AuthenticatedAcademyAcademySlugNotificationsIndexRoute,
-  AuthenticatedAcademyAcademySlugAdminCoursesIndexRoute:
-    AuthenticatedAcademyAcademySlugAdminCoursesIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

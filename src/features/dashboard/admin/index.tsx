@@ -1,7 +1,6 @@
 import type { DashboardProps } from '@/components/dashboard-router'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import { AcademyStatsOverview } from './components'
-import { SubscriptionBanner } from './components/subscription-banner'
 
 export function AdminDashboard({ user, academy }: DashboardProps) {
   if (!user || !academy) {
@@ -26,7 +25,6 @@ export function AdminDashboard({ user, academy }: DashboardProps) {
       dashboardType='academy-admin'
     >
       <div className='w-full space-y-6'>
-        <SubscriptionBanner academy={academy} />
 
         <div>
           <h1 className='text-3xl font-bold tracking-tight'>

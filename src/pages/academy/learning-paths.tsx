@@ -7,7 +7,6 @@ import {
   BookOpen,
   TrendingUp,
 } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
 import { useLearningPaths } from '@/hooks/use-learning-paths'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -25,8 +24,7 @@ export function AcademyLearningPathsPage() {
   const { academySlug } = useParams({
     from: '/_authenticated/academy/$academySlug/learning-paths/',
   })
-  const { currentAcademy } = useAuthStore()
-  const { data, isLoading } = useLearningPaths(currentAcademy?.slug || '')
+  const { data, isLoading } = useLearningPaths(academySlug)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   const learningPaths = data?.data || []
@@ -152,6 +150,7 @@ export function AcademyLearningPathsPage() {
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
         mode='create'
+        academySlug={academySlug}
       />
     </div>
   )

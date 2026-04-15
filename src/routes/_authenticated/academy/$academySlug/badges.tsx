@@ -6,8 +6,9 @@ export const Route = createFileRoute(
   '/_authenticated/academy/$academySlug/badges'
 )({
   beforeLoad: ({ params }) => {
-    const role = useAuthStore.getState().currentAcademy?.user_role
-    if (role !== 'admin' && role !== 'owner') {
+    const { currentAcademy, user } = useAuthStore.getState()
+    const role = currentAcademy?.user_role
+    if (!user?.is_super_admin && role !== 'admin' && role !== 'owner') {
       throw redirect({
         to: `/academy/${params.academySlug}/dashboard` as string,
         search: {} as never,

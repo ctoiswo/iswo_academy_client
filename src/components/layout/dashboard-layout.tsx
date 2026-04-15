@@ -8,6 +8,7 @@ import { Particles } from '@/components/ui/particles'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { ConfigDrawer } from '@/components/config-drawer'
 import type { DashboardType } from '@/components/dashboard-router'
+import { SubscriptionBanner } from '@/features/dashboard/admin/components/subscription-banner'
 import { PointsDisplay } from '@/components/gamification/points-display'
 import { LanguageToggle } from '@/components/language-toggle'
 import { Header } from '@/components/layout/header'
@@ -74,6 +75,7 @@ export function DashboardLayout({
         <FullLayout
           user={user}
           academy={academy}
+          dashboardType={dashboardType}
           topNavLinks={topNavLinks}
           showSearch={showSearch}
           showConfigDrawer={showConfigDrawer}
@@ -130,13 +132,14 @@ function FullLayout({
   children,
   user,
   academy,
+  dashboardType,
   topNavLinks = [],
   showSearch,
   showConfigDrawer,
   className,
   title,
   subtitle,
-}: Omit<DashboardLayoutProps, 'variant' | 'sidebar' | 'dashboardType'>) {
+}: Omit<DashboardLayoutProps, 'variant' | 'sidebar'>) {
   if (!user) return null
   return (
     <SearchProvider>
@@ -178,7 +181,14 @@ function FullLayout({
           </Header>
 
           {/* Main Content */}
-          <Main className='container mx-auto px-4 py-6'>{children}</Main>
+          <Main className='container mx-auto px-4 py-6'>
+            {academy && dashboardType === 'academy-admin' && (
+              <div className='mb-4'>
+                <SubscriptionBanner academy={academy} />
+              </div>
+            )}
+            {children}
+          </Main>
         </div>
       </LayoutProvider>
     </SearchProvider>
@@ -344,7 +354,14 @@ function SidebarLayout({
               </Header>
 
               {/* Main Content */}
-              <Main className='container mx-auto px-4 py-4'>{children}</Main>
+              <Main className='container mx-auto px-4 py-4'>
+                {academy && (dashboardType === 'academy-admin' || dashboardType === 'teacher') && (
+                  <div className='mb-4'>
+                    <SubscriptionBanner academy={academy} />
+                  </div>
+                )}
+                {children}
+              </Main>
             </SidebarInset>
           </div>
         </SidebarProvider>

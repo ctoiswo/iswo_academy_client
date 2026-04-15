@@ -5,7 +5,9 @@ import {
   DollarSign,
   MoreHorizontal,
   Eye,
+  Edit,
   Settings,
+  Route,
   Ban,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -126,6 +128,24 @@ export function AcademyRow({ academy, onRefresh }: AcademyRowProps) {
             >
               <Eye className='mr-2 h-4 w-4' />
               {t('super_admin.academies.actionView')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}
+            >
+              <Edit className='mr-2 h-4 w-4' />
+              Editar
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate({ to: '/academy/$academySlug/admin/courses', params: { academySlug: academy.slug } })}
+            >
+              <BookOpen className='mr-2 h-4 w-4' />
+              Cursos
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate({ to: '/academy/$academySlug/learning-paths', params: { academySlug: academy.slug } })}
+            >
+              <Route className='mr-2 h-4 w-4' />
+              Rutas de Aprendizaje
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}

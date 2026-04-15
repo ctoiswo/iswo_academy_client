@@ -14,6 +14,7 @@ import {
   Edit,
   Eye,
   Settings,
+  Route,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
@@ -210,6 +211,14 @@ export default function SuperAdminAcademies() {
                           <Edit className='mr-2 h-4 w-4' />
                           Editar
                         </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/admin/courses', params: { academySlug: academy.slug } })}>
+                          <BookOpen className='mr-2 h-4 w-4' />
+                          Cursos
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/learning-paths', params: { academySlug: academy.slug } })}>
+                          <Route className='mr-2 h-4 w-4' />
+                          Rutas de Aprendizaje
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}>
                           <Settings className='mr-2 h-4 w-4' />
                           Configuración
@@ -325,6 +334,14 @@ export default function SuperAdminAcademies() {
                           <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}>
                             <Edit className='mr-2 h-4 w-4' />
                             Editar
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/admin/courses', params: { academySlug: academy.slug } })}>
+                            <BookOpen className='mr-2 h-4 w-4' />
+                            Cursos
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/learning-paths', params: { academySlug: academy.slug } })}>
+                            <Route className='mr-2 h-4 w-4' />
+                            Rutas de Aprendizaje
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}>
                             <Settings className='mr-2 h-4 w-4' />

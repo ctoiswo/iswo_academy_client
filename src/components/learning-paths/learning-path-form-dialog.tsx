@@ -31,6 +31,7 @@ interface LearningPathFormDialogProps {
   onOpenChange: (open: boolean) => void
   learningPath?: LearningPath
   mode: 'create' | 'edit'
+  academySlug?: string
 }
 
 interface LearningPathFormData {
@@ -46,10 +47,12 @@ export function LearningPathFormDialog({
   onOpenChange,
   learningPath,
   mode,
+  academySlug: academySlugProp,
 }: LearningPathFormDialogProps) {
   const { currentAcademy } = useAuthStore()
-  const createMutation = useCreateLearningPath(currentAcademy?.slug || '')
-  const updateMutation = useUpdateLearningPath(currentAcademy?.slug || '')
+  const slug = academySlugProp || currentAcademy?.slug || ''
+  const createMutation = useCreateLearningPath(slug)
+  const updateMutation = useUpdateLearningPath(slug)
 
   const {
     register,

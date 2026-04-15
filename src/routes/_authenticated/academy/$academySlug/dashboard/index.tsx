@@ -5,11 +5,16 @@ export const Route = createFileRoute(
   '/_authenticated/academy/$academySlug/dashboard/'
 )({
   beforeLoad: ({ params }) => {
-    const { currentAcademy } = useAuthStore.getState()
+    const { currentAcademy, user } = useAuthStore.getState()
     const role = currentAcademy?.user_role
     const slug = params.academySlug
 
-    if (role === 'admin' || role === 'owner') {
+    if (user?.is_super_admin) {
+      throw redirect({
+        to: `/academy/${slug}/dashboard/admin` as string,
+        replace: true,
+      })
+    } else if (role === 'admin' || role === 'owner') {
       throw redirect({
         to: `/academy/${slug}/dashboard/admin` as string,
         replace: true,

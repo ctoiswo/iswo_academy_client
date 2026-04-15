@@ -22,6 +22,25 @@ export function useAcademyPermissions(academyId?: number) {
   const academyMemberships = academyData?.academies || []
 
   const permissions = useMemo(() => {
+    // Super admin has all permissions in every academy
+    if (user?.is_super_admin) {
+      return {
+        hasAccess: true,
+        userRole: 'admin' as AcademyRole,
+        canRead: true,
+        canCreate: true,
+        canUpdate: true,
+        canDelete: true,
+        canEnroll: true,
+        canManageCourses: true,
+        canManageUsers: true,
+        canManagePayments: true,
+        isStudent: false,
+        isTeacher: true,
+        isAdmin: true,
+      }
+    }
+
     if (!targetAcademyId || !academyMemberships.length) {
       return {
         hasAccess: false,

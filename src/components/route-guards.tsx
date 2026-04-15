@@ -234,6 +234,7 @@ export function AcademyGuard({
     isLoading,
     isInitialized,
     initialize,
+    user,
     academyData,
     currentAcademy,
     selectAcademy,
@@ -251,6 +252,11 @@ export function AcademyGuard({
     // Redirect to sign-in if not authenticated
     if (!isLoading && !isAuthenticated) {
       router.navigate({ to: '/sign-in' })
+      return
+    }
+
+    // Super admin bypasses all academy membership checks
+    if (!isLoading && isAuthenticated && user?.is_super_admin) {
       return
     }
 
@@ -303,6 +309,7 @@ export function AcademyGuard({
     isAuthenticated,
     isLoading,
     router,
+    user,
     academyData,
     academyId,
     requiredRole,
@@ -319,6 +326,11 @@ export function AcademyGuard({
   // Don't render children if not authenticated
   if (!isAuthenticated) {
     return null
+  }
+
+  // Super admin bypasses all academy membership checks at render time
+  if (user?.is_super_admin) {
+    return <>{children}</>
   }
 
   // Don't render children if academy validation is still in progress

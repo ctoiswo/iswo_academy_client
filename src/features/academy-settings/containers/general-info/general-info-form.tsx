@@ -56,7 +56,6 @@ type GeneralInfoValues = z.infer<typeof generalInfoSchema>
 
 export function GeneralInfoForm() {
   const { academySlug } = useParams({ strict: false })
-  const { currentAcademy } = useAuthStore()
   const queryClient = useQueryClient()
   const { t } = useTranslation()
 
@@ -105,8 +104,7 @@ export function GeneralInfoForm() {
 
   const mutation = useMutation({
     mutationFn: async (data: GeneralInfoValues) => {
-      const academyId = currentAcademy?.id
-      if (!academyId || !academySlug) throw new Error('Academy not found')
+      if (!academySlug) throw new Error('Academy not found')
 
       if (logoFile || bannerFile) {
         const formData = new FormData()
