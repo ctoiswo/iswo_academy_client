@@ -1,16 +1,22 @@
 import { useEffect, useMemo } from 'react'
-import { useParams, useSearch } from '@tanstack/react-router'
 import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Award, CheckCircle2, Download, ScrollText, XCircle } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth-store'
+import { useParams, useSearch } from '@tanstack/react-router'
 import { certificateService } from '@/services/certificate-service'
 import { enrollmentService } from '@/services/enrollment-service'
-import { DashboardLayout } from '@/components/layout/dashboard-layout'
+import type { Certificate, CourseCertificateStatus, Enrollment } from '@/types'
+import {
+  Award,
+  CheckCircle2,
+  Download,
+  ScrollText,
+  XCircle,
+} from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { Certificate, CourseCertificateStatus, Enrollment } from '@/types'
+import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
@@ -42,19 +48,17 @@ function CertificateStatusCard({
 }) {
   return (
     <Card
-      className={status.has_certificate
-        ? 'border-emerald-500/30 bg-emerald-500/5'
-        : 'border-amber-500/30 bg-amber-500/5'}
+      className={
+        status.has_certificate
+          ? 'border-emerald-500/30 bg-emerald-500/5'
+          : 'border-amber-500/30 bg-amber-500/5'
+      }
     >
       <CardContent className='space-y-3 p-5'>
         <div className='flex items-start justify-between gap-4'>
           <div>
-            <p className='text-sm font-semibold'>
-              {status.course.title}
-            </p>
-            <p className='text-muted-foreground mt-1 text-xs'>
-              {description}
-            </p>
+            <p className='text-sm font-semibold'>{status.course.title}</p>
+            <p className='text-muted-foreground mt-1 text-xs'>{description}</p>
           </div>
 
           {status.has_certificate ? (
@@ -72,7 +76,7 @@ function CertificateStatusCard({
 
         <div className='grid gap-3 sm:grid-cols-3'>
           <div className='bg-background/70 rounded-lg border p-3'>
-            <p className='text-muted-foreground text-[11px] uppercase tracking-wide'>
+            <p className='text-muted-foreground text-[11px] tracking-wide uppercase'>
               Progreso actual
             </p>
             <p className='mt-1 text-sm font-semibold'>
@@ -80,7 +84,7 @@ function CertificateStatusCard({
             </p>
           </div>
           <div className='bg-background/70 rounded-lg border p-3'>
-            <p className='text-muted-foreground text-[11px] uppercase tracking-wide'>
+            <p className='text-muted-foreground text-[11px] tracking-wide uppercase'>
               Calificacion actual
             </p>
             <p className='mt-1 text-sm font-semibold'>
@@ -88,7 +92,7 @@ function CertificateStatusCard({
             </p>
           </div>
           <div className='bg-background/70 rounded-lg border p-3'>
-            <p className='text-muted-foreground text-[11px] uppercase tracking-wide'>
+            <p className='text-muted-foreground text-[11px] tracking-wide uppercase'>
               Estado del curso
             </p>
             <p className='mt-1 text-sm font-semibold'>
@@ -125,16 +129,25 @@ function CertificateStatusCard({
             <p className='text-xs font-medium'>Te falta completar:</p>
             <div className='space-y-2'>
               {status.missing_requirements.map((requirement) => (
-                <div key={requirement.key} className='bg-background/60 rounded-lg border p-3'>
+                <div
+                  key={requirement.key}
+                  className='bg-background/60 rounded-lg border p-3'
+                >
                   <p className='text-sm font-medium'>{requirement.label}</p>
                   <p className='text-muted-foreground mt-1 text-xs'>
                     {requirement.message}
                   </p>
-                  {(requirement.current != null || requirement.required != null) && (
+                  {(requirement.current != null ||
+                    requirement.required != null) && (
                     <p className='text-muted-foreground mt-2 text-xs'>
-                      Actual: {formatMetricValue(requirement.current, requirement.unit)}
+                      Actual:{' '}
+                      {formatMetricValue(requirement.current, requirement.unit)}
                       {' · '}
-                      Requerido: {formatMetricValue(requirement.required, requirement.unit)}
+                      Requerido:{' '}
+                      {formatMetricValue(
+                        requirement.required,
+                        requirement.unit
+                      )}
                     </p>
                   )}
                 </div>
@@ -164,16 +177,24 @@ export default function MyCertificatesPage() {
     enabled: !!academySlug,
   })
 
-  const { data: courseCertificateStatus, isLoading: isLoadingCourseStatus } = useQuery({
-    queryKey: ['course-certificate-status', academySlug, search.courseSlug],
-    queryFn: () =>
-      certificateService.getCourseCertificateStatus(academySlug!, search.courseSlug!),
-    enabled: !!academySlug && !!search.courseSlug,
-  })
+  const { data: courseCertificateStatus, isLoading: isLoadingCourseStatus } =
+    useQuery({
+      queryKey: ['course-certificate-status', academySlug, search.courseSlug],
+      queryFn: () =>
+        certificateService.getCourseCertificateStatus(
+          academySlug!,
+          search.courseSlug!
+        ),
+      enabled: !!academySlug && !!search.courseSlug,
+    })
 
   const { data: enrollmentsData, isLoading: isLoadingEnrollments } = useQuery({
     queryKey: ['certificate-pending-enrollments', academySlug],
-    queryFn: () => enrollmentService.getUserEnrollments({ academy_slug: academySlug, per_page: 100 }),
+    queryFn: () =>
+      enrollmentService.getUserEnrollments({
+        academy_slug: academySlug,
+        per_page: 100,
+      }),
     enabled: !!academySlug,
   })
 
@@ -182,21 +203,32 @@ export default function MyCertificatesPage() {
     return raw?.enrollments ?? []
   }, [enrollmentsData])
 
-  const { pendingStatuses, isAnyPendingLoading, hasFreshCertificate } = useQueries({
-    queries: academyEnrollments.map((enrollment) => ({
-      queryKey: ['course-certificate-status', academySlug, enrollment.course.slug, 'pending-list'],
-      queryFn: () =>
-        certificateService.getCourseCertificateStatus(academySlug!, enrollment.course.slug),
-      enabled: !!academySlug && !!enrollment.course.slug,
-    })),
-    combine: (results) => ({
-      pendingStatuses: results
-        .map((r) => r.data)
-        .filter((s): s is CourseCertificateStatus => Boolean(s)),
-      isAnyPendingLoading: results.some((r) => r.isLoading),
-      hasFreshCertificate: results.some((r) => Boolean(r.data?.has_certificate)),
-    }),
-  })
+  const { pendingStatuses, isAnyPendingLoading, hasFreshCertificate } =
+    useQueries({
+      queries: academyEnrollments.map((enrollment) => ({
+        queryKey: [
+          'course-certificate-status',
+          academySlug,
+          enrollment.course.slug,
+          'pending-list',
+        ],
+        queryFn: () =>
+          certificateService.getCourseCertificateStatus(
+            academySlug!,
+            enrollment.course.slug
+          ),
+        enabled: !!academySlug && !!enrollment.course.slug,
+      })),
+      combine: (results) => ({
+        pendingStatuses: results
+          .map((r) => r.data)
+          .filter((s): s is CourseCertificateStatus => Boolean(s)),
+        isAnyPendingLoading: results.some((r) => r.isLoading),
+        hasFreshCertificate: results.some((r) =>
+          Boolean(r.data?.has_certificate)
+        ),
+      }),
+    })
 
   const certificates: Certificate[] = useMemo(() => {
     const raw = data as any
@@ -242,7 +274,9 @@ export default function MyCertificatesPage() {
   useEffect(() => {
     if (!hasFreshCertificate || !academySlug) return
 
-    queryClient.invalidateQueries({ queryKey: ['my-certificates', academySlug] })
+    queryClient.invalidateQueries({
+      queryKey: ['my-certificates', academySlug],
+    })
   }, [academySlug, hasFreshCertificate, queryClient])
 
   return (
@@ -263,36 +297,43 @@ export default function MyCertificatesPage() {
           </p>
         </div>
 
-        {search.courseSlug && !isLoadingCourseStatus && courseCertificateStatus && (
-          <CertificateStatusCard
-            status={courseCertificateStatus}
-            description={courseCertificateStatus.has_certificate
-              ? 'Tu certificado ya esta disponible.'
-              : search.from === 'final-exam'
-                ? 'Aprobaste el examen final. Revisa los requisitos pendientes para habilitar tu certificado.'
-                : 'Revisa el estado de tu certificado para este curso.'}
-          />
-        )}
+        {search.courseSlug &&
+          !isLoadingCourseStatus &&
+          courseCertificateStatus && (
+            <CertificateStatusCard
+              status={courseCertificateStatus}
+              description={
+                courseCertificateStatus.has_certificate
+                  ? 'Tu certificado ya esta disponible.'
+                  : search.from === 'final-exam'
+                    ? 'Aprobaste el examen final. Revisa los requisitos pendientes para habilitar tu certificado.'
+                    : 'Revisa el estado de tu certificado para este curso.'
+              }
+            />
+          )}
 
-        {!search.courseSlug && !isLoadingPendingStatuses && automaticPendingStatuses.length > 0 && (
-          <div className='space-y-3'>
-            <div>
-              <h2 className='text-lg font-semibold'>Pendientes</h2>
-              <p className='text-muted-foreground text-sm'>
-                Cursos donde ya aprobaste el examen final pero aun faltan requisitos para emitir el certificado.
-              </p>
+        {!search.courseSlug &&
+          !isLoadingPendingStatuses &&
+          automaticPendingStatuses.length > 0 && (
+            <div className='space-y-3'>
+              <div>
+                <h2 className='text-lg font-semibold'>Pendientes</h2>
+                <p className='text-muted-foreground text-sm'>
+                  Cursos donde ya aprobaste el examen final pero aun faltan
+                  requisitos para emitir el certificado.
+                </p>
+              </div>
+              <div className='space-y-4'>
+                {automaticPendingStatuses.map((status) => (
+                  <CertificateStatusCard
+                    key={status.course.slug}
+                    status={status}
+                    description='Aprobaste el examen final. Revisa lo que falta para habilitar tu certificado.'
+                  />
+                ))}
+              </div>
             </div>
-            <div className='space-y-4'>
-              {automaticPendingStatuses.map((status) => (
-                <CertificateStatusCard
-                  key={status.course.slug}
-                  status={status}
-                  description='Aprobaste el examen final. Revisa lo que falta para habilitar tu certificado.'
-                />
-              ))}
-            </div>
-          </div>
-        )}
+          )}
 
         {isLoading && (
           <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
@@ -302,17 +343,21 @@ export default function MyCertificatesPage() {
           </div>
         )}
 
-        {!isLoading && !isLoadingPendingStatuses && certificates.length === 0 && automaticPendingStatuses.length === 0 && (!search.courseSlug || !courseCertificateStatus) && (
-          <div className='border-border flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center'>
-            <Award className='text-muted-foreground/40 size-14' />
-            <p className='text-muted-foreground mt-4 text-base font-medium'>
-              Aun no tienes certificados
-            </p>
-            <p className='text-muted-foreground mt-1 text-sm'>
-              Completa cursos para obtener tus certificados de finalizacion
-            </p>
-          </div>
-        )}
+        {!isLoading &&
+          !isLoadingPendingStatuses &&
+          certificates.length === 0 &&
+          automaticPendingStatuses.length === 0 &&
+          (!search.courseSlug || !courseCertificateStatus) && (
+            <div className='border-border flex flex-col items-center justify-center rounded-xl border border-dashed py-20 text-center'>
+              <Award className='text-muted-foreground/40 size-14' />
+              <p className='text-muted-foreground mt-4 text-base font-medium'>
+                Aun no tienes certificados
+              </p>
+              <p className='text-muted-foreground mt-1 text-sm'>
+                Completa cursos para obtener tus certificados de finalizacion
+              </p>
+            </div>
+          )}
 
         {!isLoading && certificates.length > 0 && (
           <>
@@ -339,7 +384,7 @@ export default function MyCertificatesPage() {
                     </div>
 
                     <div className='space-y-1'>
-                      <p className='text-sm font-semibold leading-tight'>
+                      <p className='text-sm leading-tight font-semibold'>
                         {certificate.course.title}
                       </p>
                       <p className='text-muted-foreground text-xs'>
@@ -364,7 +409,9 @@ export default function MyCertificatesPage() {
 
                           window.open(target, '_blank', 'noopener,noreferrer')
                         }}
-                        disabled={!certificate.pdf_url && !certificate.verification_url}
+                        disabled={
+                          !certificate.pdf_url && !certificate.verification_url
+                        }
                       >
                         Ver certificado
                       </Button>

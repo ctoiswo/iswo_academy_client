@@ -2,8 +2,6 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { lessonService } from '@/services/lesson-service'
-import { useLessonTracker } from '@/hooks/use-lesson-tracker'
-import { useAssessments, assessmentKeys } from '@/hooks/use-assessments'
 import type { Lesson, Section, AssessmentSummary } from '@/types'
 import {
   Play,
@@ -28,9 +26,9 @@ import {
   GraduationCap,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useAssessments, assessmentKeys } from '@/hooks/use-assessments'
+import { useLessonTracker } from '@/hooks/use-lesson-tracker'
 import { useSections } from '@/hooks/use-sections'
-import { LessonExtras } from './lesson-extras'
-import { AssessmentPlayer } from './assessment-player'
 import {
   Accordion,
   AccordionContent,
@@ -41,6 +39,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Slider } from '@/components/ui/slider'
+import { AssessmentPlayer } from './assessment-player'
+import { LessonExtras } from './lesson-extras'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -69,7 +69,9 @@ function VideoPlayer({
   // Stable refs so the YT.Player callback never captures a stale closure
   const onCompleteRef = useRef(onComplete)
   const completedOnceRef = useRef(isCompleted)
-  useEffect(() => { onCompleteRef.current = onComplete }, [onComplete])
+  useEffect(() => {
+    onCompleteRef.current = onComplete
+  }, [onComplete])
   const controlsTimeout = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   const [isPlaying, setIsPlaying] = useState(false)
@@ -195,7 +197,10 @@ function VideoPlayer({
   // Determine the actual video src from provider
   const getVideoSrc = (): string | undefined => {
     // YouTube and Vimeo are embedded via iframe — never use video_url as <video> src
-    if (lesson.video_provider === 'youtube' || lesson.video_provider === 'vimeo') {
+    if (
+      lesson.video_provider === 'youtube' ||
+      lesson.video_provider === 'vimeo'
+    ) {
       return undefined
     }
     return lesson.video_url || undefined
@@ -233,7 +238,11 @@ function VideoPlayer({
       if (!document.getElementById(containerId)) return
       player = new (window as any).YT.Player(containerId, {
         videoId: youTubeId,
-        playerVars: { rel: 0, modestbranding: 1, origin: window.location.origin },
+        playerVars: {
+          rel: 0,
+          modestbranding: 1,
+          origin: window.location.origin,
+        },
         events: {
           onStateChange: (event: any) => {
             // state 0 = YT.PlayerState.ENDED
@@ -264,7 +273,11 @@ function VideoPlayer({
     }
 
     return () => {
-      try { player?.destroy() } catch { /* ignore destroy errors on cleanup */ }
+      try {
+        player?.destroy()
+      } catch {
+        /* ignore destroy errors on cleanup */
+      }
     }
   }, [isYouTube, youTubeId, lesson.id])
 
@@ -612,7 +625,11 @@ function DocumentContent({
           className='bg-primary text-primary-foreground hover:bg-primary/90 w-full gap-2'
         >
           <CheckCircle2 className='size-4' />
-          {isCompleted ? 'Completado' : isCompleting ? 'Guardando...' : 'Marcar como completado'}
+          {isCompleted
+            ? 'Completado'
+            : isCompleting
+              ? 'Guardando...'
+              : 'Marcar como completado'}
         </Button>
       </div>
     </div>
@@ -725,7 +742,8 @@ function CourseSidebar({
                   a.published &&
                   a.section_id === section.id
               )
-              const quizPassed = !sectionQuiz || passedAssessmentIds.has(sectionQuiz.id)
+              const quizPassed =
+                !sectionQuiz || passedAssessmentIds.has(sectionQuiz.id)
               const sectionComplete = sectionProgress === 100 && quizPassed
 
               return (
@@ -820,7 +838,7 @@ function CourseSidebar({
                             'flex items-center gap-3 px-4 py-3 text-left transition-all',
                             'hover:bg-secondary/30',
                             currentAssessmentId === sectionQuiz.id &&
-                              'bg-amber-500/10 border-amber-500 border-l-2'
+                              'border-l-2 border-amber-500 bg-amber-500/10'
                           )}
                         >
                           <div
@@ -836,12 +854,14 @@ function CourseSidebar({
                             {passedAssessmentIds.has(sectionQuiz.id) ? (
                               <CheckCircle2 className='size-4 text-emerald-400' />
                             ) : (
-                              <FileQuestion className={cn(
-                                'size-4',
-                                currentAssessmentId === sectionQuiz.id
-                                  ? 'text-amber-500'
-                                  : 'text-amber-400'
-                              )} />
+                              <FileQuestion
+                                className={cn(
+                                  'size-4',
+                                  currentAssessmentId === sectionQuiz.id
+                                    ? 'text-amber-500'
+                                    : 'text-amber-400'
+                                )}
+                              />
                             )}
                           </div>
                           <div className='min-w-0 flex-1'>
@@ -857,10 +877,15 @@ function CourseSidebar({
                             >
                               {sectionQuiz.title}
                             </p>
-                            <p className='text-muted-foreground text-xs'>Quiz · {sectionQuiz.questions_count} preguntas</p>
+                            <p className='text-muted-foreground text-xs'>
+                              Quiz · {sectionQuiz.questions_count} preguntas
+                            </p>
                           </div>
                           {passedAssessmentIds.has(sectionQuiz.id) && (
-                            <Badge variant='outline' className='shrink-0 border-emerald-500/40 bg-emerald-500/10 text-[10px] text-emerald-500'>
+                            <Badge
+                              variant='outline'
+                              className='shrink-0 border-emerald-500/40 bg-emerald-500/10 text-[10px] text-emerald-500'
+                            >
                               Aprobado
                             </Badge>
                           )}
@@ -881,7 +906,7 @@ function CourseSidebar({
                 'border-border flex w-full items-center gap-3 border-t px-4 py-4 text-left transition-all',
                 'hover:bg-secondary/30',
                 currentAssessmentId === finalExam.id &&
-                  'bg-orange-500/10 border-l-2 border-l-orange-500'
+                  'border-l-2 border-l-orange-500 bg-orange-500/10'
               )}
             >
               <div
@@ -897,12 +922,14 @@ function CourseSidebar({
                 {passedAssessmentIds.has(finalExam.id) ? (
                   <CheckCircle2 className='size-4 text-emerald-400' />
                 ) : (
-                  <GraduationCap className={cn(
-                    'size-4',
-                    currentAssessmentId === finalExam.id
-                      ? 'text-orange-500'
-                      : 'text-orange-400'
-                  )} />
+                  <GraduationCap
+                    className={cn(
+                      'size-4',
+                      currentAssessmentId === finalExam.id
+                        ? 'text-orange-500'
+                        : 'text-orange-400'
+                    )}
+                  />
                 )}
               </div>
               <div className='min-w-0 flex-1'>
@@ -923,7 +950,10 @@ function CourseSidebar({
                 </p>
               </div>
               {passedAssessmentIds.has(finalExam.id) && (
-                <Badge variant='outline' className='shrink-0 border-emerald-500/40 bg-emerald-500/10 text-[10px] text-emerald-500'>
+                <Badge
+                  variant='outline'
+                  className='shrink-0 border-emerald-500/40 bg-emerald-500/10 text-[10px] text-emerald-500'
+                >
                   Aprobado
                 </Badge>
               )}
@@ -996,8 +1026,12 @@ export function CoursePlayer({
   const sections: Section[] = Array.isArray(sectionsData) ? sectionsData : []
 
   // Fetch all published assessments for this course (for sidebar)
-  const { data: assessmentsData } = useAssessments(academySlug, courseSlug, { status: 'published' })
-  const assessments: AssessmentSummary[] = Array.isArray(assessmentsData) ? assessmentsData : []
+  const { data: assessmentsData } = useAssessments(academySlug, courseSlug, {
+    status: 'published',
+  })
+  const assessments: AssessmentSummary[] = Array.isArray(assessmentsData)
+    ? assessmentsData
+    : []
 
   // Current assessment (when viewing a quiz/exam)
   const currentAssessment = assessmentId
@@ -1021,12 +1055,17 @@ export function CoursePlayer({
     enabled: !!currentSection && !!lessonId,
   })
 
-  const { markComplete, isCompleting } = useLessonTracker(academySlug, courseSlug)
+  const { markComplete, isCompleting } = useLessonTracker(
+    academySlug,
+    courseSlug
+  )
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [completedIds, setCompletedIds] = useState<Set<number>>(new Set())
   // Track which assessment IDs the current user has passed
-  const [passedAssessmentIds, setPassedAssessmentIds] = useState<Set<number>>(new Set())
+  const [passedAssessmentIds, setPassedAssessmentIds] = useState<Set<number>>(
+    new Set()
+  )
 
   // Seed completed lessons from sections data
   useEffect(() => {
@@ -1042,13 +1081,15 @@ export function CoursePlayer({
         return merged
       })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sectionsLoading])
 
   // Seed passed assessments from the assessments index response (user_passed field)
   useEffect(() => {
     if (assessments.length === 0) return
-    const passed = assessments.filter((a) => a.user_passed === true).map((a) => a.id)
+    const passed = assessments
+      .filter((a) => a.user_passed === true)
+      .map((a) => a.id)
     if (passed.length > 0) {
       setPassedAssessmentIds((prev) => {
         const merged = new Set(prev)
@@ -1056,7 +1097,7 @@ export function CoursePlayer({
         return merged
       })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assessments.length])
 
   // Also pick up any completion from the currently-loaded lesson's user_progress.
@@ -1110,14 +1151,20 @@ export function CoursePlayer({
   const handleAssessmentPassed = (passedAssessmentId: number) => {
     setPassedAssessmentIds((prev) => new Set([...prev, passedAssessmentId]))
     // Invalidate assessments query so user_passed refreshes
-    queryClient.invalidateQueries({ queryKey: assessmentKeys.list(academySlug, courseSlug) })
+    queryClient.invalidateQueries({
+      queryKey: assessmentKeys.list(academySlug, courseSlug),
+    })
   }
 
   const goToNextSectionFromAssessment = (assessment: AssessmentSummary) => {
     if (!assessment.section_id) return
 
-    const sortedSections = [...sections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-    const currentSectionIndex = sortedSections.findIndex((s) => s.id === assessment.section_id)
+    const sortedSections = [...sections].sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0)
+    )
+    const currentSectionIndex = sortedSections.findIndex(
+      (s) => s.id === assessment.section_id
+    )
     if (currentSectionIndex < 0) return
 
     const nextSection = sortedSections[currentSectionIndex + 1]
@@ -1154,7 +1201,8 @@ export function CoursePlayer({
   const hasPrev = currentIndex > 0
   const hasNext = currentIndex >= 0 && currentIndex < allLessons.length - 1
 
-  const isLoading = sectionsLoading || (!!lessonId && lessonLoading && !assessmentId)
+  const isLoading =
+    sectionsLoading || (!!lessonId && lessonLoading && !assessmentId)
 
   const renderContent = () => {
     // Assessment view
@@ -1252,7 +1300,7 @@ export function CoursePlayer({
 
   const courseTitle = currentLesson?.title
     ? (sections[0]?.title ?? courseSlug)
-    : currentAssessment?.title ?? courseSlug
+    : (currentAssessment?.title ?? courseSlug)
 
   return (
     <div className='bg-background flex min-h-screen flex-col'>

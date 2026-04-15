@@ -1,12 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from '@tanstack/react-router'
-import {
-  ArrowLeft,
-  Award,
-  Star,
-  FileText,
-  Save,
-} from 'lucide-react'
+import { ArrowLeft, Award, Star, FileText, Save } from 'lucide-react'
 import { useCertificateTemplates } from '@/hooks/use-certificate-templates'
 import { useCourse, useUpdateCourse } from '@/hooks/use-courses'
 import { Badge } from '@/components/ui/badge'
@@ -51,13 +45,16 @@ export default function CourseCertificatesPage() {
   const isLoading = courseLoading || templatesLoading
   const error = courseError
 
-  const defaultTemplate = templates?.find((template) => template.is_default) || null
-  const activeTemplates = templates?.filter((template) => template.is_active) || []
+  const defaultTemplate =
+    templates?.find((template) => template.is_default) || null
+  const activeTemplates =
+    templates?.filter((template) => template.is_active) || []
   const selectedTemplate = useMemo(() => {
     if (selectedTemplateValue === 'default') return defaultTemplate
     return (
-      templates?.find((template) => String(template.id) === selectedTemplateValue) ||
-      null
+      templates?.find(
+        (template) => String(template.id) === selectedTemplateValue
+      ) || null
     )
   }, [defaultTemplate, selectedTemplateValue, templates])
 
@@ -89,8 +86,12 @@ export default function CourseCertificatesPage() {
   if (error || !course) {
     return (
       <div className='p-6 text-center'>
-        <h3 className='mb-2 text-lg font-bold text-red-500'>Error al cargar el curso</h3>
-        <p className='text-muted-foreground mb-4'>No encontrado o sin permiso de acceso</p>
+        <h3 className='mb-2 text-lg font-bold text-red-500'>
+          Error al cargar el curso
+        </h3>
+        <p className='text-muted-foreground mb-4'>
+          No encontrado o sin permiso de acceso
+        </p>
         <Link to='/academy/$academySlug/admin/courses' params={{ academySlug }}>
           <Button variant='outline'>
             <ArrowLeft className='mr-2 h-4 w-4' />
@@ -139,11 +140,15 @@ export default function CourseCertificatesPage() {
               {course.title}
             </h1>
             <p className='text-muted-foreground text-sm'>
-              Selecciona la plantilla que usará este curso para emitir certificados
+              Selecciona la plantilla que usará este curso para emitir
+              certificados
             </p>
           </div>
           <div className='flex shrink-0 gap-2'>
-            <Button onClick={handleSave} disabled={!isDirty || updateCourse.isPending}>
+            <Button
+              onClick={handleSave}
+              disabled={!isDirty || updateCourse.isPending}
+            >
               <Save className='mr-2 h-4 w-4' />
               Guardar
             </Button>
@@ -158,7 +163,7 @@ export default function CourseCertificatesPage() {
           </div>
           <div className='min-w-0'>
             <p className='text-muted-foreground text-xs'>Emisión</p>
-            <p className='text-foreground text-xl font-bold leading-none'>
+            <p className='text-foreground text-xl leading-none font-bold'>
               {certificateEnabled ? 'Activa' : 'Desactivada'}
             </p>
           </div>
@@ -169,7 +174,7 @@ export default function CourseCertificatesPage() {
           </div>
           <div className='min-w-0'>
             <p className='text-muted-foreground text-xs'>Plantilla</p>
-            <p className='text-foreground text-xl font-bold leading-none'>
+            <p className='text-foreground text-xl leading-none font-bold'>
               {selectedTemplate?.name || 'Sin definir'}
             </p>
           </div>
@@ -180,7 +185,7 @@ export default function CourseCertificatesPage() {
           </div>
           <div className='min-w-0'>
             <p className='text-muted-foreground text-xs'>Plantillas activas</p>
-            <p className='text-foreground text-xl font-bold leading-none'>
+            <p className='text-foreground text-xl leading-none font-bold'>
               {activeTemplates.length}
             </p>
           </div>
@@ -190,10 +195,13 @@ export default function CourseCertificatesPage() {
       <div className='border-primary/20 bg-primary/5 flex items-start gap-3 rounded-xl border p-4'>
         <Award className='text-primary mt-0.5 size-4 shrink-0' />
         <div>
-          <p className='text-primary text-sm font-semibold'>Asignación por curso</p>
+          <p className='text-primary text-sm font-semibold'>
+            Asignación por curso
+          </p>
           <p className='text-muted-foreground mt-0.5 text-xs'>
-            Las plantillas se diseñan fuera del curso, a nivel academia. Aquí solo eliges
-            cuál aplica a este curso. Si no eliges una específica, se usará la predeterminada.
+            Las plantillas se diseñan fuera del curso, a nivel academia. Aquí
+            solo eliges cuál aplica a este curso. Si no eliges una específica,
+            se usará la predeterminada.
           </p>
         </div>
       </div>
@@ -208,9 +216,12 @@ export default function CourseCertificatesPage() {
         <CardContent className='space-y-6'>
           <div className='flex items-center justify-between gap-6'>
             <div className='space-y-1'>
-              <Label htmlFor='course-certificate-enabled'>Emitir certificados</Label>
+              <Label htmlFor='course-certificate-enabled'>
+                Emitir certificados
+              </Label>
               <p className='text-muted-foreground text-sm'>
-                Los estudiantes obtendrán un certificado al completar este curso.
+                Los estudiantes obtendrán un certificado al completar este
+                curso.
               </p>
             </div>
             <Switch
@@ -231,7 +242,9 @@ export default function CourseCertificatesPage() {
                 <SelectValue placeholder='Selecciona una plantilla' />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='default'>Usar plantilla predeterminada de la academia</SelectItem>
+                <SelectItem value='default'>
+                  Usar plantilla predeterminada de la academia
+                </SelectItem>
                 {activeTemplates.map((template) => (
                   <SelectItem key={template.id} value={String(template.id)}>
                     {template.name}
@@ -252,7 +265,8 @@ export default function CourseCertificatesPage() {
         <CardHeader>
           <CardTitle>Resumen de la plantilla elegida</CardTitle>
           <CardDescription>
-            Vista rápida de la plantilla que se aplicará cuando se genere el certificado.
+            Vista rápida de la plantilla que se aplicará cuando se genere el
+            certificado.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -261,7 +275,9 @@ export default function CourseCertificatesPage() {
               <div className='flex items-start justify-between gap-4'>
                 <div>
                   <div className='flex items-center gap-2'>
-                    <span className='text-base font-semibold'>{selectedTemplate.name}</span>
+                    <span className='text-base font-semibold'>
+                      {selectedTemplate.name}
+                    </span>
                     {selectedTemplate.is_default && (
                       <Badge variant='secondary'>Predeterminada</Badge>
                     )}
@@ -273,7 +289,6 @@ export default function CourseCertificatesPage() {
                     </p>
                   )}
                 </div>
-
               </div>
 
               <div className='grid gap-3 md:grid-cols-3'>
@@ -291,7 +306,9 @@ export default function CourseCertificatesPage() {
                 </div>
                 <div className='bg-muted/40 rounded-lg p-3'>
                   <p className='text-muted-foreground text-xs'>Usos</p>
-                  <p className='text-sm font-semibold'>{selectedTemplate.usage_count}</p>
+                  <p className='text-sm font-semibold'>
+                    {selectedTemplate.usage_count}
+                  </p>
                 </div>
               </div>
             </div>
@@ -300,7 +317,8 @@ export default function CourseCertificatesPage() {
               <Award className='text-muted-foreground mx-auto mb-3 size-10' />
               <p className='font-medium'>No hay plantilla disponible</p>
               <p className='text-muted-foreground mt-1 text-sm'>
-                Crea una plantilla en la biblioteca de la academia y luego vuelve aquí para asignarla.
+                Crea una plantilla en la biblioteca de la academia y luego
+                vuelve aquí para asignarla.
               </p>
             </div>
           )}

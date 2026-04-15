@@ -56,7 +56,8 @@ export function useLessonTracker(academySlug: string, courseSlug: string) {
         video_position?: number
         video_duration?: number
       }
-    }) => lessonService.trackProgress(academySlug, courseSlug, lessonId, payload),
+    }) =>
+      lessonService.trackProgress(academySlug, courseSlug, lessonId, payload),
     onSuccess: (data, { lessonId }) => {
       queryClient.setQueriesData<any>(
         { predicate: (q) => q.queryKey.includes(lessonId) },

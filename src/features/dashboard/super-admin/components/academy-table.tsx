@@ -72,7 +72,11 @@ export function AcademyTable({
         </TableHeader>
         <TableBody>
           {academies.map((academy) => (
-            <AcademyRow key={academy.id} academy={academy} onRefresh={onRefresh} />
+            <AcademyRow
+              key={academy.id}
+              academy={academy}
+              onRefresh={onRefresh}
+            />
           ))}
         </TableBody>
       </Table>

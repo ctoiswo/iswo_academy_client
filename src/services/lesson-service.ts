@@ -48,12 +48,10 @@ class LessonService {
     const response = await apiClient.get(
       `/academies/${academySlug}/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}`
     )
-    return (
-      response.data?.data?.lesson ||
+    return (response.data?.data?.lesson ||
       response.data?.lesson ||
       response.data?.data ||
-      response.data
-    ) as Lesson
+      response.data) as Lesson
   }
 
   /**

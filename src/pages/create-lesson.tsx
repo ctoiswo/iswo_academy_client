@@ -13,9 +13,9 @@ import {
   X,
   Paperclip,
 } from 'lucide-react'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useCreateLesson } from '@/hooks/use-lessons'
-import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -183,7 +183,9 @@ export default function CreateLessonPage() {
     }
   }
 
-  const handleResourceFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleResourceFilesChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const selected = Array.from(e.target.files || [])
     setResourceFiles((prev) => {
       const combined = [...prev, ...selected]

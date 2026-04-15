@@ -2,7 +2,6 @@
  * Assessment, Quiz, and Question related types
  * Matching backend assessment_json structure
  */
-
 import type { CourseCertificateStatus } from './certificate'
 
 export type AssessmentType = 'Quiz' | 'Exam'
@@ -174,7 +173,18 @@ export interface QuizAttemptResult {
 
 // my_attempts response
 export interface MyAttemptsResponse {
-  attempts: Pick<AssessmentAttempt, 'id' | 'attempt_number' | 'score' | 'max_score' | 'percentage' | 'passed' | 'status' | 'started_at' | 'completed_at'>[]
+  attempts: Pick<
+    AssessmentAttempt,
+    | 'id'
+    | 'attempt_number'
+    | 'score'
+    | 'max_score'
+    | 'percentage'
+    | 'passed'
+    | 'status'
+    | 'started_at'
+    | 'completed_at'
+  >[]
   passed: boolean
   best_score: number | null
 }

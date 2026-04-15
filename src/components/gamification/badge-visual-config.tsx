@@ -221,7 +221,13 @@ export function getVisualConfig(slug: string, tier: string): BadgeVisualConfig {
 
 // ─── Custom SVG badge icons ────────────────────────────────────────────────────
 
-export function BadgeIcon({ slug, className }: { slug: string; className?: string }) {
+export function BadgeIcon({
+  slug,
+  className,
+}: {
+  slug: string
+  className?: string
+}) {
   const icons: Record<string, ReactElement> = {
     'account-confirmed': (
       <svg

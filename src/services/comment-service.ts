@@ -1,5 +1,5 @@
-import apiClient from '@/lib/api-client'
 import type { LessonComment } from '@/types'
+import apiClient from '@/lib/api-client'
 
 class CommentService {
   async getLessonComments(
@@ -12,7 +12,7 @@ class CommentService {
     const data = response.data
     return {
       comments: data.data ?? [],
-      total: data.meta?.total ?? (data.data?.length ?? 0),
+      total: data.meta?.total ?? data.data?.length ?? 0,
     }
   }
 

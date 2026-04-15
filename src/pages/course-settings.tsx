@@ -196,7 +196,6 @@ export default function CourseSettingsPage() {
                       </FormItem>
                     )}
                   />
-
                 </div>
               </div>
 

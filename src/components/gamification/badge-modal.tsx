@@ -287,7 +287,6 @@ export function BadgeModal({ badge, open, onClose }: BadgeModalProps) {
               >
                 {t('gamification.badgeModal.viewBadges')}
               </Button>
-
             </div>
           </div>
         </DialogContent>

@@ -1,22 +1,36 @@
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
-import { AlertCircle, CheckCircle2, Check, Clock, CreditCard, Loader2, ShieldCheck } from 'lucide-react'
+import paymentService from '@/services/payment-service'
+import {
+  AlertCircle,
+  CheckCircle2,
+  Check,
+  Clock,
+  CreditCard,
+  Loader2,
+  ShieldCheck,
+} from 'lucide-react'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
+import { formatFullPrice } from '@/lib/formatters'
+import { cn } from '@/lib/utils'
 import {
   ADMIN_SUBSCRIPTION_PLANS,
   getAdminSubscriptionPlan,
   type AdminSubscriptionPlanCode,
 } from '@/constants/admin-subscription-plans'
-import paymentService from '@/services/payment-service'
-import { useAuthStore } from '@/stores/auth-store'
-import { formatFullPrice } from '@/lib/formatters'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { cn } from '@/lib/utils'
 
 export function SubscriptionInfo() {
   const { currentAcademy } = useAuthStore()
@@ -57,7 +71,8 @@ export function SubscriptionInfo() {
     admin_subscription_days_remaining,
   } = currentAcademy
 
-  const isGracePeriod = admin_subscription_active && subscription_expires_at === null
+  const isGracePeriod =
+    admin_subscription_active && subscription_expires_at === null
   const isExpired = !admin_subscription_active
 
   const formattedExpiry = subscription_expires_at
@@ -82,13 +97,17 @@ export function SubscriptionInfo() {
         </CardHeader>
         <CardContent className='space-y-6'>
           <div className='flex items-center justify-between'>
-            <span className='text-sm font-medium text-muted-foreground'>Estado</span>
+            <span className='text-muted-foreground text-sm font-medium'>
+              Estado
+            </span>
             {isExpired ? (
               <Badge variant='destructive'>Expirada</Badge>
             ) : isGracePeriod ? (
               <Badge variant='secondary'>Período de gracia</Badge>
             ) : (
-              <Badge className='bg-green-600 text-white hover:bg-green-700'>Activa</Badge>
+              <Badge className='bg-green-600 text-white hover:bg-green-700'>
+                Activa
+              </Badge>
             )}
           </div>
 
@@ -97,30 +116,38 @@ export function SubscriptionInfo() {
           {formattedExpiry && (
             <>
               <div className='flex items-center justify-between'>
-                <span className='text-sm font-medium text-muted-foreground'>Fecha de vencimiento</span>
+                <span className='text-muted-foreground text-sm font-medium'>
+                  Fecha de vencimiento
+                </span>
                 <span className='text-sm font-semibold'>{formattedExpiry}</span>
               </div>
               <Separator />
             </>
           )}
 
-          {admin_subscription_days_remaining !== null && admin_subscription_days_remaining !== undefined && (
-            <div className='flex items-center justify-between'>
-              <span className='text-sm font-medium text-muted-foreground'>Días restantes</span>
-              <span className='text-sm font-semibold'>{admin_subscription_days_remaining} días</span>
-            </div>
-          )}
+          {admin_subscription_days_remaining !== null &&
+            admin_subscription_days_remaining !== undefined && (
+              <div className='flex items-center justify-between'>
+                <span className='text-muted-foreground text-sm font-medium'>
+                  Días restantes
+                </span>
+                <span className='text-sm font-semibold'>
+                  {admin_subscription_days_remaining} días
+                </span>
+              </div>
+            )}
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center gap-2'>
-            <ShieldCheck className='h-5 w-5 text-primary' />
+            <ShieldCheck className='text-primary h-5 w-5' />
             Plan anual de administrador
           </CardTitle>
           <CardDescription>
-            Selecciona uno de los dos planes anuales disponibles para activar o renovar tu academia.
+            Selecciona uno de los dos planes anuales disponibles para activar o
+            renovar tu academia.
           </CardDescription>
         </CardHeader>
         <CardContent className='space-y-6'>
@@ -175,7 +202,7 @@ export function SubscriptionInfo() {
                     </p>
                   </div>
 
-                  <ul className='mt-5 space-y-2 text-sm text-muted-foreground'>
+                  <ul className='text-muted-foreground mt-5 space-y-2 text-sm'>
                     {plan.features.map((feature) => (
                       <li key={feature} className='flex items-start gap-2'>
                         <Check className='text-primary mt-0.5 h-4 w-4 shrink-0' />
@@ -188,21 +215,22 @@ export function SubscriptionInfo() {
             })}
           </div>
 
-          <div className='rounded-xl border bg-muted/30 p-5'>
+          <div className='bg-muted/30 rounded-xl border p-5'>
             <div className='flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between'>
               <div>
-                <p className='text-sm font-medium text-muted-foreground'>
+                <p className='text-muted-foreground text-sm font-medium'>
                   Plan seleccionado
                 </p>
                 <p className='text-2xl font-bold'>
                   {selectedPlan ? selectedPlan.name : 'Selecciona un plan'}
                 </p>
-                <p className='mt-1 text-sm text-muted-foreground'>
-                  El pago se procesa a nombre de ISWO y activa tu academia por 1 ano. Puedes cambiar el plan antes de continuar.
+                <p className='text-muted-foreground mt-1 text-sm'>
+                  El pago se procesa a nombre de ISWO y activa tu academia por 1
+                  ano. Puedes cambiar el plan antes de continuar.
                 </p>
               </div>
               <div className='text-left sm:text-right'>
-                <p className='text-sm font-medium text-muted-foreground'>
+                <p className='text-muted-foreground text-sm font-medium'>
                   Total a pagar
                 </p>
                 <p className='text-3xl font-bold'>
@@ -231,18 +259,27 @@ export function SubscriptionInfo() {
             )}
           </Button>
 
-          <div className='grid gap-3 text-sm text-muted-foreground sm:grid-cols-3'>
+          <div className='text-muted-foreground grid gap-3 text-sm sm:grid-cols-3'>
             <div className='rounded-lg border p-4'>
-              <p className='font-medium text-foreground'>Activacion inmediata</p>
-              <p className='mt-1'>La academia se activa cuando MercadoPago confirma el pago.</p>
+              <p className='text-foreground font-medium'>
+                Activacion inmediata
+              </p>
+              <p className='mt-1'>
+                La academia se activa cuando MercadoPago confirma el pago.
+              </p>
             </div>
             <div className='rounded-lg border p-4'>
-              <p className='font-medium text-foreground'>Vigencia anual</p>
-              <p className='mt-1'>El plan elegido extiende la academia por 12 meses.</p>
+              <p className='text-foreground font-medium'>Vigencia anual</p>
+              <p className='mt-1'>
+                El plan elegido extiende la academia por 12 meses.
+              </p>
             </div>
             <div className='rounded-lg border p-4'>
-              <p className='font-medium text-foreground'>Pago a ISWO</p>
-              <p className='mt-1'>El checkout se procesa con el proveedor de pagos de la plataforma.</p>
+              <p className='text-foreground font-medium'>Pago a ISWO</p>
+              <p className='mt-1'>
+                El checkout se procesa con el proveedor de pagos de la
+                plataforma.
+              </p>
             </div>
           </div>
         </CardContent>
@@ -253,7 +290,8 @@ export function SubscriptionInfo() {
           <AlertCircle className='h-4 w-4' />
           <AlertTitle>Suscripción vencida</AlertTitle>
           <AlertDescription>
-            Tu academia no puede crear ni editar contenido. Activa tu plan anual para volver a operar con normalidad.
+            Tu academia no puede crear ni editar contenido. Activa tu plan anual
+            para volver a operar con normalidad.
           </AlertDescription>
         </Alert>
       )}
@@ -263,20 +301,26 @@ export function SubscriptionInfo() {
           <CheckCircle2 className='h-4 w-4' />
           <AlertTitle>Período de gracia activo</AlertTitle>
           <AlertDescription>
-            Tu academia está activa sin una fecha de vencimiento configurada. Puedes regularizar tu plan anual desde esta misma pantalla.
+            Tu academia está activa sin una fecha de vencimiento configurada.
+            Puedes regularizar tu plan anual desde esta misma pantalla.
           </AlertDescription>
         </Alert>
       )}
 
-      {!isExpired && !isGracePeriod && admin_subscription_days_remaining !== null && admin_subscription_days_remaining !== undefined && admin_subscription_days_remaining <= 30 && (
-        <Alert>
-          <Clock className='h-4 w-4' />
-          <AlertTitle>Suscripción próxima a vencer</AlertTitle>
-          <AlertDescription>
-            Tu suscripción vence en {admin_subscription_days_remaining} días. Puedes renovarla por un ano adicional desde esta pantalla.
-          </AlertDescription>
-        </Alert>
-      )}
+      {!isExpired &&
+        !isGracePeriod &&
+        admin_subscription_days_remaining !== null &&
+        admin_subscription_days_remaining !== undefined &&
+        admin_subscription_days_remaining <= 30 && (
+          <Alert>
+            <Clock className='h-4 w-4' />
+            <AlertTitle>Suscripción próxima a vencer</AlertTitle>
+            <AlertDescription>
+              Tu suscripción vence en {admin_subscription_days_remaining} días.
+              Puedes renovarla por un ano adicional desde esta pantalla.
+            </AlertDescription>
+          </Alert>
+        )}
     </div>
   )
 }

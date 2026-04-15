@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+import { useNavigate } from '@tanstack/react-router'
 import { es } from 'date-fns/locale'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Bell, ExternalLink } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import { getCategoryEmoji, getPriorityColor } from '@/lib/notification-utils'
 import { useNotifications } from '@/hooks/use-notifications'
@@ -119,7 +119,7 @@ export function NotificationDropdown({ className }: NotificationDropdownProps) {
                         key={notification.id}
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className={`mb-2 cursor-pointer rounded-lg p-3 transition-all hover:bg-accent/60 ${!notification.read ? 'border-primary/60 bg-primary/10 border-l-4' : 'bg-card'} `}
+                        className={`hover:bg-accent/60 mb-2 cursor-pointer rounded-lg p-3 transition-all ${!notification.read ? 'border-primary/60 bg-primary/10 border-l-4' : 'bg-card'} `}
                         onClick={() => handleNotificationClick(notification)}
                       >
                         <div className='flex items-start gap-3'>

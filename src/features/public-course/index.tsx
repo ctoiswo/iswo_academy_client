@@ -227,9 +227,11 @@ export function PublicCoursePage() {
           <>
             <div
               className='absolute inset-0 bg-cover bg-center'
-              style={{ backgroundImage: `url(${courseData.promotional_image_url})` }}
+              style={{
+                backgroundImage: `url(${courseData.promotional_image_url})`,
+              }}
             />
-            <div className='absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background' />
+            <div className='to-background absolute inset-0 bg-gradient-to-b from-black/60 via-black/40' />
           </>
         ) : (
           <>
@@ -299,7 +301,10 @@ export function PublicCoursePage() {
                 {courseData.enrollment_count != null && (
                   <span className='text-muted-foreground flex items-center gap-1.5'>
                     <Users className='size-4' />
-                    {new Intl.NumberFormat('es').format(courseData.enrollment_count)} estudiantes
+                    {new Intl.NumberFormat('es').format(
+                      courseData.enrollment_count
+                    )}{' '}
+                    estudiantes
                   </span>
                 )}
               </div>
@@ -369,17 +374,23 @@ export function PublicCoursePage() {
 
                 <div className='space-y-4 p-5'>
                   <div className='flex items-baseline justify-between'>
-                    <span className='text-muted-foreground text-sm'>Precio</span>
+                    <span className='text-muted-foreground text-sm'>
+                      Precio
+                    </span>
                     <span className='text-foreground text-2xl font-bold'>
                       {formatPrice(Number(courseData.price))}
                     </span>
                   </div>
 
                   <Button
-                    onClick={isEnrolled ? handleContinueCourseClick : handleEnrollClick}
-                    className={`h-11 w-full ${isEnrolled ? 'bg-green-600 hover:bg-green-700 text-white' : ''}`}
+                    onClick={
+                      isEnrolled ? handleContinueCourseClick : handleEnrollClick
+                    }
+                    className={`h-11 w-full ${isEnrolled ? 'bg-green-600 text-white hover:bg-green-700' : ''}`}
                   >
-                    {isEnrolled ? 'Continuar curso' : 'Ver opciones de inscripción'}
+                    {isEnrolled
+                      ? 'Continuar curso'
+                      : 'Ver opciones de inscripción'}
                   </Button>
 
                   <div className='grid grid-cols-2 gap-2'>
@@ -394,7 +405,8 @@ export function PublicCoursePage() {
 
                   {!isAuthenticated && (
                     <p className='text-muted-foreground text-center text-xs'>
-                      Inicia sesión para acceder al contenido completo del curso.
+                      Inicia sesión para acceder al contenido completo del
+                      curso.
                     </p>
                   )}
                 </div>
@@ -409,10 +421,15 @@ export function PublicCoursePage() {
           <div className='space-y-8 lg:col-span-2'>
             {objectives.length > 0 && (
               <section className='border-border/60 bg-card rounded-2xl border p-6'>
-                <h2 className='mb-4 text-xl font-semibold'>Lo que aprenderás</h2>
+                <h2 className='mb-4 text-xl font-semibold'>
+                  Lo que aprenderás
+                </h2>
                 <div className='grid gap-3 md:grid-cols-2'>
                   {objectives.map((objective) => (
-                    <div key={objective} className='flex items-start gap-2 text-sm'>
+                    <div
+                      key={objective}
+                      className='flex items-start gap-2 text-sm'
+                    >
                       <CheckCircle2 className='text-primary mt-0.5 size-4 shrink-0' />
                       <span>{objective}</span>
                     </div>
@@ -436,14 +453,19 @@ export function PublicCoursePage() {
             )}
 
             <section className='border-border/60 bg-card rounded-2xl border p-6'>
-              <h2 className='mb-1 text-xl font-semibold'>Contenido del curso</h2>
+              <h2 className='mb-1 text-xl font-semibold'>
+                Contenido del curso
+              </h2>
               <p className='text-muted-foreground mb-4 text-sm'>
                 {sections.length} secciones · {totalLessons} clases
               </p>
 
               <Accordion type='single' collapsible className='w-full'>
                 {sections.map((section, index) => (
-                  <AccordionItem key={section.id} value={`section-${section.id}`}>
+                  <AccordionItem
+                    key={section.id}
+                    value={`section-${section.id}`}
+                  >
                     <AccordionTrigger>
                       <div className='mr-3 flex w-full items-center justify-between text-left'>
                         <div>
@@ -452,7 +474,11 @@ export function PublicCoursePage() {
                           </p>
                           <p className='text-muted-foreground text-xs'>
                             {section.lessons_count} clases ·{' '}
-                            {Math.max(1, Math.round(section.duration_minutes / 60))}h
+                            {Math.max(
+                              1,
+                              Math.round(section.duration_minutes / 60)
+                            )}
+                            h
                           </p>
                         </div>
                         <Lock className='text-muted-foreground size-4 shrink-0' />
@@ -497,7 +523,7 @@ export function PublicCoursePage() {
               </div>
               <Separator className='my-4' />
               <Button
-                className={`w-full ${isAuthenticated && isEnrolled ? 'bg-green-600 hover:bg-green-700 text-white' : ''}`}
+                className={`w-full ${isAuthenticated && isEnrolled ? 'bg-green-600 text-white hover:bg-green-700' : ''}`}
                 variant={isAuthenticated && !isEnrolled ? 'outline' : 'default'}
                 onClick={() => {
                   if (!isAuthenticated) {

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useParams } from '@tanstack/react-router'
 import {
   Plus,
   Award,
@@ -10,14 +11,13 @@ import {
   RotateCcw,
   FileText,
 } from 'lucide-react'
-import { useParams } from '@tanstack/react-router'
+import { toast } from 'sonner'
 import {
   useCertificateTemplates,
   useDeleteCertificateTemplate,
   useGenerateTemplatePreviewPdf,
   useSetDefaultTemplate,
 } from '@/hooks/use-certificate-templates'
-import { toast } from 'sonner'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -45,7 +45,11 @@ export default function CertificateTemplatesPage() {
     null
   )
 
-  const { data: templates, isLoading, refetch } = useCertificateTemplates(academySlug)
+  const {
+    data: templates,
+    isLoading,
+    refetch,
+  } = useCertificateTemplates(academySlug)
   const deleteTemplate = useDeleteCertificateTemplate(academySlug)
   const setDefaultTemplate = useSetDefaultTemplate(academySlug)
   const generatePreviewPdf = useGenerateTemplatePreviewPdf(academySlug)
@@ -94,7 +98,9 @@ export default function CertificateTemplatesPage() {
     for (let attempt = 0; attempt < 15; attempt += 1) {
       await new Promise((resolve) => setTimeout(resolve, 1000))
       const latest = await refetch()
-      const updatedTemplate = latest.data?.find((item) => item.id === templateId)
+      const updatedTemplate = latest.data?.find(
+        (item) => item.id === templateId
+      )
 
       const previewChanged =
         !!updatedTemplate?.preview_pdf_url &&
@@ -153,9 +159,11 @@ export default function CertificateTemplatesPage() {
   }
 
   const defaultTemplate = templates?.find((template) => template.is_default)
-  const otherTemplates = templates?.filter((template) => !template.is_default) || []
+  const otherTemplates =
+    templates?.filter((template) => !template.is_default) || []
   const totalTemplates = templates?.length ?? 0
-  const activeCount = templates?.filter((template) => template.is_active).length ?? 0
+  const activeCount =
+    templates?.filter((template) => template.is_active).length ?? 0
 
   return (
     <div className='space-y-6'>
@@ -179,7 +187,9 @@ export default function CertificateTemplatesPage() {
           </div>
           <div className='min-w-0'>
             <p className='text-muted-foreground text-xs'>Total</p>
-            <p className='text-foreground text-xl font-bold leading-none'>{totalTemplates}</p>
+            <p className='text-foreground text-xl leading-none font-bold'>
+              {totalTemplates}
+            </p>
           </div>
         </div>
         <div className='border-border/60 bg-card flex items-center gap-3 rounded-xl border p-4'>
@@ -188,7 +198,7 @@ export default function CertificateTemplatesPage() {
           </div>
           <div className='min-w-0'>
             <p className='text-muted-foreground text-xs'>Predeterminada</p>
-            <p className='text-foreground text-xl font-bold leading-none'>
+            <p className='text-foreground text-xl leading-none font-bold'>
               {defaultTemplate ? '1' : '0'}
             </p>
           </div>
@@ -199,7 +209,9 @@ export default function CertificateTemplatesPage() {
           </div>
           <div className='min-w-0'>
             <p className='text-muted-foreground text-xs'>Activas</p>
-            <p className='text-foreground text-xl font-bold leading-none'>{activeCount}</p>
+            <p className='text-foreground text-xl leading-none font-bold'>
+              {activeCount}
+            </p>
           </div>
         </div>
       </div>
@@ -207,11 +219,14 @@ export default function CertificateTemplatesPage() {
       <div className='border-primary/20 bg-primary/5 flex items-start gap-3 rounded-xl border p-4'>
         <Award className='text-primary mt-0.5 size-4 shrink-0' />
         <div>
-          <p className='text-primary text-sm font-semibold'>Biblioteca reutilizable</p>
+          <p className='text-primary text-sm font-semibold'>
+            Biblioteca reutilizable
+          </p>
           <p className='text-muted-foreground mt-0.5 text-xs'>
             Diseña la plantilla una sola vez y luego asígnala a cursos o rutas.
             Usa <span className='font-mono'>{'{{student_name}}'}</span> y{' '}
-            <span className='font-mono'>{'{{course_title}}'}</span> como datos dinámicos.
+            <span className='font-mono'>{'{{course_title}}'}</span> como datos
+            dinámicos.
           </p>
         </div>
       </div>
@@ -222,11 +237,13 @@ export default function CertificateTemplatesPage() {
             <Star className='size-4 fill-amber-400 text-amber-400' />
             Plantilla predeterminada
           </p>
-          <div className='border-amber-500/30 bg-card rounded-xl border p-5'>
+          <div className='bg-card rounded-xl border border-amber-500/30 p-5'>
             <div className='mb-4 flex items-start justify-between gap-4'>
               <div className='flex flex-col gap-1'>
                 <div className='flex items-center gap-2'>
-                  <span className='text-base font-semibold'>{defaultTemplate.name}</span>
+                  <span className='text-base font-semibold'>
+                    {defaultTemplate.name}
+                  </span>
                   <span className='rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-400'>
                     Predeterminada
                   </span>
@@ -237,7 +254,9 @@ export default function CertificateTemplatesPage() {
                   )}
                 </div>
                 {defaultTemplate.description && (
-                  <p className='text-muted-foreground text-sm'>{defaultTemplate.description}</p>
+                  <p className='text-muted-foreground text-sm'>
+                    {defaultTemplate.description}
+                  </p>
                 )}
               </div>
               <div className='flex shrink-0 gap-2'>
@@ -248,7 +267,9 @@ export default function CertificateTemplatesPage() {
                   disabled={generatePreviewPdf.isPending}
                 >
                   <FileDown className='mr-1.5 h-3.5 w-3.5' />
-                  {defaultTemplate.preview_pdf_url ? 'Regenerar PDF' : 'Generar PDF'}
+                  {defaultTemplate.preview_pdf_url
+                    ? 'Regenerar PDF'
+                    : 'Generar PDF'}
                 </Button>
                 <Button
                   variant='outline'
@@ -266,28 +287,36 @@ export default function CertificateTemplatesPage() {
                   <Layout className='size-3' />
                   Orientación
                 </div>
-                <p className='text-sm font-semibold capitalize'>{defaultTemplate.design.layout}</p>
+                <p className='text-sm font-semibold capitalize'>
+                  {defaultTemplate.design.layout}
+                </p>
               </div>
               <div className='bg-muted/40 rounded-lg p-3'>
                 <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
                   <FileText className='size-3' />
                   Borde
                 </div>
-                <p className='text-sm font-semibold capitalize'>{defaultTemplate.design.border_style}</p>
+                <p className='text-sm font-semibold capitalize'>
+                  {defaultTemplate.design.border_style}
+                </p>
               </div>
               <div className='bg-muted/40 rounded-lg p-3'>
                 <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
                   <Settings className='size-3' />
                   Firmas
                 </div>
-                <p className='text-sm font-semibold'>{defaultTemplate.design.signature_count}</p>
+                <p className='text-sm font-semibold'>
+                  {defaultTemplate.design.signature_count}
+                </p>
               </div>
               <div className='bg-muted/40 rounded-lg p-3'>
                 <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
                   <RotateCcw className='size-3' />
                   Usos
                 </div>
-                <p className='text-sm font-semibold'>{defaultTemplate.usage_count}</p>
+                <p className='text-sm font-semibold'>
+                  {defaultTemplate.usage_count}
+                </p>
               </div>
             </div>
           </div>
@@ -317,18 +346,24 @@ export default function CertificateTemplatesPage() {
                       )}
                     </div>
                     {template.description && (
-                      <p className='text-muted-foreground text-xs'>{template.description}</p>
+                      <p className='text-muted-foreground text-xs'>
+                        {template.description}
+                      </p>
                     )}
                   </div>
                 </div>
                 <div className='mb-3 grid grid-cols-2 gap-2'>
                   <div className='bg-muted/40 rounded-lg p-2.5'>
                     <p className='text-muted-foreground text-xs'>Orientación</p>
-                    <p className='text-sm font-semibold capitalize'>{template.design.layout}</p>
+                    <p className='text-sm font-semibold capitalize'>
+                      {template.design.layout}
+                    </p>
                   </div>
                   <div className='bg-muted/40 rounded-lg p-2.5'>
                     <p className='text-muted-foreground text-xs'>Usos</p>
-                    <p className='text-sm font-semibold'>{template.usage_count}</p>
+                    <p className='text-sm font-semibold'>
+                      {template.usage_count}
+                    </p>
                   </div>
                 </div>
                 <div className='flex gap-2'>
@@ -381,7 +416,8 @@ export default function CertificateTemplatesPage() {
           <div>
             <h3 className='font-semibold'>Aún no hay plantillas</h3>
             <p className='text-muted-foreground mx-auto mt-1 max-w-sm text-sm'>
-              Crea tu primera plantilla para reutilizarla en cursos y rutas de aprendizaje.
+              Crea tu primera plantilla para reutilizarla en cursos y rutas de
+              aprendizaje.
             </p>
           </div>
           <Button onClick={() => setCreateDialogOpen(true)} className='mt-2'>

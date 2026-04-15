@@ -99,7 +99,10 @@ class CourseService {
    * @param slugOrId - Course slug or ID
    * @returns Promise with course details
    */
-  async getCourseBySlug(slugOrId: string | number, academySlug?: string): Promise<Course> {
+  async getCourseBySlug(
+    slugOrId: string | number,
+    academySlug?: string
+  ): Promise<Course> {
     const path = academySlug
       ? `/academies/${academySlug}/courses/${slugOrId}`
       : `/courses/${slugOrId}`
@@ -140,8 +143,8 @@ class CourseService {
         headers:
           data instanceof FormData
             ? {
-              'Content-Type': 'multipart/form-data',
-            }
+                'Content-Type': 'multipart/form-data',
+              }
             : undefined,
       }
     )
@@ -172,8 +175,8 @@ class CourseService {
         headers:
           data instanceof FormData
             ? {
-              'Content-Type': 'multipart/form-data',
-            }
+                'Content-Type': 'multipart/form-data',
+              }
             : undefined,
       }
     )

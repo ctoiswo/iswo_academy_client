@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, Link } from '@tanstack/react-router'
+import { paymentService } from '@/services/payment-service'
 import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
+import { formatPrice } from '@/lib/formatters'
 import { useCourseBySlug } from '@/hooks/use-featured-content'
-import { paymentService } from '@/services/payment-service'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Header } from '@/features/home/components/header'
-import { formatPrice } from '@/lib/formatters'
 
 export default function CourseCheckoutPage() {
   const { courseSlug } = useParams({ strict: false })
@@ -141,7 +141,9 @@ export default function CourseCheckoutPage() {
               {checkoutUrl && (
                 <Button
                   className='w-full'
-                  onClick={() => window.open(checkoutUrl, '_blank', 'noopener,noreferrer')}
+                  onClick={() =>
+                    window.open(checkoutUrl, '_blank', 'noopener,noreferrer')
+                  }
                 >
                   Abrir checkout en nueva pestaña
                 </Button>

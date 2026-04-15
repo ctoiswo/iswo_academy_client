@@ -168,7 +168,9 @@ export function AssessmentCard({
             <Award className='text-muted-foreground size-3.5 shrink-0' />
             <div className='min-w-0'>
               <p className='text-muted-foreground text-[10px]'>Mínimo</p>
-              <p className='text-foreground text-xs font-semibold'>{assessment.passing_score}%</p>
+              <p className='text-foreground text-xs font-semibold'>
+                {assessment.passing_score}%
+              </p>
             </div>
           </div>
           <div className='bg-muted/40 flex items-center gap-2 rounded-lg px-3 py-2'>
@@ -233,7 +235,8 @@ export function AssessmentCard({
             )}
           </div>
           <span className='text-muted-foreground text-xs'>
-            {assessment.attempts_count} intento{assessment.attempts_count !== 1 ? 's' : ''}
+            {assessment.attempts_count} intento
+            {assessment.attempts_count !== 1 ? 's' : ''}
           </span>
         </div>
       </div>

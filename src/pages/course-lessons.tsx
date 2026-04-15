@@ -70,7 +70,10 @@ export default function CourseLessonsPage() {
       const oldIndex = localSections.findIndex((s) => s.id === active.id)
       const newIndex = localSections.findIndex((s) => s.id === over.id)
       setLocalSections(arrayMove(localSections, oldIndex, newIndex))
-      reorderSection.mutate({ sectionId: active.id as number, position: newIndex + 1 })
+      reorderSection.mutate({
+        sectionId: active.id as number,
+        position: newIndex + 1,
+      })
     }
   }
 
@@ -180,18 +183,18 @@ export default function CourseLessonsPage() {
           </div>
           <div>
             <p className='text-muted-foreground text-xs'>Secciones</p>
-            <p className='text-foreground text-xl font-bold leading-none'>
+            <p className='text-foreground text-xl leading-none font-bold'>
               {sections.length}
             </p>
           </div>
         </div>
         <div className='border-border/60 bg-card flex items-center gap-3 rounded-xl border p-4'>
-          <div className='bg-emerald-500/10 rounded-lg p-2'>
+          <div className='rounded-lg bg-emerald-500/10 p-2'>
             <BookOpen className='size-4 text-emerald-400' />
           </div>
           <div>
             <p className='text-muted-foreground text-xs'>Lecciones</p>
-            <p className='text-foreground text-xl font-bold leading-none'>
+            <p className='text-foreground text-xl leading-none font-bold'>
               {lessonsCount}
             </p>
           </div>
@@ -207,7 +210,9 @@ export default function CourseLessonsPage() {
           <div>
             {isStudent ? (
               <>
-                <h3 className='font-semibold'>Aún no hay contenido disponible</h3>
+                <h3 className='font-semibold'>
+                  Aún no hay contenido disponible
+                </h3>
                 <p className='text-muted-foreground mx-auto mt-1 max-w-sm text-sm'>
                   El instructor está preparando el material. Vuelve pronto.
                 </p>
@@ -216,7 +221,8 @@ export default function CourseLessonsPage() {
               <>
                 <h3 className='font-semibold'>Aún no hay secciones</h3>
                 <p className='text-muted-foreground mx-auto mt-1 max-w-sm text-sm'>
-                  Comienza a construir tu curso creando secciones y añadiendo lecciones
+                  Comienza a construir tu curso creando secciones y añadiendo
+                  lecciones
                 </p>
               </>
             )}
@@ -275,4 +281,3 @@ export default function CourseLessonsPage() {
     </div>
   )
 }
-

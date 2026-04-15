@@ -21,7 +21,6 @@ import {
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'
-import { BadgeIcon, getVisualConfig } from '@/components/gamification/badge-visual-config'
 import { useTranslation } from '@/hooks/use-translation'
 import {
   AlertDialog,
@@ -56,6 +55,10 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import {
+  BadgeIcon,
+  getVisualConfig,
+} from '@/components/gamification/badge-visual-config'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
 // ─── Schema ────────────────────────────────────────────────────────────────────
@@ -479,127 +482,144 @@ function BadgeCard({ badge, onEdit, onDelete }: BadgeCardProps) {
         visual.gradient
       )}
     >
-    <Card className='relative h-full overflow-hidden rounded-[11px] border-0'>
-      {/* Active indicator */}
-      {!badge.is_active && (
-        <div className='bg-background/60 absolute inset-0 z-10 flex items-center justify-center'>
-          <Badge variant='secondary'>{t('academyBadges.inactive')}</Badge>
-        </div>
-      )}
+      <Card className='relative h-full overflow-hidden rounded-[11px] border-0'>
+        {/* Active indicator */}
+        {!badge.is_active && (
+          <div className='bg-background/60 absolute inset-0 z-10 flex items-center justify-center'>
+            <Badge variant='secondary'>{t('academyBadges.inactive')}</Badge>
+          </div>
+        )}
 
-      <CardHeader className='px-4 pt-4 pb-2'>
-        <div className='flex items-start justify-between gap-2'>
-          {/* Icon / placeholder */}
-          <div className='flex h-12 w-12 shrink-0 items-center justify-center'>
-            {badge.icon_url ? (
-              <div
-                className={cn(
-                  'flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br p-0.5',
-                  getVisualConfig(badge.slug, badge.tier).gradient
-                )}
-              >
-                <div className='bg-card flex size-full items-center justify-center rounded-full'>
-                  <img
-                    src={badge.icon_url}
-                    alt={badge.name}
-                    className='h-7 w-7 object-contain'
-                  />
+        <CardHeader className='px-4 pt-4 pb-2'>
+          <div className='flex items-start justify-between gap-2'>
+            {/* Icon / placeholder */}
+            <div className='flex h-12 w-12 shrink-0 items-center justify-center'>
+              {badge.icon_url ? (
+                <div
+                  className={cn(
+                    'flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br p-0.5',
+                    getVisualConfig(badge.slug, badge.tier).gradient
+                  )}
+                >
+                  <div className='bg-card flex size-full items-center justify-center rounded-full'>
+                    <img
+                      src={badge.icon_url}
+                      alt={badge.name}
+                      className='h-7 w-7 object-contain'
+                    />
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div
-                className={cn(
-                  'flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br p-0.5',
-                  getVisualConfig(badge.slug, badge.tier).gradient
-                )}
-              >
-                <div className='bg-card flex size-full items-center justify-center rounded-full'>
-                  <BadgeIcon slug={badge.slug} className='text-primary h-7 w-7' />
+              ) : (
+                <div
+                  className={cn(
+                    'flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br p-0.5',
+                    getVisualConfig(badge.slug, badge.tier).gradient
+                  )}
+                >
+                  <div className='bg-card flex size-full items-center justify-center rounded-full'>
+                    <BadgeIcon
+                      slug={badge.slug}
+                      className='text-primary h-7 w-7'
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className='flex gap-1 opacity-0 transition-opacity group-hover:opacity-100'>
+              <Button
+                variant='ghost'
+                size='icon'
+                className='h-7 w-7'
+                onClick={() => onEdit(badge)}
+              >
+                <Pencil className='h-3.5 w-3.5' />
+              </Button>
+              <Button
+                variant='ghost'
+                size='icon'
+                className='text-destructive hover:text-destructive h-7 w-7'
+                onClick={() => onDelete(badge)}
+              >
+                <Trash2 className='h-3.5 w-3.5' />
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent className='space-y-2 px-4 pb-4'>
+          <div>
+            <p className='text-sm leading-tight font-semibold'>
+              {badge.slug
+                ? t(`badges.${badge.slug}.name`, { defaultValue: badge.name })
+                : badge.name}
+            </p>
+            <p className='text-muted-foreground mt-0.5 line-clamp-2 text-xs'>
+              {badge.slug
+                ? t(`badges.${badge.slug}.description`, {
+                    defaultValue: badge.description,
+                  })
+                : badge.description}
+            </p>
+          </div>
+
+          <div className='flex flex-wrap gap-1'>
+            <Badge
+              variant='outline'
+              className={cn(
+                'gap-1 text-xs capitalize',
+                (() => {
+                  const tier = badge.tier
+                  if (tier === 'bronze')
+                    return 'border-amber-700 text-amber-700'
+                  if (tier === 'silver')
+                    return 'border-slate-400 text-slate-500'
+                  if (tier === 'gold')
+                    return 'border-yellow-500 text-yellow-600'
+                  if (tier === 'platinum')
+                    return 'border-cyan-400 text-cyan-500'
+                  if (tier === 'diamond')
+                    return 'border-purple-400 text-purple-500'
+                  return ''
+                })()
+              )}
+            >
+              {badge.tier}
+            </Badge>
+            <Badge variant='outline' className='text-xs capitalize'>
+              {badge.rarity}
+            </Badge>
+            <Badge variant='secondary' className='text-xs capitalize'>
+              {badge.category}
+            </Badge>
+            {badge.is_secret && (
+              <Badge variant='destructive' className='text-xs'>
+                {t('academyBadges.secret')}
+              </Badge>
             )}
           </div>
 
-          {/* Actions */}
-          <div className='flex gap-1 opacity-0 transition-opacity group-hover:opacity-100'>
-            <Button
-              variant='ghost'
-              size='icon'
-              className='h-7 w-7'
-              onClick={() => onEdit(badge)}
-            >
-              <Pencil className='h-3.5 w-3.5' />
-            </Button>
-            <Button
-              variant='ghost'
-              size='icon'
-              className='text-destructive hover:text-destructive h-7 w-7'
-              onClick={() => onDelete(badge)}
-            >
-              <Trash2 className='h-3.5 w-3.5' />
-            </Button>
+          <div className='text-muted-foreground flex items-center gap-3 pt-1 text-xs'>
+            <span className='flex items-center gap-1'>
+              <Star className='h-3 w-3' />
+              {badge.points_reward} pts
+            </span>
+            <span className='flex items-center gap-1'>
+              <Users className='h-3 w-3' />
+              {badge.earned_count} {t('academyBadges.earned')}
+            </span>
+            {badge.earn_rate > 0 && <span>{badge.earn_rate}%</span>}
           </div>
-        </div>
-      </CardHeader>
 
-      <CardContent className='space-y-2 px-4 pb-4'>
-        <div>
-          <p className='text-sm leading-tight font-semibold'>
-            {badge.slug ? t(`badges.${badge.slug}.name`, { defaultValue: badge.name }) : badge.name}
-          </p>
-          <p className='text-muted-foreground mt-0.5 line-clamp-2 text-xs'>
-            {badge.slug ? t(`badges.${badge.slug}.description`, { defaultValue: badge.description }) : badge.description}
-          </p>
-        </div>
-
-        <div className='flex flex-wrap gap-1'>
-          <Badge
-            variant='outline'
-            className={cn('gap-1 text-xs capitalize', (() => {
-              const tier = badge.tier
-              if (tier === 'bronze') return 'border-amber-700 text-amber-700'
-              if (tier === 'silver') return 'border-slate-400 text-slate-500'
-              if (tier === 'gold') return 'border-yellow-500 text-yellow-600'
-              if (tier === 'platinum') return 'border-cyan-400 text-cyan-500'
-              if (tier === 'diamond') return 'border-purple-400 text-purple-500'
-              return ''
-            })())}
-          >
-            {badge.tier}
-          </Badge>
-          <Badge variant='outline' className='text-xs capitalize'>
-            {badge.rarity}
-          </Badge>
-          <Badge variant='secondary' className='text-xs capitalize'>
-            {badge.category}
-          </Badge>
-          {badge.is_secret && (
-            <Badge variant='destructive' className='text-xs'>
-              {t('academyBadges.secret')}
-            </Badge>
+          {badge.triggers.length > 0 && (
+            <p className='text-muted-foreground flex items-center gap-1 text-xs'>
+              <Zap className='h-3 w-3' />
+              {badge.triggers[0].trigger_type}
+            </p>
           )}
-        </div>
-
-        <div className='text-muted-foreground flex items-center gap-3 pt-1 text-xs'>
-          <span className='flex items-center gap-1'>
-            <Star className='h-3 w-3' />
-            {badge.points_reward} pts
-          </span>
-          <span className='flex items-center gap-1'>
-            <Users className='h-3 w-3' />
-            {badge.earned_count} {t('academyBadges.earned')}
-          </span>
-          {badge.earn_rate > 0 && <span>{badge.earn_rate}%</span>}
-        </div>
-
-        {badge.triggers.length > 0 && (
-          <p className='text-muted-foreground flex items-center gap-1 text-xs'>
-            <Zap className='h-3 w-3' />
-            {badge.triggers[0].trigger_type}
-          </p>
-        )}
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
     </div>
   )
 }

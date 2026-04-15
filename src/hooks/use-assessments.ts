@@ -185,7 +185,11 @@ export function useDeleteAssessment(academySlug: string, courseSlug: string) {
 
 // ─── Student quiz-taking hooks ────────────────────────────────────────────────
 
-export const myAttemptsKey = (academySlug: string, courseSlug: string, assessmentId: number) =>
+export const myAttemptsKey = (
+  academySlug: string,
+  courseSlug: string,
+  assessmentId: number
+) =>
   ['assessments', 'my_attempts', academySlug, courseSlug, assessmentId] as const
 
 export function useMyAttempts(
@@ -219,8 +223,20 @@ export function useSubmitAttempt(
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ attemptId, answers }: { attemptId: number; answers: SubmitAnswer[] }) =>
-      assessmentService.submitAttempt(academySlug, courseSlug, assessmentId, attemptId, answers),
+    mutationFn: ({
+      attemptId,
+      answers,
+    }: {
+      attemptId: number
+      answers: SubmitAnswer[]
+    }) =>
+      assessmentService.submitAttempt(
+        academySlug,
+        courseSlug,
+        assessmentId,
+        attemptId,
+        answers
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: myAttemptsKey(academySlug, courseSlug, assessmentId),

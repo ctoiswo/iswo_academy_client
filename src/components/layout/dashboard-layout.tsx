@@ -8,7 +8,6 @@ import { Particles } from '@/components/ui/particles'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { ConfigDrawer } from '@/components/config-drawer'
 import type { DashboardType } from '@/components/dashboard-router'
-import { SubscriptionBanner } from '@/features/dashboard/admin/components/subscription-banner'
 import { PointsDisplay } from '@/components/gamification/points-display'
 import { LanguageToggle } from '@/components/language-toggle'
 import { Header } from '@/components/layout/header'
@@ -18,6 +17,7 @@ import { NotificationDropdown } from '@/components/notifications'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { SkipToMain } from '@/components/skip-to-main'
+import { SubscriptionBanner } from '@/features/dashboard/admin/components/subscription-banner'
 
 export type DashboardLayoutVariant = 'full' | 'sidebar' | 'compact'
 
@@ -355,11 +355,13 @@ function SidebarLayout({
 
               {/* Main Content */}
               <Main className='container mx-auto px-4 py-4'>
-                {academy && (dashboardType === 'academy-admin' || dashboardType === 'teacher') && (
-                  <div className='mb-4'>
-                    <SubscriptionBanner academy={academy} />
-                  </div>
-                )}
+                {academy &&
+                  (dashboardType === 'academy-admin' ||
+                    dashboardType === 'teacher') && (
+                    <div className='mb-4'>
+                      <SubscriptionBanner academy={academy} />
+                    </div>
+                  )}
                 {children}
               </Main>
             </SidebarInset>

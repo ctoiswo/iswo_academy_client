@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import type { LessonType } from '@/types/entities/lesson'
+import { AnimatePresence, motion } from 'framer-motion'
 import {
   ArrowLeft,
   Award,
@@ -18,7 +19,6 @@ import {
   Users,
   X,
 } from 'lucide-react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { useCourse } from '@/hooks/use-courses'
@@ -206,10 +206,12 @@ export default function StudentCourseContentPage() {
           <>
             <div
               className='absolute inset-0 bg-cover bg-center'
-              style={{ backgroundImage: `url(${course.promotional_image_url})` }}
+              style={{
+                backgroundImage: `url(${course.promotional_image_url})`,
+              }}
             />
             {/* fade-out overlay: dark tint on top, full background color at bottom */}
-            <div className='absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background' />
+            <div className='to-background absolute inset-0 bg-gradient-to-b from-black/60 via-black/40' />
           </>
         ) : (
           <>
@@ -537,9 +539,8 @@ export default function StudentCourseContentPage() {
                 >
                   {sections.map((section, idx) => {
                     const lessonCount = section.lessons?.length ?? 0
-                    const completedCount = section.lessons?.filter(
-                      (l) => l.is_completed
-                    ).length ?? 0
+                    const completedCount =
+                      section.lessons?.filter((l) => l.is_completed).length ?? 0
                     const sectionDone =
                       lessonCount > 0 && completedCount === lessonCount
                     return (

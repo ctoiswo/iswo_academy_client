@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { useAuthStore } from '@/stores/auth-store'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import academyService from '@/services/academy-service'
-import { Skeleton } from '@/components/ui/skeleton'
 import type { AcademyMembership } from '@/types'
+import { useAuthStore } from '@/stores/auth-store'
+import { Skeleton } from '@/components/ui/skeleton'
 
 /**
  * Layout route for all /$academySlug/* routes.

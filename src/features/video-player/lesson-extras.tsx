@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { commentService } from '@/services/comment-service'
+import type { LessonAttachment, LessonComment } from '@/types'
 import {
   Download,
   MessageCircle,
@@ -9,15 +11,12 @@ import {
   FileText,
 } from 'lucide-react'
 import { toast } from 'sonner'
-
-import { commentService } from '@/services/comment-service'
 import { useAuthStore } from '@/stores/auth-store'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
-import type { LessonAttachment, LessonComment } from '@/types'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Textarea } from '@/components/ui/textarea'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -68,7 +67,7 @@ function ResourceItem({ attachment }: { attachment: LessonAttachment }) {
           {attachment.file_extension && ` · .${attachment.file_extension}`}
           {hasFileSize ? ` · ${fileSizeMb.toFixed(1)} MB` : ''}
           {attachment.required && (
-            <span className='text-amber-400 ml-1'>· Requerido</span>
+            <span className='ml-1 text-amber-400'>· Requerido</span>
           )}
         </p>
       </div>
@@ -144,7 +143,9 @@ function CommentItem({
         </div>
         <div
           className='prose prose-invert prose-sm text-foreground/90 max-w-none text-sm'
-          dangerouslySetInnerHTML={{ __html: comment.body_html || comment.body }}
+          dangerouslySetInnerHTML={{
+            __html: comment.body_html || comment.body,
+          }}
         />
         <div className='mt-1.5 flex items-center gap-3'>
           {user && (
@@ -182,7 +183,7 @@ function CommentItem({
               size='sm'
               onClick={() => replyMutation.mutate()}
               disabled={!replyBody.trim() || replyMutation.isPending}
-              className='self-end shrink-0'
+              className='shrink-0 self-end'
             >
               {replyMutation.isPending ? (
                 <Loader2 className='size-3.5 animate-spin' />

@@ -193,7 +193,7 @@ export default function MyAssignmentsPage() {
                 <CardTitle className='text-muted-foreground text-sm font-medium'>
                   Vencidas
                 </CardTitle>
-                <AlertCircle className='h-4 w-4 text-destructive' />
+                <AlertCircle className='text-destructive h-4 w-4' />
               </CardHeader>
               <CardContent>
                 <div className='text-destructive text-2xl font-bold'>
@@ -267,10 +267,7 @@ export default function MyAssignmentsPage() {
                   }.`}
             </p>
             <Button asChild className='mt-6' variant='outline'>
-              <Link
-                to='/academy/$academySlug/courses'
-                params={{ academySlug }}
-              >
+              <Link to='/academy/$academySlug/courses' params={{ academySlug }}>
                 Explorar Cursos
               </Link>
             </Button>

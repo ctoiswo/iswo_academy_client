@@ -9,8 +9,8 @@ import {
   AlertTriangle,
   CalendarClock,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import { useAssignments } from '@/hooks/use-assignments'
 import { useCourse } from '@/hooks/use-courses'
 import { useSections } from '@/hooks/use-sections'
@@ -206,7 +206,7 @@ export default function CourseAssignmentsPage() {
               </div>
               <div className='min-w-0'>
                 <p className='text-muted-foreground text-xs'>{tab.label}</p>
-                <p className='text-foreground text-xl font-bold leading-none'>
+                <p className='text-foreground text-xl leading-none font-bold'>
                   {countFor(tab.value)}
                 </p>
               </div>
@@ -291,4 +291,3 @@ export default function CourseAssignmentsPage() {
     </div>
   )
 }
-

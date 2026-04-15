@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
 import type { Question } from '@/types'
-import { ArrowLeft, Plus, GripVertical, Edit, Trash2 } from 'lucide-react'
 import {
   DndContext,
   closestCenter,
@@ -19,10 +18,15 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { ArrowLeft, Plus, GripVertical, Edit, Trash2 } from 'lucide-react'
+import { useAuthStore } from '@/stores/auth-store'
 import { useAssessments } from '@/hooks/use-assessments'
 import { useCourse } from '@/hooks/use-courses'
-import { useQuestions, useDeleteQuestion, useReorderQuestion } from '@/hooks/use-questions'
-import { useAuthStore } from '@/stores/auth-store'
+import {
+  useQuestions,
+  useDeleteQuestion,
+  useReorderQuestion,
+} from '@/hooks/use-questions'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -56,7 +60,9 @@ export default function AssessmentQuestionsPage() {
   const { academySlug, courseSlug, assessmentId } = params
   const { user, currentAcademy } = useAuthStore()
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null)
-  const [deletingQuestionId, setDeletingQuestionId] = useState<number | null>(null)
+  const [deletingQuestionId, setDeletingQuestionId] = useState<number | null>(
+    null
+  )
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [localQuestions, setLocalQuestions] = useState<Question[]>([])
 
@@ -70,8 +76,16 @@ export default function AssessmentQuestionsPage() {
     Number(assessmentId)
   )
 
-  const deleteQuestion = useDeleteQuestion(academySlug, courseSlug, Number(assessmentId))
-  const reorderQuestion = useReorderQuestion(academySlug, courseSlug, Number(assessmentId))
+  const deleteQuestion = useDeleteQuestion(
+    academySlug,
+    courseSlug,
+    Number(assessmentId)
+  )
+  const reorderQuestion = useReorderQuestion(
+    academySlug,
+    courseSlug,
+    Number(assessmentId)
+  )
 
   useEffect(() => {
     if (questions !== undefined) {
@@ -91,7 +105,10 @@ export default function AssessmentQuestionsPage() {
       const newIndex = localQuestions.findIndex((q) => q.id === over.id)
       const reordered = arrayMove(localQuestions, oldIndex, newIndex)
       setLocalQuestions(reordered)
-      reorderQuestion.mutate({ questionId: active.id as number, position: newIndex + 1 })
+      reorderQuestion.mutate({
+        questionId: active.id as number,
+        position: newIndex + 1,
+      })
     }
   }
 
@@ -326,8 +343,14 @@ function SortableQuestionCard({
   onDelete,
   getQuestionTypeLabel,
 }: SortableQuestionCardProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: question.id! })
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: question.id! })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -336,11 +359,7 @@ function SortableQuestionCard({
   }
 
   return (
-    <Card
-      ref={setNodeRef}
-      style={style}
-      className='border-border/60'
-    >
+    <Card ref={setNodeRef} style={style} className='border-border/60'>
       <CardContent className='pt-6'>
         <div className='flex items-start gap-3'>
           <div className='flex items-center gap-2'>
@@ -352,7 +371,7 @@ function SortableQuestionCard({
             >
               <GripVertical className='h-5 w-5' />
             </button>
-            <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary'>
+            <div className='bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold'>
               {index + 1}
             </div>
           </div>
@@ -416,7 +435,7 @@ function SortableQuestionCard({
             )}
 
             {question.explanation && (
-              <p className='text-muted-foreground mt-3 rounded-lg bg-muted px-3 py-2 text-sm italic'>
+              <p className='text-muted-foreground bg-muted mt-3 rounded-lg px-3 py-2 text-sm italic'>
                 Explicación: {question.explanation}
               </p>
             )}

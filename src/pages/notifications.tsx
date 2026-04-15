@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+import { useNavigate } from '@tanstack/react-router'
 import { es } from 'date-fns/locale'
 import { Bell, BellOff, CheckCheck } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
 import { useAuthStore } from '@/stores/auth-store'
 import {
   getCategoryIcon,

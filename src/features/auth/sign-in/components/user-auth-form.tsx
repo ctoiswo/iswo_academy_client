@@ -175,18 +175,18 @@ export function UserAuthForm({ redirectTo }: UserAuthFormProps) {
           </svg>
           {t('auth.signIn.continueWithGithub')}
         </Button>
-        <Button                                                                                                                                                                                       
+        <Button
           type='button'
-          variant='outline'                                                                                                                                                                           
+          variant='outline'
           onClick={() => handleOAuthLogin('sigiswo')} // /auth/sigiswo
           className='border-border/60 bg-card/50 hover:bg-secondary/50 hover:border-border h-11 w-full gap-3 text-sm font-medium transition-all duration-200'
-        >                                                                                                                                                                                             
+        >
           <img
             src='/LOGOISWOIA.png'
             alt='SIG-ISWO'
             className='size-5 rounded-full'
           />
-          Entrar con SIG-ISWO                                                                                                                                                                         
+          Entrar con SIG-ISWO
         </Button>
       </div>
 

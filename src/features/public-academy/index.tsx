@@ -1,14 +1,14 @@
-import { useParams, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useParams, useNavigate } from '@tanstack/react-router'
+import { paymentService } from '@/services/payment-service'
 import { Loader2, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { useAcademy } from '@/hooks/use-academy'
 import { useWishlist } from '@/hooks/use-wishlist'
-import { paymentService } from '@/services/payment-service'
-import { Particles } from '@/components/ui/particles'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Particles } from '@/components/ui/particles'
 import {
   PageHeader,
   PageFooter,
@@ -168,26 +168,26 @@ export function PublicAcademyPage() {
       <div className='pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.08),transparent_60%)]' />
 
       <div className='relative z-10'>
-      <PageHeader />
+        <PageHeader />
 
-      <AcademyHero
-        academy={backendAcademy}
-        isSaved={isSaved}
-        onSave={handleWishlistToggle}
-        onShare={handleShare}
-        onBuySubscription={handleBuySubscription}
-        isBuyingSubscription={isBuyingSubscription}
-      />
+        <AcademyHero
+          academy={backendAcademy}
+          isSaved={isSaved}
+          onSave={handleWishlistToggle}
+          onShare={handleShare}
+          onBuySubscription={handleBuySubscription}
+          isBuyingSubscription={isBuyingSubscription}
+        />
 
-      <AcademyInfo academy={backendAcademy} />
+        <AcademyInfo academy={backendAcademy} />
 
-      <CoursesSection
-        courses={courses}
-        academyName={backendAcademy.name}
-        academySlug={backendAcademy.slug}
-      />
+        <CoursesSection
+          courses={courses}
+          academyName={backendAcademy.name}
+          academySlug={backendAcademy.slug}
+        />
 
-      <PageFooter />
+        <PageFooter />
       </div>
     </div>
   )

@@ -74,14 +74,17 @@ export function LearningPathCertificates() {
   }, [certificateConfig])
 
   const isLoading = isLoadingConfig || isLoadingTemplates
-  const defaultTemplate = templates?.find((template) => template.is_default) || null
-  const activeTemplates = templates?.filter((template) => template.is_active) || []
+  const defaultTemplate =
+    templates?.find((template) => template.is_default) || null
+  const activeTemplates =
+    templates?.filter((template) => template.is_active) || []
   const selectedTemplate = useMemo(() => {
     if (selectedTemplateValue === 'default') return defaultTemplate
 
     return (
-      templates?.find((template) => String(template.id) === selectedTemplateValue) ||
-      null
+      templates?.find(
+        (template) => String(template.id) === selectedTemplateValue
+      ) || null
     )
   }, [defaultTemplate, selectedTemplateValue, templates])
   const initialTemplateValue = certificateConfig?.certificate_template?.id
@@ -133,11 +136,15 @@ export function LearningPathCertificates() {
               {certificateConfig.learning_path.title}
             </h1>
             <p className='text-muted-foreground text-sm'>
-              Selecciona la plantilla que usará esta ruta para emitir certificados
+              Selecciona la plantilla que usará esta ruta para emitir
+              certificados
             </p>
           </div>
           <div className='flex shrink-0 gap-2'>
-            <Link to='/academy/$academySlug/certificates' params={{ academySlug }}>
+            <Link
+              to='/academy/$academySlug/certificates'
+              params={{ academySlug }}
+            >
               <Button variant='outline'>
                 <ExternalLink className='mr-2 h-4 w-4' />
                 Gestionar Plantillas
@@ -161,7 +168,7 @@ export function LearningPathCertificates() {
           </div>
           <div className='min-w-0'>
             <p className='text-muted-foreground text-xs'>Emisión</p>
-            <p className='text-foreground text-xl font-bold leading-none'>
+            <p className='text-foreground text-xl leading-none font-bold'>
               {certificateEnabled ? 'Activa' : 'Desactivada'}
             </p>
           </div>
@@ -172,7 +179,7 @@ export function LearningPathCertificates() {
           </div>
           <div className='min-w-0'>
             <p className='text-muted-foreground text-xs'>Plantilla</p>
-            <p className='text-foreground text-xl font-bold leading-none'>
+            <p className='text-foreground text-xl leading-none font-bold'>
               {selectedTemplate?.name || 'Sin definir'}
             </p>
           </div>
@@ -183,7 +190,7 @@ export function LearningPathCertificates() {
           </div>
           <div className='min-w-0'>
             <p className='text-muted-foreground text-xs'>Plantillas activas</p>
-            <p className='text-foreground text-xl font-bold leading-none'>
+            <p className='text-foreground text-xl leading-none font-bold'>
               {activeTemplates.length}
             </p>
           </div>
@@ -193,7 +200,9 @@ export function LearningPathCertificates() {
       <div className='border-primary/20 bg-primary/5 flex items-start gap-3 rounded-xl border p-4'>
         <Award className='text-primary mt-0.5 size-4 shrink-0' />
         <div>
-          <p className='text-primary text-sm font-semibold'>Asignación por ruta</p>
+          <p className='text-primary text-sm font-semibold'>
+            Asignación por ruta
+          </p>
           <p className='text-muted-foreground mt-0.5 text-xs'>
             Las plantillas se gestionan a nivel academia. Aquí solo eliges cuál
             aplica a esta ruta de aprendizaje. Si no eliges una específica, se
@@ -285,7 +294,10 @@ export function LearningPathCertificates() {
                       'Esta plantilla se utilizará para generar los certificados de la ruta.'}
                   </p>
                 </div>
-                <Link to='/academy/$academySlug/certificates' params={{ academySlug }}>
+                <Link
+                  to='/academy/$academySlug/certificates'
+                  params={{ academySlug }}
+                >
                   <Button variant='outline' size='sm'>
                     <ExternalLink className='mr-2 h-4 w-4' />
                     Ver plantillas
@@ -295,25 +307,27 @@ export function LearningPathCertificates() {
 
               <div className='grid gap-3 md:grid-cols-2'>
                 <div className='rounded-xl border p-4'>
-                  <p className='text-muted-foreground text-xs uppercase tracking-[0.2em]'>
+                  <p className='text-muted-foreground text-xs tracking-[0.2em] uppercase'>
                     Ruta
                   </p>
                   <p className='mt-2 text-sm font-medium'>
                     {certificateConfig.learning_path.title}
                   </p>
                   <p className='text-muted-foreground mt-1 text-sm'>
-                    {certificateConfig.learning_path.courses_count} cursos incluidos
+                    {certificateConfig.learning_path.courses_count} cursos
+                    incluidos
                   </p>
                 </div>
                 <div className='rounded-xl border p-4'>
-                  <p className='text-muted-foreground text-xs uppercase tracking-[0.2em]'>
+                  <p className='text-muted-foreground text-xs tracking-[0.2em] uppercase'>
                     Academia
                   </p>
                   <p className='mt-2 text-sm font-medium'>
                     {certificateConfig.academy.name}
                   </p>
                   <p className='text-muted-foreground mt-1 text-sm'>
-                    {certificateConfig.learning_path.estimated_duration_hours} horas estimadas
+                    {certificateConfig.learning_path.estimated_duration_hours}{' '}
+                    horas estimadas
                   </p>
                 </div>
               </div>
@@ -325,8 +339,8 @@ export function LearningPathCertificates() {
                 No hay una plantilla disponible todavía
               </p>
               <p className='text-muted-foreground mt-2 text-sm'>
-                Crea o activa una plantilla a nivel academia para poder asignarla
-                a esta ruta.
+                Crea o activa una plantilla a nivel academia para poder
+                asignarla a esta ruta.
               </p>
             </div>
           )}

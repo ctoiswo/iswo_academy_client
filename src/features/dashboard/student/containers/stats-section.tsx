@@ -21,8 +21,13 @@ export function StatsSection({
   const s = 'dashboard.student.stats'
   const navigate = useNavigate()
 
-  const { data: allEnrollments, isLoading } = useUserEnrollments({ academy_slug: academySlug })
-  const { data: activeEnrollments } = useUserEnrollments({ status: 'active', academy_slug: academySlug })
+  const { data: allEnrollments, isLoading } = useUserEnrollments({
+    academy_slug: academySlug,
+  })
+  const { data: activeEnrollments } = useUserEnrollments({
+    status: 'active',
+    academy_slug: academySlug,
+  })
   const { data: completedEnrollments } = useUserEnrollments({
     status: 'completed',
     academy_slug: academySlug,

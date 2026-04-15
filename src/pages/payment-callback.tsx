@@ -1,9 +1,16 @@
 import { useMemo } from 'react'
 import { Link, useParams } from '@tanstack/react-router'
-import { CheckCircle2, XCircle, Clock3, Home, BookOpen, RefreshCcw } from 'lucide-react'
-import { Header } from '@/features/home/components/header'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  CheckCircle2,
+  XCircle,
+  Clock3,
+  Home,
+  BookOpen,
+  RefreshCcw,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Header } from '@/features/home/components/header'
 
 type PaymentCallbackStatus = 'success' | 'failure' | 'pending'
 
@@ -32,16 +39,20 @@ const statusUi = {
   },
 } as const
 
-export default function PaymentCallbackPage({ status }: PaymentCallbackPageProps) {
+export default function PaymentCallbackPage({
+  status,
+}: PaymentCallbackPageProps) {
   const { paymentId } = useParams({ strict: false })
 
   const details = useMemo(() => {
     const params = new URLSearchParams(window.location.search)
     return {
-      collectionStatus: params.get('collection_status') || params.get('status') || '-',
+      collectionStatus:
+        params.get('collection_status') || params.get('status') || '-',
       paymentType: params.get('payment_type') || '-',
       preferenceId: params.get('preference_id') || '-',
-      collectionId: params.get('collection_id') || params.get('payment_id') || '-',
+      collectionId:
+        params.get('collection_id') || params.get('payment_id') || '-',
     }
   }, [])
 
@@ -65,15 +76,21 @@ export default function PaymentCallbackPage({ status }: PaymentCallbackPageProps
 
             <CardContent className='space-y-6'>
               <div className='bg-muted/50 rounded-md border p-4 text-sm'>
-                <div className='mb-2 font-medium'>Detalle de la transacción</div>
+                <div className='mb-2 font-medium'>
+                  Detalle de la transacción
+                </div>
                 <div className='grid gap-2'>
                   <div className='flex justify-between gap-4'>
-                    <span className='text-muted-foreground'>Payment interno</span>
+                    <span className='text-muted-foreground'>
+                      Payment interno
+                    </span>
                     <span className='font-medium'>#{paymentId || '-'}</span>
                   </div>
                   <div className='flex justify-between gap-4'>
                     <span className='text-muted-foreground'>Estado MP</span>
-                    <span className='font-medium'>{details.collectionStatus}</span>
+                    <span className='font-medium'>
+                      {details.collectionStatus}
+                    </span>
                   </div>
                   <div className='flex justify-between gap-4'>
                     <span className='text-muted-foreground'>Tipo</span>
@@ -85,7 +102,9 @@ export default function PaymentCallbackPage({ status }: PaymentCallbackPageProps
                   </div>
                   <div className='flex justify-between gap-4'>
                     <span className='text-muted-foreground'>Preference</span>
-                    <span className='truncate font-medium'>{details.preferenceId}</span>
+                    <span className='truncate font-medium'>
+                      {details.preferenceId}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -106,7 +125,10 @@ export default function PaymentCallbackPage({ status }: PaymentCallbackPageProps
                 </Link>
 
                 {status === 'failure' && (
-                  <Button variant='secondary' onClick={() => window.history.back()}>
+                  <Button
+                    variant='secondary'
+                    onClick={() => window.history.back()}
+                  >
                     <RefreshCcw className='mr-2 h-4 w-4' />
                     Reintentar
                   </Button>

@@ -1,4 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
+import type {
+  AssessmentSummary,
+  StudentQuestion,
+  SubmitAnswer,
+  QuizAttemptResult,
+} from '@/types'
 import {
   CheckCircle2,
   XCircle,
@@ -11,16 +17,10 @@ import {
   Trophy,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
 import { useStartAttempt, useSubmitAttempt } from '@/hooks/use-assessments'
-import type {
-  AssessmentSummary,
-  StudentQuestion,
-  SubmitAnswer,
-  QuizAttemptResult,
-} from '@/types'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 
 interface AssessmentPlayerProps {
   academySlug: string
@@ -63,7 +63,7 @@ function Timer({
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-mono font-medium',
+        'flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-mono text-sm font-medium',
         isWarning
           ? 'bg-destructive/15 text-destructive'
           : 'bg-secondary text-foreground'
@@ -101,7 +101,7 @@ function ResultScreen({
           <Trophy className='size-12 text-emerald-500' />
         </div>
       ) : (
-        <div className='flex size-24 items-center justify-center rounded-full bg-destructive/15'>
+        <div className='bg-destructive/15 flex size-24 items-center justify-center rounded-full'>
           <XCircle className='text-destructive size-12' />
         </div>
       )}
@@ -125,7 +125,9 @@ function ResultScreen({
       <div className='bg-card border-border flex flex-col items-center gap-1 rounded-xl border px-8 py-5'>
         <span className='text-muted-foreground text-sm'>Tu puntuación</span>
         <span className='text-foreground text-4xl font-bold'>
-          {result.percentage != null ? `${Math.round(result.percentage)}%` : '—'}
+          {result.percentage != null
+            ? `${Math.round(result.percentage)}%`
+            : '—'}
         </span>
         {result.score != null && result.max_score != null && (
           <span className='text-muted-foreground text-xs'>
@@ -148,12 +150,18 @@ function ResultScreen({
           </h3>
           <div className='space-y-4'>
             {result.incorrect_answers?.map((item) => (
-              <div key={item.question_id} className='border-border rounded-lg border p-3'>
+              <div
+                key={item.question_id}
+                className='border-border rounded-lg border p-3'
+              >
                 <p className='text-foreground text-sm font-medium'>
                   {item.question_text}
                 </p>
                 <p className='text-muted-foreground mt-2 text-xs'>
-                  Tu respuesta: {item.selected_answers.length > 0 ? item.selected_answers.join(', ') : 'Sin respuesta'}
+                  Tu respuesta:{' '}
+                  {item.selected_answers.length > 0
+                    ? item.selected_answers.join(', ')
+                    : 'Sin respuesta'}
                 </p>
                 {assessment.show_correct_answers && (
                   <p className='mt-1 text-xs text-emerald-500'>
@@ -162,7 +170,10 @@ function ResultScreen({
                 )}
                 {item.explanation && (
                   <p className='text-muted-foreground mt-2 text-xs'>
-                    {assessment.show_correct_answers ? 'Explicación' : 'Sugerencia'}: {item.explanation}
+                    {assessment.show_correct_answers
+                      ? 'Explicación'
+                      : 'Sugerencia'}
+                    : {item.explanation}
                   </p>
                 )}
               </div>
@@ -178,12 +189,14 @@ function ResultScreen({
         </Button>
       )}
 
-      {result.passed && assessment.type !== 'Exam' && onContinueToNextSection && (
-        <Button onClick={onContinueToNextSection} className='gap-2'>
-          Ir a la siguiente sección
-          <ChevronRight className='size-4' />
-        </Button>
-      )}
+      {result.passed &&
+        assessment.type !== 'Exam' &&
+        onContinueToNextSection && (
+          <Button onClick={onContinueToNextSection} className='gap-2'>
+            Ir a la siguiente sección
+            <ChevronRight className='size-4' />
+          </Button>
+        )}
     </div>
   )
 }
@@ -237,9 +250,7 @@ export function AssessmentPlayer({
 
     const answers: SubmitAnswer[] = questions.map((q) => {
       const selected = selections[q.id] ?? []
-      if (
-        q.question_type === 'multiple_select'
-      ) {
+      if (q.question_type === 'multiple_select') {
         return { question_id: q.id, answer_ids: selected }
       }
       return { question_id: q.id, answer_id: selected[0] }
@@ -261,7 +272,8 @@ export function AssessmentPlayer({
   const answered = Object.keys(selections).filter(
     (k) => (selections[Number(k)] ?? []).length > 0
   ).length
-  const progress = questions.length > 0 ? (answered / questions.length) * 100 : 0
+  const progress =
+    questions.length > 0 ? (answered / questions.length) * 100 : 0
 
   const toggleAnswer = (answerId: number) => {
     if (!currentQuestion) return
@@ -327,7 +339,9 @@ export function AssessmentPlayer({
                 <p className='text-foreground text-lg font-semibold'>
                   {assessment.time_limit_minutes} min
                 </p>
-                <p className='text-muted-foreground text-xs'>Límite de tiempo</p>
+                <p className='text-muted-foreground text-xs'>
+                  Límite de tiempo
+                </p>
               </div>
             )}
             {assessment.attempts_allowed && (
@@ -382,7 +396,9 @@ export function AssessmentPlayer({
         <div className='mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-amber-500/15'>
           <FileQuestion className='size-8 text-amber-500' />
         </div>
-        <h3 className='text-foreground text-lg font-semibold'>Quiz sin preguntas</h3>
+        <h3 className='text-foreground text-lg font-semibold'>
+          Quiz sin preguntas
+        </h3>
         <p className='text-muted-foreground mt-2 text-sm'>
           Este quiz todavia no tiene preguntas publicadas. Intentalo mas tarde o
           contacta al instructor.
@@ -424,7 +440,7 @@ export function AssessmentPlayer({
             {currentIndex + 1}
           </span>
           <div>
-            <p className='text-foreground text-base font-medium leading-relaxed'>
+            <p className='text-foreground text-base leading-relaxed font-medium'>
               {currentQuestion.question_text}
             </p>
             <p className='text-muted-foreground mt-1 text-xs'>
@@ -455,12 +471,12 @@ export function AssessmentPlayer({
                   className={cn(
                     'flex size-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
                     isMultiSelect ? 'rounded' : 'rounded-full',
-                    selected ? 'border-primary bg-primary' : 'border-muted-foreground/40'
+                    selected
+                      ? 'border-primary bg-primary'
+                      : 'border-muted-foreground/40'
                   )}
                 >
-                  {selected && (
-                    <CheckCircle2 className='size-3 text-white' />
-                  )}
+                  {selected && <CheckCircle2 className='size-3 text-white' />}
                 </span>
                 <span className='text-sm'>{answer.answer_text}</span>
               </button>

@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion'
 import { Link } from '@tanstack/react-router'
+import { motion } from 'framer-motion'
 import {
   ArrowLeft,
   BookOpen,
@@ -63,7 +63,7 @@ export function AcademyHero({
             className='absolute inset-0 bg-cover bg-center'
             style={{ backgroundImage: `url(${bannerUrl})` }}
           />
-          <div className='absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-background' />
+          <div className='to-background absolute inset-0 bg-gradient-to-b from-black/70 via-black/45' />
         </>
       ) : (
         <>
@@ -113,7 +113,10 @@ export function AcademyHero({
                   {academy.academy_category.name}
                 </Badge>
               )}
-              <Badge variant='outline' className='border-border/60 text-muted-foreground'>
+              <Badge
+                variant='outline'
+                className='border-border/60 text-muted-foreground'
+              >
                 <Sparkles className='mr-1.5 size-3' />
                 Academia destacada
               </Badge>
@@ -136,7 +139,9 @@ export function AcademyHero({
                     {creatorName.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className='text-foreground font-medium'>Por {creatorName}</p>
+                    <p className='text-foreground font-medium'>
+                      Por {creatorName}
+                    </p>
                   </div>
                 </div>
               )}
@@ -195,7 +200,9 @@ export function AcademyHero({
                 </>
               ) : (
                 <>
-                  <p className='text-foreground text-xl font-bold'>Acceso abierto</p>
+                  <p className='text-foreground text-xl font-bold'>
+                    Acceso abierto
+                  </p>
                   <p className='text-muted-foreground mt-1 text-sm'>
                     Puedes entrar a los cursos sin membresía de academia.
                   </p>

@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { DashboardLayout } from '@/components/layout/dashboard-layout'
 import CertificateTemplatesPage from '@/pages/certificate-templates'
 import MyCertificatesPage from '@/pages/my-certificates'
 import { useAuthStore } from '@/stores/auth-store'
+import { DashboardLayout } from '@/components/layout/dashboard-layout'
 
 function AcademyCertificatesRouteComponent() {
   const { user, currentAcademy } = useAuthStore()

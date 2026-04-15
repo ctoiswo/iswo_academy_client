@@ -71,7 +71,9 @@ export function CreateCertificateTemplateDialog({
     { title: 'Instructor', name_placeholder: '{{course_instructor}}' },
   ])
   const [backgroundImage, setBackgroundImage] = useState<File | null>(null)
-  const [backgroundPreviewUrl, setBackgroundPreviewUrl] = useState<string | null>(null)
+  const [backgroundPreviewUrl, setBackgroundPreviewUrl] = useState<
+    string | null
+  >(null)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema) as any,
@@ -497,9 +499,9 @@ export function CreateCertificateTemplateDialog({
                         Placeholders disponibles: {'{{student_name}}'},{' '}
                         {'{{course_title}}'},{'{{completion_date}}'},{' '}
                         {'{{academy_name}}'}, {'{{final_score}}'},{' '}
-                        {'{{platform_ceo_email}}'},{' '}
-                        {'{{academy_admin_name}}'}, {'{{academy_admin_email}}'},{' '}
-                        {'{{academy_owner_name}}'}, {'{{academy_owner_email}}'}
+                        {'{{platform_ceo_email}}'}, {'{{academy_admin_name}}'},{' '}
+                        {'{{academy_admin_email}}'}, {'{{academy_owner_name}}'},{' '}
+                        {'{{academy_owner_email}}'}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>

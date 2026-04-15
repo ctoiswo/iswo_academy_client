@@ -1,9 +1,9 @@
+import { useState } from 'react'
 import { Check, Sparkles } from 'lucide-react'
-import { ADMIN_SUBSCRIPTION_PLANS } from '@/constants/admin-subscription-plans'
 import { cn } from '@/lib/utils'
+import { ADMIN_SUBSCRIPTION_PLANS } from '@/constants/admin-subscription-plans'
 import { Button } from '@/components/ui/button'
 import { PlanCtaModal } from './plan-cta-modal'
-import { useState } from 'react'
 
 export function PricingSection() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -28,7 +28,8 @@ export function PricingSection() {
             Dos planes anuales, claros y directos
           </h2>
           <p className='text-muted-foreground max-w-lg text-sm leading-relaxed'>
-            Elige el plan que mejor se ajuste a tu academia. Ambos se pagan una vez al ano y activan tu academia en ISWO.
+            Elige el plan que mejor se ajuste a tu academia. Ambos se pagan una
+            vez al ano y activan tu academia en ISWO.
           </p>
         </div>
 
@@ -70,9 +71,7 @@ export function PricingSection() {
                 >
                   ${plan.price.toLocaleString('es-CO')}
                 </span>
-                <span className='text-muted-foreground text-sm'>
-                  / ano
-                </span>
+                <span className='text-muted-foreground text-sm'>/ ano</span>
               </div>
               <p className='text-muted-foreground -mt-4 text-xs'>
                 Facturado anualmente en pesos colombianos.

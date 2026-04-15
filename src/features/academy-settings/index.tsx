@@ -50,9 +50,7 @@ export function AcademySettings() {
             <TabsTrigger value='features'>
               {t('academySettings.tabs.features')}
             </TabsTrigger>
-            <TabsTrigger value='subscription'>
-              Suscripción
-            </TabsTrigger>
+            <TabsTrigger value='subscription'>Suscripción</TabsTrigger>
           </TabsList>
         </Tabs>
         <Outlet />

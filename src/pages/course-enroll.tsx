@@ -1,8 +1,8 @@
-import { useParams, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useParams, useNavigate } from '@tanstack/react-router'
+import type { AccessCodeRedemptionResponse } from '@/types'
 import { Loader2, AlertCircle, ShoppingCart, Ticket } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import type { AccessCodeRedemptionResponse } from '@/types'
 import { useAuthStore } from '@/stores/auth-store'
 import { formatPrice } from '@/lib/formatters'
 import { useCourseBySlug } from '@/hooks/use-featured-content'
@@ -108,7 +108,8 @@ export default function CourseEnrollPage() {
   ) => {
     await refreshAcademies()
 
-    const updatedAcademies = useAuthStore.getState().academyData?.academies || []
+    const updatedAcademies =
+      useAuthStore.getState().academyData?.academies || []
     const targetAcademy = updatedAcademies.find(
       (academy) => academy.slug === response.course.academy.slug
     )
@@ -291,7 +292,8 @@ export default function CourseEnrollPage() {
             renderSuccessActions={({ response, reset }) => {
               const redeemedAcademySlug = response.course.academy.slug
               const isDifferentAcademy =
-                !!currentAcademy?.slug && currentAcademy.slug !== redeemedAcademySlug
+                !!currentAcademy?.slug &&
+                currentAcademy.slug !== redeemedAcademySlug
               const hasAcademyInList =
                 academyData?.academies?.some(
                   (academy) => academy.slug === redeemedAcademySlug

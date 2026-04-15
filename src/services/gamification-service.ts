@@ -43,7 +43,10 @@ class GamificationService {
    * @param filters - Optional filters
    * @returns Promise with user badges array
    */
-  async getEarnedBadges(academySlug: string, filters?: BadgeFilters): Promise<UserBadge[]> {
+  async getEarnedBadges(
+    academySlug: string,
+    filters?: BadgeFilters
+  ): Promise<UserBadge[]> {
     const response = await apiClient.get('/badges/earned', {
       params: filters,
       headers: { 'X-Academy-Slug': academySlug },
@@ -82,7 +85,10 @@ class GamificationService {
    * @param academySlug - Academy slug to scope the request (sends X-Academy-Slug header)
    * @returns Promise with gamification profile
    */
-  async getGamificationProfile(userId?: number, academySlug?: string): Promise<GamificationProfile> {
+  async getGamificationProfile(
+    userId?: number,
+    academySlug?: string
+  ): Promise<GamificationProfile> {
     const endpoint = userId
       ? `/gamification_profiles/${userId}`
       : '/gamification_profiles/me'

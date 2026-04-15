@@ -44,7 +44,9 @@ class PaymentService {
    * Initiates a course purchase via MercadoPago Checkout Pro.
    * Returns a checkout_url to redirect the user to MercadoPago.
    */
-  async createCoursePurchase(courseId: number): Promise<CoursePurchaseResponse> {
+  async createCoursePurchase(
+    courseId: number
+  ): Promise<CoursePurchaseResponse> {
     const response = await apiClient.post<CoursePurchaseResponse>(
       '/payments/course_purchase',
       { course_id: courseId }

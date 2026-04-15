@@ -58,9 +58,14 @@ export default function CourseExamsPage() {
   const { academySlug, courseSlug } = params
 
   const [filterType, setFilterType] = useState<FilterType>('all')
-  const [editingAssessment, setEditingAssessment] = useState<Assessment | null>(null)
-  const [statsAssessment, setStatsAssessment] = useState<Assessment | null>(null)
-  const [attemptsAssessment, setAttemptsAssessment] = useState<Assessment | null>(null)
+  const [editingAssessment, setEditingAssessment] = useState<Assessment | null>(
+    null
+  )
+  const [statsAssessment, setStatsAssessment] = useState<Assessment | null>(
+    null
+  )
+  const [attemptsAssessment, setAttemptsAssessment] =
+    useState<Assessment | null>(null)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
   const { data: course, isLoading, error } = useCourse(courseSlug)
@@ -87,8 +92,12 @@ export default function CourseExamsPage() {
   if (error || !course) {
     return (
       <div className='p-6 text-center'>
-        <h3 className='mb-2 text-lg font-bold text-red-500'>Error al cargar el curso</h3>
-        <p className='text-muted-foreground mb-4'>No encontrado o sin permiso de acceso</p>
+        <h3 className='mb-2 text-lg font-bold text-red-500'>
+          Error al cargar el curso
+        </h3>
+        <p className='text-muted-foreground mb-4'>
+          No encontrado o sin permiso de acceso
+        </p>
         <Link to='/academy/$academySlug/admin/courses' params={{ academySlug }}>
           <Button variant='outline'>
             <ArrowLeft className='mr-2 h-4 w-4' />
@@ -105,7 +114,11 @@ export default function CourseExamsPage() {
   const hasExam = assessments?.some((a) => a.type === 'Exam') ?? false
 
   const countFor = (v: FilterType) =>
-    v === 'all' ? (assessments?.length ?? 0) : v === 'Quiz' ? quizzesCount : examsCount
+    v === 'all'
+      ? (assessments?.length ?? 0)
+      : v === 'Quiz'
+        ? quizzesCount
+        : examsCount
 
   return (
     <div className='flex flex-col gap-6 p-6'>
@@ -160,13 +173,23 @@ export default function CourseExamsPage() {
               </div>
               <div className='min-w-0'>
                 <p className='text-muted-foreground text-xs'>{tab.label}</p>
-                <p className='text-foreground text-xl font-bold leading-none'>
+                <p className='text-foreground text-xl leading-none font-bold'>
                   {countFor(tab.value)}
                 </p>
               </div>
               {active && (
-                <div className={cn('absolute right-3 top-3 size-2 rounded-full', tab.bg)}>
-                  <div className={cn('size-2 rounded-full', tab.accent.replace('text-', 'bg-'))} />
+                <div
+                  className={cn(
+                    'absolute top-3 right-3 size-2 rounded-full',
+                    tab.bg
+                  )}
+                >
+                  <div
+                    className={cn(
+                      'size-2 rounded-full',
+                      tab.accent.replace('text-', 'bg-')
+                    )}
+                  />
                 </div>
               )}
             </button>
@@ -176,13 +199,16 @@ export default function CourseExamsPage() {
 
       {/* Warning banner for existing exam */}
       {hasExam && (
-        <div className='border-amber-500/30 bg-amber-500/10 flex items-start gap-3 rounded-xl border p-4'>
+        <div className='flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4'>
           <GraduationCap className='mt-0.5 size-4 shrink-0 text-amber-400' />
           <div>
-            <p className='text-sm font-semibold text-amber-400'>Examen final existente</p>
+            <p className='text-sm font-semibold text-amber-400'>
+              Examen final existente
+            </p>
             <p className='text-muted-foreground mt-0.5 text-xs'>
-              Este curso ya tiene un examen final. Solo puede existir uno por curso. Puedes
-              editarlo o crear quizzes adicionales para las secciones.
+              Este curso ya tiene un examen final. Solo puede existir uno por
+              curso. Puedes editarlo o crear quizzes adicionales para las
+              secciones.
             </p>
           </div>
         </div>
@@ -206,13 +232,22 @@ export default function CourseExamsPage() {
             <h3 className='font-semibold'>
               {filterType === 'all' && 'Aún no hay evaluaciones'}
               {filterType === 'Quiz' && 'Aún no hay quizzes'}
-              {filterType === 'Exam' && (hasExam ? 'Ya existe un examen final' : 'Aún no hay exámenes finales')}
+              {filterType === 'Exam' &&
+                (hasExam
+                  ? 'Ya existe un examen final'
+                  : 'Aún no hay exámenes finales')}
             </h3>
             <p className='text-muted-foreground mx-auto mt-1 max-w-sm text-sm'>
-              {filterType === 'all' && 'Crea quizzes para secciones individuales o un examen final para todo el curso'}
-              {filterType === 'Quiz' && 'Los quizzes evalúan secciones específicas y permiten múltiples intentos'}
-              {filterType === 'Exam' && !hasExam && 'Los exámenes finales evalúan todo el curso y requieren completar todas las secciones'}
-              {filterType === 'Exam' && hasExam && 'Solo puede existir un examen final por curso'}
+              {filterType === 'all' &&
+                'Crea quizzes para secciones individuales o un examen final para todo el curso'}
+              {filterType === 'Quiz' &&
+                'Los quizzes evalúan secciones específicas y permiten múltiples intentos'}
+              {filterType === 'Exam' &&
+                !hasExam &&
+                'Los exámenes finales evalúan todo el curso y requieren completar todas las secciones'}
+              {filterType === 'Exam' &&
+                hasExam &&
+                'Solo puede existir un examen final por curso'}
             </p>
           </div>
         </div>

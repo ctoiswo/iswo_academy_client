@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { superAdminApi, type AcademyOverview } from '@/lib/super-admin-api'
 import type { PaginationMeta } from '@/types'
 import {
   LayoutGrid,
@@ -19,6 +18,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
+import { superAdminApi, type AcademyOverview } from '@/lib/super-admin-api'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -106,7 +106,6 @@ export default function SuperAdminAcademies() {
     loadAcademies(page, searchQuery)
   }
 
-
   return (
     <DashboardLayout
       user={user}
@@ -146,7 +145,10 @@ export default function SuperAdminAcademies() {
               <List className='h-4 w-4' />
             </Button>
           </div>
-          <Button className='self-start' onClick={() => navigate({ to: '/create-academy' })}>
+          <Button
+            className='self-start'
+            onClick={() => navigate({ to: '/create-academy' })}
+          >
             <Plus className='mr-2 h-4 w-4' />
             Nueva Academia
           </Button>
@@ -203,23 +205,58 @@ export default function SuperAdminAcademies() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align='end'>
-                        <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/dashboard', params: { academySlug: academy.slug } })}>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate({
+                              to: '/academy/$academySlug/dashboard',
+                              params: { academySlug: academy.slug },
+                            })
+                          }
+                        >
                           <Eye className='mr-2 h-4 w-4' />
                           Ver detalles
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate({
+                              to: '/academy/$academySlug/settings',
+                              params: { academySlug: academy.slug },
+                            })
+                          }
+                        >
                           <Edit className='mr-2 h-4 w-4' />
                           Editar
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/admin/courses', params: { academySlug: academy.slug } })}>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate({
+                              to: '/academy/$academySlug/admin/courses',
+                              params: { academySlug: academy.slug },
+                            })
+                          }
+                        >
                           <BookOpen className='mr-2 h-4 w-4' />
                           Cursos
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/learning-paths', params: { academySlug: academy.slug } })}>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate({
+                              to: '/academy/$academySlug/learning-paths',
+                              params: { academySlug: academy.slug },
+                            })
+                          }
+                        >
                           <Route className='mr-2 h-4 w-4' />
                           Rutas de Aprendizaje
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate({
+                              to: '/academy/$academySlug/settings',
+                              params: { academySlug: academy.slug },
+                            })
+                          }
+                        >
                           <Settings className='mr-2 h-4 w-4' />
                           Configuración
                         </DropdownMenuItem>
@@ -242,7 +279,11 @@ export default function SuperAdminAcademies() {
                     </div>
                   </div>
                   <div className='flex items-center gap-2'>
-                    <Badge variant={academy.status === 'active' ? 'default' : 'secondary'}>
+                    <Badge
+                      variant={
+                        academy.status === 'active' ? 'default' : 'secondary'
+                      }
+                    >
                       {academy.status === 'active' ? 'Activa' : 'Inactiva'}
                     </Badge>
                   </div>
@@ -303,7 +344,11 @@ export default function SuperAdminAcademies() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={academy.status === 'active' ? 'default' : 'secondary'}>
+                      <Badge
+                        variant={
+                          academy.status === 'active' ? 'default' : 'secondary'
+                        }
+                      >
                         {academy.status === 'active' ? 'Activa' : 'Inactiva'}
                       </Badge>
                     </TableCell>
@@ -327,23 +372,58 @@ export default function SuperAdminAcademies() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='end'>
-                          <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/dashboard', params: { academySlug: academy.slug } })}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate({
+                                to: '/academy/$academySlug/dashboard',
+                                params: { academySlug: academy.slug },
+                              })
+                            }
+                          >
                             <Eye className='mr-2 h-4 w-4' />
                             Ver detalles
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate({
+                                to: '/academy/$academySlug/settings',
+                                params: { academySlug: academy.slug },
+                              })
+                            }
+                          >
                             <Edit className='mr-2 h-4 w-4' />
                             Editar
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/admin/courses', params: { academySlug: academy.slug } })}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate({
+                                to: '/academy/$academySlug/admin/courses',
+                                params: { academySlug: academy.slug },
+                              })
+                            }
+                          >
                             <BookOpen className='mr-2 h-4 w-4' />
                             Cursos
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/learning-paths', params: { academySlug: academy.slug } })}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate({
+                                to: '/academy/$academySlug/learning-paths',
+                                params: { academySlug: academy.slug },
+                              })
+                            }
+                          >
                             <Route className='mr-2 h-4 w-4' />
                             Rutas de Aprendizaje
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate({
+                                to: '/academy/$academySlug/settings',
+                                params: { academySlug: academy.slug },
+                              })
+                            }
+                          >
                             <Settings className='mr-2 h-4 w-4' />
                             Configuración
                           </DropdownMenuItem>

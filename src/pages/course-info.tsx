@@ -60,10 +60,22 @@ export default function CourseInfoPage() {
 
   const statusAccent =
     course.status === 'published'
-      ? { text: 'text-emerald-400', bg: 'bg-emerald-500/10', label: t('courseInfo.statusPublished') }
+      ? {
+          text: 'text-emerald-400',
+          bg: 'bg-emerald-500/10',
+          label: t('courseInfo.statusPublished'),
+        }
       : course.status === 'draft'
-        ? { text: 'text-amber-400', bg: 'bg-amber-500/10', label: t('courseInfo.statusDraft') }
-        : { text: 'text-muted-foreground', bg: 'bg-muted/40', label: t('courseInfo.statusArchived') }
+        ? {
+            text: 'text-amber-400',
+            bg: 'bg-amber-500/10',
+            label: t('courseInfo.statusDraft'),
+          }
+        : {
+            text: 'text-muted-foreground',
+            bg: 'bg-muted/40',
+            label: t('courseInfo.statusArchived'),
+          }
 
   return (
     <div className='flex flex-col gap-6 p-6'>
@@ -112,7 +124,9 @@ export default function CourseInfoPage() {
             <BarChart3 className={`size-4 ${statusAccent.text}`} />
           </div>
           <div className='min-w-0'>
-            <p className='text-muted-foreground text-xs'>{t('courseInfo.status')}</p>
+            <p className='text-muted-foreground text-xs'>
+              {t('courseInfo.status')}
+            </p>
             <p className={`text-sm font-semibold ${statusAccent.text}`}>
               {statusAccent.label}
             </p>
@@ -125,7 +139,9 @@ export default function CourseInfoPage() {
             <BarChart3 className='text-primary size-4' />
           </div>
           <div className='min-w-0'>
-            <p className='text-muted-foreground text-xs'>{t('courseInfo.level')}</p>
+            <p className='text-muted-foreground text-xs'>
+              {t('courseInfo.level')}
+            </p>
             <p className='text-foreground text-sm font-semibold capitalize'>
               {t(`myCourses.difficulty.${course.difficulty_level}`, {
                 defaultValue: course.difficulty_level,
@@ -140,7 +156,9 @@ export default function CourseInfoPage() {
             <DollarSign className='size-4 text-emerald-400' />
           </div>
           <div className='min-w-0'>
-            <p className='text-muted-foreground text-xs'>{t('courseInfo.price')}</p>
+            <p className='text-muted-foreground text-xs'>
+              {t('courseInfo.price')}
+            </p>
             <p className='text-sm font-semibold text-emerald-400'>
               {course.is_free
                 ? t('courseInfo.free')
@@ -155,7 +173,9 @@ export default function CourseInfoPage() {
             <Clock className='size-4 text-amber-400' />
           </div>
           <div className='min-w-0'>
-            <p className='text-muted-foreground text-xs'>{t('courseInfo.duration')}</p>
+            <p className='text-muted-foreground text-xs'>
+              {t('courseInfo.duration')}
+            </p>
             <p className='text-foreground text-sm font-semibold'>
               {Math.floor(course.duration_minutes / 60)}h{' '}
               {course.duration_minutes % 60}m
@@ -217,4 +237,3 @@ export default function CourseInfoPage() {
     </div>
   )
 }
-

@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router'
 import {
   Building2,
   Users,
@@ -11,7 +12,6 @@ import {
   Ban,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { superAdminApi } from '@/lib/api-client'
 import { formatCurrency } from '@/lib/utils'
@@ -124,36 +124,64 @@ export function AcademyRow({ academy, onRefresh }: AcademyRowProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
             <DropdownMenuItem
-              onClick={() => navigate({ to: '/academy/$academySlug/dashboard', params: { academySlug: academy.slug } })}
+              onClick={() =>
+                navigate({
+                  to: '/academy/$academySlug/dashboard',
+                  params: { academySlug: academy.slug },
+                })
+              }
             >
               <Eye className='mr-2 h-4 w-4' />
               {t('super_admin.academies.actionView')}
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}
+              onClick={() =>
+                navigate({
+                  to: '/academy/$academySlug/settings',
+                  params: { academySlug: academy.slug },
+                })
+              }
             >
               <Edit className='mr-2 h-4 w-4' />
               Editar
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => navigate({ to: '/academy/$academySlug/admin/courses', params: { academySlug: academy.slug } })}
+              onClick={() =>
+                navigate({
+                  to: '/academy/$academySlug/admin/courses',
+                  params: { academySlug: academy.slug },
+                })
+              }
             >
               <BookOpen className='mr-2 h-4 w-4' />
               Cursos
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => navigate({ to: '/academy/$academySlug/learning-paths', params: { academySlug: academy.slug } })}
+              onClick={() =>
+                navigate({
+                  to: '/academy/$academySlug/learning-paths',
+                  params: { academySlug: academy.slug },
+                })
+              }
             >
               <Route className='mr-2 h-4 w-4' />
               Rutas de Aprendizaje
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => navigate({ to: '/academy/$academySlug/settings', params: { academySlug: academy.slug } })}
+              onClick={() =>
+                navigate({
+                  to: '/academy/$academySlug/settings',
+                  params: { academySlug: academy.slug },
+                })
+              }
             >
               <Settings className='mr-2 h-4 w-4' />
               {t('super_admin.academies.actionSettings')}
             </DropdownMenuItem>
-            <DropdownMenuItem className='text-destructive' onClick={handleSuspend}>
+            <DropdownMenuItem
+              className='text-destructive'
+              onClick={handleSuspend}
+            >
               <Ban className='mr-2 h-4 w-4' />
               {t('super_admin.academies.actionSuspend')}
             </DropdownMenuItem>

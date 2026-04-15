@@ -332,7 +332,8 @@ class APIClient {
             ? `/academy/${slugMatch[1]}/settings/subscription`
             : null
           toast.error(message, {
-            description: 'Actualiza tu plan para continuar usando la plataforma.',
+            description:
+              'Actualiza tu plan para continuar usando la plataforma.',
             duration: 10000,
             ...(subscriptionUrl && {
               action: {
