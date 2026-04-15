@@ -21,7 +21,7 @@ function AcademySlugLayout() {
 
   const { data: fetchedAcademy, isLoading: isFetching } = useQuery({
     queryKey: ['academy', academySlug, 'full'],
-    queryFn: () => academyService.getAcademyBySlug(academySlug),
+    queryFn: () => academyService.getAcademyBySlug(academySlug, 'full'),
     enabled: needsSync && !!academySlug,
     staleTime: 30_000,
   })

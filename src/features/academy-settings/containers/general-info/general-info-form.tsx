@@ -7,7 +7,6 @@ import { useParams } from '@tanstack/react-router'
 import academyCategoryService from '@/services/academy-category-service'
 import academyService from '@/services/academy-service'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/stores/auth-store'
 import { useTranslation } from '@/hooks/use-translation'
 import { Button } from '@/components/ui/button'
 import {
