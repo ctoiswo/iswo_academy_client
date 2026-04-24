@@ -537,7 +537,7 @@ export default function SuperAdminAcademies() {
                       </>
                     )}
                     {/* Quitar force_active: visible cuando activa sin fecha ni pagos */}
-                    {academy.admin_subscription_active && !academy.subscription_expires_at && !academy.subscription_ever_paid && (
+                    {academy.admin_subscription_active && !academy.subscription_ever_paid && (
                       <Button
                         size='sm'
                         variant='outline'
@@ -678,7 +678,7 @@ export default function SuperAdminAcademies() {
                           </>
                         )}
                         {/* Quitar force_active — list view */}
-                        {academy.admin_subscription_active && !academy.subscription_expires_at && !academy.subscription_ever_paid && (
+                        {academy.admin_subscription_active && !academy.subscription_ever_paid && (
                           <Button
                             size='sm'
                             variant='outline'
