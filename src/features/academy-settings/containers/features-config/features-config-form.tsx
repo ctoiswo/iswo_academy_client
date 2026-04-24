@@ -79,7 +79,9 @@ export function FeaturesConfigForm() {
 
   useEffect(() => {
     if (config) {
-      const features = config.features || config
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const featuresConfig = config as any
+      const features = featuresConfig.features || featuresConfig
       form.reset({
         enable_certificates: features.certificates ?? false,
         enable_discussions: features.discussions ?? false,

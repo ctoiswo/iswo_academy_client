@@ -58,6 +58,10 @@ export interface AcademyOverview {
   total_revenue: number
   created_at: string
   status: 'active' | 'inactive' | 'suspended'
+  // Subscription / payment status
+  subscription_expires_at: string | null
+  admin_subscription_active: boolean
+  subscription_days_remaining: number | null
   creator: AcademyCreator
 }
 
@@ -268,6 +272,21 @@ export const superAdminApi = {
     const response = await apiClient.patch(
       `/super_admin/academies/${slug}/status`,
       { status }
+    )
+    return response.data
+  },
+
+  /**
+   * Update academy subscription (activate, extend, cancel, force_active)
+   */
+  async updateSubscription(
+    slug: string,
+    action: 'activate' | 'extend' | 'cancel' | 'force_active',
+    days?: number
+  ): Promise<{ message: string; data: AcademyOverview }> {
+    const response = await apiClient.patch(
+      `/super_admin/academies/${slug}/subscription`,
+      { action, days }
     )
     return response.data
   },
