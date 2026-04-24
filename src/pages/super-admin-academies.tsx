@@ -22,6 +22,8 @@ import {
   CreditCard,
   Clock,
   BadgeCheck,
+  XCircle,
+  CalendarClock,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
@@ -53,6 +55,14 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
 
 type ViewMode = 'grid' | 'list'
 
@@ -60,6 +70,8 @@ export default function SuperAdminAcademies() {
   const { user } = useAuthStore()
   const navigate = useNavigate()
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
+  const [gracePeriodAcademy, setGracePeriodAcademy] = useState<AcademyOverview | null>(null)
+  const [gracePeriodDate, setGracePeriodDate] = useState('')
   const [academies, setAcademies] = useState<AcademyOverview[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
@@ -180,6 +192,36 @@ export default function SuperAdminAcademies() {
     }
   }
 
+  const handleDeactivateSubscription = async (academy: AcademyOverview) => {
+    if (!window.confirm(`¿Desactivar la suscripción de "${academy.name}"? La academia será suspendida.`)) return
+    try {
+      const result = await superAdminApi.updateSubscription(academy.slug, 'deactivate')
+      toast.success(result.message)
+      loadAcademies(currentPage, searchQuery)
+    } catch {
+      toast.error('No se pudo desactivar la suscripción')
+    }
+  }
+
+  const handleConfirmGracePeriod = async () => {
+    if (!gracePeriodAcademy || !gracePeriodDate) return
+    const selectedDate = new Date(gracePeriodDate)
+    const days = Math.ceil((selectedDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    if (days <= 0) {
+      toast.error('La fecha debe ser en el futuro')
+      return
+    }
+    try {
+      const result = await superAdminApi.updateSubscription(gracePeriodAcademy.slug, 'grace_period', days)
+      toast.success(result.message)
+      setGracePeriodAcademy(null)
+      setGracePeriodDate('')
+      loadAcademies(currentPage, searchQuery)
+    } catch {
+      toast.error('No se pudo activar el período de gracia')
+    }
+  }
+
   const handleCancelSubscription = async (academy: AcademyOverview) => {
     if (!window.confirm(`¿Cancelar la suscripción de "${academy.name}"? La academia seguirá operativa sin fecha de expiración.`)) return
     try {
@@ -192,6 +234,48 @@ export default function SuperAdminAcademies() {
   }
 
   return (
+    <>
+    {/* Diálogo período de gracia */}
+    <Dialog open={!!gracePeriodAcademy} onOpenChange={(open) => { if (!open) { setGracePeriodAcademy(null); setGracePeriodDate('') } }}>
+      <DialogContent className='sm:max-w-md'>
+        <DialogHeader>
+          <DialogTitle className='flex items-center gap-2'>
+            <CalendarClock className='h-5 w-5 text-amber-500' />
+            Período de gracia — {gracePeriodAcademy?.name}
+          </DialogTitle>
+        </DialogHeader>
+        <div className='space-y-4 py-2'>
+          <p className='text-muted-foreground text-sm'>
+            La academia tendrá acceso completo hasta la fecha seleccionada. Al vencer, la suscripción expirará automáticamente.
+          </p>
+          <div className='space-y-2'>
+            <Label htmlFor='grace-date'>Fecha de expiración del período de gracia</Label>
+            <input
+              id='grace-date'
+              type='date'
+              value={gracePeriodDate}
+              min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
+              onChange={(e) => setGracePeriodDate(e.target.value)}
+              className='border-input bg-background w-full rounded-md border px-3 py-2 text-sm'
+            />
+          </div>
+        </div>
+        <DialogFooter className='gap-2'>
+          <Button variant='outline' onClick={() => { setGracePeriodAcademy(null); setGracePeriodDate('') }}>
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleConfirmGracePeriod}
+            disabled={!gracePeriodDate}
+            className='bg-amber-500 hover:bg-amber-600'
+          >
+            <CalendarClock className='mr-2 h-4 w-4' />
+            Activar período de gracia
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
     <DashboardLayout
       user={user}
       academy={null}
@@ -429,19 +513,39 @@ export default function SuperAdminAcademies() {
                         {academy.subscription_ever_paid ? 'Vencido' : 'Sin pagar'}
                       </Badge>
                     )}
-                    {/* Botón Activar pago solo si suscripción no está activa */}
+                    {/* Botones de suscripción — grid view */}
                     {!academy.admin_subscription_active && academy.status === 'active' && (
+                      <>
+                        <Button
+                          size='sm'
+                          variant='default'
+                          className='h-6 text-xs px-2 bg-green-600 hover:bg-green-700'
+                          onClick={(e) => { e.stopPropagation(); handleActivateSubscription(academy) }}
+                        >
+                          <BadgeCheck className='mr-1 h-3 w-3' />
+                          Activar
+                        </Button>
+                        <Button
+                          size='sm'
+                          variant='outline'
+                          className='h-6 text-xs px-2 border-amber-500 text-amber-600 hover:bg-amber-50'
+                          onClick={(e) => { e.stopPropagation(); setGracePeriodAcademy(academy); setGracePeriodDate('') }}
+                        >
+                          <CalendarClock className='mr-1 h-3 w-3' />
+                          Gracia
+                        </Button>
+                      </>
+                    )}
+                    {/* Quitar force_active: visible cuando activa sin fecha ni pagos */}
+                    {academy.admin_subscription_active && !academy.subscription_expires_at && !academy.subscription_ever_paid && (
                       <Button
                         size='sm'
-                        variant='default'
-                        className='h-6 text-xs px-2 bg-green-600 hover:bg-green-700'
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleActivateSubscription(academy)
-                        }}
+                        variant='outline'
+                        className='h-6 text-xs px-2 border-destructive text-destructive hover:bg-destructive/10'
+                        onClick={(e) => { e.stopPropagation(); handleDeactivateSubscription(academy) }}
                       >
-                        <BadgeCheck className='mr-1 h-3 w-3' />
-                        Activar
+                        <XCircle className='mr-1 h-3 w-3' />
+                        Quitar
                       </Button>
                     )}
                   </div>
@@ -550,16 +654,39 @@ export default function SuperAdminAcademies() {
                             Suspender
                           </Button>
                         )}
-                        {/* Botón para Suscripción/Pago - solo si suscripción no está activa */}
+                        {/* Botones de suscripción — list view */}
                         {!academy.admin_subscription_active && academy.status === 'active' && (
+                          <>
+                            <Button
+                              size='sm'
+                              variant='default'
+                              className='h-7 text-xs bg-green-600 hover:bg-green-700'
+                              onClick={() => handleActivateSubscription(academy)}
+                            >
+                              <BadgeCheck className='mr-1 h-3 w-3' />
+                              Activar
+                            </Button>
+                            <Button
+                              size='sm'
+                              variant='outline'
+                              className='h-7 text-xs border-amber-500 text-amber-600 hover:bg-amber-50'
+                              onClick={() => { setGracePeriodAcademy(academy); setGracePeriodDate('') }}
+                            >
+                              <CalendarClock className='mr-1 h-3 w-3' />
+                              Gracia
+                            </Button>
+                          </>
+                        )}
+                        {/* Quitar force_active — list view */}
+                        {academy.admin_subscription_active && !academy.subscription_expires_at && !academy.subscription_ever_paid && (
                           <Button
                             size='sm'
-                            variant='default'
-                            className='h-7 text-xs bg-green-600 hover:bg-green-700'
-                            onClick={() => handleActivateSubscription(academy)}
+                            variant='outline'
+                            className='h-7 text-xs border-destructive text-destructive hover:bg-destructive/10'
+                            onClick={() => handleDeactivateSubscription(academy)}
                           >
-                            <BadgeCheck className='mr-1 h-3 w-3' />
-                            Activar
+                            <XCircle className='mr-1 h-3 w-3' />
+                            Quitar
                           </Button>
                         )}
                         {academy.subscription_currently_active && (
@@ -770,5 +897,6 @@ export default function SuperAdminAcademies() {
         )}
       </div>
     </DashboardLayout>
+    </>
   )
 }
