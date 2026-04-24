@@ -54,7 +54,7 @@ class AcademyConfigurationService {
     data: UpdateFeaturesRequest
   ): Promise<AcademyConfiguration> {
     const response = await apiClient.patch(
-      `/academies/${academyId}/configuration/features`,
+      `/academies/${academyId}/configuration/update_features`,
       { features: data }
     )
     return response.data.data ?? response.data

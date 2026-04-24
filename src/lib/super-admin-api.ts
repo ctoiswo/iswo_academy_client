@@ -57,7 +57,7 @@ export interface AcademyOverview {
   total_courses: number
   total_revenue: number
   created_at: string
-  status: 'active' | 'inactive'
+  status: 'active' | 'inactive' | 'suspended'
   creator: AcademyCreator
 }
 
@@ -262,13 +262,21 @@ export const superAdminApi = {
    * Update academy status
    */
   async updateAcademyStatus(
-    id: number,
-    status: 'active' | 'inactive'
+    slug: string,
+    status: 'active' | 'inactive' | 'suspended'
   ): Promise<AcademyOverview> {
-    const response = await apiClient.patch(`/super_admin/academies/${id}`, {
-      status,
-    })
+    const response = await apiClient.patch(
+      `/super_admin/academies/${slug}/status`,
+      { status }
+    )
     return response.data
+  },
+
+  /**
+   * Delete a suspended academy (superadmin only)
+   */
+  async deleteAcademy(slug: string): Promise<void> {
+    await apiClient.delete(`/super_admin/academies/${slug}`)
   },
 
   /**

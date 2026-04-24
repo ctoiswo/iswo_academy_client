@@ -10,6 +10,8 @@ import {
   Settings,
   Route,
   Ban,
+  Trash2,
+  RotateCcw,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -46,11 +48,32 @@ export function AcademyRow({ academy, onRefresh }: AcademyRowProps) {
 
   const handleSuspend = async () => {
     try {
-      await superAdminApi.updateAcademyStatus(academy.id, 'inactive')
+      await superAdminApi.updateAcademyStatus(academy.slug, 'inactive')
       toast.success(`Academia "${academy.name}" suspendida`)
       onRefresh()
     } catch {
       toast.error('No se pudo suspender la academia')
+    }
+  }
+
+  const handleReactivate = async () => {
+    try {
+      await superAdminApi.updateAcademyStatus(academy.slug, 'active')
+      toast.success(`Academia "${academy.name}" reactivada`)
+      onRefresh()
+    } catch {
+      toast.error('No se pudo reactivar la academia')
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!window.confirm(`¿Eliminar permanentemente la academia "${academy.name}"? Esta acción no se puede deshacer.`)) return
+    try {
+      await superAdminApi.deleteAcademy(academy.slug)
+      toast.success(`Academia "${academy.name}" eliminada`)
+      onRefresh()
+    } catch {
+      toast.error('No se pudo eliminar la academia')
     }
   }
 
@@ -178,13 +201,30 @@ export function AcademyRow({ academy, onRefresh }: AcademyRowProps) {
               <Settings className='mr-2 h-4 w-4' />
               {t('super_admin.academies.actionSettings')}
             </DropdownMenuItem>
-            <DropdownMenuItem
-              className='text-destructive'
-              onClick={handleSuspend}
-            >
-              <Ban className='mr-2 h-4 w-4' />
-              {t('super_admin.academies.actionSuspend')}
-            </DropdownMenuItem>
+            {academy.status === 'active' && (
+              <DropdownMenuItem
+                className='text-destructive'
+                onClick={handleSuspend}
+              >
+                <Ban className='mr-2 h-4 w-4' />
+                {t('super_admin.academies.actionSuspend')}
+              </DropdownMenuItem>
+            )}
+            {academy.status === 'inactive' && (
+              <DropdownMenuItem onClick={handleReactivate}>
+                <RotateCcw className='mr-2 h-4 w-4' />
+                Reactivar academia
+              </DropdownMenuItem>
+            )}
+            {academy.status === 'inactive' && (
+              <DropdownMenuItem
+                className='text-destructive'
+                onClick={handleDelete}
+              >
+                <Trash2 className='mr-2 h-4 w-4' />
+                Eliminar academia
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </TableCell>

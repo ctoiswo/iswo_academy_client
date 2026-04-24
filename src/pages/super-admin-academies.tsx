@@ -16,7 +16,11 @@ import {
   Route,
   ChevronLeft,
   ChevronRight,
+  Ban,
+  Trash2,
+  RotateCcw,
 } from 'lucide-react'
+import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
 import { superAdminApi, type AcademyOverview } from '@/lib/super-admin-api'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -104,6 +108,49 @@ export default function SuperAdminAcademies() {
 
   const handlePageChange = (page: number) => {
     loadAcademies(page, searchQuery)
+  }
+
+  const handleSuspend = async (academy: AcademyOverview) => {
+    try {
+      await superAdminApi.updateAcademyStatus(academy.slug, 'inactive')
+      toast.success(`Academia "${academy.name}" suspendida`)
+      loadAcademies(currentPage, searchQuery)
+    } catch {
+      toast.error('No se pudo suspender la academia')
+    }
+  }
+
+  const handleReactivate = async (academy: AcademyOverview) => {
+    try {
+      await superAdminApi.updateAcademyStatus(academy.slug, 'active')
+      toast.success(`Academia "${academy.name}" reactivada`)
+      loadAcademies(currentPage, searchQuery)
+    } catch {
+      toast.error('No se pudo reactivar la academia')
+    }
+  }
+
+  const handleDelete = async (academy: AcademyOverview) => {
+    if (!window.confirm(`¿Eliminar permanentemente la academia "${academy.name}"? Esta acción no se puede deshacer.`)) return
+    try {
+      await superAdminApi.deleteAcademy(academy.slug)
+      toast.success(`Academia "${academy.name}" eliminada`)
+      loadAcademies(currentPage, searchQuery)
+    } catch {
+      toast.error('No se pudo eliminar la academia')
+    }
+  }
+
+  const statusLabel = (status: AcademyOverview['status']) => {
+    if (status === 'active') return 'Activa'
+    if (status === 'suspended') return 'Suspendida'
+    return 'Inactiva'
+  }
+
+  const statusVariant = (status: AcademyOverview['status']): 'default' | 'secondary' | 'destructive' => {
+    if (status === 'active') return 'default'
+    if (status === 'suspended') return 'destructive'
+    return 'secondary'
   }
 
   return (
@@ -260,6 +307,30 @@ export default function SuperAdminAcademies() {
                           <Settings className='mr-2 h-4 w-4' />
                           Configuración
                         </DropdownMenuItem>
+                        {academy.status === 'active' && (
+                          <DropdownMenuItem
+                            className='text-destructive'
+                            onClick={() => handleSuspend(academy)}
+                          >
+                            <Ban className='mr-2 h-4 w-4' />
+                            Suspender academia
+                          </DropdownMenuItem>
+                        )}
+                        {academy.status === 'inactive' && (
+                          <DropdownMenuItem
+                            onClick={() => handleReactivate(academy)}
+                          >
+                            <RotateCcw className='mr-2 h-4 w-4' />
+                            Reactivar academia
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className='text-destructive'
+                            onClick={() => handleDelete(academy)}
+                          >
+                            <Trash2 className='mr-2 h-4 w-4' />
+                            Eliminar academia
+                          </DropdownMenuItem>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -279,12 +350,8 @@ export default function SuperAdminAcademies() {
                     </div>
                   </div>
                   <div className='flex items-center gap-2'>
-                    <Badge
-                      variant={
-                        academy.status === 'active' ? 'default' : 'secondary'
-                      }
-                    >
-                      {academy.status === 'active' ? 'Activa' : 'Inactiva'}
+                    <Badge variant={statusVariant(academy.status)}>
+                      {statusLabel(academy.status)}
                     </Badge>
                   </div>
                 </CardContent>
@@ -344,12 +411,8 @@ export default function SuperAdminAcademies() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        variant={
-                          academy.status === 'active' ? 'default' : 'secondary'
-                        }
-                      >
-                        {academy.status === 'active' ? 'Activa' : 'Inactiva'}
+                      <Badge variant={statusVariant(academy.status)}>
+                        {statusLabel(academy.status)}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -427,6 +490,30 @@ export default function SuperAdminAcademies() {
                             <Settings className='mr-2 h-4 w-4' />
                             Configuración
                           </DropdownMenuItem>
+                          {academy.status === 'active' && (
+                            <DropdownMenuItem
+                              className='text-destructive'
+                              onClick={() => handleSuspend(academy)}
+                            >
+                              <Ban className='mr-2 h-4 w-4' />
+                              Suspender academia
+                            </DropdownMenuItem>
+                          )}
+                          {academy.status === 'inactive' && (
+                            <DropdownMenuItem
+                              onClick={() => handleReactivate(academy)}
+                            >
+                              <RotateCcw className='mr-2 h-4 w-4' />
+                              Reactivar academia
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className='text-destructive'
+                              onClick={() => handleDelete(academy)}
+                            >
+                              <Trash2 className='mr-2 h-4 w-4' />
+                              Eliminar academia
+                            </DropdownMenuItem>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
