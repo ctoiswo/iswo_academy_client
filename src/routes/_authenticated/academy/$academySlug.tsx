@@ -8,16 +8,14 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 /**
  * Layout route for all /$academySlug/* routes.
- * For super admin: syncs currentAcademy whenever the URL slug changes.
- * Regular users: passes through (their currentAcademy is managed by normal auth flow).
+ * Syncs currentAcademy whenever the URL slug changes for all users.
  */
 function AcademySlugLayout() {
   const { academySlug } = Route.useParams()
-  const { user, currentAcademy, setCurrentAcademy } = useAuthStore()
+  const { currentAcademy, setCurrentAcademy } = useAuthStore()
 
-  // Sync needed when super admin and current academy doesn't match URL
-  const needsSync =
-    !!user?.is_super_admin && currentAcademy?.slug !== academySlug
+  // Sync needed when current academy doesn't match URL or currentAcademy is null
+  const needsSync = !currentAcademy || currentAcademy?.slug !== academySlug
 
   const { data: fetchedAcademy, isLoading: isFetching } = useQuery({
     queryKey: ['academy', academySlug, 'full'],

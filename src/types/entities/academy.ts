@@ -125,6 +125,13 @@ export interface AcademyConfiguration {
   enable_discussions: boolean
   enable_progress_tracking: boolean
   enable_gamification: boolean
+  // Also support nested features object from backend
+  features?: {
+    certificates: boolean
+    discussions: boolean
+    progress_tracking: boolean
+    gamification: boolean
+  }
   // Timestamps
   created_at: string
   updated_at: string

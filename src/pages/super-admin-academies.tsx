@@ -309,27 +309,29 @@ export default function SuperAdminAcademies() {
                         </DropdownMenuItem>
                         {academy.status === 'active' && (
                           <DropdownMenuItem
-                            className='text-destructive'
-                            onClick={() => handleSuspend(academy)}
-                          >
-                            <Ban className='mr-2 h-4 w-4' />
-                            Suspender academia
-                          </DropdownMenuItem>
+                          variant='destructive'
+                          onClick={() => handleSuspend(academy)}
+                        >
+                          <Ban className='mr-2 h-4 w-4' />
+                          Suspender academia
+                        </DropdownMenuItem>
                         )}
                         {academy.status === 'inactive' && (
-                          <DropdownMenuItem
-                            onClick={() => handleReactivate(academy)}
-                          >
-                            <RotateCcw className='mr-2 h-4 w-4' />
-                            Reactivar academia
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className='text-destructive'
-                            onClick={() => handleDelete(academy)}
-                          >
-                            <Trash2 className='mr-2 h-4 w-4' />
-                            Eliminar academia
-                          </DropdownMenuItem>
+                          <>
+                            <DropdownMenuItem
+                              onClick={() => handleReactivate(academy)}
+                            >
+                              <RotateCcw className='mr-2 h-4 w-4' />
+                              Reactivar academia
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              variant='destructive'
+                              onClick={() => handleDelete(academy)}
+                            >
+                              <Trash2 className='mr-2 h-4 w-4' />
+                              Eliminar academia
+                            </DropdownMenuItem>
+                          </>
                         )}
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -491,28 +493,30 @@ export default function SuperAdminAcademies() {
                             Configuración
                           </DropdownMenuItem>
                           {academy.status === 'active' && (
-                            <DropdownMenuItem
-                              className='text-destructive'
-                              onClick={() => handleSuspend(academy)}
-                            >
+<DropdownMenuItem
+                            variant='destructive'
+                            onClick={() => handleSuspend(academy)}
+                          >
                               <Ban className='mr-2 h-4 w-4' />
                               Suspender academia
                             </DropdownMenuItem>
                           )}
                           {academy.status === 'inactive' && (
-                            <DropdownMenuItem
-                              onClick={() => handleReactivate(academy)}
-                            >
-                              <RotateCcw className='mr-2 h-4 w-4' />
-                              Reactivar academia
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className='text-destructive'
-                              onClick={() => handleDelete(academy)}
-                            >
-                              <Trash2 className='mr-2 h-4 w-4' />
-                              Eliminar academia
-                            </DropdownMenuItem>
+                            <>
+                              <DropdownMenuItem
+                                onClick={() => handleReactivate(academy)}
+                              >
+                                <RotateCcw className='mr-2 h-4 w-4' />
+                                Reactivar academia
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                variant='destructive'
+                                onClick={() => handleDelete(academy)}
+                              >
+                                <Trash2 className='mr-2 h-4 w-4' />
+                                Eliminar academia
+                              </DropdownMenuItem>
+                            </>
                           )}
                         </DropdownMenuContent>
                       </DropdownMenu>

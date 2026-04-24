@@ -79,11 +79,12 @@ export function FeaturesConfigForm() {
 
   useEffect(() => {
     if (config) {
+      const features = config.features || config
       form.reset({
-        enable_certificates: config.enable_certificates,
-        enable_discussions: config.enable_discussions,
-        enable_progress_tracking: config.enable_progress_tracking,
-        enable_gamification: config.enable_gamification,
+        enable_certificates: features.certificates ?? false,
+        enable_discussions: features.discussions ?? false,
+        enable_progress_tracking: features.progress_tracking ?? false,
+        enable_gamification: features.gamification ?? false,
       })
     }
   }, [config, form])
