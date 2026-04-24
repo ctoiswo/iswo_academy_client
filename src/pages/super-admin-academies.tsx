@@ -193,7 +193,7 @@ export default function SuperAdminAcademies() {
   }
 
   const handleDeactivateSubscription = async (academy: AcademyOverview) => {
-    if (!window.confirm(`¿Desactivar la suscripción de "${academy.name}"? La academia será suspendida.`)) return
+    if (!window.confirm(`¿Revocar la activación de pago de "${academy.name}"? El estado de la academia no cambiará.`)) return
     try {
       const result = await superAdminApi.updateSubscription(academy.slug, 'deactivate')
       toast.success(result.message)

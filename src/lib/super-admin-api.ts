@@ -283,15 +283,15 @@ export const superAdminApi = {
    */
   async updateSubscription(
     slug: string,
-    action: 'activate' | 'extend' | 'cancel' | 'force_active',
+    action: 'activate' | 'extend' | 'cancel' | 'force_active' | 'grace_period' | 'deactivate',
     days?: number
   ): Promise<{ message: string; data: AcademyOverview }> {
     const response = await apiClient.patch(
       `/super_admin/academies/${slug}/subscription`,
       { subscription: { action, days } }
     )
-    // Handle different response formats
-    return response.data?.data || response.data
+    // Return full response so callers can access both message and data
+    return response.data
   },
 
   /**
