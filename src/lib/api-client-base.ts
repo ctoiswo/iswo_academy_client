@@ -148,9 +148,14 @@ export const tokenManager = new TokenManager()
  */
 class APIClient {
   private client: AxiosInstance
-  @SuppressWarnings('unused')
   private authStore: AuthStore | null = null
   private isRefreshing = false
+
+  // Used for debugging - keep for future use
+  getAuthStore() {
+    return this.authStore
+  }
+
   private failedRequestsQueue: Array<{
     resolve: (token: string) => void
     reject: (error: Error) => void

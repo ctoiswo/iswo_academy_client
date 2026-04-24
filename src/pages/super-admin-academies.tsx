@@ -168,6 +168,27 @@ export default function SuperAdminAcademies() {
     return 'secondary'
   }
 
+  const subscriptionType = (academy: AcademyOverview) => {
+    const { admin_subscription_active, subscription_expires_at, subscription_ever_paid } = academy
+    if (!admin_subscription_active) return subscription_ever_paid ? 'expired' : 'unpaid'
+    if (!subscription_expires_at) return 'force_active'
+    return subscription_ever_paid ? 'paid' : 'grace_period'
+  }
+
+  const subscriptionTypeLabel = (academy: AcademyOverview) => {
+    const type = subscriptionType(academy)
+    if (type === 'force_active') return 'Gracia indefinida'
+    if (type === 'grace_period') return 'Período de gracia'
+    if (type === 'paid') return 'Pagada'
+    if (type === 'expired') return 'Vencida'
+    return 'Sin pagar'
+  }
+
+  const formatExpiryDate = (dateStr: string | null) => {
+    if (!dateStr) return null
+    return new Intl.DateTimeFormat('es', { dateStyle: 'medium' }).format(new Date(dateStr))
+  }
+
   // Subscription status helpers
   const handleActivateSubscription = async (academy: AcademyOverview) => {
     try {
@@ -493,24 +514,25 @@ export default function SuperAdminAcademies() {
                       </Button>
                     )}
                   </div>
+                  <div className='space-y-1'>
                   <div className='flex items-center gap-2'>
                     <span className='text-xs text-muted-foreground mr-1'>Pago:</span>
                     {academy.admin_subscription_active ? (
-                      academy.subscription_days_remaining && academy.subscription_days_remaining <= 30 ? (
-                        <Badge variant='outline' className='text-amber-600'>
+                      academy.subscription_days_remaining !== null && academy.subscription_days_remaining !== undefined && academy.subscription_days_remaining <= 30 ? (
+                        <Badge variant='outline' className='text-amber-600 border-amber-400'>
                           <Clock className='mr-1 h-3 w-3' />
-                          {academy.subscription_days_remaining} días
+                          {subscriptionTypeLabel(academy)} · {academy.subscription_days_remaining}d
                         </Badge>
                       ) : (
                         <Badge variant='default' className='bg-green-500'>
                           <BadgeCheck className='mr-1 h-3 w-3' />
-                          Activa
+                          {subscriptionTypeLabel(academy)}
                         </Badge>
                       )
                     ) : (
                       <Badge variant='destructive'>
                         <CreditCard className='mr-1 h-3 w-3' />
-                        {academy.subscription_ever_paid ? 'Vencido' : 'Sin pagar'}
+                        {subscriptionTypeLabel(academy)}
                       </Badge>
                     )}
                     {/* Botones de suscripción — grid view */}
@@ -548,6 +570,19 @@ export default function SuperAdminAcademies() {
                         Quitar
                       </Button>
                     )}
+                  </div>
+                  {academy.subscription_expires_at && (
+                    <div className='flex items-center gap-1 text-xs text-muted-foreground pl-1'>
+                      <CalendarClock className='h-3 w-3 shrink-0' />
+                      <span>Vence: {formatExpiryDate(academy.subscription_expires_at)}</span>
+                    </div>
+                  )}
+                  {academy.admin_subscription_active && !academy.subscription_expires_at && (
+                    <div className='flex items-center gap-1 text-xs text-muted-foreground pl-1'>
+                      <CalendarClock className='h-3 w-3 shrink-0' />
+                      <span>Sin fecha de vencimiento</span>
+                    </div>
+                  )}
                   </div>
                 </CardContent>
                 <CardFooter className='text-muted-foreground text-xs'>
@@ -611,26 +646,41 @@ export default function SuperAdminAcademies() {
                         {statusLabel(academy.status)}
                       </Badge>
                     </TableCell>
-                    <TableCell className='whitespace-nowrap'>
-                      <span className='text-xs text-muted-foreground mr-1'>Pago:</span>
-                      {academy.admin_subscription_active ? (
-                        academy.subscription_days_remaining && academy.subscription_days_remaining <= 30 ? (
-                          <Badge variant='outline' className='text-amber-600'>
-                            <Clock className='mr-1 h-3 w-3' />
-                            {academy.subscription_days_remaining}d
-                          </Badge>
-                        ) : (
-                          <Badge variant='default' className='bg-green-500'>
-                            <BadgeCheck className='mr-1 h-3 w-3' />
-                            Activa
-                          </Badge>
-                        )
-                      ) : (
-                        <Badge variant='destructive'>
-                          <CreditCard className='mr-1 h-3 w-3' />
-                          Sin pagar
-                        </Badge>
-                      )}
+                    <TableCell>
+                      <div className='space-y-1'>
+                        <div className='flex items-center gap-1.5'>
+                          {academy.admin_subscription_active ? (
+                            academy.subscription_days_remaining !== null && academy.subscription_days_remaining !== undefined && academy.subscription_days_remaining <= 30 ? (
+                              <Badge variant='outline' className='text-amber-600 border-amber-400'>
+                                <Clock className='mr-1 h-3 w-3' />
+                                {subscriptionTypeLabel(academy)} · {academy.subscription_days_remaining}d
+                              </Badge>
+                            ) : (
+                              <Badge variant='default' className='bg-green-500'>
+                                <BadgeCheck className='mr-1 h-3 w-3' />
+                                {subscriptionTypeLabel(academy)}
+                              </Badge>
+                            )
+                          ) : (
+                            <Badge variant='destructive'>
+                              <CreditCard className='mr-1 h-3 w-3' />
+                              {subscriptionTypeLabel(academy)}
+                            </Badge>
+                          )}
+                        </div>
+                        {academy.subscription_expires_at && (
+                          <div className='flex items-center gap-1 text-xs text-muted-foreground'>
+                            <CalendarClock className='h-3 w-3 shrink-0' />
+                            <span>{formatExpiryDate(academy.subscription_expires_at)}</span>
+                          </div>
+                        )}
+                        {academy.admin_subscription_active && !academy.subscription_expires_at && (
+                          <div className='flex items-center gap-1 text-xs text-muted-foreground'>
+                            <CalendarClock className='h-3 w-3 shrink-0' />
+                            <span>Sin fecha de vencimiento</span>
+                          </div>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <span className='text-sm'>
