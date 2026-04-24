@@ -148,6 +148,7 @@ export const tokenManager = new TokenManager()
  */
 class APIClient {
   private client: AxiosInstance
+  @SuppressWarnings('unused')
   private authStore: AuthStore | null = null
   private isRefreshing = false
   private failedRequestsQueue: Array<{
@@ -216,9 +217,10 @@ class APIClient {
               const newTokens = await tokenManager.refreshAccessToken()
               config.headers.Authorization = `Bearer ${newTokens.access_token}`
             } catch (_error) {
-              // Proactive refresh failed — clear tokens so the response
-              // interceptor won't retry endlessly with a dead refresh token
-              tokenManager.clearTokens()
+              // Proactive refresh failed — continue with the existing token.
+              // The response interceptor handles 401 if the token is actually expired.
+              // Do NOT clear tokens here: the current access token may still be valid
+              // and clearing causes a false logout via isAuthenticated: false.
             } finally {
               this.isRefreshing = false
             }
@@ -279,21 +281,11 @@ class APIClient {
               })
               this.failedRequestsQueue = []
 
-              // Limpiar tokens y redirigir al login
+              // Limpiar tokens — esto actualiza el auth store (isAuthenticated: false)
+              // y el AuthGuard detecta el cambio y redirige a /sign-in via TanStack Router.
+              // No usar window.location.href: evita hard-reload que rompe la navegación
+              // post-login y causa el bug "toast de bienvenida sin redirect al dashboard".
               tokenManager.clearTokens()
-
-              // Notificar al auth store para que actualice el estado y redirija
-              if (this.authStore) {
-                const state = this.authStore.getState()
-                if (state.reset) {
-                  state.reset()
-                }
-              }
-
-              // Redirigir al login si estamos en el navegador
-              if (typeof window !== 'undefined') {
-                window.location.href = '/sign-in'
-              }
 
               return Promise.reject(
                 new Error('Session expired. Please login again.')

@@ -179,6 +179,17 @@ export default function SuperAdminAcademies() {
     }
   }
 
+  const handleCancelSubscription = async (academy: AcademyOverview) => {
+    if (!window.confirm(`¿Cancelar la suscripción de "${academy.name}"? La academia seguirá operativa sin fecha de expiración.`)) return
+    try {
+      const result = await superAdminApi.updateSubscription(academy.slug, 'cancel')
+      toast.success(result.message)
+      loadAcademies(currentPage, searchQuery)
+    } catch {
+      toast.error('No se pudo cancelar la suscripción')
+    }
+  }
+
   return (
     <DashboardLayout
       user={user}
@@ -378,9 +389,27 @@ export default function SuperAdminAcademies() {
                     </div>
                   </div>
                   <div className='flex items-center gap-2'>
+                    <span className='text-xs text-muted-foreground mr-1'>Estado:</span>
                     <Badge variant={statusVariant(academy.status)}>
                       {statusLabel(academy.status)}
                     </Badge>
+                    {academy.status === 'active' && (
+                      <Button
+                        size='sm'
+                        variant='outline'
+                        className='h-6 text-xs px-2'
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleSuspend(academy)
+                        }}
+                      >
+                        <Ban className='mr-1 h-3 w-3' />
+                        Suspender
+                      </Button>
+                    )}
+                  </div>
+                  <div className='flex items-center gap-2'>
+                    <span className='text-xs text-muted-foreground mr-1'>Pago:</span>
                     {academy.admin_subscription_active ? (
                       academy.subscription_days_remaining && academy.subscription_days_remaining <= 30 ? (
                         <Badge variant='outline' className='text-amber-600'>
@@ -398,6 +427,20 @@ export default function SuperAdminAcademies() {
                         <CreditCard className='mr-1 h-3 w-3' />
                         Sin pagar
                       </Badge>
+                    )}
+                    {!academy.admin_subscription_active && academy.status === 'active' && (
+                      <Button
+                        size='sm'
+                        variant='default'
+                        className='h-6 text-xs px-2 bg-green-600 hover:bg-green-700'
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleActivateSubscription(academy)
+                        }}
+                      >
+                        <BadgeCheck className='mr-1 h-3 w-3' />
+                        Activar
+                      </Button>
                     )}
                   </div>
                 </CardContent>
@@ -455,33 +498,35 @@ export default function SuperAdminAcademies() {
                         <BookOpen className='text-muted-foreground h-4 w-4' />
                         {academy.total_courses || 0}
                       </div>
+</TableCell>
+                    <TableCell className='whitespace-nowrap'>
+                      <span className='text-xs text-muted-foreground mr-1'>Estado:</span>
+                      <Badge variant={statusVariant(academy.status)}>
+                        {statusLabel(academy.status)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className='whitespace-nowrap'>
+                      <span className='text-xs text-muted-foreground mr-1'>Pago:</span>
+                      {academy.admin_subscription_active ? (
+                        academy.subscription_days_remaining && academy.subscription_days_remaining <= 30 ? (
+                          <Badge variant='outline' className='text-amber-600'>
+                            <Clock className='mr-1 h-3 w-3' />
+                            {academy.subscription_days_remaining}d
+                          </Badge>
+                        ) : (
+                          <Badge variant='default' className='bg-green-500'>
+                            <BadgeCheck className='mr-1 h-3 w-3' />
+                            Activa
+                          </Badge>
+                        )
+                      ) : (
+                        <Badge variant='destructive'>
+                          <CreditCard className='mr-1 h-3 w-3' />
+                          Sin pagar
+                        </Badge>
+                      )}
                     </TableCell>
                     <TableCell>
-<Badge variant={statusVariant(academy.status)}>
-                          {statusLabel(academy.status)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {academy.admin_subscription_active ? (
-                          academy.subscription_days_remaining && academy.subscription_days_remaining <= 30 ? (
-                            <Badge variant='outline' className='text-amber-600'>
-                              <Clock className='mr-1 h-3 w-3' />
-                              {academy.subscription_days_remaining} días
-                            </Badge>
-                          ) : (
-                            <Badge variant='default' className='bg-green-500'>
-                              <BadgeCheck className='mr-1 h-3 w-3' />
-                              Activa
-                            </Badge>
-                          )
-                        ) : (
-                          <Badge variant='destructive'>
-                            <CreditCard className='mr-1 h-3 w-3' />
-                            Sin pagar
-                          </Badge>
-                        )}
-                      </TableCell>
-                      <TableCell>
                       <span className='text-sm'>
                         ${academy.total_revenue?.toFixed(2) || '0.00'}
                       </span>
@@ -490,6 +535,43 @@ export default function SuperAdminAcademies() {
                       {academy.creator?.name || 'Sin creador'}
                     </TableCell>
                     <TableCell className='text-right'>
+                      <div className='flex items-center justify-end gap-1'>
+                        {/* Botón para Estado de Academia */}
+                        {academy.status === 'active' && (
+                          <Button
+                            size='sm'
+                            variant='outline'
+                            className='h-7 text-xs'
+                            onClick={() => handleSuspend(academy)}
+                          >
+                            <Ban className='mr-1 h-3 w-3' />
+                            Suspender
+                          </Button>
+                        )}
+                        {/* Botón para Suscripción/Pago */}
+                        {!academy.admin_subscription_active && academy.status === 'active' && (
+                          <Button
+                            size='sm'
+                            variant='default'
+                            className='h-7 text-xs bg-green-600 hover:bg-green-700'
+                            onClick={() => handleActivateSubscription(academy)}
+                          >
+                            <BadgeCheck className='mr-1 h-3 w-3' />
+                            Activar
+                          </Button>
+                        )}
+                        {academy.admin_subscription_active && (
+                          <Button
+                            size='sm'
+                            variant='outline'
+                            className='h-7 text-xs'
+                            onClick={() => handleExtendSubscription(academy)}
+                          >
+                            <Clock className='mr-1 h-3 w-3' />
+                            Extender
+                          </Button>
+                        )}
+                      </div>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
@@ -579,6 +661,15 @@ export default function SuperAdminAcademies() {
                             >
                               <Clock className='mr-2 h-4 w-4' />
                               Extender suscripción
+                            </DropdownMenuItem>
+                          )}
+                          {academy.admin_subscription_active && (
+                            <DropdownMenuItem
+                              variant='destructive'
+                              onClick={() => handleCancelSubscription(academy)}
+                            >
+                              <Ban className='mr-2 h-4 w-4' />
+                              Cancelar suscripción
                             </DropdownMenuItem>
                           )}
                           {academy.status === 'inactive' && (
