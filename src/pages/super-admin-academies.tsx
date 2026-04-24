@@ -160,9 +160,10 @@ export default function SuperAdminAcademies() {
   const handleActivateSubscription = async (academy: AcademyOverview) => {
     try {
       const result = await superAdminApi.updateSubscription(academy.slug, 'force_active')
-      toast.success(result.message)
+      toast.success(result.message || 'Suscripción activada correctamente')
       loadAcademies(currentPage, searchQuery)
-    } catch {
+    } catch (error) {
+      console.error('Error activating subscription:', error)
       toast.error('No se pudo activar la suscripción')
     }
   }
@@ -425,9 +426,10 @@ export default function SuperAdminAcademies() {
                     ) : (
                       <Badge variant='destructive'>
                         <CreditCard className='mr-1 h-3 w-3' />
-                        Sin pagar
+                        {academy.subscription_ever_paid ? 'Vencido' : 'Sin pagar'}
                       </Badge>
                     )}
+                    {/* Botón Activar pago solo si suscripción no está activa */}
                     {!academy.admin_subscription_active && academy.status === 'active' && (
                       <Button
                         size='sm'
@@ -548,7 +550,7 @@ export default function SuperAdminAcademies() {
                             Suspender
                           </Button>
                         )}
-                        {/* Botón para Suscripción/Pago */}
+                        {/* Botón para Suscripción/Pago - solo si suscripción no está activa */}
                         {!academy.admin_subscription_active && academy.status === 'active' && (
                           <Button
                             size='sm'
@@ -560,7 +562,7 @@ export default function SuperAdminAcademies() {
                             Activar
                           </Button>
                         )}
-                        {academy.admin_subscription_active && (
+                        {academy.subscription_currently_active && (
                           <Button
                             size='sm'
                             variant='outline'

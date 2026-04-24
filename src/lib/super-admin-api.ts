@@ -61,6 +61,8 @@ export interface AcademyOverview {
   // Subscription / payment status
   subscription_expires_at: string | null
   admin_subscription_active: boolean
+  subscription_currently_active: boolean
+  subscription_ever_paid: boolean
   subscription_days_remaining: number | null
   creator: AcademyCreator
 }
@@ -286,9 +288,10 @@ export const superAdminApi = {
   ): Promise<{ message: string; data: AcademyOverview }> {
     const response = await apiClient.patch(
       `/super_admin/academies/${slug}/subscription`,
-      { action, days }
+      { subscription: { action, days } }
     )
-    return response.data
+    // Handle different response formats
+    return response.data?.data || response.data
   },
 
   /**
