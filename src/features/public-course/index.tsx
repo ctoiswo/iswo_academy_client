@@ -268,7 +268,7 @@ export function PublicCoursePage() {
                     {courseData.category}
                   </Badge>
                 )}
-                {(courseData.tags ?? []).slice(0, 3).map((tag) => (
+                {(Array.isArray(courseData.tags) ? courseData.tags : []).slice(0, 3).map((tag) => (
                   <Badge
                     key={tag}
                     variant='outline'

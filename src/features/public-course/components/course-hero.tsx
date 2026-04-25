@@ -54,7 +54,7 @@ export function CourseHero({
                   {formatDifficulty(course.difficulty_level)}
                 </Badge>
                 <Badge variant='outline'>{course.academy?.name}</Badge>
-                {course.tags.slice(0, 2).map((tag) => (
+                {(Array.isArray(course.tags) ? course.tags : []).slice(0, 2).map((tag) => (
                   <Badge key={tag} variant='secondary'>
                     {tag}
                   </Badge>

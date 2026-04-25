@@ -118,7 +118,14 @@ class CourseService {
    */
   async getPublicCourseBySlug(slug: string): Promise<Course> {
     const response = await apiClient.get(`/courses/${slug}`)
-    return response.data
+    const data = response.data
+    if (data.tags != null && !Array.isArray(data.tags)) {
+      data.tags = String(data.tags)
+        .split(',')
+        .map((t: string) => t.trim())
+        .filter(Boolean)
+    }
+    return data
   }
 
   /**
