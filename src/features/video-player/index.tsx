@@ -196,10 +196,12 @@ function VideoPlayer({
 
   // Determine the actual video src from provider
   const getVideoSrc = (): string | undefined => {
-    // YouTube and Vimeo are embedded via iframe — never use video_url as <video> src
+    // Iframe-based providers — never use as <video> src
     if (
       lesson.video_provider === 'youtube' ||
-      lesson.video_provider === 'vimeo'
+      lesson.video_provider === 'vimeo' ||
+      lesson.video_provider === 'google_drive' ||
+      lesson.video_provider === 'bunny_cdn'
     ) {
       return undefined
     }
@@ -224,6 +226,10 @@ function VideoPlayer({
   const youTubeId = lesson.video_provider === 'youtube' ? getYouTubeId() : null
   const isYouTube = !!youTubeId
   const isVimeo = lesson.video_provider === 'vimeo' && !!lesson.video_identifier
+  const isGoogleDrive =
+    lesson.video_provider === 'google_drive' && !!lesson.video_identifier
+  const isBunnyCdn =
+    lesson.video_provider === 'bunny_cdn' && !!lesson.video_url
   const videoSrc = getVideoSrc()
 
   // Load the YouTube IFrame API script once and create a YT.Player that
@@ -281,8 +287,18 @@ function VideoPlayer({
     }
   }, [isYouTube, youTubeId, lesson.id])
 
-  // YouTube / Vimeo: embed
-  if (isYouTube || isVimeo) {
+  // Iframe-based providers: YouTube, Vimeo, Google Drive, Bunny CDN
+  if (isYouTube || isVimeo || isGoogleDrive || isBunnyCdn) {
+    const getIframeSrc = (): string => {
+      if (isYouTube) return '' // YT.Player manages its own iframe
+      if (isVimeo)
+        return `https://player.vimeo.com/video/${lesson.video_identifier}`
+      if (isGoogleDrive)
+        return `https://drive.google.com/file/d/${lesson.video_identifier}/preview`
+      // bunny_cdn: backend provides the full embed URL in video_url
+      return lesson.video_url!
+    }
+
     return (
       <div className='bg-card border-border flex flex-col overflow-hidden rounded-xl border'>
         <div className='relative aspect-video w-full bg-black'>
@@ -291,7 +307,7 @@ function VideoPlayer({
             <div id={`yt-player-${lesson.id}`} className='h-full w-full' />
           ) : (
             <iframe
-              src={`https://player.vimeo.com/video/${lesson.video_identifier}`}
+              src={getIframeSrc()}
               className='h-full w-full'
               allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
               allowFullScreen
