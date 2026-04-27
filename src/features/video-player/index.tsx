@@ -1251,6 +1251,18 @@ export function CoursePlayer({
 
     if (!currentLesson) return null
 
+    // Lesson of any type with an attached video renders VideoPlayer
+    if (currentLesson.has_video && currentLesson.video_provider) {
+      return (
+        <VideoPlayer
+          lesson={currentLesson}
+          onComplete={handleComplete}
+          isCompleting={isCompleting}
+          isCompleted={completedIds.has(currentLesson.id)}
+        />
+      )
+    }
+
     switch (currentLesson.lesson_type) {
       case 'video':
         return (

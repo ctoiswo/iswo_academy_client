@@ -26,6 +26,7 @@ export interface Lesson {
   content?: string
   content_json?: Record<string, any>
   lesson_type: LessonType
+  has_video?: boolean
   video_provider?: VideoProvider
   video_identifier?: string
   video_url?: string
