@@ -83,6 +83,22 @@ class EnrollmentService {
   }
 
   /**
+   * Enroll in a free course
+   * @param academySlug - Academy slug
+   * @param courseSlug - Course slug
+   * @returns Promise with created enrollment
+   */
+  async createEnrollment(
+    academySlug: string,
+    courseSlug: string
+  ): Promise<Enrollment> {
+    const response = await apiClient.post(
+      `/academies/${academySlug}/courses/${courseSlug}/enrollments`
+    )
+    return response.data.data
+  }
+
+  /**
    * Delete an enrollment
    * @param academySlug - Academy slug
    * @param courseSlug - Course slug

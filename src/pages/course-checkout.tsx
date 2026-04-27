@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, Link } from '@tanstack/react-router'
 import { paymentService } from '@/services/payment-service'
+import { enrollmentService } from '@/services/enrollment-service'
 import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { formatPrice } from '@/lib/formatters'
@@ -42,6 +43,23 @@ export default function CourseCheckoutPage() {
     const initiateCheckout = async () => {
       setIsRedirecting(true)
       try {
+        const isFree = courseData.is_free || Number(courseData.price) === 0
+
+        if (isFree) {
+          const academySlug = courseData.academy?.slug
+          if (!academySlug) {
+            setError('No se pudo determinar la academia del curso.')
+            setIsRedirecting(false)
+            return
+          }
+          await enrollmentService.createEnrollment(academySlug, courseSlug!)
+          navigate({
+            to: '/academy/$academySlug/courses/$courseSlug',
+            params: { academySlug, courseSlug: courseSlug! },
+          })
+          return
+        }
+
         const result = await paymentService.createCoursePurchase(courseData.id)
         const checkout = result.data?.checkout_url
 
@@ -101,7 +119,9 @@ export default function CourseCheckoutPage() {
               <p className='text-muted-foreground text-sm'>
                 {isCourseLoading
                   ? 'Cargando información del curso...'
-                  : 'Redirigiendo a MercadoPago...'}
+                  : courseData?.is_free || Number(courseData?.price) === 0
+                    ? 'Inscribiendo al curso...'
+                    : 'Redirigiendo a MercadoPago...'}
               </p>
             </div>
           )}
