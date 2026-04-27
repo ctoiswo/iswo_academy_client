@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import type { Academy } from '@/types'
 import { CheckCircle2, ExternalLink, Settings, Sparkles } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useAuthStore } from '@/stores/auth-store'
 import { Button } from '@/components/ui/button'
 
 interface StepSuccessProps {
@@ -10,6 +11,7 @@ interface StepSuccessProps {
 
 export function StepSuccess({ academy }: StepSuccessProps) {
   const { t } = useTranslation()
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
 
   return (
     <div className='animate-in fade-in-0 zoom-in-95 flex flex-col items-center justify-center gap-8 py-4 duration-700'>
@@ -60,14 +62,24 @@ export function StepSuccess({ academy }: StepSuccessProps) {
           className='border-border hover:border-primary/50 hover:bg-secondary/50 h-12 w-full gap-2 text-sm font-medium transition-all duration-300'
           asChild
         >
-          <a
-            href={`/academies/${academy.slug}`}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <ExternalLink className='size-4' />
-            {t('createAcademy.success.viewAcademy')}
-          </a>
+          {isAuthenticated ? (
+            <Link
+              to='/academy/$academySlug/dashboard'
+              params={{ academySlug: academy.slug }}
+            >
+              <ExternalLink className='size-4' />
+              {t('createAcademy.success.viewAcademy')}
+            </Link>
+          ) : (
+            <a
+              href={`/academies/${academy.slug}`}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <ExternalLink className='size-4' />
+              {t('createAcademy.success.viewAcademy')}
+            </a>
+          )}
         </Button>
       </div>
 
