@@ -22,6 +22,7 @@ interface CourseCardProps {
     title: string
     slug?: string
     thumbnail_url?: string | null
+    promotional_image_url?: string | null
     difficulty_level: 'beginner' | 'intermediate' | 'advanced'
     is_free: boolean
     price: number
@@ -56,6 +57,7 @@ export function CourseCard({ course, index = 0 }: CourseCardProps) {
           <div className='relative'>
             <img
               src={
+                course?.promotional_image_url ||
                 course?.thumbnail_url ||
                 'https://images.pexels.com/photos/574077/pexels-photo-574077.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=2'
               }

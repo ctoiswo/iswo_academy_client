@@ -358,24 +358,31 @@ export function PublicCoursePage() {
 
             <div>
               <div className='border-border/60 bg-card sticky top-24 overflow-hidden rounded-2xl border shadow-[0_8px_32px_rgba(0,0,0,0.2)]'>
-                {courseData.promotional_image_url ? (
+                {hasPromoVideo ? (
+                  <div className='aspect-video w-full overflow-hidden'>
+                    {courseData.promotional_video_embedded_url ? (
+                      <iframe
+                        src={courseData.promotional_video_embedded_url}
+                        title='Video promocional'
+                        className='h-full w-full'
+                        allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                        allowFullScreen
+                      />
+                    ) : (
+                      <video
+                        src={courseData.promotional_video_url || undefined}
+                        controls
+                        className='h-full w-full'
+                      />
+                    )}
+                  </div>
+                ) : courseData.promotional_image_url ? (
                   <div
-                    className='relative aspect-video bg-cover bg-center'
+                    className='aspect-video bg-cover bg-center'
                     style={{
                       backgroundImage: `url(${courseData.promotional_image_url})`,
                     }}
-                  >
-                    <div className='absolute inset-0 flex items-center justify-center bg-black/40'>
-                      {hasPromoVideo && (
-                        <button
-                          onClick={() => setShowVideoModal(true)}
-                          className='bg-primary/90 text-primary-foreground flex size-16 items-center justify-center rounded-full shadow-[0_0_32px_rgba(99,102,241,0.4)] transition-transform hover:scale-105'
-                        >
-                          <Play className='ml-1 size-7' />
-                        </button>
-                      )}
-                    </div>
-                  </div>
+                  />
                 ) : (
                   <div className='from-primary/15 to-primary/5 flex aspect-video items-center justify-center bg-gradient-to-br'>
                     <BookOpen className='text-primary/50 size-10' />
