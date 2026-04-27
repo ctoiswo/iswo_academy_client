@@ -79,6 +79,21 @@ export interface Course {
     duration_minutes: number
   }>
 
+  // Full sections with lessons (only present in :full view for enrolled users / teachers)
+  sections?: Array<{
+    id: number
+    title: string
+    description: string | null
+    position: number
+    lessons: Array<{
+      id: number
+      title: string
+      duration_minutes: number
+      position: number
+      lesson_type: string
+    }>
+  }>
+
   // Relations
   creator_id: number
   learning_path_id: number | null

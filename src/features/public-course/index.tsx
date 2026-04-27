@@ -50,7 +50,10 @@ export function PublicCoursePage() {
     refetch,
   } = useCourseBySlug(courseSlug || '')
 
-  const sections = courseData?.sections_summary ?? []
+  const sections =
+    courseData?.enrolled === true
+      ? (courseData?.sections ?? courseData?.sections_summary ?? [])
+      : (courseData?.sections_summary ?? [])
   const objectives =
     courseData?.course_objectives?.map((item) => item.formatted_title) ?? []
 
@@ -461,37 +464,79 @@ export function PublicCoursePage() {
               </p>
 
               <Accordion type='single' collapsible className='w-full'>
-                {sections.map((section, index) => (
-                  <AccordionItem
-                    key={section.id}
-                    value={`section-${section.id}`}
-                  >
-                    <AccordionTrigger>
-                      <div className='mr-3 flex w-full items-center justify-between text-left'>
-                        <div>
-                          <p className='text-sm font-medium'>
-                            {index + 1}. {section.title}
-                          </p>
-                          <p className='text-muted-foreground text-xs'>
-                            {section.lessons_count} clases ·{' '}
-                            {Math.max(
-                              1,
-                              Math.round(section.duration_minutes / 60)
-                            )}
-                            h
-                          </p>
+                {sections.map((section, index) => {
+                  const fullSection = 'lessons' in section ? section : null
+                  const lessonCount = fullSection
+                    ? fullSection.lessons.length
+                    : (section as { lessons_count: number }).lessons_count
+                  const durationMins = fullSection
+                    ? fullSection.lessons.reduce(
+                        (acc: number, l: { duration_minutes: number }) =>
+                          acc + (l.duration_minutes ?? 0),
+                        0
+                      )
+                    : (section as { duration_minutes: number }).duration_minutes
+
+                  return (
+                    <AccordionItem
+                      key={section.id}
+                      value={`section-${section.id}`}
+                    >
+                      <AccordionTrigger>
+                        <div className='mr-3 flex w-full items-center justify-between text-left'>
+                          <div>
+                            <p className='text-sm font-medium'>
+                              {index + 1}. {section.title}
+                            </p>
+                            <p className='text-muted-foreground text-xs'>
+                              {lessonCount} clases ·{' '}
+                              {Math.max(1, Math.round(durationMins / 60))}h
+                            </p>
+                          </div>
+                          {!isEnrolled && (
+                            <Lock className='text-muted-foreground size-4 shrink-0' />
+                          )}
                         </div>
-                        <Lock className='text-muted-foreground size-4 shrink-0' />
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <p className='text-muted-foreground text-sm'>
-                        {section.description ||
-                          'Inicia sesión y completa tu inscripción para desbloquear esta sección.'}
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        {fullSection ? (
+                          <ul className='space-y-1'>
+                            {fullSection.lessons.map(
+                              (lesson: {
+                                id: number
+                                title: string
+                                duration_minutes: number
+                                lesson_type: string
+                              }) => (
+                                <li key={lesson.id}>
+                                  <a
+                                    href={`/academy/${courseData.academy?.slug}/courses/${courseSlug}/watch/${lesson.id}`}
+                                    className='hover:text-foreground text-muted-foreground flex items-center justify-between py-1 text-sm'
+                                  >
+                                    <span className='flex items-center gap-2'>
+                                      <Play className='size-3 shrink-0' />
+                                      {lesson.title}
+                                    </span>
+                                    {lesson.duration_minutes > 0 && (
+                                      <span className='text-xs'>
+                                        {lesson.duration_minutes}min
+                                      </span>
+                                    )}
+                                  </a>
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        ) : (
+                          <p className='text-muted-foreground text-sm'>
+                            {section.description ||
+                              'Inicia sesión y completa tu inscripción para desbloquear esta sección.'}
+                          </p>
+                        )}
+                      </AccordionContent>
+                    </AccordionItem>
+                  )
+                })}
               </Accordion>
             </section>
           </div>
