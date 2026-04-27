@@ -67,11 +67,18 @@ export function PublicCoursePage() {
 
   const totalLessons =
     courseData?.total_lessons ??
-    sections.reduce((acc, section) => acc + section.lessons_count, 0)
+    sections.reduce((acc, section) => {
+      if ('lessons' in section) return acc + section.lessons.length
+      return acc + (section as { lessons_count: number }).lessons_count
+    }, 0)
 
   const totalDurationMinutes =
     courseData?.duration_minutes ??
-    sections.reduce((acc, section) => acc + section.duration_minutes, 0)
+    sections.reduce((acc, section) => {
+      if ('lessons' in section)
+        return acc + section.lessons.reduce((s: number, l: { duration_minutes: number }) => s + (l.duration_minutes ?? 0), 0)
+      return acc + (section as { duration_minutes: number }).duration_minutes
+    }, 0)
 
   const durationLabel =
     totalDurationMinutes > 0
