@@ -529,6 +529,11 @@ export function CourseForm({
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error('La imagen no puede superar 10 MB')
+        e.target.value = ''
+        return
+      }
       form.setValue('promotional_image_file', file)
       const reader = new FileReader()
       reader.onloadend = () => {
@@ -541,6 +546,11 @@ export function CourseForm({
   const handleVideoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      if (file.size > 40 * 1024 * 1024) {
+        toast.error('El video no puede superar 40 MB')
+        e.target.value = ''
+        return
+      }
       form.setValue('promotional_video_file', file)
       const reader = new FileReader()
       reader.onloadend = () => {
