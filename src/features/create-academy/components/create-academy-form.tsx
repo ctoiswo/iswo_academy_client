@@ -167,22 +167,30 @@ export function CreateAcademyForm() {
       }
       const academy = await academyService.createAcademy(payload)
 
-      // Upload logo and banner as polymorphic Attachment records
+      // Upload logo and banner — failures here don't block the flow
       if (logoFile) {
-        await academyService.uploadAttachment(
-          academy.slug,
-          logoFile,
-          'logo',
-          'Academy Logo'
-        )
+        try {
+          await academyService.uploadAttachment(
+            academy.slug,
+            logoFile,
+            'logo',
+            'Academy Logo'
+          )
+        } catch {
+          toast.warning('Academia creada. No se pudo subir el logo; puedes hacerlo desde la configuración.')
+        }
       }
       if (bannerFile) {
-        await academyService.uploadAttachment(
-          academy.slug,
-          bannerFile,
-          'banner',
-          'Academy Banner'
-        )
+        try {
+          await academyService.uploadAttachment(
+            academy.slug,
+            bannerFile,
+            'banner',
+            'Academy Banner'
+          )
+        } catch {
+          toast.warning('No se pudo subir el banner; puedes hacerlo desde la configuración.')
+        }
       }
 
       setCreatedAcademy(academy)
@@ -191,9 +199,10 @@ export function CreateAcademyForm() {
       // and the dashboard button navigates to the correct slug
       await refreshAcademies()
     } catch (error: unknown) {
-      const msg =
+      const apiMessage =
         (error as { response?: { data?: { error?: { message?: string } } } })
-          ?.response?.data?.error?.message ?? t('createAcademy.errors.generic')
+          ?.response?.data?.error?.message
+      const msg = apiMessage ?? t('createAcademy.errors.generic')
       toast.error(msg)
     } finally {
       setIsSubmitting(false)
