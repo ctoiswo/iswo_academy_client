@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import type { CreateAssessmentRequest, AssessmentType } from '@/types'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import type { AssessmentType } from '@/types'
 import { Plus } from 'lucide-react'
 import { useCreateAssessment } from '@/hooks/use-assessments'
 import { Button } from '@/components/ui/button'
@@ -24,6 +26,45 @@ import {
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
+
+const schema = z
+  .object({
+    type: z.enum(['Quiz', 'Exam']),
+    title: z.string().min(1, 'El título es requerido'),
+    description: z.string().optional(),
+    section_id: z.number().optional(),
+    passing_score: z.number().min(0).max(100),
+    attempts_allowed: z.number().min(1),
+    time_limit_minutes: z.preprocess(
+      (val) => (typeof val === 'number' && isNaN(val) ? undefined : val),
+      z.number().min(1, 'Debe ser al menos 1 minuto').optional()
+    ),
+    weight_percentage: z.number().min(0).max(100),
+    retake_waiting_hours: z.number().min(0),
+    published: z.boolean(),
+    randomize_questions: z.boolean(),
+    randomize_answers: z.boolean(),
+    show_correct_answers: z.boolean(),
+    require_all_sections_complete: z.boolean(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.type === 'Exam' && !data.time_limit_minutes) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'El límite de tiempo es obligatorio para el examen final',
+        path: ['time_limit_minutes'],
+      })
+    }
+    if (data.type === 'Quiz' && !data.section_id) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Debes seleccionar una sección',
+        path: ['section_id'],
+      })
+    }
+  })
+
+type FormData = z.infer<typeof schema>
 
 interface CreateAssessmentDialogProps {
   academySlug: string
@@ -50,27 +91,33 @@ export function CreateAssessmentDialog({
 
   const createAssessment = useCreateAssessment(academySlug, courseSlug)
 
-  const { register, handleSubmit, reset, setValue, watch } =
-    useForm<CreateAssessmentRequest>({
-      defaultValues: {
-        type: 'Quiz',
-        passing_score: 70,
-        attempts_allowed: 3,
-        weight_percentage: 10,
-        retake_waiting_hours: 0,
-        published: false,
-        randomize_questions: false,
-        randomize_answers: false,
-        show_correct_answers: true,
-        require_all_sections_complete: false,
-      },
-    })
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      type: 'Quiz',
+      passing_score: 70,
+      attempts_allowed: 3,
+      weight_percentage: 10,
+      retake_waiting_hours: 0,
+      published: false,
+      randomize_questions: false,
+      randomize_answers: false,
+      show_correct_answers: true,
+      require_all_sections_complete: false,
+    },
+  })
 
   const handleTypeChange = (type: AssessmentType) => {
     setAssessmentType(type)
     setValue('type', type)
 
-    // Set defaults based on type
     if (type === 'Exam') {
       setValue('passing_score', 75)
       setValue('attempts_allowed', 1)
@@ -89,7 +136,7 @@ export function CreateAssessmentDialog({
     }
   }
 
-  const onSubmit = async (data: CreateAssessmentRequest) => {
+  const onSubmit = async (data: FormData) => {
     createAssessment.mutate(data, {
       onSuccess: () => {
         setOpen(false)
@@ -144,9 +191,12 @@ export function CreateAssessmentDialog({
               <Label htmlFor='title'>Título *</Label>
               <Input
                 id='title'
-                {...register('title', { required: true })}
+                {...register('title')}
                 placeholder='Ej: Quiz Módulo 1 - Introducción'
               />
+              {errors.title && (
+                <p className='mt-1 text-sm text-red-500'>{errors.title.message}</p>
+              )}
             </div>
 
             <div>
@@ -181,6 +231,9 @@ export function CreateAssessmentDialog({
                     ))}
                   </SelectContent>
                 </Select>
+                {errors.section_id && (
+                  <p className='mt-1 text-sm text-red-500'>{errors.section_id.message}</p>
+                )}
                 <p className='text-muted-foreground mt-1 text-sm'>
                   Los quizzes pertenecen a una sección específica
                 </p>
@@ -212,16 +265,21 @@ export function CreateAssessmentDialog({
             </div>
 
             <div>
-              <Label htmlFor='time_limit_minutes'>Límite de Tiempo (min)</Label>
+              <Label htmlFor='time_limit_minutes'>
+                Límite de Tiempo (min){assessmentType === 'Exam' ? ' *' : ''}
+              </Label>
               <Input
                 id='time_limit_minutes'
                 type='number'
                 min='1'
                 {...register('time_limit_minutes', { valueAsNumber: true })}
-                placeholder={
-                  assessmentType === 'Exam' ? 'Requerido' : 'Opcional'
-                }
+                placeholder={assessmentType === 'Exam' ? 'Requerido' : 'Opcional'}
               />
+              {errors.time_limit_minutes && (
+                <p className='mt-1 text-sm text-red-500'>
+                  {errors.time_limit_minutes.message}
+                </p>
+              )}
             </div>
 
             <div>

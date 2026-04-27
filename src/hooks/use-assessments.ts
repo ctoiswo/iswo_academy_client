@@ -8,6 +8,64 @@ import type {
 } from '@/types'
 import { toast } from 'sonner'
 
+const RAILS_FIELD_TRANSLATIONS: Record<string, string> = {
+  'time limit minutes': 'Tiempo límite',
+  'title': 'Título',
+  'passing score': 'Puntaje mínimo',
+  'attempts allowed': 'Intentos permitidos',
+  'weight percentage': 'Peso',
+  'section': 'Sección',
+}
+
+const RAILS_ERROR_TRANSLATIONS: Record<string, string> = {
+  'blank': 'es obligatorio',
+  'not a number': 'debe ser un número',
+  'greater than 0': 'debe ser mayor a 0',
+  'less than or equal to 100': 'debe ser 100 o menos',
+  'is not included in the list': 'no es válido',
+}
+
+function translateRailsErrors(errors: string[]): string {
+  return errors
+    .map((err) => {
+      const lower = err.toLowerCase()
+      // Buscar campo
+      let translated = err
+      for (const [field, fieldEs] of Object.entries(RAILS_FIELD_TRANSLATIONS)) {
+        if (lower.startsWith(field)) {
+          for (const [msg, msgEs] of Object.entries(RAILS_ERROR_TRANSLATIONS)) {
+            if (lower.includes(msg)) {
+              translated = `${fieldEs} ${msgEs}`
+              break
+            }
+          }
+          break
+        }
+      }
+      // Si contiene "Translation missing" no mostrar el ruido
+      if (translated.includes('Translation missing')) {
+        for (const [field, fieldEs] of Object.entries(RAILS_FIELD_TRANSLATIONS)) {
+          if (lower.startsWith(field)) {
+            if (lower.includes('blank')) translated = `${fieldEs} es obligatorio`
+            else if (lower.includes('not_a_number') || lower.includes('not a number')) translated = `${fieldEs} debe ser un número`
+            break
+          }
+        }
+      }
+      return translated
+    })
+    .join('\n')
+}
+
+function extractErrorMessage(error: Error): string {
+  const axiosError = error as any
+  const errors = axiosError?.response?.data?.errors
+  if (Array.isArray(errors) && errors.length > 0) {
+    return translateRailsErrors(errors)
+  }
+  return error.message
+}
+
 // Query keys
 export const assessmentKeys = {
   all: ['assessments'] as const,
@@ -132,7 +190,7 @@ export function useCreateAssessment(academySlug: string, courseSlug: string) {
       toast.success('Evaluación creada exitosamente')
     },
     onError: (error: Error) => {
-      toast.error(`Error al crear la evaluación: ${error.message}`)
+      toast.error(`Error al crear la evaluación: ${extractErrorMessage(error)}`)
     },
   })
 }
@@ -161,7 +219,7 @@ export function useUpdateAssessment(
       toast.success('Evaluación actualizada exitosamente')
     },
     onError: (error: Error) => {
-      toast.error(`Error al actualizar la evaluación: ${error.message}`)
+      toast.error(`Error al actualizar la evaluación: ${extractErrorMessage(error)}`)
     },
   })
 }
@@ -178,7 +236,7 @@ export function useDeleteAssessment(academySlug: string, courseSlug: string) {
       toast.success('Evaluación eliminada exitosamente')
     },
     onError: (error: Error) => {
-      toast.error(`Error al eliminar la evaluación: ${error.message}`)
+      toast.error(`Error al eliminar la evaluación: ${extractErrorMessage(error)}`)
     },
   })
 }
