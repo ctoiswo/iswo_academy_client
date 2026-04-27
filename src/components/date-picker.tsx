@@ -12,20 +12,26 @@ type DatePickerProps = {
   selected: Date | undefined
   onSelect: (date: Date | undefined) => void
   placeholder?: string
+  disabled?: (date: Date) => boolean
+  className?: string
 }
 
 export function DatePicker({
   selected,
   onSelect,
   placeholder = 'Pick a date',
+  disabled = (date: Date) =>
+    date > new Date() || date < new Date('1900-01-01'),
+  className,
 }: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          type='button'
           variant='outline'
           data-empty={!selected}
-          className='data-[empty=true]:text-muted-foreground w-[240px] justify-start text-start font-normal'
+          className={`data-[empty=true]:text-muted-foreground justify-start text-start font-normal ${className ?? 'w-[240px]'}`}
         >
           {selected ? (
             format(selected, 'MMM d, yyyy')
@@ -41,9 +47,7 @@ export function DatePicker({
           captionLayout='dropdown'
           selected={selected}
           onSelect={onSelect}
-          disabled={(date: Date) =>
-            date > new Date() || date < new Date('1900-01-01')
-          }
+          disabled={disabled}
         />
       </PopoverContent>
     </Popover>

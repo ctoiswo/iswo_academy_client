@@ -105,6 +105,7 @@ export function CreateAccessCodeDialog({
             <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
               <PopoverTrigger asChild>
                 <Button
+                  type='button'
                   variant='outline'
                   className={cn(
                     'w-full justify-start text-left font-normal',

@@ -63,6 +63,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
+import { DatePicker } from '@/components/date-picker'
 
 type ViewMode = 'grid' | 'list'
 
@@ -270,14 +271,15 @@ export default function SuperAdminAcademies() {
             La academia tendrá acceso completo hasta la fecha seleccionada. Al vencer, la suscripción expirará automáticamente.
           </p>
           <div className='space-y-2'>
-            <Label htmlFor='grace-date'>Fecha de expiración del período de gracia</Label>
-            <input
-              id='grace-date'
-              type='date'
-              value={gracePeriodDate}
-              min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
-              onChange={(e) => setGracePeriodDate(e.target.value)}
-              className='border-input bg-background w-full rounded-md border px-3 py-2 text-sm'
+            <Label>Fecha de expiración del período de gracia</Label>
+            <DatePicker
+              selected={gracePeriodDate ? new Date(gracePeriodDate + 'T00:00:00') : undefined}
+              onSelect={(date) =>
+                setGracePeriodDate(date ? date.toISOString().split('T')[0] : '')
+              }
+              placeholder='Selecciona una fecha'
+              disabled={(date) => date <= new Date()}
+              className='w-full'
             />
           </div>
         </div>
