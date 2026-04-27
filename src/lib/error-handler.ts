@@ -29,6 +29,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   VALIDATION_ERROR: 'Por favor verifica los datos ingresados.',
   INVALID_INPUT: 'Los datos proporcionados no son válidos.',
   MISSING_PARAMETER: 'Faltan parámetros requeridos.',
+  RECORD_INVALID: 'Por favor verifica los datos ingresados.',
 
   // Resource errors
   RESOURCE_NOT_FOUND: 'El recurso solicitado no fue encontrado.',
@@ -130,7 +131,9 @@ export function isValidationError(error: ApiError | unknown): boolean {
 
   const apiError = error as ApiError
   return (
-    apiError.code === 'VALIDATION_ERROR' || apiError.code === 'INVALID_INPUT'
+    apiError.code === 'VALIDATION_ERROR' ||
+    apiError.code === 'INVALID_INPUT' ||
+    apiError.code === 'RECORD_INVALID'
   )
 }
 
@@ -159,7 +162,14 @@ export function getValidationDetails(error: ApiError): Record<string, string> {
   }
   // Si details es un objeto con campos específicos
   else if (typeof error.details === 'object') {
-    Object.entries(error.details).forEach(([key, value]) => {
+    // Manejar formato { errors: { email: [...], password: [...] } } de ActiveRecord
+    const source =
+      'errors' in (error.details as object) &&
+      typeof (error.details as Record<string, unknown>).errors === 'object'
+        ? ((error.details as Record<string, unknown>).errors as Record<string, unknown>)
+        : (error.details as Record<string, unknown>)
+
+    Object.entries(source).forEach(([key, value]) => {
       if (typeof value === 'string') {
         details[key] = value
       } else if (Array.isArray(value)) {
