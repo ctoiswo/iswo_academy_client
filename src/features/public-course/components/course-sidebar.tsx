@@ -18,14 +18,16 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
+interface CourseSidebarSection {
+  id: number
+  title: string
+  lessons: number
+  duration: number
+}
+
 interface CourseSidebarProps {
-  course: Course & {
-    sections: Array<{
-      id: number
-      title: string
-      lessons: number
-      duration: number
-    }>
+  course: Omit<Course, 'sections'> & {
+    sections: CourseSidebarSection[]
     promotional_video_url?: string
     promotional_video_embedded_url?: string
     promotional_image_url?: string

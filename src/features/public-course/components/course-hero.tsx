@@ -3,8 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Clock, Users, Star, X } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
+interface CourseHeroSection {
+  id: number
+  title: string
+  lessons: number
+  duration: number
+}
+
 interface CourseHeroProps {
-  course: Course & {
+  course: Omit<Course, 'sections'> & {
     instructor: {
       name: string
       avatar: string
@@ -16,12 +23,7 @@ interface CourseHeroProps {
     promotional_video_url?: string
     promotional_video_embedded_url?: string
     promotional_image_url?: string
-    sections?: Array<{
-      id: number
-      title: string
-      lessons: number
-      duration: number
-    }>
+    sections?: CourseHeroSection[]
   }
   getDifficultyColor: (level: DifficultyLevel) => string
   formatDifficulty: (level: DifficultyLevel) => string
