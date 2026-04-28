@@ -67,7 +67,12 @@ export function AcademyRow({ academy, onRefresh }: AcademyRowProps) {
   }
 
   const handleDelete = async () => {
-    if (!window.confirm(`¿Eliminar permanentemente la academia "${academy.name}"? Esta acción no se puede deshacer.`)) return
+    if (
+      !window.confirm(
+        `¿Eliminar permanentemente la academia "${academy.name}"? Esta acción no se puede deshacer.`
+      )
+    )
+      return
     try {
       await superAdminApi.deleteAcademy(academy.slug)
       toast.success(`Academia "${academy.name}" eliminada`)

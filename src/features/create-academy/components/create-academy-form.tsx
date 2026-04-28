@@ -177,7 +177,9 @@ export function CreateAcademyForm() {
             'Academy Logo'
           )
         } catch {
-          toast.warning('Academia creada. No se pudo subir el logo; puedes hacerlo desde la configuración.')
+          toast.warning(
+            'Academia creada. No se pudo subir el logo; puedes hacerlo desde la configuración.'
+          )
         }
       }
       if (bannerFile) {
@@ -189,7 +191,9 @@ export function CreateAcademyForm() {
             'Academy Banner'
           )
         } catch {
-          toast.warning('No se pudo subir el banner; puedes hacerlo desde la configuración.')
+          toast.warning(
+            'No se pudo subir el banner; puedes hacerlo desde la configuración.'
+          )
         }
       }
 
@@ -199,9 +203,9 @@ export function CreateAcademyForm() {
       // and the dashboard button navigates to the correct slug
       await refreshAcademies()
     } catch (error: unknown) {
-      const apiMessage =
-        (error as { response?: { data?: { error?: { message?: string } } } })
-          ?.response?.data?.error?.message
+      const apiMessage = (
+        error as { response?: { data?: { error?: { message?: string } } } }
+      )?.response?.data?.error?.message
       const msg = apiMessage ?? t('createAcademy.errors.generic')
       toast.error(msg)
     } finally {

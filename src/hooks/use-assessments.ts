@@ -10,15 +10,15 @@ import { toast } from 'sonner'
 
 const RAILS_FIELD_TRANSLATIONS: Record<string, string> = {
   'time limit minutes': 'Tiempo límite',
-  'title': 'Título',
+  title: 'Título',
   'passing score': 'Puntaje mínimo',
   'attempts allowed': 'Intentos permitidos',
   'weight percentage': 'Peso',
-  'section': 'Sección',
+  section: 'Sección',
 }
 
 const RAILS_ERROR_TRANSLATIONS: Record<string, string> = {
-  'blank': 'es obligatorio',
+  blank: 'es obligatorio',
   'not a number': 'debe ser un número',
   'greater than 0': 'debe ser mayor a 0',
   'less than or equal to 100': 'debe ser 100 o menos',
@@ -44,10 +44,17 @@ function translateRailsErrors(errors: string[]): string {
       }
       // Si contiene "Translation missing" no mostrar el ruido
       if (translated.includes('Translation missing')) {
-        for (const [field, fieldEs] of Object.entries(RAILS_FIELD_TRANSLATIONS)) {
+        for (const [field, fieldEs] of Object.entries(
+          RAILS_FIELD_TRANSLATIONS
+        )) {
           if (lower.startsWith(field)) {
-            if (lower.includes('blank')) translated = `${fieldEs} es obligatorio`
-            else if (lower.includes('not_a_number') || lower.includes('not a number')) translated = `${fieldEs} debe ser un número`
+            if (lower.includes('blank'))
+              translated = `${fieldEs} es obligatorio`
+            else if (
+              lower.includes('not_a_number') ||
+              lower.includes('not a number')
+            )
+              translated = `${fieldEs} debe ser un número`
             break
           }
         }
@@ -219,7 +226,9 @@ export function useUpdateAssessment(
       toast.success('Evaluación actualizada exitosamente')
     },
     onError: (error: Error) => {
-      toast.error(`Error al actualizar la evaluación: ${extractErrorMessage(error)}`)
+      toast.error(
+        `Error al actualizar la evaluación: ${extractErrorMessage(error)}`
+      )
     },
   })
 }
@@ -236,7 +245,9 @@ export function useDeleteAssessment(academySlug: string, courseSlug: string) {
       toast.success('Evaluación eliminada exitosamente')
     },
     onError: (error: Error) => {
-      toast.error(`Error al eliminar la evaluación: ${extractErrorMessage(error)}`)
+      toast.error(
+        `Error al eliminar la evaluación: ${extractErrorMessage(error)}`
+      )
     },
   })
 }

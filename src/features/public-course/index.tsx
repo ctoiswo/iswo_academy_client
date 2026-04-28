@@ -76,7 +76,14 @@ export function PublicCoursePage() {
     courseData?.duration_minutes ??
     sections.reduce((acc, section) => {
       if ('lessons' in section)
-        return acc + section.lessons.reduce((s: number, l: { duration_minutes: number }) => s + (l.duration_minutes ?? 0), 0)
+        return (
+          acc +
+          section.lessons.reduce(
+            (s: number, l: { duration_minutes: number }) =>
+              s + (l.duration_minutes ?? 0),
+            0
+          )
+        )
       return acc + (section as { duration_minutes: number }).duration_minutes
     }, 0)
 
@@ -278,15 +285,17 @@ export function PublicCoursePage() {
                     {courseData.category}
                   </Badge>
                 )}
-                {(Array.isArray(courseData.tags) ? courseData.tags : []).slice(0, 3).map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant='outline'
-                    className='border-border/60 text-muted-foreground'
-                  >
-                    {tag}
-                  </Badge>
-                ))}
+                {(Array.isArray(courseData.tags) ? courseData.tags : [])
+                  .slice(0, 3)
+                  .map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant='outline'
+                      className='border-border/60 text-muted-foreground'
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
               </div>
 
               <h1 className='text-foreground text-3xl font-bold tracking-tight text-balance md:text-4xl lg:text-5xl'>

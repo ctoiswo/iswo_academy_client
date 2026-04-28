@@ -1,8 +1,4 @@
-import {
-  LayoutDashboard,
-  GraduationCap,
-  User,
-} from 'lucide-react'
+import { LayoutDashboard, GraduationCap, User } from 'lucide-react'
 import { type SidebarData } from '../types'
 
 /**

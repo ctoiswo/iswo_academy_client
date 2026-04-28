@@ -20,8 +20,7 @@ export function DatePicker({
   selected,
   onSelect,
   placeholder = 'Pick a date',
-  disabled = (date: Date) =>
-    date > new Date() || date < new Date('1900-01-01'),
+  disabled = (date: Date) => date > new Date() || date < new Date('1900-01-01'),
   className,
 }: DatePickerProps) {
   return (

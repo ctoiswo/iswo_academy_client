@@ -141,16 +141,22 @@ export function CourseForm({
 
   // Determinar el tipo de attachment existente para imagen
   // Use attachment_type from backend if available, otherwise fallback to checking URL
-  const existingImageType = course?.promotional_image_attachment_type === 'UrlAttachment'
-    ? 'url'
-    : course?.promotional_image_attachment_type === 'FileAttachment'
-    ? 'file'
-    : course?.promotional_image_url ? 'url' : 'file'
-  const existingVideoType = course?.promotional_video_attachment_type === 'UrlAttachment'
-    ? 'url'
-    : course?.promotional_video_attachment_type === 'FileAttachment'
-    ? 'file'
-    : course?.promotional_video_url ? 'url' : 'file'
+  const existingImageType =
+    course?.promotional_image_attachment_type === 'UrlAttachment'
+      ? 'url'
+      : course?.promotional_image_attachment_type === 'FileAttachment'
+        ? 'file'
+        : course?.promotional_image_url
+          ? 'url'
+          : 'file'
+  const existingVideoType =
+    course?.promotional_video_attachment_type === 'UrlAttachment'
+      ? 'url'
+      : course?.promotional_video_attachment_type === 'FileAttachment'
+        ? 'file'
+        : course?.promotional_video_url
+          ? 'url'
+          : 'file'
 
   const form = useForm<CourseFormData>({
     resolver: zodResolver(courseSchema),
@@ -234,38 +240,61 @@ export function CourseForm({
   const [videoUrlPreview, setVideoUrlPreview] = useState<string | null>(null)
 
   // Track original attachment types to detect changes
-  const [originalImageType, setOriginalImageType] = useState<'file' | 'url'>(existingImageType as 'file' | 'url')
-  const [originalVideoType, setOriginalVideoType] = useState<'file' | 'url'>(existingVideoType as 'file' | 'url')
-  const [hasExistingImage, setHasExistingImage] = useState(!!course?.promotional_image_url)
-  const [hasExistingVideo, setHasExistingVideo] = useState(!!course?.promotional_video_url)
+  const [originalImageType, setOriginalImageType] = useState<'file' | 'url'>(
+    existingImageType as 'file' | 'url'
+  )
+  const [originalVideoType, setOriginalVideoType] = useState<'file' | 'url'>(
+    existingVideoType as 'file' | 'url'
+  )
+  const [hasExistingImage, setHasExistingImage] = useState(
+    !!course?.promotional_image_url
+  )
+  const [hasExistingVideo, setHasExistingVideo] = useState(
+    !!course?.promotional_video_url
+  )
 
   // Reset form when course changes (for editing)
   useEffect(() => {
-    if (!course) return;
+    if (!course) return
 
-    const imgType = course?.promotional_image_attachment_type === 'UrlAttachment'
-      ? 'url'
-      : course?.promotional_image_attachment_type === 'FileAttachment'
-      ? 'file'
-      : course?.promotional_image_url ? 'url' : 'file'
-    const vidType = course?.promotional_video_attachment_type === 'UrlAttachment'
-      ? 'url'
-      : course?.promotional_video_attachment_type === 'FileAttachment'
-      ? 'file'
-      : course?.promotional_video_url ? 'url' : 'file'
+    const imgType =
+      course?.promotional_image_attachment_type === 'UrlAttachment'
+        ? 'url'
+        : course?.promotional_image_attachment_type === 'FileAttachment'
+          ? 'file'
+          : course?.promotional_image_url
+            ? 'url'
+            : 'file'
+    const vidType =
+      course?.promotional_video_attachment_type === 'UrlAttachment'
+        ? 'url'
+        : course?.promotional_video_attachment_type === 'FileAttachment'
+          ? 'file'
+          : course?.promotional_video_url
+            ? 'url'
+            : 'file'
 
     form.reset({
       title: course.title || '',
       description: course.description || '',
-      difficulty_level: (course.difficulty_level as 'beginner' | 'intermediate' | 'advanced') || 'beginner',
+      difficulty_level:
+        (course.difficulty_level as 'beginner' | 'intermediate' | 'advanced') ||
+        'beginner',
       status: (course.status as 'draft' | 'published' | 'archived') || 'draft',
       category: course.category || '',
-      tags: Array.isArray(course.tags) ? course.tags.join(', ') : course.tags || '',
-      pricing_type: (course.pricing_type as 'free' | 'one_time' | 'subscription') || 'free',
+      tags: Array.isArray(course.tags)
+        ? course.tags.join(', ')
+        : course.tags || '',
+      pricing_type:
+        (course.pricing_type as 'free' | 'one_time' | 'subscription') || 'free',
       price: String(course.price || '0'),
       currency: course.currency || 'COP',
-      subscription_price_monthly: String(course.subscription_price_monthly || '0'),
-      subscription_price_annual: String(course.subscription_price_annual || '0'),
+      subscription_price_monthly: String(
+        course.subscription_price_monthly || '0'
+      ),
+      subscription_price_annual: String(
+        course.subscription_price_annual || '0'
+      ),
       duration_minutes: course.duration_minutes || 0,
       prerequisites: course.prerequisites || '',
       meta_title: course.meta_title || '',
@@ -275,14 +304,15 @@ export function CourseForm({
       progress_tracking: course.progress_tracking ?? true,
       featured: course.featured ?? false,
       trial_period_days: course.trial_period_days || 0,
-      course_objectives: course?.course_objectives?.map((obj: any, index: number) => ({
-        id: obj.id,
-        title: obj.title,
-        objective_type: obj.objective_type,
-        is_measurable: obj.is_measurable,
-        position: obj.position || index + 1,
-        _destroy: false,
-      })) || [],
+      course_objectives:
+        course?.course_objectives?.map((obj: any, index: number) => ({
+          id: obj.id,
+          title: obj.title,
+          objective_type: obj.objective_type,
+          is_measurable: obj.is_measurable,
+          position: obj.position || index + 1,
+          _destroy: false,
+        })) || [],
       promotional_image_type: imgType as 'file' | 'url',
       promotional_image_file: undefined,
       promotional_image_url: course?.promotional_image_url || '',
@@ -508,11 +538,16 @@ export function CourseForm({
     // Imagen promocional - solo enviar si hay cambios
     // imageTypeChanged ya está declarada arriba en la validación
     const hasNewImageFile = data.promotional_image_file != null
-    const hasNewImageUrl = data.promotional_image_url && data.promotional_image_url !== course?.promotional_image_url
+    const hasNewImageUrl =
+      data.promotional_image_url &&
+      data.promotional_image_url !== course?.promotional_image_url
 
     if (imageTypeChanged || hasNewImageFile || hasNewImageUrl) {
       // Si cambió el tipo o hay nuevo archivo/url, enviar los datos
-      if (data.promotional_image_type === 'file' && (hasNewImageFile || imageTypeChanged)) {
+      if (
+        data.promotional_image_type === 'file' &&
+        (hasNewImageFile || imageTypeChanged)
+      ) {
         formData.append(
           'course[promotional_image_attachment][type]',
           'FileAttachment'
@@ -531,7 +566,10 @@ export function CourseForm({
             data.promotional_image_file
           )
         }
-      } else if (data.promotional_image_type === 'url' && (hasNewImageUrl || imageTypeChanged)) {
+      } else if (
+        data.promotional_image_type === 'url' &&
+        (hasNewImageUrl || imageTypeChanged)
+      ) {
         formData.append(
           'course[promotional_image_attachment][type]',
           'UrlAttachment'
@@ -556,10 +594,15 @@ export function CourseForm({
     // Video promocional - solo enviar si hay cambios
     // videoTypeChanged ya está declarada arriba en la validación
     const hasNewVideoFile = data.promotional_video_file != null
-    const hasNewVideoUrl = data.promotional_video_url && data.promotional_video_url !== course?.promotional_video_url
+    const hasNewVideoUrl =
+      data.promotional_video_url &&
+      data.promotional_video_url !== course?.promotional_video_url
 
     if (videoTypeChanged || hasNewVideoFile || hasNewVideoUrl) {
-      if (data.promotional_video_type === 'file' && (hasNewVideoFile || videoTypeChanged)) {
+      if (
+        data.promotional_video_type === 'file' &&
+        (hasNewVideoFile || videoTypeChanged)
+      ) {
         formData.append(
           'course[promotional_video_attachment][type]',
           'FileAttachment'
@@ -578,7 +621,10 @@ export function CourseForm({
             data.promotional_video_file
           )
         }
-      } else if (data.promotional_video_type === 'url' && (hasNewVideoUrl || videoTypeChanged)) {
+      } else if (
+        data.promotional_video_type === 'url' &&
+        (hasNewVideoUrl || videoTypeChanged)
+      ) {
         formData.append(
           'course[promotional_video_attachment][type]',
           'UrlAttachment'
@@ -1341,18 +1387,21 @@ export function CourseForm({
                 </div>
               )}
 
-              {imageType === 'file' && hasExistingImage && !imagePreview && course?.promotional_image_url && (
-                <div className='bg-muted relative mt-4 flex justify-center overflow-hidden rounded-lg border p-4'>
-                  <img
-                    src={course.promotional_image_url}
-                    alt='Imagen actual'
-                    className='h-auto max-h-96 w-auto max-w-full object-contain'
-                  />
-                  <p className='text-muted-foreground absolute bottom-2 left-2 text-xs'>
-                    Imagen actual. Sube un nuevo archivo para reemplazarla.
-                  </p>
-                </div>
-              )}
+              {imageType === 'file' &&
+                hasExistingImage &&
+                !imagePreview &&
+                course?.promotional_image_url && (
+                  <div className='bg-muted relative mt-4 flex justify-center overflow-hidden rounded-lg border p-4'>
+                    <img
+                      src={course.promotional_image_url}
+                      alt='Imagen actual'
+                      className='h-auto max-h-96 w-auto max-w-full object-contain'
+                    />
+                    <p className='text-muted-foreground absolute bottom-2 left-2 text-xs'>
+                      Imagen actual. Sube un nuevo archivo para reemplazarla.
+                    </p>
+                  </div>
+                )}
 
               {imageType === 'file' && imagePreview && (
                 <div className='bg-muted relative mt-4 flex justify-center overflow-hidden rounded-lg border p-4'>

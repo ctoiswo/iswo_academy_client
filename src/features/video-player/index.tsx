@@ -228,8 +228,7 @@ function VideoPlayer({
   const isVimeo = lesson.video_provider === 'vimeo' && !!lesson.video_identifier
   const isGoogleDrive =
     lesson.video_provider === 'google_drive' && !!lesson.video_identifier
-  const isBunnyCdn =
-    lesson.video_provider === 'bunny_cdn' && !!lesson.video_url
+  const isBunnyCdn = lesson.video_provider === 'bunny_cdn' && !!lesson.video_url
   const videoSrc = getVideoSrc()
 
   // Load the YouTube IFrame API script once and create a YT.Player that

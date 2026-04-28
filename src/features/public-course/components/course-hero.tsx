@@ -56,11 +56,13 @@ export function CourseHero({
                   {formatDifficulty(course.difficulty_level)}
                 </Badge>
                 <Badge variant='outline'>{course.academy?.name}</Badge>
-                {(Array.isArray(course.tags) ? course.tags : []).slice(0, 2).map((tag) => (
-                  <Badge key={tag} variant='secondary'>
-                    {tag}
-                  </Badge>
-                ))}
+                {(Array.isArray(course.tags) ? course.tags : [])
+                  .slice(0, 2)
+                  .map((tag) => (
+                    <Badge key={tag} variant='secondary'>
+                      {tag}
+                    </Badge>
+                  ))}
               </div>
 
               <h1 className='text-foreground mb-4 text-3xl font-bold lg:text-4xl'>

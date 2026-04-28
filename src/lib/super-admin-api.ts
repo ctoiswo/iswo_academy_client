@@ -283,7 +283,13 @@ export const superAdminApi = {
    */
   async updateSubscription(
     slug: string,
-    action: 'activate' | 'extend' | 'cancel' | 'force_active' | 'grace_period' | 'deactivate',
+    action:
+      | 'activate'
+      | 'extend'
+      | 'cancel'
+      | 'force_active'
+      | 'grace_period'
+      | 'deactivate',
     days?: number
   ): Promise<{ message: string; data: AcademyOverview }> {
     const response = await apiClient.patch(

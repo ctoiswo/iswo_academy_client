@@ -1,7 +1,7 @@
 import { useState } from 'react'
+import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import type { AssessmentType } from '@/types'
 import { Plus } from 'lucide-react'
 import { useCreateAssessment } from '@/hooks/use-assessments'
@@ -35,7 +35,10 @@ const schema = z
     section_id: z.number().optional(),
     passing_score: z.number().min(0).max(100),
     attempts_allowed: z.number().min(1),
-    time_limit_minutes: z.number().min(1, 'Debe ser al menos 1 minuto').optional(),
+    time_limit_minutes: z
+      .number()
+      .min(1, 'Debe ser al menos 1 minuto')
+      .optional(),
     weight_percentage: z.number().min(0).max(100),
     retake_waiting_hours: z.number().min(0),
     published: z.boolean(),
@@ -192,7 +195,9 @@ export function CreateAssessmentDialog({
                 placeholder='Ej: Quiz Módulo 1 - Introducción'
               />
               {errors.title && (
-                <p className='mt-1 text-sm text-red-500'>{errors.title.message}</p>
+                <p className='mt-1 text-sm text-red-500'>
+                  {errors.title.message}
+                </p>
               )}
             </div>
 
@@ -229,7 +234,9 @@ export function CreateAssessmentDialog({
                   </SelectContent>
                 </Select>
                 {errors.section_id && (
-                  <p className='mt-1 text-sm text-red-500'>{errors.section_id.message}</p>
+                  <p className='mt-1 text-sm text-red-500'>
+                    {errors.section_id.message}
+                  </p>
                 )}
                 <p className='text-muted-foreground mt-1 text-sm'>
                   Los quizzes pertenecen a una sección específica
@@ -270,7 +277,9 @@ export function CreateAssessmentDialog({
                 type='number'
                 min='1'
                 {...register('time_limit_minutes', { valueAsNumber: true })}
-                placeholder={assessmentType === 'Exam' ? 'Requerido' : 'Opcional'}
+                placeholder={
+                  assessmentType === 'Exam' ? 'Requerido' : 'Opcional'
+                }
               />
               {errors.time_limit_minutes && (
                 <p className='mt-1 text-sm text-red-500'>

@@ -166,7 +166,10 @@ export function getValidationDetails(error: ApiError): Record<string, string> {
     const source =
       'errors' in (error.details as object) &&
       typeof (error.details as Record<string, unknown>).errors === 'object'
-        ? ((error.details as Record<string, unknown>).errors as Record<string, unknown>)
+        ? ((error.details as Record<string, unknown>).errors as Record<
+            string,
+            unknown
+          >)
         : (error.details as Record<string, unknown>)
 
     Object.entries(source).forEach(([key, value]) => {

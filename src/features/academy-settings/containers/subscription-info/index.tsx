@@ -159,7 +159,9 @@ export function SubscriptionInfo() {
             <div className='text-muted-foreground grid gap-3 text-sm sm:grid-cols-3'>
               <div className='rounded-lg border p-4'>
                 <p className='text-foreground font-medium'>Estado</p>
-                <p className='mt-1'>Tu academia opera con normalidad y sin restricciones.</p>
+                <p className='mt-1'>
+                  Tu academia opera con normalidad y sin restricciones.
+                </p>
               </div>
               <div className='rounded-lg border p-4'>
                 <p className='text-foreground font-medium'>Vencimiento</p>
@@ -194,8 +196,8 @@ export function SubscriptionInfo() {
               Plan anual de administrador
             </CardTitle>
             <CardDescription>
-              Selecciona uno de los dos planes anuales disponibles para activar o
-              renovar tu academia.
+              Selecciona uno de los dos planes anuales disponibles para activar
+              o renovar tu academia.
             </CardDescription>
           </CardHeader>
           <CardContent className='space-y-6'>
@@ -273,8 +275,8 @@ export function SubscriptionInfo() {
                     {selectedPlan ? selectedPlan.name : 'Selecciona un plan'}
                   </p>
                   <p className='text-muted-foreground mt-1 text-sm'>
-                    El pago se procesa a nombre de ISWO y activa tu academia por 1
-                    año. Puedes cambiar el plan antes de continuar.
+                    El pago se procesa a nombre de ISWO y activa tu academia por
+                    1 año. Puedes cambiar el plan antes de continuar.
                   </p>
                 </div>
                 <div className='text-left sm:text-right'>
@@ -350,9 +352,9 @@ export function SubscriptionInfo() {
           <CheckCircle2 className='h-4 w-4' />
           <AlertTitle>Período de gracia indefinido</AlertTitle>
           <AlertDescription>
-            Tu academia está habilitada por el administrador de la plataforma sin
-            fecha de vencimiento. Cuando se asigne una fecha o venza el período,
-            podrás adquirir un plan anual desde esta pantalla.
+            Tu academia está habilitada por el administrador de la plataforma
+            sin fecha de vencimiento. Cuando se asigne una fecha o venza el
+            período, podrás adquirir un plan anual desde esta pantalla.
           </AlertDescription>
         </Alert>
       )}
@@ -365,9 +367,9 @@ export function SubscriptionInfo() {
             <Clock className='h-4 w-4' />
             <AlertTitle>Período de gracia próximo a vencer</AlertTitle>
             <AlertDescription>
-              Tu período de gracia vence en {admin_subscription_days_remaining} días
-              ({formattedExpiry}). Contacta al administrador de la plataforma para
-              renovarlo.
+              Tu período de gracia vence en {admin_subscription_days_remaining}{' '}
+              días ({formattedExpiry}). Contacta al administrador de la
+              plataforma para renovarlo.
             </AlertDescription>
           </Alert>
         )}

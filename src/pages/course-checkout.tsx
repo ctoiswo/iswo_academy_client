@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, Link } from '@tanstack/react-router'
-import { paymentService } from '@/services/payment-service'
 import { enrollmentService } from '@/services/enrollment-service'
+import { paymentService } from '@/services/payment-service'
 import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { formatPrice } from '@/lib/formatters'
