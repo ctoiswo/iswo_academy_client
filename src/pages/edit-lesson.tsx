@@ -12,6 +12,7 @@ import {
   Sparkles,
   X,
   Paperclip,
+  Plus,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -25,6 +26,14 @@ import { Switch } from '@/components/ui/switch'
 import { RichTextEditor } from '@/components/editor/rich-text-editor'
 
 type VideoSourceType = 'url' | 'file'
+
+interface ResourceEntry {
+  id: string
+  name: string
+  kind: 'file' | 'url'
+  file?: File
+  url?: string
+}
 
 export default function EditLessonPage() {
   const { academySlug, courseSlug, lessonId } = useParams({
@@ -54,8 +63,8 @@ export default function EditLessonPage() {
   // Text state
   const [textContent, setTextContent] = useState('')
 
-  // Resource files state (new files to upload, max 5)
-  const [resourceFiles, setResourceFiles] = useState<File[]>([])
+  // Resource entries state (new entries to add, max 5)
+  const [resourceEntries, setResourceEntries] = useState<ResourceEntry[]>([])
   const [existingAttachments, setExistingAttachments] = useState<
     LessonAttachment[]
   >([])
@@ -123,7 +132,7 @@ export default function EditLessonPage() {
       Array.isArray(currentLesson.attachments) ? currentLesson.attachments : []
     )
     setRemovedAttachmentIds([])
-    setResourceFiles([])
+    setResourceEntries([])
   }, [currentLesson])
 
   const convertToEmbedUrl = (url: string): string | null => {
@@ -232,29 +241,48 @@ export default function EditLessonPage() {
       attrIndex += 1
     })
 
-    resourceFiles.forEach((file) => {
-      const titleValue = file.name.replace(/\.[^/.]+$/, '')
-      formDataToSend.append(
-        `lesson[attachments_attributes][${attrIndex}][type]`,
-        'FileAttachment'
-      )
-      formDataToSend.append(
-        `lesson[attachments_attributes][${attrIndex}][title]`,
-        titleValue || file.name
-      )
-      formDataToSend.append(
-        `lesson[attachments_attributes][${attrIndex}][attachment_type]`,
-        'general'
-      )
-      formDataToSend.append(
-        `lesson[attachments_attributes][${attrIndex}][required]`,
-        'false'
-      )
-      formDataToSend.append(
-        `lesson[attachments_attributes][${attrIndex}][file]`,
-        file
-      )
-      attrIndex += 1
+    resourceEntries.forEach((entry) => {
+      if (entry.kind === 'url' && entry.url?.trim()) {
+        formDataToSend.append(
+          `lesson[attachments_attributes][${attrIndex}][type]`,
+          'UrlAttachment'
+        )
+        formDataToSend.append(
+          `lesson[attachments_attributes][${attrIndex}][title]`,
+          entry.name.trim() || entry.url.trim()
+        )
+        formDataToSend.append(
+          `lesson[attachments_attributes][${attrIndex}][url]`,
+          entry.url.trim()
+        )
+        formDataToSend.append(
+          `lesson[attachments_attributes][${attrIndex}][attachment_type]`,
+          'general'
+        )
+        attrIndex += 1
+      } else if (entry.kind === 'file' && entry.file) {
+        formDataToSend.append(
+          `lesson[attachments_attributes][${attrIndex}][type]`,
+          'FileAttachment'
+        )
+        formDataToSend.append(
+          `lesson[attachments_attributes][${attrIndex}][title]`,
+          entry.name.trim() || entry.file.name
+        )
+        formDataToSend.append(
+          `lesson[attachments_attributes][${attrIndex}][attachment_type]`,
+          'general'
+        )
+        formDataToSend.append(
+          `lesson[attachments_attributes][${attrIndex}][required]`,
+          'false'
+        )
+        formDataToSend.append(
+          `lesson[attachments_attributes][${attrIndex}][file]`,
+          entry.file
+        )
+        attrIndex += 1
+      }
     })
 
     try {
@@ -271,21 +299,42 @@ export default function EditLessonPage() {
     }
   }
 
-  const maxAllowed = Math.max(0, 5 - existingAttachments.length)
-
-  const handleResourceFilesChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const selected = Array.from(e.target.files || [])
-    setResourceFiles((prev) => {
-      const combined = [...prev, ...selected]
-      return combined.slice(0, maxAllowed)
-    })
-    e.target.value = ''
+  const addResourceEntry = () => {
+    if (existingAttachments.length + resourceEntries.length >= 5) return
+    setResourceEntries((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), name: '', kind: 'file' },
+    ])
   }
 
-  const removeResourceFile = (index: number) => {
-    setResourceFiles((prev) => prev.filter((_, i) => i !== index))
+  const removeResourceEntry = (id: string) => {
+    setResourceEntries((prev) => prev.filter((e) => e.id !== id))
+  }
+
+  const updateResourceEntry = (id: string, patch: Partial<ResourceEntry>) => {
+    setResourceEntries((prev) =>
+      prev.map((e) => (e.id === id ? { ...e, ...patch } : e))
+    )
+  }
+
+  const handleEntryFileChange = (
+    id: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setResourceEntries((prev) =>
+      prev.map((entry) =>
+        entry.id === id
+          ? {
+              ...entry,
+              file,
+              name: entry.name || file.name.replace(/\.[^/.]+$/, ''),
+            }
+          : entry
+      )
+    )
+    e.target.value = ''
   }
 
   const removeExistingAttachment = (attachmentId: number) => {
@@ -704,7 +753,7 @@ export default function EditLessonPage() {
                   Recursos descargables
                 </h2>
                 <p className='text-muted-foreground text-sm'>
-                  Archivos que el estudiante puede descargar (máx. 5)
+                  Archivos o enlaces que el estudiante puede descargar (máx. 5)
                 </p>
               </div>
             </div>
@@ -721,11 +770,19 @@ export default function EditLessonPage() {
                       className='border-border/60 bg-secondary/10 flex items-center justify-between rounded-lg border px-4 py-2.5'
                     >
                       <div className='flex items-center gap-3 overflow-hidden'>
-                        <FileText className='text-muted-foreground size-4 shrink-0' />
+                        {attachment.attachment_kind === 'url' ? (
+                          <LinkIcon className='text-muted-foreground size-4 shrink-0' />
+                        ) : (
+                          <FileText className='text-muted-foreground size-4 shrink-0' />
+                        )}
                         <span className='text-foreground truncate text-sm'>
                           {attachment.title}
                         </span>
-                        {attachment.file_size_mb ? (
+                        {attachment.attachment_kind === 'url' ? (
+                          <span className='text-muted-foreground shrink-0 text-xs'>
+                            enlace
+                          </span>
+                        ) : attachment.file_size_mb ? (
                           <span className='text-muted-foreground shrink-0 text-xs'>
                             {attachment.file_size_mb} MB
                           </span>
@@ -744,60 +801,125 @@ export default function EditLessonPage() {
               </div>
             )}
 
-            {existingAttachments.length === 0 && (
-              <p className='text-muted-foreground text-sm'>
-                Esta lección no tiene recursos adjuntos actualmente.
-              </p>
-            )}
+            {existingAttachments.length === 0 &&
+              resourceEntries.length === 0 && (
+                <p className='text-muted-foreground text-sm'>
+                  Esta lección no tiene recursos adjuntos actualmente.
+                </p>
+              )}
 
-            {resourceFiles.length > 0 && (
+            {resourceEntries.length > 0 && (
               <div className='space-y-2'>
                 <Label className='text-muted-foreground text-xs'>
                   Nuevos recursos a agregar
                 </Label>
-                <ul className='flex flex-col gap-2'>
-                  {resourceFiles.map((file, index) => (
+                <ul className='flex flex-col gap-3'>
+                  {resourceEntries.map((entry) => (
                     <li
-                      key={index}
-                      className='border-border/60 bg-secondary/20 flex items-center justify-between rounded-lg border px-4 py-2.5'
+                      key={entry.id}
+                      className='border-border/60 bg-secondary/10 flex flex-col gap-2 rounded-lg border p-3'
                     >
-                      <div className='flex items-center gap-3 overflow-hidden'>
-                        <FileText className='text-muted-foreground size-4 shrink-0' />
-                        <span className='text-foreground truncate text-sm'>
-                          {file.name}
-                        </span>
-                        <span className='text-muted-foreground shrink-0 text-xs'>
-                          {(file.size / 1024 / 1024).toFixed(2)} MB
-                        </span>
+                      <div className='flex items-center gap-2'>
+                        <Input
+                          value={entry.name}
+                          onChange={(e) =>
+                            updateResourceEntry(entry.id, {
+                              name: e.target.value,
+                            })
+                          }
+                          placeholder='Nombre del recurso'
+                          className='h-8 flex-1 text-sm'
+                        />
+                        <div className='border-border/60 flex shrink-0 overflow-hidden rounded-md border'>
+                          <button
+                            type='button'
+                            onClick={() =>
+                              updateResourceEntry(entry.id, { kind: 'file' })
+                            }
+                            className={cn(
+                              'flex items-center gap-1 px-2.5 py-1 text-xs transition-colors',
+                              entry.kind === 'file'
+                                ? 'bg-primary text-primary-foreground'
+                                : 'text-muted-foreground hover:text-foreground'
+                            )}
+                          >
+                            <Upload className='size-3' />
+                            Archivo
+                          </button>
+                          <button
+                            type='button'
+                            onClick={() =>
+                              updateResourceEntry(entry.id, { kind: 'url' })
+                            }
+                            className={cn(
+                              'flex items-center gap-1 px-2.5 py-1 text-xs transition-colors',
+                              entry.kind === 'url'
+                                ? 'bg-primary text-primary-foreground'
+                                : 'text-muted-foreground hover:text-foreground'
+                            )}
+                          >
+                            <LinkIcon className='size-3' />
+                            Link
+                          </button>
+                        </div>
+                        <button
+                          type='button'
+                          onClick={() => removeResourceEntry(entry.id)}
+                          className='text-muted-foreground hover:text-destructive shrink-0 transition-colors'
+                        >
+                          <X className='size-4' />
+                        </button>
                       </div>
-                      <button
-                        type='button'
-                        onClick={() => removeResourceFile(index)}
-                        className='text-muted-foreground hover:text-destructive ml-2 shrink-0 transition-colors'
-                      >
-                        <X className='size-4' />
-                      </button>
+                      {entry.kind === 'file' ? (
+                        <label className='border-border/60 hover:border-primary/50 hover:bg-primary/5 flex cursor-pointer items-center gap-2 rounded-md border border-dashed px-3 py-2 transition-all'>
+                          <FileText className='text-muted-foreground size-4 shrink-0' />
+                          <span className='text-muted-foreground truncate text-xs'>
+                            {entry.file
+                              ? entry.file.name
+                              : 'Seleccionar archivo'}
+                          </span>
+                          {entry.file && (
+                            <span className='text-muted-foreground ml-auto shrink-0 text-xs'>
+                              {(entry.file.size / 1024 / 1024).toFixed(2)} MB
+                            </span>
+                          )}
+                          <input
+                            type='file'
+                            className='hidden'
+                            onChange={(e) => handleEntryFileChange(entry.id, e)}
+                          />
+                        </label>
+                      ) : (
+                        <Input
+                          value={entry.url || ''}
+                          onChange={(e) =>
+                            updateResourceEntry(entry.id, {
+                              url: e.target.value,
+                            })
+                          }
+                          placeholder='https://...'
+                          className='h-8 text-sm'
+                        />
+                      )}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
 
-            {maxAllowed > 0 && resourceFiles.length < maxAllowed && (
-              <label className='border-border/60 hover:border-primary/50 hover:bg-primary/5 flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 transition-all'>
-                <Upload className='text-muted-foreground size-4' />
+            {existingAttachments.length + resourceEntries.length < 5 && (
+              <button
+                type='button'
+                onClick={addResourceEntry}
+                className='border-border/60 hover:border-primary/50 hover:bg-primary/5 flex items-center justify-center gap-2 rounded-lg border-2 border-dashed p-3 transition-all'
+              >
+                <Plus className='text-muted-foreground size-4' />
                 <span className='text-muted-foreground text-sm'>
-                  {resourceFiles.length === 0
-                    ? `Seleccionar archivos (${existingAttachments.length}/5 existentes)`
-                    : `Agregar más (${existingAttachments.length + resourceFiles.length}/5)`}
+                  {existingAttachments.length + resourceEntries.length === 0
+                    ? 'Agregar recurso'
+                    : `Agregar más (${existingAttachments.length + resourceEntries.length}/5)`}
                 </span>
-                <input
-                  type='file'
-                  multiple
-                  className='hidden'
-                  onChange={handleResourceFilesChange}
-                />
-              </label>
+              </button>
             )}
           </section>
 

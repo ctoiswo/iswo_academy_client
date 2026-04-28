@@ -4,6 +4,7 @@ import { commentService } from '@/services/comment-service'
 import type { LessonAttachment, LessonComment } from '@/types'
 import {
   Download,
+  ExternalLink,
   MessageCircle,
   Paperclip,
   Send,
@@ -72,12 +73,32 @@ function ResourceItem({ attachment }: { attachment: LessonAttachment }) {
         </p>
       </div>
       {attachment.download_url ? (
-        <a href={attachment.download_url} download className='shrink-0'>
-          <Button variant='outline' size='sm' className='gap-1.5'>
-            <Download className='size-3.5' />
-            Descargar
-          </Button>
-        </a>
+        attachment.attachment_kind === 'url' ? (
+          <a
+            href={attachment.download_url}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='shrink-0'
+          >
+            <Button variant='outline' size='sm' className='gap-1.5'>
+              <ExternalLink className='size-3.5' />
+              Abrir
+            </Button>
+          </a>
+        ) : (
+          <a
+            href={attachment.download_url}
+            download
+            target='_blank'
+            rel='noopener noreferrer'
+            className='shrink-0'
+          >
+            <Button variant='outline' size='sm' className='gap-1.5'>
+              <Download className='size-3.5' />
+              Descargar
+            </Button>
+          </a>
+        )
       ) : (
         <Button
           variant='outline'
