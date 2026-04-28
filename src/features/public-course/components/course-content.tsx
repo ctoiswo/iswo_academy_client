@@ -20,16 +20,18 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
+interface CourseSection {
+  id: number
+  title: string
+  lessons: number
+  duration: number
+}
+
 interface CourseContentProps {
-  course: Course & {
+  course: Omit<Course, 'sections'> & {
     whatYoullLearn: string[]
     requirements: string[]
-    sections: Array<{
-      id: number
-      title: string
-      lessons: number
-      duration: number
-    }>
+    sections: CourseSection[]
   }
 }
 

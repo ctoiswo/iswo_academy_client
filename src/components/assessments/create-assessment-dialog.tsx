@@ -35,10 +35,7 @@ const schema = z
     section_id: z.number().optional(),
     passing_score: z.number().min(0).max(100),
     attempts_allowed: z.number().min(1),
-    time_limit_minutes: z.preprocess(
-      (val) => (typeof val === 'number' && isNaN(val) ? undefined : val),
-      z.number().min(1, 'Debe ser al menos 1 minuto').optional()
-    ),
+    time_limit_minutes: z.number().min(1, 'Debe ser al menos 1 minuto').optional(),
     weight_percentage: z.number().min(0).max(100),
     retake_waiting_hours: z.number().min(0),
     published: z.boolean(),
