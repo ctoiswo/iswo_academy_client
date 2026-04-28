@@ -196,8 +196,7 @@ export default function SuperAdminAcademies() {
       const result = await superAdminApi.updateSubscription(academy.slug, 'force_active')
       toast.success(result.message || 'Suscripción activada correctamente')
       loadAcademies(currentPage, searchQuery)
-    } catch (error) {
-      console.error('Error activating subscription:', error)
+    } catch (_error) {
       toast.error('No se pudo activar la suscripción')
     }
   }

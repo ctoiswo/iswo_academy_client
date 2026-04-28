@@ -243,13 +243,6 @@ export function CourseForm({
   useEffect(() => {
     if (!course) return;
 
-    console.log('CourseForm: Resetting form with course data:', {
-      id: course.id,
-      prerequisites: course.prerequisites,
-      promotional_image_attachment_type: course.promotional_image_attachment_type,
-      promotional_video_attachment_type: course.promotional_video_attachment_type,
-    });
-
     const imgType = course?.promotional_image_attachment_type === 'UrlAttachment'
       ? 'url'
       : course?.promotional_image_attachment_type === 'FileAttachment'
