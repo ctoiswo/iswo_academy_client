@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import type { AccessCodeRedemptionResponse } from '@/types'
 import { Loader2, AlertCircle, ShoppingCart, Ticket } from 'lucide-react'
@@ -36,6 +37,7 @@ export default function CourseEnrollPage() {
     currentAcademy,
     selectAcademy,
   } = useAuthStore()
+  const queryClient = useQueryClient()
   const [isRedeemModalOpen, setIsRedeemModalOpen] = useState(false)
 
   const {
@@ -99,14 +101,19 @@ export default function CourseEnrollPage() {
   }
 
   const handleRedeemSuccess = async () => {
-    // Keep academy memberships in sync in case the code grants access in a new academy.
     await refreshAcademies()
+    queryClient.invalidateQueries({
+      queryKey: ['course', 'public', courseSlug],
+    })
   }
 
   const handleGoToRedeemedAcademyDashboard = async (
     response: AccessCodeRedemptionResponse
   ) => {
     await refreshAcademies()
+    queryClient.invalidateQueries({
+      queryKey: ['course', 'public', courseSlug],
+    })
 
     const updatedAcademies =
       useAuthStore.getState().academyData?.academies || []

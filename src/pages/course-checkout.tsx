@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useParams, useNavigate, Link } from '@tanstack/react-router'
 import { enrollmentService } from '@/services/enrollment-service'
 import { paymentService } from '@/services/payment-service'
@@ -13,7 +14,8 @@ import { Header } from '@/features/home/components/header'
 export default function CourseCheckoutPage() {
   const { courseSlug } = useParams({ strict: false })
   const navigate = useNavigate()
-  const { isAuthenticated } = useAuthStore()
+  const { isAuthenticated, refreshAcademies } = useAuthStore()
+  const queryClient = useQueryClient()
 
   const [error, setError] = useState<string | null>(null)
   const [isRedirecting, setIsRedirecting] = useState(false)
@@ -53,6 +55,11 @@ export default function CourseCheckoutPage() {
             return
           }
           await enrollmentService.createEnrollment(academySlug, courseSlug!)
+          // Refresh academies (correct role) and invalidate course cache (enrolled: true)
+          await refreshAcademies()
+          queryClient.invalidateQueries({
+            queryKey: ['course', 'public', courseSlug],
+          })
           navigate({
             to: '/academy/$academySlug/courses/$courseSlug',
             params: { academySlug, courseSlug: courseSlug! },
