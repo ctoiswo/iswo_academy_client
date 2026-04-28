@@ -57,7 +57,9 @@ export interface Course {
 
   // Promotional materials
   promotional_image_url?: string | null
+  promotional_image_attachment_type?: string | null
   promotional_video_url?: string | null
+  promotional_video_attachment_type?: string | null
   promotional_video_embedded_url?: string | null
 
   // Course objectives

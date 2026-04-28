@@ -140,8 +140,17 @@ export function CourseForm({
   const isEditing = !!course
 
   // Determinar el tipo de attachment existente para imagen
-  const existingImageType = course?.promotional_image_url ? 'url' : 'file'
-  const existingVideoType = course?.promotional_video_url ? 'url' : 'file'
+  // Use attachment_type from backend if available, otherwise fallback to checking URL
+  const existingImageType = course?.promotional_image_attachment_type === 'UrlAttachment'
+    ? 'url'
+    : course?.promotional_image_attachment_type === 'FileAttachment'
+    ? 'file'
+    : course?.promotional_image_url ? 'url' : 'file'
+  const existingVideoType = course?.promotional_video_attachment_type === 'UrlAttachment'
+    ? 'url'
+    : course?.promotional_video_attachment_type === 'FileAttachment'
+    ? 'file'
+    : course?.promotional_video_url ? 'url' : 'file'
 
   const form = useForm<CourseFormData>({
     resolver: zodResolver(courseSchema),
@@ -225,7 +234,78 @@ export function CourseForm({
   const [videoUrlPreview, setVideoUrlPreview] = useState<string | null>(null)
 
   // Track original attachment types to detect changes
-  // Note: Rails should handle replacing attachments automatically when new data is provided
+  const [originalImageType, setOriginalImageType] = useState<'file' | 'url'>(existingImageType as 'file' | 'url')
+  const [originalVideoType, setOriginalVideoType] = useState<'file' | 'url'>(existingVideoType as 'file' | 'url')
+  const [hasExistingImage, setHasExistingImage] = useState(!!course?.promotional_image_url)
+  const [hasExistingVideo, setHasExistingVideo] = useState(!!course?.promotional_video_url)
+
+  // Reset form when course changes (for editing)
+  useEffect(() => {
+    if (!course) return;
+
+    console.log('CourseForm: Resetting form with course data:', {
+      id: course.id,
+      prerequisites: course.prerequisites,
+      promotional_image_attachment_type: course.promotional_image_attachment_type,
+      promotional_video_attachment_type: course.promotional_video_attachment_type,
+    });
+
+    const imgType = course?.promotional_image_attachment_type === 'UrlAttachment'
+      ? 'url'
+      : course?.promotional_image_attachment_type === 'FileAttachment'
+      ? 'file'
+      : course?.promotional_image_url ? 'url' : 'file'
+    const vidType = course?.promotional_video_attachment_type === 'UrlAttachment'
+      ? 'url'
+      : course?.promotional_video_attachment_type === 'FileAttachment'
+      ? 'file'
+      : course?.promotional_video_url ? 'url' : 'file'
+
+    form.reset({
+      title: course.title || '',
+      description: course.description || '',
+      difficulty_level: (course.difficulty_level as 'beginner' | 'intermediate' | 'advanced') || 'beginner',
+      status: (course.status as 'draft' | 'published' | 'archived') || 'draft',
+      category: course.category || '',
+      tags: Array.isArray(course.tags) ? course.tags.join(', ') : course.tags || '',
+      pricing_type: (course.pricing_type as 'free' | 'one_time' | 'subscription') || 'free',
+      price: String(course.price || '0'),
+      currency: course.currency || 'COP',
+      subscription_price_monthly: String(course.subscription_price_monthly || '0'),
+      subscription_price_annual: String(course.subscription_price_annual || '0'),
+      duration_minutes: course.duration_minutes || 0,
+      prerequisites: course.prerequisites || '',
+      meta_title: course.meta_title || '',
+      meta_description: course.meta_description || '',
+      allow_comments: course.allow_comments ?? true,
+      certificate_enabled: course.certificate_enabled ?? true,
+      progress_tracking: course.progress_tracking ?? true,
+      featured: course.featured ?? false,
+      trial_period_days: course.trial_period_days || 0,
+      course_objectives: course?.course_objectives?.map((obj: any, index: number) => ({
+        id: obj.id,
+        title: obj.title,
+        objective_type: obj.objective_type,
+        is_measurable: obj.is_measurable,
+        position: obj.position || index + 1,
+        _destroy: false,
+      })) || [],
+      promotional_image_type: imgType as 'file' | 'url',
+      promotional_image_file: undefined,
+      promotional_image_url: course?.promotional_image_url || '',
+      promotional_video_type: vidType as 'file' | 'url',
+      promotional_video_file: undefined,
+      promotional_video_url: course?.promotional_video_url || '',
+    })
+    setOriginalImageType(imgType as 'file' | 'url')
+    setOriginalVideoType(vidType as 'file' | 'url')
+    setHasExistingImage(!!course?.promotional_image_url)
+    setHasExistingVideo(!!course?.promotional_video_url)
+    setImagePreview(null)
+    setImageUrlPreview(null)
+    setVideoPreview(null)
+    setVideoUrlPreview(null)
+  }, [course, form])
 
   // Use the hooks that handle query invalidation
   const createMutation = useCreateCourse(String(academySlug))
@@ -273,53 +353,57 @@ export function CourseForm({
 
   const onSubmit = (data: CourseFormData) => {
     // Validar imagen promocional
+    // Solo validar como requerido si es un curso nuevo (no hay imagen previa)
+    // o si el usuario cambió el tipo y no proporcionó nuevo archivo/url
+    const imageTypeChanged = data.promotional_image_type !== originalImageType
+
     if (data.promotional_image_type === 'file') {
-      if (!data.promotional_image_file && !course?.promotional_image_url) {
+      // Si es tipo file, requiere archivo solo si no hay imagen previa o si cambió el tipo
+      if (!data.promotional_image_file && !hasExistingImage) {
         form.setError('promotional_image_file', {
           message: 'Debes subir una imagen',
         })
-        toast.error(
-          'Imagen requerida: debes subir una imagen promocional o proporcionar una URL.'
-        )
+        toast.error('Debes subir una imagen promocional.')
         return
       }
     } else if (data.promotional_image_type === 'url') {
+      // Si es tipo url, requiere url si no hay url previa o si cambió el tipo
+      const hasExistingUrl = hasExistingImage && !imageTypeChanged
       if (
-        !data.promotional_image_url ||
-        data.promotional_image_url.trim() === ''
+        (!data.promotional_image_url ||
+          data.promotional_image_url.trim() === '') &&
+        !hasExistingUrl
       ) {
         form.setError('promotional_image_url', {
           message: 'Debes proporcionar una URL de imagen',
         })
-        toast.error(
-          'Imagen requerida: debes proporcionar una URL de imagen promocional.'
-        )
+        toast.error('Debes proporcionar una URL de imagen promocional.')
         return
       }
     }
 
     // Validar video promocional
+    const videoTypeChanged = data.promotional_video_type !== originalVideoType
+
     if (data.promotional_video_type === 'file') {
-      if (!data.promotional_video_file && !course?.promotional_video_url) {
+      if (!data.promotional_video_file && !hasExistingVideo) {
         form.setError('promotional_video_file', {
           message: 'Debes subir un video',
         })
-        toast.error(
-          'Video requerido: debes subir un video promocional o proporcionar una URL.'
-        )
+        toast.error('Debes subir un video promocional.')
         return
       }
     } else if (data.promotional_video_type === 'url') {
+      const hasExistingUrl = hasExistingVideo && !videoTypeChanged
       if (
-        !data.promotional_video_url ||
-        data.promotional_video_url.trim() === ''
+        (!data.promotional_video_url ||
+          data.promotional_video_url.trim() === '') &&
+        !hasExistingUrl
       ) {
         form.setError('promotional_video_url', {
           message: 'Debes proporcionar una URL de video',
         })
-        toast.error(
-          'Video requerido: debes proporcionar una URL de video promocional.'
-        )
+        toast.error('Debes proporcionar una URL de video promocional.')
         return
       }
     }
@@ -363,8 +447,7 @@ export function CourseForm({
     )
 
     // Información adicional
-    if (data.prerequisites)
-      formData.append('course[prerequisites]', data.prerequisites)
+    formData.append('course[prerequisites]', data.prerequisites || '')
     if (data.meta_title) formData.append('course[meta_title]', data.meta_title)
     if (data.meta_description)
       formData.append('course[meta_description]', data.meta_description)
@@ -429,84 +512,99 @@ export function CourseForm({
       })
     }
 
-    // Imagen promocional
-    if (data.promotional_image_type === 'file' && data.promotional_image_file) {
-      formData.append(
-        'course[promotional_image_attachment][type]',
-        'FileAttachment'
-      )
-      formData.append(
-        'course[promotional_image_attachment][attachment_type]',
-        'promotional_image'
-      )
-      formData.append(
-        'course[promotional_image_attachment][title]',
-        'Imagen Promocional'
-      )
-      formData.append(
-        'course[promotional_image_attachment][file]',
-        data.promotional_image_file
-      )
-    } else if (
-      data.promotional_image_type === 'url' &&
-      data.promotional_image_url
-    ) {
-      formData.append(
-        'course[promotional_image_attachment][type]',
-        'UrlAttachment'
-      )
-      formData.append(
-        'course[promotional_image_attachment][attachment_type]',
-        'promotional_image'
-      )
-      formData.append(
-        'course[promotional_image_attachment][title]',
-        'Imagen Promocional'
-      )
-      formData.append(
-        'course[promotional_image_attachment][url]',
-        data.promotional_image_url
-      )
+    // Imagen promocional - solo enviar si hay cambios
+    // imageTypeChanged ya está declarada arriba en la validación
+    const hasNewImageFile = data.promotional_image_file != null
+    const hasNewImageUrl = data.promotional_image_url && data.promotional_image_url !== course?.promotional_image_url
+
+    if (imageTypeChanged || hasNewImageFile || hasNewImageUrl) {
+      // Si cambió el tipo o hay nuevo archivo/url, enviar los datos
+      if (data.promotional_image_type === 'file' && (hasNewImageFile || imageTypeChanged)) {
+        formData.append(
+          'course[promotional_image_attachment][type]',
+          'FileAttachment'
+        )
+        formData.append(
+          'course[promotional_image_attachment][attachment_type]',
+          'promotional_image'
+        )
+        formData.append(
+          'course[promotional_image_attachment][title]',
+          'Imagen Promocional'
+        )
+        if (data.promotional_image_file) {
+          formData.append(
+            'course[promotional_image_attachment][file]',
+            data.promotional_image_file
+          )
+        }
+      } else if (data.promotional_image_type === 'url' && (hasNewImageUrl || imageTypeChanged)) {
+        formData.append(
+          'course[promotional_image_attachment][type]',
+          'UrlAttachment'
+        )
+        formData.append(
+          'course[promotional_image_attachment][attachment_type]',
+          'promotional_image'
+        )
+        formData.append(
+          'course[promotional_image_attachment][title]',
+          'Imagen Promocional'
+        )
+        if (data.promotional_image_url) {
+          formData.append(
+            'course[promotional_image_attachment][url]',
+            data.promotional_image_url
+          )
+        }
+      }
     }
 
-    // Video promocional
-    if (data.promotional_video_type === 'file' && data.promotional_video_file) {
-      formData.append(
-        'course[promotional_video_attachment][type]',
-        'FileAttachment'
-      )
-      formData.append(
-        'course[promotional_video_attachment][attachment_type]',
-        'promotional_video'
-      )
-      formData.append(
-        'course[promotional_video_attachment][title]',
-        'Video Promocional'
-      )
-      formData.append(
-        'course[promotional_video_attachment][file]',
-        data.promotional_video_file
-      )
-    } else if (
-      data.promotional_video_type === 'url' &&
-      data.promotional_video_url
-    ) {
-      formData.append(
-        'course[promotional_video_attachment][type]',
-        'UrlAttachment'
-      )
-      formData.append(
-        'course[promotional_video_attachment][attachment_type]',
-        'promotional_video'
-      )
-      formData.append(
-        'course[promotional_video_attachment][title]',
-        'Video Promocional'
-      )
-      formData.append(
-        'course[promotional_video_attachment][url]',
-        data.promotional_video_url
-      )
+    // Video promocional - solo enviar si hay cambios
+    // videoTypeChanged ya está declarada arriba en la validación
+    const hasNewVideoFile = data.promotional_video_file != null
+    const hasNewVideoUrl = data.promotional_video_url && data.promotional_video_url !== course?.promotional_video_url
+
+    if (videoTypeChanged || hasNewVideoFile || hasNewVideoUrl) {
+      if (data.promotional_video_type === 'file' && (hasNewVideoFile || videoTypeChanged)) {
+        formData.append(
+          'course[promotional_video_attachment][type]',
+          'FileAttachment'
+        )
+        formData.append(
+          'course[promotional_video_attachment][attachment_type]',
+          'promotional_video'
+        )
+        formData.append(
+          'course[promotional_video_attachment][title]',
+          'Video Promocional'
+        )
+        if (data.promotional_video_file) {
+          formData.append(
+            'course[promotional_video_attachment][file]',
+            data.promotional_video_file
+          )
+        }
+      } else if (data.promotional_video_type === 'url' && (hasNewVideoUrl || videoTypeChanged)) {
+        formData.append(
+          'course[promotional_video_attachment][type]',
+          'UrlAttachment'
+        )
+        formData.append(
+          'course[promotional_video_attachment][attachment_type]',
+          'promotional_video'
+        )
+        formData.append(
+          'course[promotional_video_attachment][title]',
+          'Video Promocional'
+        )
+        if (data.promotional_video_url) {
+          formData.append(
+            'course[promotional_video_attachment][url]',
+            data.promotional_video_url
+          )
+        }
+      }
     }
 
     if (isEditing) {
@@ -1247,6 +1345,19 @@ export function CourseForm({
                       <X className='h-4 w-4' />
                     </Button>
                   </div>
+                </div>
+              )}
+
+              {imageType === 'file' && hasExistingImage && !imagePreview && course?.promotional_image_url && (
+                <div className='bg-muted relative mt-4 flex justify-center overflow-hidden rounded-lg border p-4'>
+                  <img
+                    src={course.promotional_image_url}
+                    alt='Imagen actual'
+                    className='h-auto max-h-96 w-auto max-w-full object-contain'
+                  />
+                  <p className='text-muted-foreground absolute bottom-2 left-2 text-xs'>
+                    Imagen actual. Sube un nuevo archivo para reemplazarla.
+                  </p>
                 </div>
               )}
 

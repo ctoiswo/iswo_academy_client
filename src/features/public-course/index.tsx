@@ -55,7 +55,7 @@ export function PublicCoursePage() {
       ? (courseData?.sections ?? courseData?.sections_summary ?? [])
       : (courseData?.sections_summary ?? [])
   const objectives =
-    courseData?.course_objectives?.map((item) => item.formatted_title) ?? []
+    courseData?.course_objectives?.map((item) => item.title) ?? []
 
   const prerequisites = useMemo(() => {
     if (!courseData?.prerequisites) return []
