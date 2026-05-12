@@ -56,13 +56,25 @@ class AcademyAdminService {
   async updateUserRole(
     academySlug: string,
     userId: number,
-    role: AcademyUserRole
+    role: AcademyUserRole,
+    courseIds?: number[]
   ): Promise<AcademyUser> {
     const response = await apiClient.post(
       `/academies/${academySlug}/admin/users/${userId}/update_role`,
-      { role }
+      { role, course_ids: courseIds }
     )
     return response.data.data
+  }
+
+  async assignTeacherCourses(
+    academySlug: string,
+    userId: number,
+    courseIds: number[]
+  ): Promise<void> {
+    await apiClient.post(
+      `/academies/${academySlug}/admin/users/${userId}/assign_courses`,
+      { course_ids: courseIds }
+    )
   }
 
   async removeUser(academySlug: string, userId: number): Promise<void> {

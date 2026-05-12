@@ -1,5 +1,6 @@
 export interface TeacherCourse {
   id: number
+  slug?: string
   title: string
   description: string
   status: 'draft' | 'published' | 'archived'

@@ -1296,7 +1296,16 @@
       "makeAdmin": "Rendi Admin",
       "makeTeacher": "Rendi Insegnante",
       "makeStudent": "Rendi Studente",
+      "assignCourses": "Assegna corsi",
       "remove": "Rimuovi dall'accademia"
+    },
+    "teacherCoursesAssigned": "Corsi assegnati con successo.",
+    "teacherCoursesError": "Impossibile assegnare i corsi.",
+    "assignCoursesDialog": {
+      "title": "Assegna corsi all'insegnante",
+      "description": "Seleziona i corsi che {{name}} potrà gestire.",
+      "noCourses": "Nessun corso in questa accademia.",
+      "confirm": "Assegna {{count}} corso/i"
     },
     "removeDialog": {
       "title": "Rimuovi utente",
