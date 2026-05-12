@@ -9,6 +9,7 @@ import {
   ImageIcon,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useAcademyPermissions } from '@/hooks/use-academy-permissions'
 import { useCourse } from '@/hooks/use-courses'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -24,6 +25,7 @@ export default function CourseInfoPage() {
   const { t } = useTranslation()
 
   const { data: course, isLoading, error } = useCourse(courseSlug)
+  const { canManageCourses } = useAcademyPermissions()
 
   if (isLoading) {
     return (
@@ -101,18 +103,20 @@ export default function CourseInfoPage() {
               </p>
             )}
           </div>
-          <Button
-            onClick={() =>
-              navigate({
-                to: '/academy/$academySlug/courses/$courseSlug/edit',
-                params: { academySlug, courseSlug },
-              })
-            }
-            className='bg-primary text-primary-foreground hover:bg-primary/90 shrink-0 font-semibold shadow-[0_0_20px_rgba(99,102,241,0.2)] transition-all hover:shadow-[0_0_28px_rgba(99,102,241,0.35)]'
-          >
-            <Settings className='mr-2 h-4 w-4' />
-            {t('courseInfo.editCourse')}
-          </Button>
+          {canManageCourses && (
+            <Button
+              onClick={() =>
+                navigate({
+                  to: '/academy/$academySlug/courses/$courseSlug/edit',
+                  params: { academySlug, courseSlug },
+                })
+              }
+              className='bg-primary text-primary-foreground hover:bg-primary/90 shrink-0 font-semibold shadow-[0_0_20px_rgba(99,102,241,0.2)] transition-all hover:shadow-[0_0_28px_rgba(99,102,241,0.35)]'
+            >
+              <Settings className='mr-2 h-4 w-4' />
+              {t('courseInfo.editCourse')}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -185,37 +189,41 @@ export default function CourseInfoPage() {
       </div>
 
       {/* Dates */}
-      <div className='border-border/60 bg-card rounded-xl border p-5'>
-        <p className='text-muted-foreground mb-4 text-sm font-medium'>Fechas</p>
-        <div className='grid grid-cols-2 gap-4'>
-          <div className='bg-muted/40 rounded-lg p-3'>
-            <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
-              <Calendar className='size-3' />
-              {t('courseInfo.createdAt')}
+      {canManageCourses && (
+        <div className='border-border/60 bg-card rounded-xl border p-5'>
+          <p className='text-muted-foreground mb-4 text-sm font-medium'>
+            Fechas
+          </p>
+          <div className='grid grid-cols-2 gap-4'>
+            <div className='bg-muted/40 rounded-lg p-3'>
+              <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
+                <Calendar className='size-3' />
+                {t('courseInfo.createdAt')}
+              </div>
+              <p className='text-foreground text-sm font-semibold'>
+                {new Date(course.created_at).toLocaleDateString(undefined, {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </p>
             </div>
-            <p className='text-foreground text-sm font-semibold'>
-              {new Date(course.created_at).toLocaleDateString(undefined, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </p>
-          </div>
-          <div className='bg-muted/40 rounded-lg p-3'>
-            <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
-              <Calendar className='size-3' />
-              {t('courseInfo.updatedAt')}
+            <div className='bg-muted/40 rounded-lg p-3'>
+              <div className='text-muted-foreground mb-1 flex items-center gap-1.5 text-xs'>
+                <Calendar className='size-3' />
+                {t('courseInfo.updatedAt')}
+              </div>
+              <p className='text-foreground text-sm font-semibold'>
+                {new Date(course.updated_at).toLocaleDateString(undefined, {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </p>
             </div>
-            <p className='text-foreground text-sm font-semibold'>
-              {new Date(course.updated_at).toLocaleDateString(undefined, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </p>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Thumbnail */}
       {course.thumbnail_url && (
@@ -233,7 +241,7 @@ export default function CourseInfoPage() {
       )}
 
       {/* Access Codes */}
-      <AccessCodeList courseSlug={course.slug} />
+      {canManageCourses && <AccessCodeList courseSlug={course.slug} />}
     </div>
   )
 }
