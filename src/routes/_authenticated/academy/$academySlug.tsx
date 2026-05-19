@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
+import academyService from '@/services/academy-service'
 import { useAuthStore } from '@/stores/auth-store'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -7,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
  * Layout route for all /$academySlug/* routes.
  * Syncs currentAcademy using the user's membership data (with correct role).
  * Falls back to refreshAcademies() if the academy is not yet in the store.
+ * For superadmins, fetches the academy directly by slug (no membership needed).
  */
 function AcademySlugLayout() {
   const { academySlug } = Route.useParams()
@@ -18,7 +20,7 @@ function AcademySlugLayout() {
   useEffect(() => {
     if (!needsSync) return
 
-    const { academyData, setCurrentAcademy, refreshAcademies } =
+    const { user, academyData, setCurrentAcademy, refreshAcademies } =
       useAuthStore.getState()
 
     // Look up the user's membership by slug — this has the correct user_role
@@ -27,6 +29,33 @@ function AcademySlugLayout() {
     )
     if (membership) {
       setCurrentAcademy(membership)
+      return
+    }
+
+    // Superadmin has no memberships — fetch academy directly by slug
+    if (user?.is_super_admin) {
+      setIsRefreshing(true)
+      academyService
+        .getAcademyBySlug(academySlug, 'summary_light')
+        .then((academy) => {
+          setCurrentAcademy({
+            id: academy.id,
+            name: academy.name,
+            slug: academy.slug,
+            description: academy.description,
+            logo_url: academy.logo_url,
+            user_role: 'admin',
+            user_role_display: 'Administrador',
+            created_at: new Date().toISOString(),
+            last_accessed: null,
+            admin_subscription_active: true,
+            subscription_expires_at: null,
+            admin_subscription_days_remaining: null,
+            status: 'active',
+          })
+          setIsRefreshing(false)
+        })
+        .catch(() => setIsRefreshing(false))
       return
     }
 

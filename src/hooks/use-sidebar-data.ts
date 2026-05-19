@@ -1,4 +1,5 @@
 import { useLocation } from '@tanstack/react-router'
+import { Shield } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
 import { useUserEnrollments } from '@/hooks/use-enrollments'
@@ -62,7 +63,28 @@ export function useSidebarData(): SidebarData['navGroups'] {
 
   // Obtener el sidebar según el rol y la ubicación
   if (userRole === 'super_admin') {
-    // Super admin siempre usa su sidebar especial (sin slug de academia)
+    // When superadmin is managing a specific academy, show admin sidebar with course tabs
+    if (isInAcademyRoute && currentAcademy) {
+      const adminGroups = getAdminSidebar(
+        currentAcademy.slug,
+        t,
+        courseSlug,
+        learningPathSlug
+      )
+      return [
+        {
+          title: 'Super Admin',
+          items: [
+            {
+              title: 'Panel Super Admin',
+              url: '/super-admin/academies',
+              icon: Shield,
+            },
+          ],
+        },
+        ...adminGroups,
+      ]
+    }
     return getSuperAdminSidebar(t)
   }
 
