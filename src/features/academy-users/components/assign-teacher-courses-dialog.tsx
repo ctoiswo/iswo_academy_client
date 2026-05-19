@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import academyAdminService, {
   type AcademyUser,
@@ -40,6 +40,13 @@ export function AssignTeacherCoursesDialog({
   const queryClient = useQueryClient()
   const [selectedIds, setSelectedIds] = useState<number[]>([])
 
+  // Pre-select already assigned courses when dialog opens
+  const prevOpen = useRef(false)
+  if (open && !prevOpen.current && user?.teaching_course_ids) {
+    setSelectedIds(user.teaching_course_ids)
+  }
+  prevOpen.current = open
+
   const { data: courses, isLoading: loadingCourses } = useQuery({
     queryKey: ['academy-courses', academySlug],
     queryFn: () => courseService.getCoursesByAcademy(academySlug),
@@ -70,7 +77,7 @@ export function AssignTeacherCoursesDialog({
         queryKey: ['academy-users', academySlug],
       })
       onOpenChange(false)
-      setSelectedIds([])
+      setSelectedIds(selectedIds)
     },
     onError: () => toast.error(t('academyUsers.teacherCoursesError')),
   })
@@ -84,7 +91,7 @@ export function AssignTeacherCoursesDialog({
   }
 
   function handleClose(open: boolean) {
-    if (!open) setSelectedIds([])
+    if (!open) setSelectedIds(user?.teaching_course_ids ?? [])
     onOpenChange(open)
   }
 

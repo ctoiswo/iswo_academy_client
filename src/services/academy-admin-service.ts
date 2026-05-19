@@ -11,6 +11,7 @@ export interface AcademyUser {
   last_accessed_at: string | null
   enrollments: number | null
   courses_teaching: number | null
+  teaching_course_ids: number[] | null
 }
 
 export interface AcademyUsersResponse {
