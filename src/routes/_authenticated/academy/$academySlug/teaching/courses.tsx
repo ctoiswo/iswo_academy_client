@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link, useParams } from '@tanstack/react-router'
-import { BookOpen, Loader2 } from 'lucide-react'
+import { BookOpen, Loader2, Settings } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { teacherQueries } from '@/lib/api/teacher'
 import { Badge } from '@/components/ui/badge'
@@ -43,7 +43,7 @@ function TeachingCoursesPage() {
           {courses.map((course) => (
             <Link
               key={course.id}
-              to='/academy/$academySlug/courses/$courseSlug'
+              to='/academy/$academySlug/courses/$courseSlug/info'
               params={{
                 academySlug: academySlug ?? '',
                 courseSlug: course.slug ?? String(course.id),
@@ -68,9 +68,12 @@ function TeachingCoursesPage() {
                   {course.description}
                 </p>
               )}
-              <div className='text-muted-foreground mt-3 flex gap-4 text-xs'>
-                <span>{course.enrollments ?? 0} estudiantes</span>
-                <span>{course.totalLessons ?? 0} lecciones</span>
+              <div className='text-muted-foreground mt-3 flex items-center justify-between text-xs'>
+                <div className='flex gap-4'>
+                  <span>{course.enrollments ?? 0} estudiantes</span>
+                  <span>{course.totalLessons ?? 0} lecciones</span>
+                </div>
+                <Settings className='h-3.5 w-3.5 opacity-40 transition-opacity group-hover:opacity-100' />
               </div>
             </Link>
           ))}
