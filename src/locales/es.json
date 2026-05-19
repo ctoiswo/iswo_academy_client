@@ -1785,7 +1785,16 @@
       "makeAdmin": "Hacer Admin",
       "makeTeacher": "Hacer Profesor",
       "makeStudent": "Hacer Estudiante",
+      "assignCourses": "Asignar cursos",
       "remove": "Remover de la academia"
+    },
+    "teacherCoursesAssigned": "Cursos asignados correctamente.",
+    "teacherCoursesError": "No se pudieron asignar los cursos.",
+    "assignCoursesDialog": {
+      "title": "Asignar cursos al profesor",
+      "description": "Selecciona los cursos que {{name}} podrá gestionar.",
+      "noCourses": "No hay cursos en esta academia.",
+      "confirm": "Asignar {{count}} curso(s)"
     },
     "removeDialog": {
       "title": "Remover usuario",

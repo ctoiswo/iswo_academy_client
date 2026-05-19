@@ -1785,7 +1785,16 @@
       "makeAdmin": "Make Admin",
       "makeTeacher": "Make Teacher",
       "makeStudent": "Make Student",
+      "assignCourses": "Assign courses",
       "remove": "Remove from academy"
+    },
+    "teacherCoursesAssigned": "Courses assigned successfully.",
+    "teacherCoursesError": "Could not assign courses.",
+    "assignCoursesDialog": {
+      "title": "Assign courses to teacher",
+      "description": "Select the courses {{name}} will be able to manage.",
+      "noCourses": "No courses in this academy.",
+      "confirm": "Assign {{count}} course(s)"
     },
     "removeDialog": {
       "title": "Remove user",

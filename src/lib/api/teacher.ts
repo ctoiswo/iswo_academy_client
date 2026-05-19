@@ -97,90 +97,68 @@ export interface AssignmentsFilters {
  * Teacher API client for dashboard functionality
  */
 export class TeacherApi {
-  /**
-   * Get teacher dashboard data including stats, courses, and recent activity
-   */
   static async getDashboardData(
     teacherId: number,
-    academyId: number
+    academySlug: string
   ): Promise<TeacherDashboardData> {
     const response = await apiClient.get<
       TeacherApiResponse<TeacherDashboardData>
-    >(`/academies/${academyId}/teachers/${teacherId}/dashboard`)
+    >(`/academies/${academySlug}/teachers/${teacherId}/dashboard`)
     return response.data.data
   }
 
-  /**
-   * Get teacher statistics for dashboard
-   */
   static async getStats(
     teacherId: number,
-    academyId: number
+    academySlug: string
   ): Promise<TeacherStats> {
     const response = await apiClient.get<TeacherApiResponse<TeacherStats>>(
-      `/academies/${academyId}/teachers/${teacherId}/stats`
+      `/academies/${academySlug}/teachers/${teacherId}/stats`
     )
     return response.data.data
   }
 
-  /**
-   * Get courses assigned to the teacher
-   */
   static async getCourses(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     filters: CoursesFilters = {}
   ): Promise<TeacherApiResponse<TeacherCourse[]>> {
     const params = new URLSearchParams()
-
     if (filters.status) params.append('status', filters.status)
     if (filters.search) params.append('search', filters.search)
     if (filters.page) params.append('page', filters.page.toString())
     if (filters.per_page) params.append('per_page', filters.per_page.toString())
-
     const queryString = params.toString()
-    const url = `/academies/${academyId}/teachers/${teacherId}/courses${queryString ? `?${queryString}` : ''}`
-
+    const url = `/academies/${academySlug}/teachers/${teacherId}/courses${queryString ? `?${queryString}` : ''}`
     const response =
       await apiClient.get<TeacherApiResponse<TeacherCourse[]>>(url)
     return response.data
   }
 
-  /**
-   * Get students enrolled in teacher's courses
-   */
   static async getStudentProgress(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     filters: StudentsFilters = {}
   ): Promise<TeacherApiResponse<StudentProgress[]>> {
     const params = new URLSearchParams()
-
     if (filters.course_id)
       params.append('course_id', filters.course_id.toString())
     if (filters.status) params.append('status', filters.status)
     if (filters.search) params.append('search', filters.search)
     if (filters.page) params.append('page', filters.page.toString())
     if (filters.per_page) params.append('per_page', filters.per_page.toString())
-
     const queryString = params.toString()
-    const url = `/academies/${academyId}/teachers/${teacherId}/students${queryString ? `?${queryString}` : ''}`
-
+    const url = `/academies/${academySlug}/teachers/${teacherId}/students${queryString ? `?${queryString}` : ''}`
     const response =
       await apiClient.get<TeacherApiResponse<StudentProgress[]>>(url)
     return response.data
   }
 
-  /**
-   * Get lessons for teacher's courses
-   */
   static async getLessons(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     filters: LessonsFilters = {}
   ): Promise<TeacherApiResponse<LessonContent[]>> {
     const params = new URLSearchParams()
-
     if (filters.course_id)
       params.append('course_id', filters.course_id.toString())
     if (filters.type) params.append('type', filters.type)
@@ -188,25 +166,19 @@ export class TeacherApi {
       params.append('is_published', filters.is_published.toString())
     if (filters.page) params.append('page', filters.page.toString())
     if (filters.per_page) params.append('per_page', filters.per_page.toString())
-
     const queryString = params.toString()
-    const url = `/academies/${academyId}/teachers/${teacherId}/lessons${queryString ? `?${queryString}` : ''}`
-
+    const url = `/academies/${academySlug}/teachers/${teacherId}/lessons${queryString ? `?${queryString}` : ''}`
     const response =
       await apiClient.get<TeacherApiResponse<LessonContent[]>>(url)
     return response.data
   }
 
-  /**
-   * Get assignments for teacher's courses
-   */
   static async getAssignments(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     filters: AssignmentsFilters = {}
   ): Promise<TeacherApiResponse<Assignment[]>> {
     const params = new URLSearchParams()
-
     if (filters.course_id)
       params.append('course_id', filters.course_id.toString())
     if (filters.status) params.append('status', filters.status)
@@ -214,129 +186,103 @@ export class TeacherApi {
       params.append('overdue', filters.overdue.toString())
     if (filters.page) params.append('page', filters.page.toString())
     if (filters.per_page) params.append('per_page', filters.per_page.toString())
-
     const queryString = params.toString()
-    const url = `/academies/${academyId}/teachers/${teacherId}/assignments${queryString ? `?${queryString}` : ''}`
-
+    const url = `/academies/${academySlug}/teachers/${teacherId}/assignments${queryString ? `?${queryString}` : ''}`
     const response = await apiClient.get<TeacherApiResponse<Assignment[]>>(url)
     return response.data
   }
 
-  /**
-   * Create a new lesson
-   */
   static async createLesson(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     lessonData: CreateLessonRequest
   ): Promise<LessonContent> {
     const response = await apiClient.post<TeacherApiResponse<LessonContent>>(
-      `/academies/${academyId}/teachers/${teacherId}/lessons`,
+      `/academies/${academySlug}/teachers/${teacherId}/lessons`,
       { lesson: lessonData }
     )
     return response.data.data
   }
 
-  /**
-   * Update an existing lesson
-   */
   static async updateLesson(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     lessonId: number,
     lessonData: UpdateLessonRequest
   ): Promise<LessonContent> {
     const response = await apiClient.patch<TeacherApiResponse<LessonContent>>(
-      `/academies/${academyId}/teachers/${teacherId}/lessons/${lessonId}`,
+      `/academies/${academySlug}/teachers/${teacherId}/lessons/${lessonId}`,
       { lesson: lessonData }
     )
     return response.data.data
   }
 
-  /**
-   * Delete a lesson
-   */
   static async deleteLesson(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     lessonId: number
   ): Promise<void> {
     await apiClient.delete(
-      `/academies/${academyId}/teachers/${teacherId}/lessons/${lessonId}`
+      `/academies/${academySlug}/teachers/${teacherId}/lessons/${lessonId}`
     )
   }
 
-  /**
-   * Publish/unpublish a lesson
-   */
   static async toggleLessonPublication(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     lessonId: number,
     isPublished: boolean
   ): Promise<LessonContent> {
     const response = await apiClient.patch<TeacherApiResponse<LessonContent>>(
-      `/academies/${academyId}/teachers/${teacherId}/lessons/${lessonId}/toggle_publication`,
+      `/academies/${academySlug}/teachers/${teacherId}/lessons/${lessonId}/toggle_publication`,
       { is_published: isPublished }
     )
     return response.data.data
   }
 
-  /**
-   * Create a new assignment
-   */
   static async createAssignment(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     assignmentData: CreateAssignmentRequest
   ): Promise<Assignment> {
     const response = await apiClient.post<TeacherApiResponse<Assignment>>(
-      `/academies/${academyId}/teachers/${teacherId}/assignments`,
+      `/academies/${academySlug}/teachers/${teacherId}/assignments`,
       { assignment: assignmentData }
     )
     return response.data.data
   }
 
-  /**
-   * Update an existing assignment
-   */
   static async updateAssignment(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     assignmentId: number,
     assignmentData: UpdateAssignmentRequest
   ): Promise<Assignment> {
     const response = await apiClient.patch<TeacherApiResponse<Assignment>>(
-      `/academies/${academyId}/teachers/${teacherId}/assignments/${assignmentId}`,
+      `/academies/${academySlug}/teachers/${teacherId}/assignments/${assignmentId}`,
       { assignment: assignmentData }
     )
     return response.data.data
   }
 
-  /**
-   * Delete an assignment
-   */
   static async deleteAssignment(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     assignmentId: number
   ): Promise<void> {
     await apiClient.delete(
-      `/academies/${academyId}/teachers/${teacherId}/assignments/${assignmentId}`
+      `/academies/${academySlug}/teachers/${teacherId}/assignments/${assignmentId}`
     )
   }
 
-  /**
-   * Get detailed student progress for a specific course
-   */
   static async getStudentProgressDetail(
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     studentId: number,
     courseId: number
   ): Promise<StudentProgress> {
     const response = await apiClient.get<TeacherApiResponse<StudentProgress>>(
-      `/academies/${academyId}/teachers/${teacherId}/courses/${courseId}/students/${studentId}/progress`
+      `/academies/${academySlug}/teachers/${teacherId}/courses/${courseId}/students/${studentId}/progress`
     )
     return response.data.data
   }
@@ -346,61 +292,62 @@ export class TeacherApi {
  * React Query hooks for Teacher API
  */
 export const teacherQueries = {
-  dashboardData: (teacherId: number, academyId: number) => ({
-    queryKey: ['teacher', 'dashboard', teacherId, academyId],
-    queryFn: () => TeacherApi.getDashboardData(teacherId, academyId),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+  dashboardData: (teacherId: number, academySlug: string) => ({
+    queryKey: ['teacher', 'dashboard', teacherId, academySlug],
+    queryFn: () => TeacherApi.getDashboardData(teacherId, academySlug),
+    staleTime: 5 * 60 * 1000,
   }),
 
-  stats: (teacherId: number, academyId: number) => ({
-    queryKey: ['teacher', 'stats', teacherId, academyId],
-    queryFn: () => TeacherApi.getStats(teacherId, academyId),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+  stats: (teacherId: number, academySlug: string) => ({
+    queryKey: ['teacher', 'stats', teacherId, academySlug],
+    queryFn: () => TeacherApi.getStats(teacherId, academySlug),
+    staleTime: 5 * 60 * 1000,
   }),
 
   courses: (
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     filters: CoursesFilters = {}
   ) => ({
-    queryKey: ['teacher', 'courses', teacherId, academyId, filters],
-    queryFn: () => TeacherApi.getCourses(teacherId, academyId, filters),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    queryKey: ['teacher', 'courses', teacherId, academySlug, filters],
+    queryFn: () => TeacherApi.getCourses(teacherId, academySlug, filters),
+    staleTime: 2 * 60 * 1000,
   }),
 
   studentProgress: (
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     filters: StudentsFilters = {}
   ) => ({
-    queryKey: ['teacher', 'students', teacherId, academyId, filters],
-    queryFn: () => TeacherApi.getStudentProgress(teacherId, academyId, filters),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    queryKey: ['teacher', 'students', teacherId, academySlug, filters],
+    queryFn: () =>
+      TeacherApi.getStudentProgress(teacherId, academySlug, filters),
+    staleTime: 2 * 60 * 1000,
   }),
 
   lessons: (
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     filters: LessonsFilters = {}
   ) => ({
-    queryKey: ['teacher', 'lessons', teacherId, academyId, filters],
-    queryFn: () => TeacherApi.getLessons(teacherId, academyId, filters),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    queryKey: ['teacher', 'lessons', teacherId, academySlug, filters],
+    queryFn: () => TeacherApi.getLessons(teacherId, academySlug, filters),
+    staleTime: 2 * 60 * 1000,
   }),
 
   assignments: (
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     filters: AssignmentsFilters = {}
   ) => ({
-    queryKey: ['teacher', 'assignments', teacherId, academyId, filters],
-    queryFn: () => TeacherApi.getAssignments(teacherId, academyId, filters),
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    queryKey: ['teacher', 'assignments', teacherId, academySlug, filters],
+    queryFn: () => TeacherApi.getAssignments(teacherId, academySlug, filters),
+    staleTime: 2 * 60 * 1000,
   }),
 
   studentProgressDetail: (
     teacherId: number,
-    academyId: number,
+    academySlug: string,
     studentId: number,
     courseId: number
   ) => ({
@@ -408,18 +355,18 @@ export const teacherQueries = {
       'teacher',
       'student-progress',
       teacherId,
-      academyId,
+      academySlug,
       studentId,
       courseId,
     ],
     queryFn: () =>
       TeacherApi.getStudentProgressDetail(
         teacherId,
-        academyId,
+        academySlug,
         studentId,
         courseId
       ),
-    staleTime: 1 * 60 * 1000, // 1 minute
+    staleTime: 1 * 60 * 1000,
   }),
 }
 
@@ -430,56 +377,56 @@ export const teacherMutations = {
   createLesson: {
     mutationFn: ({
       teacherId,
-      academyId,
+      academySlug,
       lessonData,
     }: {
       teacherId: number
-      academyId: number
+      academySlug: string
       lessonData: CreateLessonRequest
-    }) => TeacherApi.createLesson(teacherId, academyId, lessonData),
+    }) => TeacherApi.createLesson(teacherId, academySlug, lessonData),
   },
 
   updateLesson: {
     mutationFn: ({
       teacherId,
-      academyId,
+      academySlug,
       lessonId,
       lessonData,
     }: {
       teacherId: number
-      academyId: number
+      academySlug: string
       lessonId: number
       lessonData: UpdateLessonRequest
-    }) => TeacherApi.updateLesson(teacherId, academyId, lessonId, lessonData),
+    }) => TeacherApi.updateLesson(teacherId, academySlug, lessonId, lessonData),
   },
 
   deleteLesson: {
     mutationFn: ({
       teacherId,
-      academyId,
+      academySlug,
       lessonId,
     }: {
       teacherId: number
-      academyId: number
+      academySlug: string
       lessonId: number
-    }) => TeacherApi.deleteLesson(teacherId, academyId, lessonId),
+    }) => TeacherApi.deleteLesson(teacherId, academySlug, lessonId),
   },
 
   toggleLessonPublication: {
     mutationFn: ({
       teacherId,
-      academyId,
+      academySlug,
       lessonId,
       isPublished,
     }: {
       teacherId: number
-      academyId: number
+      academySlug: string
       lessonId: number
       isPublished: boolean
     }) =>
       TeacherApi.toggleLessonPublication(
         teacherId,
-        academyId,
+        academySlug,
         lessonId,
         isPublished
       ),
@@ -488,30 +435,30 @@ export const teacherMutations = {
   createAssignment: {
     mutationFn: ({
       teacherId,
-      academyId,
+      academySlug,
       assignmentData,
     }: {
       teacherId: number
-      academyId: number
+      academySlug: string
       assignmentData: CreateAssignmentRequest
-    }) => TeacherApi.createAssignment(teacherId, academyId, assignmentData),
+    }) => TeacherApi.createAssignment(teacherId, academySlug, assignmentData),
   },
 
   updateAssignment: {
     mutationFn: ({
       teacherId,
-      academyId,
+      academySlug,
       assignmentId,
       assignmentData,
     }: {
       teacherId: number
-      academyId: number
+      academySlug: string
       assignmentId: number
       assignmentData: UpdateAssignmentRequest
     }) =>
       TeacherApi.updateAssignment(
         teacherId,
-        academyId,
+        academySlug,
         assignmentId,
         assignmentData
       ),
@@ -520,12 +467,12 @@ export const teacherMutations = {
   deleteAssignment: {
     mutationFn: ({
       teacherId,
-      academyId,
+      academySlug,
       assignmentId,
     }: {
       teacherId: number
-      academyId: number
+      academySlug: string
       assignmentId: number
-    }) => TeacherApi.deleteAssignment(teacherId, academyId, assignmentId),
+    }) => TeacherApi.deleteAssignment(teacherId, academySlug, assignmentId),
   },
 }

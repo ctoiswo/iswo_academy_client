@@ -37,6 +37,7 @@ export interface UpdateCourseRequest extends Partial<CreateCourseRequest> {}
 
 export interface UpdateUserRoleRequest {
   role: 'admin' | 'teacher' | 'student'
+  course_ids?: number[]
 }
 
 export interface CoursesFilters {
@@ -174,6 +175,20 @@ export class AcademyAdminApi {
   }
 
   /**
+   * Assign (or replace) courses for a teacher
+   */
+  static async assignTeacherCourses(
+    academyIdentifier: number | string,
+    userId: number,
+    courseIds: number[]
+  ): Promise<void> {
+    await apiClient.post(
+      `/academies/${academyIdentifier}/admin/users/${userId}/assign_courses`,
+      { course_ids: courseIds }
+    )
+  }
+
+  /**
    * Remove user from academy
    */
   static async removeUser(
@@ -258,6 +273,23 @@ export const academyAdminMutations = {
       userId: number
       roleData: UpdateUserRoleRequest
     }) => AcademyAdminApi.updateUserRole(academyIdentifier, userId, roleData),
+  },
+
+  assignTeacherCourses: {
+    mutationFn: ({
+      academyIdentifier,
+      userId,
+      courseIds,
+    }: {
+      academyIdentifier: number | string
+      userId: number
+      courseIds: number[]
+    }) =>
+      AcademyAdminApi.assignTeacherCourses(
+        academyIdentifier,
+        userId,
+        courseIds
+      ),
   },
 
   removeUser: {

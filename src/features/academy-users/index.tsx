@@ -12,6 +12,7 @@ import {
   GraduationCap,
   UserCheck,
   Trash2,
+  BookOpen,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/auth-store'
@@ -47,6 +48,7 @@ import {
 } from '@/components/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DashboardLayout } from '@/components/layout/dashboard-layout'
+import { AssignTeacherCoursesDialog } from './components/assign-teacher-courses-dialog'
 
 type FilterRole = 'all' | AcademyUserRole
 
@@ -75,6 +77,11 @@ export function AcademyUsersPage({
   const [role, setRole] = useState<FilterRole>(defaultRole)
   const [page, setPage] = useState(1)
   const [userToRemove, setUserToRemove] = useState<AcademyUser | null>(null)
+  const [assignCoursesUser, setAssignCoursesUser] =
+    useState<AcademyUser | null>(null)
+  const [assignCoursesPendingRole, setAssignCoursesPendingRole] = useState<
+    'teacher' | undefined
+  >()
 
   const slug = academySlug ?? ''
 
@@ -268,15 +275,24 @@ export function AcademyUsersPage({
                           )}
                           {u.role !== 'teacher' && (
                             <DropdownMenuItem
-                              onClick={() =>
-                                updateRoleMutation.mutate({
-                                  userId: u.id,
-                                  newRole: 'teacher',
-                                })
-                              }
+                              onClick={() => {
+                                setAssignCoursesUser(u)
+                                setAssignCoursesPendingRole('teacher')
+                              }}
                             >
                               <UserCheck className='mr-2 h-4 w-4' />
                               {t('academyUsers.actions.makeTeacher')}
+                            </DropdownMenuItem>
+                          )}
+                          {u.role === 'teacher' && (
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setAssignCoursesUser(u)
+                                setAssignCoursesPendingRole(undefined)
+                              }}
+                            >
+                              <BookOpen className='mr-2 h-4 w-4' />
+                              {t('academyUsers.actions.assignCourses')}
                             </DropdownMenuItem>
                           )}
                           {u.role !== 'student' && (
@@ -344,6 +360,20 @@ export function AcademyUsersPage({
           </div>
         )}
       </div>
+
+      {/* Assign teacher courses dialog */}
+      <AssignTeacherCoursesDialog
+        user={assignCoursesUser}
+        academySlug={slug}
+        pendingRole={assignCoursesPendingRole}
+        open={!!assignCoursesUser}
+        onOpenChange={(open) => {
+          if (!open) {
+            setAssignCoursesUser(null)
+            setAssignCoursesPendingRole(undefined)
+          }
+        }}
+      />
 
       {/* Remove user dialog */}
       <AlertDialog
