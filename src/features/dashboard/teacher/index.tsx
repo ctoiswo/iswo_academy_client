@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { BookOpen, Users, TrendingUp, ClipboardCheck } from 'lucide-react'
 import { teacherQueries } from '@/lib/api/teacher'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -13,6 +14,7 @@ export function TeacherDashboard({ user, academy }: DashboardProps) {
   const academySlug = academy?.slug ?? ''
   const teacherId = user?.id ?? 0
   const enabled = !!teacherId && !!academySlug
+  const navigate = useNavigate()
 
   const { data: statsData, isLoading: loadingStats } = useQuery({
     ...teacherQueries.stats(teacherId, academySlug),
@@ -51,10 +53,10 @@ export function TeacherDashboard({ user, academy }: DashboardProps) {
     <DashboardLayout
       user={user}
       academy={academy}
-      variant='sidebar'
+      variant='full'
       dashboardType='teacher'
     >
-      <div className='space-y-6 p-6'>
+      <div className='w-full space-y-6'>
         <div>
           <h1 className='text-2xl font-bold tracking-tight'>
             Panel de Enseñanza
@@ -113,9 +115,27 @@ export function TeacherDashboard({ user, academy }: DashboardProps) {
               courses={courses}
               loading={loadingCourses}
               onCreateCourse={() => {}}
-              onEditCourse={() => {}}
-              onViewCourse={() => {}}
-              onManageCourse={() => {}}
+              onEditCourse={(_id, slug) =>
+                slug &&
+                navigate({
+                  to: '/academy/$academySlug/courses/$courseSlug/edit',
+                  params: { academySlug, courseSlug: slug },
+                })
+              }
+              onViewCourse={(_id, slug) =>
+                slug &&
+                navigate({
+                  to: '/academy/$academySlug/courses/$courseSlug/info',
+                  params: { academySlug, courseSlug: slug },
+                })
+              }
+              onManageCourse={(_id, slug) =>
+                slug &&
+                navigate({
+                  to: '/academy/$academySlug/courses/$courseSlug/settings',
+                  params: { academySlug, courseSlug: slug },
+                })
+              }
             />
           </TabsContent>
 

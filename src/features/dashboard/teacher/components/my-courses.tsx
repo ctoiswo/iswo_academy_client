@@ -27,9 +27,9 @@ interface MyCoursesProps {
   courses: TeacherCourse[]
   loading?: boolean
   onCreateCourse?: () => void
-  onEditCourse?: (courseId: number) => void
-  onViewCourse?: (courseId: number) => void
-  onManageCourse?: (courseId: number) => void
+  onEditCourse?: (courseId: number, courseSlug?: string) => void
+  onViewCourse?: (courseId: number, courseSlug?: string) => void
+  onManageCourse?: (courseId: number, courseSlug?: string) => void
 }
 
 export function MyCourses({
@@ -114,15 +114,21 @@ export function MyCourses({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
-          <DropdownMenuItem onClick={() => onViewCourse?.(course.id)}>
+          <DropdownMenuItem
+            onClick={() => onViewCourse?.(course.id, course.slug)}
+          >
             <Eye className='mr-2 h-4 w-4' />
             View Course
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onEditCourse?.(course.id)}>
+          <DropdownMenuItem
+            onClick={() => onEditCourse?.(course.id, course.slug)}
+          >
             <Edit className='mr-2 h-4 w-4' />
             Edit Content
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onManageCourse?.(course.id)}>
+          <DropdownMenuItem
+            onClick={() => onManageCourse?.(course.id, course.slug)}
+          >
             <Settings className='mr-2 h-4 w-4' />
             Manage Settings
           </DropdownMenuItem>

@@ -1,25 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useAuthStore } from '@/stores/auth-store'
-import { DashboardLayout } from '@/components/layout/dashboard-layout'
+import { LayoutList } from 'lucide-react'
+import { CourseSectionRedirect } from '@/components/teaching/course-section-redirect'
 
-function TeachingPage() {
-  const { user, currentAcademy } = useAuthStore()
+function TeachingLessonsPage() {
   return (
-    <DashboardLayout
-      user={user}
-      academy={currentAcademy}
-      variant='full'
-      dashboardType='teacher'
-    >
-      <div className='text-muted-foreground flex items-center justify-center py-16'>
-        <p>Próximamente...</p>
-      </div>
-    </DashboardLayout>
+    <CourseSectionRedirect
+      section='lessons'
+      title='Mis Lecciones'
+      description='Gestiona lecciones y secciones de tus cursos'
+      icon={LayoutList}
+    />
   )
 }
 
 export const Route = createFileRoute(
   '/_authenticated/academy/$academySlug/teaching/lessons'
 )({
-  component: TeachingPage,
+  component: TeachingLessonsPage,
 })
