@@ -381,7 +381,7 @@ export const teacherMutations = {
       lessonData,
     }: {
       teacherId: number
-      academySlug: number
+      academySlug: string
       lessonData: CreateLessonRequest
     }) => TeacherApi.createLesson(teacherId, academySlug, lessonData),
   },
@@ -394,7 +394,7 @@ export const teacherMutations = {
       lessonData,
     }: {
       teacherId: number
-      academySlug: number
+      academySlug: string
       lessonId: number
       lessonData: UpdateLessonRequest
     }) => TeacherApi.updateLesson(teacherId, academySlug, lessonId, lessonData),
@@ -407,7 +407,7 @@ export const teacherMutations = {
       lessonId,
     }: {
       teacherId: number
-      academySlug: number
+      academySlug: string
       lessonId: number
     }) => TeacherApi.deleteLesson(teacherId, academySlug, lessonId),
   },
@@ -420,7 +420,7 @@ export const teacherMutations = {
       isPublished,
     }: {
       teacherId: number
-      academySlug: number
+      academySlug: string
       lessonId: number
       isPublished: boolean
     }) =>
@@ -439,7 +439,7 @@ export const teacherMutations = {
       assignmentData,
     }: {
       teacherId: number
-      academySlug: number
+      academySlug: string
       assignmentData: CreateAssignmentRequest
     }) => TeacherApi.createAssignment(teacherId, academySlug, assignmentData),
   },
@@ -452,7 +452,7 @@ export const teacherMutations = {
       assignmentData,
     }: {
       teacherId: number
-      academySlug: number
+      academySlug: string
       assignmentId: number
       assignmentData: UpdateAssignmentRequest
     }) =>
@@ -471,7 +471,7 @@ export const teacherMutations = {
       assignmentId,
     }: {
       teacherId: number
-      academySlug: number
+      academySlug: string
       assignmentId: number
     }) => TeacherApi.deleteAssignment(teacherId, academySlug, assignmentId),
   },
