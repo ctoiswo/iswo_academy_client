@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { assessmentService } from '@/services/assessment-service'
 import type {
   AssessmentSummary,
   StudentQuestion,
@@ -16,6 +17,7 @@ import {
   RotateCcw,
   Trophy,
 } from 'lucide-react'
+import type { ApiError } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 import { useStartAttempt, useSubmitAttempt } from '@/hooks/use-assessments'
 import { Badge } from '@/components/ui/badge'
@@ -222,9 +224,15 @@ export function AssessmentPlayer({
   const startAttempt = useStartAttempt(academySlug, courseSlug)
   const submitAttempt = useSubmitAttempt(academySlug, courseSlug, assessment.id)
 
+  // Guards against a duplicate submit (e.g. the timer expiring right as the
+  // user clicks "Entregar") triggering two concurrent submit requests, which
+  // makes the backend's second call fail with "Attempt already completed".
+  const submittedRef = useRef(false)
+
   const handleStart = () => {
     startAttempt.mutate(assessment.id, {
       onSuccess: (session) => {
+        submittedRef.current = false
         setAttemptId(session.attempt_id)
         setQuestions(session.questions)
         setSelections({})
@@ -235,18 +243,53 @@ export function AssessmentPlayer({
   }
 
   const handleRetry = () => {
+    submittedRef.current = false
     setResult(null)
     setPhase('intro')
   }
 
+  // If the attempt was already completed on the backend (e.g. a prior submit
+  // actually went through but its response was lost), recover by fetching
+  // the attempt's result instead of leaving the student stuck on the quiz.
+  const recoverCompletedAttempt = useCallback(async () => {
+    try {
+      const { attempts } = await assessmentService.getMyAttempts(
+        academySlug,
+        courseSlug,
+        assessment.id
+      )
+      const completedAttempt = attempts
+        .filter((a) => a.status === 'completed')
+        .sort((a, b) => b.attempt_number - a.attempt_number)[0]
+
+      if (!completedAttempt) return false
+
+      const recoveredResult: QuizAttemptResult = {
+        passed: completedAttempt.passed ?? false,
+        score: completedAttempt.score,
+        max_score: completedAttempt.max_score,
+        percentage: completedAttempt.percentage,
+        attempt_number: completedAttempt.attempt_number,
+      }
+      setResult(recoveredResult)
+      setPhase('result')
+      if (recoveredResult.passed && onPassed) onPassed()
+      return true
+    } catch {
+      return false
+    }
+  }, [academySlug, courseSlug, assessment.id, onPassed])
+
   const handleExpire = useCallback(() => {
     if (attemptId == null) return
-    handleSubmit(true)
+    handleSubmit()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attemptId, selections])
 
-  const handleSubmit = (_fromTimer = false) => {
+  const handleSubmit = () => {
     if (attemptId == null) return
+    if (submittedRef.current) return
+    submittedRef.current = true
 
     const answers: SubmitAnswer[] = questions.map((q) => {
       const selected = selections[q.id] ?? []
@@ -263,6 +306,15 @@ export function AssessmentPlayer({
           setResult(res)
           setPhase('result')
           if (res.passed && onPassed) onPassed()
+        },
+        onError: (error) => {
+          const code = (error as ApiError).code
+          if (code === 'ATTEMPT_ALREADY_COMPLETED') {
+            recoverCompletedAttempt()
+            return
+          }
+          // Allow retrying the submit for any other error.
+          submittedRef.current = false
         },
       }
     )

@@ -7,6 +7,7 @@ import type {
   SubmitAnswer,
 } from '@/types'
 import { toast } from 'sonner'
+import type { ApiError } from '@/lib/api-client'
 
 const RAILS_FIELD_TRANSLATIONS: Record<string, string> = {
   'time limit minutes': 'Tiempo límite',
@@ -314,7 +315,11 @@ export function useSubmitAttempt(
         queryKey: assessmentKeys.list(academySlug, courseSlug),
       })
     },
-    onError: (error: Error) => {
+    onError: (error: ApiError) => {
+      // "Ya completado" se recupera en el componente (fetch de my_attempts),
+      // no es un error real que el usuario deba ver como fallo de envío.
+      if (error.code === 'ATTEMPT_ALREADY_COMPLETED') return
+
       toast.error(`Error al enviar el quiz: ${error.message}`)
     },
   })
