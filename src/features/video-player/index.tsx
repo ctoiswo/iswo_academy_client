@@ -27,6 +27,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAssessments, assessmentKeys } from '@/hooks/use-assessments'
+import { useCourse } from '@/hooks/use-courses'
 import { useLessonTracker } from '@/hooks/use-lesson-tracker'
 import { useSections } from '@/hooks/use-sections'
 import {
@@ -1040,6 +1041,12 @@ export function CoursePlayer({
   )
   const sections: Section[] = Array.isArray(sectionsData) ? sectionsData : []
 
+  // Backend-authoritative progress for this enrollment. Once the course is
+  // completed, this value is frozen server-side and won't drop if new
+  // lessons/quizzes are added afterwards — unlike counting completedIds
+  // locally against the *current* lesson list.
+  const { data: courseData } = useCourse(courseSlug, academySlug)
+
   // Fetch all published assessments for this course (for sidebar)
   const { data: assessmentsData } = useAssessments(academySlug, courseSlug, {
     status: 'published',
@@ -1128,9 +1135,11 @@ export function CoursePlayer({
   const allLessons = sections.flatMap((s) => s.lessons ?? [])
 
   const courseProgress =
-    allLessons.length > 0
-      ? Math.round((completedIds.size / allLessons.length) * 100)
-      : 0
+    courseData?.progress_percentage != null
+      ? Math.round(courseData.progress_percentage)
+      : allLessons.length > 0
+        ? Math.round((completedIds.size / allLessons.length) * 100)
+        : 0
 
   const handleComplete = () => {
     if (!currentLesson || completedIds.has(currentLesson.id)) return

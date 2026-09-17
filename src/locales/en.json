@@ -175,6 +175,15 @@
       "retry": "Try Again",
       "errors": {
         "noToken": "Confirmation token not found."
+      },
+      "resend": {
+        "label": "Enter your email to get a new link",
+        "placeholder": "you@email.com",
+        "button": "Resend confirmation email",
+        "sending": "Sending...",
+        "sent": "If your email is registered and not yet confirmed, we've sent a new link. Check your inbox.",
+        "emailRequired": "Enter your email address.",
+        "error": "We couldn't resend the email. Please try again in a few minutes."
       }
     },
     "resetPassword": {
