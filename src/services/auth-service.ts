@@ -99,6 +99,19 @@ class AuthService {
   }
 
   /**
+   * Resend the account confirmation email (e.g. when the original link expired)
+   * @param email - User email address
+   * @returns Promise with success message
+   */
+  async resendConfirmation(email: string): Promise<MessageResponse> {
+    const response = await apiClient.post<MessageResponse>(
+      '/auth/resend_confirmation',
+      { email }
+    )
+    return response.data
+  }
+
+  /**
    * Reset password with token
    * @param token - Password reset token from email
    * @param password - New password

@@ -275,12 +275,37 @@ export function useMyAttempts(
   })
 }
 
+const START_ATTEMPT_ERROR_MESSAGES: Record<string, string> = {
+  NOT_ENROLLED: 'No estás inscrito en este curso.',
+  NO_ATTEMPTS_REMAINING: 'No tienes intentos disponibles para esta evaluación.',
+  QUIZ_HAS_NO_QUESTIONS:
+    'Esta evaluación todavía no tiene preguntas. Contacta a tu instructor.',
+  PREREQUISITES_NOT_MET:
+    'Debes completar todas las lecciones del curso antes de presentar el examen final.',
+}
+
 export function useStartAttempt(academySlug: string, courseSlug: string) {
   return useMutation({
     mutationFn: (assessmentId: number) =>
       assessmentService.startAttempt(academySlug, courseSlug, assessmentId),
-    onError: (error: Error) => {
-      toast.error(`Error al iniciar el quiz: ${error.message}`)
+    onError: (error: ApiError) => {
+      const knownMessage = error.code
+        ? START_ATTEMPT_ERROR_MESSAGES[error.code]
+        : undefined
+
+      let message = knownMessage || error.message
+
+      if (
+        error.code === 'PREREQUISITES_NOT_MET' &&
+        error.details &&
+        !Array.isArray(error.details) &&
+        Array.isArray(error.details.missing_sections) &&
+        error.details.missing_sections.length > 0
+      ) {
+        message += ` Secciones pendientes: ${error.details.missing_sections.join(', ')}.`
+      }
+
+      toast.error(`No se pudo iniciar la evaluación: ${message}`)
     },
   })
 }

@@ -175,6 +175,15 @@
       "retry": "Intentar Nuevamente",
       "errors": {
         "noToken": "Token de confirmación no encontrado."
+      },
+      "resend": {
+        "label": "Ingresa tu correo para recibir un enlace nuevo",
+        "placeholder": "tu@correo.com",
+        "button": "Reenviar correo de confirmación",
+        "sending": "Enviando...",
+        "sent": "Si tu correo está registrado y aún no está confirmado, te enviamos un nuevo enlace. Revisa tu bandeja de entrada.",
+        "emailRequired": "Ingresa tu correo electrónico.",
+        "error": "No pudimos reenviar el correo. Intenta de nuevo en unos minutos."
       }
     },
     "resetPassword": {

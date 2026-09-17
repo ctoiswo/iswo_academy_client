@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate, useSearch, Link } from '@tanstack/react-router'
+import { authApi } from '@/services'
 import {
   MailCheck,
   XCircle,
@@ -12,10 +13,13 @@ import {
   Users,
   Trophy,
 } from 'lucide-react'
+import { toast } from 'sonner'
 import { getErrorMessage } from '@/lib/error-handler'
 import { cn } from '@/lib/utils'
 import { useTranslation } from '@/hooks/use-translation'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 type ConfirmationStatus = 'loading' | 'success' | 'error'
 
@@ -80,6 +84,10 @@ export function ConfirmEmail() {
   const [errorCode, setErrorCode] = useState<string | null>(null)
   const hasConfirmed = useRef(false)
   const [mounted, setMounted] = useState(false)
+  const [resendEmail, setResendEmail] = useState('')
+  const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent'>(
+    'idle'
+  )
 
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 200)
@@ -142,6 +150,22 @@ export function ConfirmEmail() {
 
   const handleRetry = () => {
     window.location.reload()
+  }
+
+  const handleResend = async () => {
+    if (!resendEmail.trim()) {
+      toast.error(t('auth.confirmEmail.resend.emailRequired'))
+      return
+    }
+
+    setResendStatus('sending')
+    try {
+      await authApi.resendConfirmation(resendEmail.trim())
+      setResendStatus('sent')
+    } catch {
+      toast.error(t('auth.confirmEmail.resend.error'))
+      setResendStatus('idle')
+    }
   }
 
   const isExpiredError = errorCode === 'EXPIRED_CONFIRMATION_TOKEN'
@@ -385,6 +409,49 @@ export function ConfirmEmail() {
                   {message}
                 </p>
               </div>
+
+              {isExpiredError && (
+                <div
+                  className={cn(
+                    'border-border/50 bg-card/60 w-full max-w-xs rounded-2xl border p-5 text-left backdrop-blur-sm transition-all delay-400 duration-700',
+                    mounted
+                      ? 'translate-y-0 opacity-100'
+                      : 'translate-y-6 opacity-0'
+                  )}
+                >
+                  {resendStatus === 'sent' ? (
+                    <p className='text-muted-foreground text-center text-sm leading-relaxed'>
+                      {t('auth.confirmEmail.resend.sent')}
+                    </p>
+                  ) : (
+                    <div className='flex flex-col gap-3'>
+                      <Label
+                        htmlFor='resend-email'
+                        className='text-foreground/80 text-sm'
+                      >
+                        {t('auth.confirmEmail.resend.label')}
+                      </Label>
+                      <Input
+                        id='resend-email'
+                        type='email'
+                        placeholder={t('auth.confirmEmail.resend.placeholder')}
+                        value={resendEmail}
+                        onChange={(e) => setResendEmail(e.target.value)}
+                        disabled={resendStatus === 'sending'}
+                      />
+                      <Button
+                        onClick={handleResend}
+                        disabled={resendStatus === 'sending'}
+                        className='bg-primary text-primary-foreground hover:bg-primary/90 h-11 w-full text-sm font-semibold'
+                      >
+                        {resendStatus === 'sending'
+                          ? t('auth.confirmEmail.resend.sending')
+                          : t('auth.confirmEmail.resend.button')}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div
                 className={cn(
