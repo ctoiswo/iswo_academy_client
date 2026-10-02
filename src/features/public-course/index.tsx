@@ -243,12 +243,12 @@ export function PublicCoursePage() {
         {courseData.promotional_image_url ? (
           <>
             <div
-              className='absolute inset-0 bg-cover bg-center opacity-50'
+              className='absolute inset-0 bg-cover bg-center opacity-30'
               style={{
                 backgroundImage: `url(${courseData.promotional_image_url})`,
               }}
             />
-            <div className='bg-background/50 absolute inset-0' />
+            <div className='bg-background/30 absolute inset-0' />
           </>
         ) : (
           <>
