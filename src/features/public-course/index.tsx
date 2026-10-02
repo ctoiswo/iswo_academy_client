@@ -243,12 +243,13 @@ export function PublicCoursePage() {
         {courseData.promotional_image_url ? (
           <>
             <div
-              className='absolute inset-0 bg-cover bg-center'
+              className='absolute inset-0 scale-110 bg-cover bg-center opacity-25 blur-[3px] grayscale'
               style={{
                 backgroundImage: `url(${courseData.promotional_image_url})`,
               }}
             />
-            <div className='to-background absolute inset-0 bg-gradient-to-b from-black/60 via-black/40' />
+            <div className='bg-background/70 absolute inset-0' />
+            <div className='to-background from-background/40 via-background/60 absolute inset-0 bg-gradient-to-b' />
           </>
         ) : (
           <>
@@ -265,17 +266,17 @@ export function PublicCoursePage() {
           }}
         />
 
-        <div className='relative mx-auto max-w-7xl px-4 pt-8 pb-12 lg:px-8 lg:pb-16'>
+        <div className='relative mx-auto max-w-7xl px-4 pt-6 pb-10 sm:pt-8 lg:px-8 lg:pb-16'>
           <button
             onClick={handleBackClick}
-            className='text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-2 text-sm transition-colors'
+            className='text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-2 text-sm transition-colors sm:mb-6'
           >
             <ArrowLeft className='size-4' />
             Volver
           </button>
 
-          <div className='grid gap-8 lg:grid-cols-3 lg:gap-12'>
-            <div className='flex flex-col gap-5 lg:col-span-2'>
+          <div className='grid gap-6 lg:grid-cols-3 lg:gap-12'>
+            <div className='flex flex-col gap-4 sm:gap-5 lg:col-span-2'>
               <div className='flex flex-wrap items-center gap-2'>
                 {courseData.category && (
                   <Badge
@@ -298,12 +299,12 @@ export function PublicCoursePage() {
                   ))}
               </div>
 
-              <h1 className='text-foreground text-3xl font-bold tracking-tight text-balance md:text-4xl lg:text-5xl'>
+              <h1 className='text-foreground text-2xl leading-tight font-bold tracking-tight text-balance sm:text-3xl md:text-4xl lg:text-5xl'>
                 {courseData.title}
               </h1>
 
               {courseData.description && (
-                <p className='text-muted-foreground line-clamp-3 max-w-2xl text-base leading-relaxed md:text-lg'>
+                <p className='text-foreground/80 line-clamp-3 max-w-2xl text-sm leading-relaxed sm:text-base md:text-lg'>
                   {courseData.description}
                 </p>
               )}
@@ -366,7 +367,7 @@ export function PublicCoursePage() {
             </div>
 
             <div>
-              <div className='border-border/60 bg-card sticky top-24 overflow-hidden rounded-2xl border shadow-[0_8px_32px_rgba(0,0,0,0.2)]'>
+              <div className='border-border/60 bg-card top-24 overflow-hidden rounded-2xl border shadow-lg lg:sticky lg:shadow-[0_8px_32px_rgba(0,0,0,0.2)]'>
                 {hasPromoVideo ? (
                   <div className='aspect-video w-full overflow-hidden'>
                     {courseData.promotional_video_embedded_url ? (
